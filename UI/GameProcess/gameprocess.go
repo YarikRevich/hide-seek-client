@@ -159,7 +159,6 @@ func (g *GameProcess) ProcessKeyboard() {
 			}
 		}
 	}
-
 }
 
 func (g *GameProcess) ProcessTextInput() {
@@ -175,16 +174,15 @@ func (g *GameProcess) ProcessMusic() {
 
 func (g *GameProcess) DrawAnnouncements() {
 	//WARNING: it is not implemented!
+	make()
 }
 
 func (g *GameProcess) DrawElements() {
 	g.winConf.DrawGameBackground()
 
-	//g.winConf.DrawGoldChest()
+	// g.winConf.DrawGoldChest()
 
 	g.mapComponents.GetCollisions().GetDoorsCollisions().DrawDoors(g.winConf.DrawHorDoor, g.winConf.DrawVerDoor)
-
-	
 
 	Animation.NewDefaultSwordAnimator(g.winConf, g.userConfig).Move()
 	Animation.NewIconAnimator(g.winConf, g.userConfig).Move()
@@ -193,7 +191,6 @@ func (g *GameProcess) DrawElements() {
 		Animation.NewDefaultSwordAnimator(g.winConf, value).Move()
 		Animation.NewIconAnimator(g.winConf, value).Move()
 	}
-
 
 	g.winConf.DrawDarkness(pixel.V((float64(g.userConfig.Pos.X)*2.5)-31, (float64(g.userConfig.Pos.Y)*2.5)-30))
 
