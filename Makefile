@@ -1,48 +1,53 @@
 .PHONY: all exit
-
 .ONESHELL:
-
 .SILENT: all exit
 
 CURRDIRBASE := $(shell basename "${PWD}")
-
-CURRDIRFULL = $(CURDIR)
-
+CURRDIRFULL := $(CURDIR)
 NAME := $(shell uname -s)
+
+define clear
+	clear > $(shell tty)
+endef
+
+define exit
+	$(error 1)
+endef
+
+define log_print
+	@printf "\n --- $(1) --- \n"
+endef
 
 all:
 	clear > $(shell tty)
 ifeq ($(NAME), Darwin) 
-	printf "\n --- Installs golang via brew --- \n"
+# Creates the environment for the game
+	$(call log_print,"Installs golang via brew")
 ifeq ($(shell ${USER}), root)
-	printf "\n --- Switch user to non root --- \n"
-	$(MAKE) exit
+	$(call log_print,"Switch user to non root")
+	$(call exit)
 endif
 	brew install golang > /dev/null
 endif
 	
 ifeq ($(NAME), Linux) 
-	printf "\n --- Installs golang via apt --- \n"
-	sudo apt install golang > /dev/null
+	$(call log_print,"Installs golang via apt")
+	@sudo apt install golang
 endif
 
 ifeq ($(NAME), Windows)
-	printf "\n --- if your os is Windows you are left without a game ㋡ hahahhah --- \n"
-	$(MAKE) exit
+	$(call log_print,"Your OS is Windows, sorry dude ㋡ hahahhah")
+	$(call exit)
 endif
-	clear > $(shell tty);\
-	printf "\n --- Creates the environment for the game --- \n";\
-	mkdir -p $$GOPATH/src;\
-	mv $(CURRDIRFULL) $$GOPATH/src;\
-	clear > $(shell tty);\
-    printf "\n --- Installs all the important packages for project ---\n";\
-	go get github.com/galsondor/go-ascii;\
-	go get github.com/go-ping/ping;\
-	go get github.com/faiface/beep;\
-	go get github.com/gookit/color;\
-	clear > $(shell tty);\
-	printf "\n --- Builds project --- \n";\
-	go build main.go > /dev/null
+	$(call clear)
+	$(call log_print,"Creates the environment for the game")
 
-exit: 
-	$(error 1)
+	mkdir -p $$GOPATH/src
+	mv $(CURRDIRFULL) $$GOPATH/src
+
+	$(call clear)
+	$(call log_print,"Installs all the important packages for project")
+
+	$(call clear)
+	$(call log_print,"Build project")
+	@go build main.go

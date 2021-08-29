@@ -1,0 +1,1 @@
+echo "root='$PWD/..'" > /usr/local/etc/HideSeek_system.toml
