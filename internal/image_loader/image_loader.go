@@ -7,6 +7,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/paths"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -44,5 +45,5 @@ func processImageDir(dirname string) {
 }
 
 func LoadImages() {
-	processImageDir("../assets/images")
+	processImageDir(paths.GAME_ASSETS_DIR)
 }

@@ -87,6 +87,7 @@ func init(){
 
 func main() {
 	fullWidth, fullHeight := ebiten.ScreenSizeInFullscreen()
+	
 	ebiten.SetWindowSize(int(float64(fullWidth) / 1.25), int(float64(fullHeight) / 1.25))
 	ebiten.SetWindowTitle("Hide&Seek")
 

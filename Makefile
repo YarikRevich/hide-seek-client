@@ -1,6 +1,6 @@
-.PHONY: all exit
+.PHONY: go_install build install  
 .ONESHELL:
-.SILENT: all exit
+.SILENT: all
 
 CURRDIRBASE := $(shell basename "${PWD}")
 CURRDIRFULL := $(CURDIR)
@@ -18,10 +18,9 @@ define log_print
 	@printf "\n --- $(1) --- \n"
 endef
 
-all:
+go_install:
 	clear > $(shell tty)
 ifeq ($(NAME), Darwin) 
-# Creates the environment for the game
 	$(call log_print,"Installs golang via brew")
 ifeq ($(shell ${USER}), root)
 	$(call log_print,"Switch user to non root")
@@ -35,19 +34,13 @@ ifeq ($(NAME), Linux)
 	@sudo apt install golang
 endif
 
-ifeq ($(NAME), Windows)
-	$(call log_print,"Your OS is Windows, sorry dude ㋡ hahahhah")
-	$(call exit)
 endif
-	$(call clear)
-	$(call log_print,"Creates the environment for the game")
 
-	mkdir -p $$GOPATH/src
-	mv $(CURRDIRFULL) $$GOPATH/src
-
+build:
 	$(call clear)
-	$(call log_print,"Installs all the important packages for project")
-
+	$(call log_print,"Builds project")
+	@go build -o HideSeek
+install: 
 	$(call clear)
-	$(call log_print,"Build project")
-	@go build main.go
+	$(call log_print,"Installs project")
+	@go install 
