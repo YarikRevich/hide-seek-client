@@ -1,4 +1,4 @@
-module github.com/YarikRevich/Hide-Seek-with-Guns
+module github.com/YarikRevich/HideSeek-Client
 
 go 1.16
 
@@ -9,7 +9,7 @@ require (
 	github.com/faiface/beep v1.0.2
 	github.com/faiface/pixel v0.10.0
 	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10
-	github.com/go-ping/ping v0.0.0-20201115131931-3300c582a663
+	github.com/go-ping/ping v0.0.0-20210911151512-381826476871
 	github.com/gookit/color v1.3.5
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hajimehoshi/ebiten v1.12.12 // indirect

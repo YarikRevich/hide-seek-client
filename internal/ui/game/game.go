@@ -1,18 +1,18 @@
 package GameProcess
 
-import (
-	// Map "Game/Components/Map"
-	// "Game/Components/Sound"
-	// "Game/Components/States"
-	// "Game/Heroes/Animation"
-	// "Game/Heroes/Users"
-	// "Game/Server"
-	// "Game/UI/GameProcess/ConfigParsers"
-	// "Game/Window"
+import "github.com/hajimehoshi/ebiten/v2"
 
-	// "github.com/faiface/pixel"
-	// "github.com/faiface/pixel/pixelgl"
-)
+// Map "Game/Components/Map"
+// "Game/Components/Sound"
+// "Game/Components/States"
+// "Game/Heroes/Animation"
+// "Game/Heroes/Users"
+// "Game/Server"
+// "Game/UI/GameProcess/ConfigParsers"
+// "Game/Window"
+
+// "github.com/faiface/pixel"
+// "github.com/faiface/pixel/pixelgl"
 
 // type GameProcess struct {
 // 	//It is such called stage struct
@@ -44,7 +44,6 @@ import (
 // 	return nil
 // }
 
-
 // func (g *GameProcess) Run() {
 
 // 	g.ProcessKeyboard()
@@ -56,7 +55,8 @@ import (
 // 	g.ProcessMusic()
 // }
 
-func Exec(){
+func Draw(screen *ebiten.Image){
+	// screen.DrawImage(, &ebiten.DrawImageOptions{})
 	// g.winConf.DrawGameBackground()
 
 	// // g.winConf.DrawGoldChest()

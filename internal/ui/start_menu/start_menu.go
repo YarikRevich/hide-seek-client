@@ -2,15 +2,19 @@ package start_menu
 
 import (
 	// "github.com/hajimehoshi/ebiten/v2"
-
-	"fmt"
-
-	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/image_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/asset_manager/loader"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func Exec() {
-	// u := image_loader.Image[""]
-	fmt.Println(imageloader.Images)
+func Draw(screen *ebiten.Image) {
+	opts := &ebiten.DrawImageOptions{}
+
+	img := loader.Images["/images/menues/background/StartMenu"]
+	imageW, imageH := img.Size()
+	screenW, screenH := screen.Size()
+	opts.GeoM.Scale(float64(screenW) / float64(imageW), float64(screenH)/ float64(imageH))
+
+	screen.DrawImage(img, opts)
 	// 	s.winConf.TextAreas.GameLogo.Clear()
 	// 	IsOld := func(value float64, list []float64) bool {
 	// 		//Checks whether new pos is not already used

@@ -1,20 +1,23 @@
 package main
 
-//go:generate sh ../scripts/init.sh
 import (
-	
+	// go:generate sh ../scripts/init.sh
 	// "github.com/faiface/pixel/pixelgl"
 	// "github.com/gookit/color"
 
-	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/game"
-	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/image_loader"
-	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/messages"
+	"flag"
+	"log"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/asset_manager/loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/loop"
+
+	// "github.com/YarikRevich/HideSeek-Client/internal/messages"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func init(){
-	messages.GetInstance().Listen()
-	imageloader.LoadImages()
+	flag.Parse()
+	loader.LoadAssets()
 }
 
 	//Gets info from user to place his name and server's name
@@ -90,6 +93,7 @@ func main() {
 	
 	ebiten.SetWindowSize(int(float64(fullWidth) / 1.25), int(float64(fullHeight) / 1.25))
 	ebiten.SetWindowTitle("Hide&Seek")
+	ebiten.SetWindowResizable(true)
 
-	ebiten.RunGame(game.New())
+	log.Fatalln(ebiten.RunGame(loop.New()))
 }

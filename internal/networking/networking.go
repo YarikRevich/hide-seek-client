@@ -1,16 +1,16 @@
 package networking
 
 import (
-	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/networking/game"
-	joinlobbymenu "github.com/YarikRevich/Hide-Seek-with-Guns/internal/networking/join_lobby_menu"
-	"github.com/YarikRevich/Hide-Seek-with-Guns/internal/status"
+	"github.com/YarikRevich/HideSeek-Client/internal/networking/game"
+	joinlobbymenu "github.com/YarikRevich/HideSeek-Client/internal/networking/join_lobby_menu"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 )
 
 func Process(){
-	switch status.GetInstance().GetState(){
-	case status.JOIN_LOBBY_MENU:
+	switch statemachine.GetInstance().GetState(){
+	case statemachine.JOIN_LOBBY_MENU:
 		joinlobbymenu.Exec()
-	case status.GAME:
+	case statemachine.GAME:
 		game.Exec()
 	}
 }

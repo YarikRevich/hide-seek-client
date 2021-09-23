@@ -1,13 +1,13 @@
 package Animation
 
-import (
-	"Game/Heroes/Users"
-	"Game/Window"
-	"time"
+// import (
+// 	"Game/Heroes/Users"
+// 	"Game/Window"
+// 	"time"
 
-	"github.com/faiface/pixel"
-	"github.com/faiface/pixel/pixelgl"
-)
+// 	"github.com/faiface/pixel"
+// 	"github.com/faiface/pixel/pixelgl"
+// )
 
 // type DS struct {
 // 	WinConf *Window.WindowConfig
