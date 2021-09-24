@@ -3,18 +3,23 @@ package start_menu
 import (
 	// "github.com/hajimehoshi/ebiten/v2"
 	"github.com/YarikRevich/HideSeek-Client/internal/asset_manager/loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func Draw(screen *ebiten.Image) {
-	opts := &ebiten.DrawImageOptions{}
-
+func Draw() {
 	img := loader.Images["/images/menues/background/StartMenu"]
-	imageW, imageH := img.Size()
-	screenW, screenH := screen.Size()
-	opts.GeoM.Scale(float64(screenW) / float64(imageW), float64(screenH)/ float64(imageH))
 
-	screen.DrawImage(img, opts)
+	render.SetImageToRender(img, func(screen *ebiten.Image)*ebiten.DrawImageOptions {
+		opts := &ebiten.DrawImageOptions{}
+		imageW, imageH := img.Size()
+		screenW, screenH := screen.Size()
+		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
+
+		return opts
+	})
+
+	// screen.DrawImage(img, opts)
 	// 	s.winConf.TextAreas.GameLogo.Clear()
 	// 	IsOld := func(value float64, list []float64) bool {
 	// 		//Checks whether new pos is not already used
