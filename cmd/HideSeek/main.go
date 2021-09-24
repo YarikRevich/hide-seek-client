@@ -7,9 +7,14 @@ import (
 
 	"flag"
 	"log"
+	"sync"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/asset_manager/loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
+	"github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader"
+	collisionloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/collision_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/paths"
 
 	// "github.com/YarikRevich/HideSeek-Client/internal/messages"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -17,7 +22,13 @@ import (
 
 func init(){
 	flag.Parse()
-	loader.LoadAssets()
+	loader.LoadResources(map[string][]func(string, string, string, *sync.WaitGroup){
+		paths.GAME_ASSETS_DIR: {
+			imageloader.Load,
+			collisionloader.Load,
+		},
+	})
+	collisions.ConnectCollisionsToImages()
 }
 
 	//Gets info from user to place his name and server's name

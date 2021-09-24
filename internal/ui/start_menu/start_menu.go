@@ -1,14 +1,13 @@
 package start_menu
 
 import (
-	// "github.com/hajimehoshi/ebiten/v2"
-	"github.com/YarikRevich/HideSeek-Client/internal/asset_manager/loader"
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/YarikRevich/HideSeek-Client/internal/render"
 )
 
 func Draw() {
-	img := loader.Images["/images/menues/background/StartMenu"]
+	img := imageloader.Images["/images/menues/background/StartMenu"]
 
 	render.SetImageToRender(img, func(screen *ebiten.Image)*ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
@@ -78,4 +77,5 @@ func Draw() {
 	// 			s.winConf.StartMenu.Regime = 0
 	// 		}
 	// 	}
+	
 }

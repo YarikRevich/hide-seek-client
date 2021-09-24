@@ -1,12 +1,24 @@
 package collisions
 
-var (
-	colls = make(map[interface{}]interface{})
+import (
+	collisionloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/collision_loader"
+	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func IsCollision(y int, x int)bool{
-	// if _, ok := colls[{y, x}]; ok{
-	// 	return true
-	// }
-	return false
+var (
+	Collisions = make(map[*ebiten.Image]collisionloader.Collision)
+)
+
+func ConnectCollisionsToImages(){
+	for path, img := range imageloader.Images{
+		coll, ok := collisionloader.RawCollisions[path]
+		if ok{
+			Collisions[img] = coll
+		}
+	}
 }
+
+// func SyncCollision(screen *ebiten.Image, coll *Collision){
+// 	//sets x and y of coll due to screen
+// }
