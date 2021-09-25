@@ -1,10 +1,6 @@
 package main
 
 import (
-	// go:generate sh ../scripts/init.sh
-	// "github.com/faiface/pixel/pixelgl"
-	// "github.com/gookit/color"
-
 	"flag"
 	"log"
 	"sync"
@@ -12,20 +8,28 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
 	"github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader"
-	collisionloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/collision_loader"
+	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/paths"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/messages"
 	"github.com/hajimehoshi/ebiten/v2"
 )
+
+var (
+	screenWidth, screenHeight = InitScreenSize()
+	fullWidth, fullHeight = ebiten.ScreenSizeInFullscreen()
+)
+
+func InitScreenSize()(int, int){
+	return int(float64(fullWidth) / 1.15), int(float64(fullHeight) / 1.15)
+}
 
 func init(){
 	flag.Parse()
 	loader.LoadResources(map[string][]func(string, string, string, *sync.WaitGroup){
 		paths.GAME_ASSETS_DIR: {
 			imageloader.Load,
-			collisionloader.Load,
+			metadataloader.Load,
 		},
 	})
 	collisions.ConnectCollisionsToImages()
@@ -100,11 +104,10 @@ func init(){
 // }
 
 func main() {
-	fullWidth, fullHeight := ebiten.ScreenSizeInFullscreen()
-	
-	ebiten.SetWindowSize(int(float64(fullWidth) / 1.25), int(float64(fullHeight) / 1.25))
+	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("Hide&Seek")
 	ebiten.SetWindowResizable(true)
+	ebiten.SetWindowSizeLimits(int((fullWidth * 60)/ 100), int((fullHeight * 60)/ 100), -1, -1)
 
 	log.Fatalln(ebiten.RunGame(loop.New()))
 }

@@ -1,5 +1,7 @@
 package pc
 
+import "crypto/sha256"
+
 const (
 	EMPTY = ""
 	DEFAULT_HEALTH = 10
@@ -21,7 +23,7 @@ type GameCredentials struct {
 }
 
 type Skin struct {
-	Name string
+	ImageHash [sha256.Size]byte
 	Animation Animation
 }
 

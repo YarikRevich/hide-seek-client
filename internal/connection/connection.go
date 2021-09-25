@@ -1,5 +1,8 @@
-
 package connection
+
+import "github.com/alimasyhur/is-connect"
+
+var IsOnline = isconnect.IsOnline()
 
 // import (
 // 	"log"

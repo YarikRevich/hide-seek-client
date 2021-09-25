@@ -42,8 +42,6 @@ install:
 	$(call clear)
 	$(call log_print,"Installs project")
 	@go install 
-	@go generate ./...
 
-generate:
 	@$(shell $(CURDIR)/scripts/transfer_assets.sh)
 	$(call log_print,"Assets transfered")

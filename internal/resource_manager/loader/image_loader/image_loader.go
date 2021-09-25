@@ -2,7 +2,9 @@ package imageloader
 
 import (
 	"log"
+	"os"
 	"regexp"
+	"crypto/sha256"
 	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -10,9 +12,14 @@ import (
 )
 
 var (
-	Images = make(map[string]*ebiten.Image)
+	Images = make(map[string]*Image)
 	mu     = sync.Mutex{}
 )
+
+type Image struct {
+	Id [sha256.Size]byte
+	Image *ebiten.Image
+}
 
 func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 	if extension != "png" {
@@ -21,6 +28,11 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 
 	wg.Add(1)
 	go func() {
+		f, err := os.ReadFile(path)
+		if err != nil{
+			log.Fatalln(err)
+		}
+
 		img, _, err := ebitenutil.NewImageFromFile(path)
 		if err != nil {
 			log.Fatalln(err)
@@ -31,7 +43,10 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 		if reg.MatchString(path) {
 			mu.Lock()
 			defer mu.Unlock()
-			Images[reg.Split(path, -1)[0]] = img
+			Images[reg.Split(path, -1)[0]] = &Image{
+				Id: sha256.Sum256(f),
+				Image: img,
+			}
 		}
 
 		wg.Done()

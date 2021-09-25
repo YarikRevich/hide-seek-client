@@ -1,17 +1,20 @@
 package render
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 var (
-	imagesToRender    = make(map[*ebiten.Image]func(*ebiten.Image) *ebiten.DrawImageOptions)
+	imagesToRender    = make(map[*imageloader.Image]func(*ebiten.Image) *ebiten.DrawImageOptions)
 	debugTextToRender = make([]func(*ebiten.Image), 0, 100)
 )
 
-func SetImageToRender(i *ebiten.Image, c func(*ebiten.Image) *ebiten.DrawImageOptions) {
+func SetImageToRender(i *imageloader.Image, c func(*ebiten.Image) *ebiten.DrawImageOptions) {
 	imagesToRender[i] = c
 }
 
-func GetImagesToRender() map[*ebiten.Image]func(*ebiten.Image) *ebiten.DrawImageOptions {
+func GetImagesToRender() map[*imageloader.Image]func(*ebiten.Image) *ebiten.DrawImageOptions {
 	return imagesToRender
 }
 
