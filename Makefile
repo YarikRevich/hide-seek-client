@@ -41,7 +41,7 @@ build:
 install: 
 	$(call clear)
 	$(call log_print,"Installs project")
-	@go install 
+	@go install $(CURDIR)/cmd/HideSeek/main.go
 
 	@$(shell $(CURDIR)/scripts/transfer_assets.sh)
 	$(call log_print,"Assets transfered")

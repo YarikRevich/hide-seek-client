@@ -1,22 +1,33 @@
 package render
 
 import (
-	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	// metadata "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+// = make(map[*ebiten.Image]func(*ebiten.Image) *ebiten.DrawImageOptions)
+
 var (
-	imagesToRender    = make(map[*imageloader.Image]func(*ebiten.Image) *ebiten.DrawImageOptions)
+	imagesToRender  = make([]RenderCell, 0, 100)
 	debugTextToRender = make([]func(*ebiten.Image), 0, 100)
 )
 
-func SetImageToRender(i *imageloader.Image, c func(*ebiten.Image) *ebiten.DrawImageOptions) {
-	imagesToRender[i] = c
+type RenderCell struct {
+	Image *ebiten.Image
+	CallBack func(*ebiten.Image) *ebiten.DrawImageOptions
 }
 
-func GetImagesToRender() map[*imageloader.Image]func(*ebiten.Image) *ebiten.DrawImageOptions {
+func SetImageToRender(c RenderCell) {
+	imagesToRender = append(imagesToRender, c)
+}
+
+func GetImagesToRender() []RenderCell {
 	return imagesToRender
 }
+
+// func GetCollisionsOfImagesToRender()metadata.M{
+
+// }
 
 func SetDebugTextToRender(c func(*ebiten.Image)) {
 	debugTextToRender = append(debugTextToRender, c)

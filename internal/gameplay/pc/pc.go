@@ -49,9 +49,9 @@ type PC struct{
 	Equipment Equipment
 
 	GameCredentials GameCredentials
-
-	OtherUsers []PC
 }
+
+type PCs []PC
 
 // userConfig := Users.User{
 // 	// Conn: conn,
@@ -77,7 +77,7 @@ type PC struct{
 // 	Index int
 // }
 
-func UsePC()*PC{
+func GetPC()*PC{
 	if pc == nil{
 		pc = &PC{
 			Username: EMPTY,

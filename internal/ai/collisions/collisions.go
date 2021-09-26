@@ -13,15 +13,17 @@ var (
 )
 
 func ConnectCollisionsToImages(){
-	for path, img := range imageloader.Images{
+	for hash := range imageloader.Images{
+		
+		path := imageloader.GetPathByHash(hash)
 		coll, ok := metadataloader.Metadata[path]
 		if ok{
-			Collisions[img.Id] = coll
+			Collisions[hash] = coll
 		}
 	}
 }
 
-func SyncCollisionWithImage(screen *ebiten.Image, i *imageloader.Image){
+func SyncCollisionWithImage(screen *ebiten.Image, i *ebiten.Image){
 	//sets x and y of coll due to screen
 	// id := i.Id.String()
 	// Collisions[id]

@@ -1,15 +1,11 @@
 package collisionloader
 
 import (
-	// "log"
-	// "regexp"
 	"log"
 	"regexp"
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	// "github.com/hajimehoshi/ebiten/v2"
-	// "github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 var (
@@ -21,6 +17,10 @@ type M struct {
 	Size struct {
 		Height float64
 		Width  float64
+	}
+	Margins struct {
+		LeftMargin float64
+		TopMargin float64
 	}
 }
 

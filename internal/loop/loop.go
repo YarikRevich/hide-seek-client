@@ -30,9 +30,9 @@ func (g *Loop) Update() error {
 }
 
 func (g *Loop) Draw(screen *ebiten.Image) {
-	for i, o := range render.GetImagesToRender(){
-		collisions.SyncCollisionWithImage(screen, i)
-		screen.DrawImage(i.Image, o(screen))
+	for _, c := range render.GetImagesToRender(){
+		collisions.SyncCollisionWithImage(screen, c.Image)
+		screen.DrawImage(c.Image, c.CallBack(screen))
 	}
 	for _, dt := range render.GetDebugTextToRender(){
 		dt(screen)

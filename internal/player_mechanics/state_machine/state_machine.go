@@ -34,7 +34,7 @@ func (s *Status) GetState() statusEntry {
 
 func GetInstance() *Status {
 	if stateMachine == nil {
-		return &Status{status: START_MENU}
+		stateMachine = &Status{status: START_MENU}
 	}
 	return stateMachine
 }

@@ -10,16 +10,29 @@ import (
 )
 
 func Draw() {
-	img := imageloader.Images["/images/menues/background/StartMenu"]
+	back := imageloader.Images[imageloader.PathsToHash["/images/menues/background/StartMenu"]]
 
-	render.SetImageToRender(img, func(screen *ebiten.Image)*ebiten.DrawImageOptions {
+	
+	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(screen *ebiten.Image)*ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
-		imageW, imageH := img.Image.Size()
+		imageW, imageH := back.Size()
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
 		return opts
-	})
+	}})
+
+
+	setting := imageloader.Images[imageloader.PathsToHash["/images/menues/panels/settingswheel"]]
+
+	render.SetImageToRender(render.RenderCell{Image: setting, CallBack: func(screen *ebiten.Image)*ebiten.DrawImageOptions {
+		opts := &ebiten.DrawImageOptions{}
+		// imageW, imageH := setting.Size()
+		// screenW, screenH := screen.Size()
+		// opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
+
+		return opts
+	}})
 
 	// screen.DrawImage(img, opts)
 	// 	s.winConf.TextAreas.GameLogo.Clear()
