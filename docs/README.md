@@ -1,6 +1,6 @@
 #Hide&Seek
 
-![]('./../assets/docs/preview.png')
+![]('./../../assets/docs/preview.png')
 
 **_You can install game using insructions below_**
 
