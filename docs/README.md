@@ -1,8 +1,8 @@
-#Hide&Seek
+#Hide&Seek🎮
 
-![]('./../assets/docs/preview.png')
+![](./../assets/docs/preview.png)
 
-**_You can install game using insructions below_**
+**_You can install the game using insructions below_**
 
 Create a dir
 
@@ -23,9 +23,17 @@ $ make build
 $ make install
 ```
 
-Run and enjoy the game
+Run and enjoy the game👌
 
 ```
 $ HideSeek
 ```
+
+Use 
+
+```
+$ HideSeek --help
+```
+
+To see all available flags
 
