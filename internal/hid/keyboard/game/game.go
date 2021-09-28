@@ -1,6 +1,28 @@
 package game
 
+import (
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/hajimehoshi/ebiten/v2"
+)
+
 func Exec(){
+	if ebiten.IsKeyPressed(ebiten.KeyW){
+		pc.GetPC().Y -= pc.GetPC().Buffs.Speed
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyS){
+		pc.GetPC().Y += pc.GetPC().Buffs.Speed
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyD){
+		pc.GetPC().X += pc.GetPC().Buffs.Speed
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyA){
+		pc.GetPC().X -= pc.GetPC().Buffs.Speed
+	}
+
+
 // 	currPosition := pixel.V(float64(g.userConfig.Pos.X), float64(g.userConfig.Pos.Y))
 // 	g.mapComponents.GetCollisions().GetDoorsCollisions().DoorTraker(currPosition)
 

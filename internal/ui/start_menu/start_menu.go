@@ -10,10 +10,9 @@ import (
 )
 
 func Draw() {
-	back := imageloader.Images[imageloader.PathsToHash["/images/menues/background/StartMenu"]]
+	back := imageloader.GetImage("/images/menues/background/StartMenu")
 
-	
-	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(screen *ebiten.Image)*ebiten.DrawImageOptions {
+	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
 		imageW, imageH := back.Size()
 		screenW, screenH := screen.Size()
@@ -22,10 +21,9 @@ func Draw() {
 		return opts
 	}})
 
+	setting := imageloader.GetImage("/images/menues/panels/settingswheel")
 
-	setting := imageloader.Images[imageloader.PathsToHash["/images/menues/panels/settingswheel"]]
-
-	render.SetImageToRender(render.RenderCell{Image: setting, CallBack: func(screen *ebiten.Image)*ebiten.DrawImageOptions {
+	render.SetImageToRender(render.RenderCell{Image: setting, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
 		// imageW, imageH := setting.Size()
 		// screenW, screenH := screen.Size()
@@ -93,5 +91,5 @@ func Draw() {
 	// 			s.winConf.StartMenu.Regime = 0
 	// 		}
 	// 	}
-	
+
 }

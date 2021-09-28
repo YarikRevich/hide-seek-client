@@ -1,5 +1,4 @@
 package Animation
-
 // import (
 // 	// "fmt"
 // 	// "Game/Window"

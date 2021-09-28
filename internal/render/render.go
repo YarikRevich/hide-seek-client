@@ -36,3 +36,8 @@ func SetDebugTextToRender(c func(*ebiten.Image)) {
 func GetDebugTextToRender() []func(*ebiten.Image) {
 	return debugTextToRender
 }
+
+func CleanRenderPool(){
+	imagesToRender = imagesToRender[:0]
+ 	debugTextToRender = debugTextToRender[:0]
+}

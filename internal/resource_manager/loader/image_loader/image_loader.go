@@ -2,6 +2,7 @@ package imageloader
 
 import (
 	"crypto/sha256"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -17,19 +19,13 @@ var (
 	mu     = sync.Mutex{}
 )
 
-func GetPathByHash(hash [sha256.Size]byte)string{
-	for k, v := range PathsToHash{
-		if v == hash{
-			return k
-		}
+func GetImage(path string)*ebiten.Image{
+	i, ok := Images[PathsToHash[path]]
+	if !ok{
+		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 	}
-	return ""
+	return i
 }
-
-// type Image struct {
-// 	Id [sha256.Size]byte
-// 	Image *ebiten.Image
-// }
 
 func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 	if extension != "png" {
@@ -57,10 +53,6 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 			defer mu.Unlock()
 			Images[imageHash] = img
 			PathsToHash[reg.Split(path, -1)[0]] = imageHash
-			// Images[reg.Split(path, -1)[0]] = &Image{
-				// Id: sha256.Sum256(f),
-				// Image: img,
-			// }
 		}
 
 		wg.Done()

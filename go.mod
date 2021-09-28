@@ -18,5 +18,6 @@ require (
 	github.com/hajimehoshi/ebiten v1.12.12 // indirect
 	github.com/hajimehoshi/ebiten/v2 v2.1.5 // indirect
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
+	github.com/sirupsen/logrus v1.8.1 // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb
 )

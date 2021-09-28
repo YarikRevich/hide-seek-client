@@ -1,4 +1,4 @@
-.PHONY: go_install build install generate
+.PHONY: go_install build install_bin update_assets full_install
 .ONESHELL:
 .SILENT: all
 
@@ -19,7 +19,7 @@ define log_print
 endef
 
 go_install:
-	clear > $(shell tty)
+	$(call clear)
 ifeq ($(NAME), Darwin) 
 	$(call log_print,"Installs golang via brew")
 ifeq ($(shell ${USER}), root)
@@ -30,18 +30,29 @@ endif
 endif
 	
 ifeq ($(NAME), Linux) 
-	$(call log_print,"Installs golang via apt")
+	$(call log_print, Installs golang via apt)
 	@sudo apt install golang
 endif
 
 build:
 	$(call clear)
-	$(call log_print,"Builds project")
+	$(call log_print, Builds project)
 	@go build -o HideSeek
-install: 
+
+install_bin: 
 	$(call clear)
-	$(call log_print,"Installs project")
+	$(call log_print, Installs project)
 	@go install $(CURDIR)/cmd/HideSeek/main.go
 
-	@$(shell $(CURDIR)/scripts/transfer_assets.sh)
-	$(call log_print,"Assets transfered")
+update_assets:
+	@$(call clear)
+	@$(call log_print, Assets transfer)
+	@mkdir -p /usr/local/share/games/HideSeek/assets
+	@mkdir -p /usr/local/share/games/HideSeek/log
+	@cp -r $(CURDIR)/assets/* /usr/local/share/games/HideSeek/assets
+
+full_install:
+	$(MAKE) go_install
+	$(MAKE) build
+	$(MAKE) install_bin
+	$(MAKE) update_assets	

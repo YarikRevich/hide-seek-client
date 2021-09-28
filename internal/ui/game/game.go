@@ -1,9 +1,15 @@
-package GameProcess
+package game
 
 import (
+	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	//
+
+	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -16,12 +22,33 @@ import (
 // 	return nil
 // }
 
-func Draw(screen *ebiten.Image) {
-	p := pc.GetPC()
-	img := imageloader.Images[p.Equipment.Skin.ImageHash]
-	render.SetImageToRender(render.RenderCell{Image: img, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
-		return &ebiten.DrawImageOptions{}
+func Draw() {
+	back := imageloader.GetImage("/images/maps/default/background/Game")
+
+	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
+		opts := &ebiten.DrawImageOptions{}
+
+		imageW, imageH := back.Size()
+		screenW, screenH := i.Size()
+		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
+
+		return opts
 	}})
+
+	p := pc.GetPC()
+	c := animation.WithAnimation(
+		imageloader.GetImage("/images/heroes/pumpkinhero"), 
+		metadataloader.Metadata["/images/heroes/pumpkinhero"], 
+		&p.Equipment.Skin.Animation)
+	render.SetImageToRender(render.RenderCell{Image: c, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Translate(p.X, p.Y)
+		return opts
+	}})
+
+	// for _, otherC := range pc.PCs{
+
+	// }
 
 	// for _, otherPCs := range {
 	// 	img := 	imageloader.Images[players.Equipment.Skin.ImageHash]

@@ -1,6 +1,7 @@
 package keyboard
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/game"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 )
 
@@ -13,5 +14,6 @@ func Process() {
 	case statemachine.CHOOSE_EQUIPMENT:
 	case statemachine.WAIT_ROOM:
 	case statemachine.GAME:
+		game.Exec()
 	}
 }

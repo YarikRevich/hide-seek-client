@@ -5,6 +5,7 @@ import (
 
 	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	"github.com/YarikRevich/HideSeek-Client/tools/utils"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -15,7 +16,7 @@ var (
 func ConnectCollisionsToImages(){
 	for hash := range imageloader.Images{
 		
-		path := imageloader.GetPathByHash(hash)
+		path := utils.GetPathByHash(hash, imageloader.PathsToHash)
 		coll, ok := metadataloader.Metadata[path]
 		if ok{
 			Collisions[hash] = coll

@@ -12,9 +12,10 @@ var (
 )
 
 type Animation struct {
-	Updation uint32
-	UpdationDelay uint32
-	CurrentFrame uint32
+	FrameCount uint32
+	FrameDelay uint32
+	FrameDelayCounter uint32
+	// CurrentFrame uint32
 	CurrentFrameMatrix []float64
 }
 
@@ -38,6 +39,10 @@ type Equipment struct {
 	Weapon string
 }
 
+type Buffs struct {
+	Speed float64 
+}
+
 type PC struct{
 	Username string
 
@@ -45,6 +50,8 @@ type PC struct{
 
 	X float64
 	Y float64
+
+	Buffs Buffs
 
 	Equipment Equipment
 
@@ -73,16 +80,14 @@ type PCs []PC
 // }
 
 
-// type Networking struct{
-// 	Index int
-// }
-
 func GetPC()*PC{
 	if pc == nil{
-		pc = &PC{
-			Username: EMPTY,
-			Health: DEFAULT_HEALTH,
-		}
+		pc = new(PC)
+		pc.Username = EMPTY
+		pc.Health = DEFAULT_HEALTH
+		pc.Buffs.Speed = 2.5
+		pc.Equipment.Skin.Animation.FrameDelay = 5
+		pc.Equipment.Skin.Animation.FrameDelayCounter = 1
 	}
 	return pc
 }

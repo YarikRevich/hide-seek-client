@@ -37,6 +37,8 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 	for _, dt := range render.GetDebugTextToRender(){
 		dt(screen)
 	}
+
+	render.CleanRenderPool()
 }
 
 func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
