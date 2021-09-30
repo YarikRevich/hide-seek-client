@@ -9,7 +9,7 @@ import (
 func Draw() {
 	back := imageloader.GetImage("/images/menues/background/WaitRoom")
 
-	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
+	render.SetImageToRender(render.Cell{Image: back, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
 		imageW, imageH := back.Size()
 		screenW, screenH := screen.Size()

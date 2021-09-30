@@ -25,6 +25,7 @@ type Status struct {
 }
 
 func (s *Status) SetState(st statusEntry) {
+	UseMiddlewares()
 	s.status = st
 }
 

@@ -1,7 +1,6 @@
 package animation
 
 import (
-	"fmt"
 	"image"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
@@ -66,12 +65,9 @@ func WithAnimation(src *ebiten.Image, m metadataloader.M, p *pc.Animation) *ebit
 	if p.FrameDelayCounter == 0 {
 		p.FrameCount++
 		p.FrameCount %= uint32(m.Animation.FrameNum)
-		if p.FrameCount == 0{
-			p.FrameCount = 1
-		}
 	}
 	sx, sy := int((m.Animation.FrameX+float64(p.FrameCount))*m.Animation.FrameWidth), int(m.Animation.FrameY)
-	fmt.Println(int((m.Animation.FrameX+float64(p.FrameCount))*m.Animation.FrameWidth))
+	// fmt.Println(int((m.Animation.FrameX+float64(p.FrameCount))*m.Animation.FrameWidth))
 
 	return src.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
 }

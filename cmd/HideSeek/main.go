@@ -38,7 +38,7 @@ func init() {
 		log.Fatalln(err)
 	}
 	go func(){
-		nch := make(chan os.Signal, 1)
+		nch := make(chan os.Signal)
 		signal.Notify(nch, os.Interrupt)
 		for range nch{
 			if err := lgf.Close(); err != nil{
@@ -63,37 +63,9 @@ func init() {
 	collisions.ConnectCollisionsToImages()
 }
 
-//Gets info from user to place his name and server's name
-// username, server := Start.GetStartInfo()
-// conn := Server.GetConnection(server)
-// defer conn.Close()
-
-// //Create window and place all the components
-// winConf := Window.CreateWindow()
-
-// //Loads all the components
-// winConf.LoadAllImageComponents()
-// winConf.LoadAllTextAreas()
-// winConf.LoadAvailableHeroImages()
-// winConf.LoadAvailableWeaponImages()
-// winConf.LoadAvailableWeaponIconImages()
-
-// //Draws background image to start game
-// winConf.DrawBackgroundImage()
-
 //Get user's spawn place
 // randomSpawn := Utils.GetRandomSpawn()
 
-//Configures user's info
-
-//Sets current state at 'StartMenu'
-// currState := States.States{
-// 	MainStates:       new(States.MainStates),
-// 	MusicStates:      new(States.MusicStates),
-// 	SendStates:       new(States.SendStates),
-// 	NetworkingStates: new(States.NetworkingStates),
-// }
-// currState.MainStates.SetStartMenu()
 
 //Configures map
 // mapComponents := Map.MapConf(new(Map.MapC))

@@ -12,7 +12,7 @@ import (
 func Draw() {
 	back := imageloader.GetImage("/images/menues/background/StartMenu")
 
-	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
+	render.SetImageToRender(render.Cell{Image: back, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
 		imageW, imageH := back.Size()
 		screenW, screenH := screen.Size()
@@ -22,14 +22,8 @@ func Draw() {
 	}})
 
 	setting := imageloader.GetImage("/images/menues/panels/settingswheel")
-
-	render.SetImageToRender(render.RenderCell{Image: setting, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
-		opts := &ebiten.DrawImageOptions{}
-		// imageW, imageH := setting.Size()
-		// screenW, screenH := screen.Size()
-		// opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
-
-		return opts
+	render.SetImageToRender(render.Cell{Image: setting, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
+		return new(ebiten.DrawImageOptions)
 	}})
 
 	// screen.DrawImage(img, opts)

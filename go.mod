@@ -3,7 +3,7 @@ module github.com/YarikRevich/HideSeek-Client
 go 1.16
 
 require (
-	github.com/BurntSushi/toml v0.4.1 // indirect
+	github.com/BurntSushi/toml v0.4.1
 	github.com/SolarLune/resolv v0.0.0-20201206065135-f22ef61a44a3
 	github.com/YarikRevich/game-networking v0.0.0-20210815072908-35cb242516b4 // indirect
 	github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0 // indirect
@@ -16,8 +16,8 @@ require (
 	github.com/gookit/color v1.3.5
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hajimehoshi/ebiten v1.12.12 // indirect
-	github.com/hajimehoshi/ebiten/v2 v2.1.5 // indirect
+	github.com/hajimehoshi/ebiten/v2 v2.1.5
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
+	github.com/sirupsen/logrus v1.8.1
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb
 )

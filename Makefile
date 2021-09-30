@@ -34,10 +34,13 @@ ifeq ($(NAME), Linux)
 	@sudo apt install golang
 endif
 
+dev: build install_bin
+	
+
 build:
 	$(call clear)
 	$(call log_print, Builds project)
-	@go build -o HideSeek
+	@go build $(CURDIR)/cmd/HideSeek/main.go
 
 install_bin: 
 	$(call clear)

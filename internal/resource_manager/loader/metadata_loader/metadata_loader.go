@@ -32,6 +32,10 @@ type M struct {
 		FrameWidth  float64
 		FrameHeight float64
 	}
+	Spawns []struct {
+		X float64
+		Y float64
+	}
 }
 
 func GetMetadata(path string)M{

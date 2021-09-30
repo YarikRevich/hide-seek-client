@@ -15,7 +15,7 @@ var (
 func Draw() {
 	select {
 	case msg := <- MessageChan:
-		render.SetDebugTextToRender(func(screen *ebiten.Image) {
+		render.SetTextToRender(func(screen *ebiten.Image) {
 			text.Draw(screen, msg.Error(), basicfont.Face7x13, 40, 40, color.RGBA{0xff, 0x00, 0x00, 0xff})
 		})
 	default:

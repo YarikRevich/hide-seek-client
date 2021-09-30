@@ -1,3 +1,16 @@
 [size]
 width = 50.0
 height = 60.0
+
+[[spawns]]
+x = 10.0
+y = 15.0
+[[spawns]]
+x = 5.0
+y = 25.0
+[[spawns]]
+x = 50.0
+y = 32.0
+[[spawns]]
+x = 6.0
+y = 89.0

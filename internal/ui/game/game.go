@@ -6,6 +6,7 @@ import (
 
 	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
@@ -13,19 +14,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// func GetUserFromList(u string, l []*Server.GameRequest) *Server.GameRequest {
-// 	for _, value := range l {
-// 		if value.PersonalInfo.Username == u {
-// 			return value
-// 		}
-// 	}
-// 	return nil
-// }
-
 func Draw() {
 	back := imageloader.GetImage("/images/maps/default/background/Game")
 
-	render.SetImageToRender(render.RenderCell{Image: back, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
+	render.SetImageToRender(render.Cell{Image: back, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
 
 		imageW, imageH := back.Size()
@@ -37,11 +29,19 @@ func Draw() {
 
 	p := pc.GetPC()
 	c := animation.WithAnimation(
-		imageloader.GetImage("/images/heroes/pumpkinhero"), 
-		metadataloader.Metadata["/images/heroes/pumpkinhero"], 
+		imageloader.GetImage("/images/heroes/pumpkinhero"),
+		metadataloader.Metadata["/images/heroes/pumpkinhero"],
 		&p.Equipment.Skin.Animation)
-	render.SetImageToRender(render.RenderCell{Image: c, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
+	render.SetImageToRender(render.Cell{Image: c, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
 		opts := &ebiten.DrawImageOptions{}
+
+		if history.GetDirection() == history.LEFT {
+			opts.GeoM.Scale(-1, 1)
+		}
+		if history.GetDirection() == history.RIGHT {
+			opts.GeoM.Scale(1, 1)
+		}
+
 		opts.GeoM.Translate(p.X, p.Y)
 		return opts
 	}})

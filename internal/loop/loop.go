@@ -34,7 +34,7 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 		collisions.SyncCollisionWithImage(screen, c.Image)
 		screen.DrawImage(c.Image, c.CallBack(screen))
 	}
-	for _, dt := range render.GetDebugTextToRender(){
+	for _, dt := range render.GetTextToRender(){
 		dt(screen)
 	}
 
