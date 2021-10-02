@@ -2,13 +2,11 @@ package loader
 
 import (
 	"embed"
-	"fmt"
 	_ "image/png"
 	"io/fs"
 	"strings"
 	"sync"
 
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	"github.com/sirupsen/logrus"
 )
 
@@ -46,5 +44,4 @@ func LoadResources(loaders map[Component][]Loader) {
 		}(c, l) 
 	}
 	wg.Wait()
-	fmt.Println(metadataloader.MetadataCollection)
 }

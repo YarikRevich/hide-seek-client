@@ -5,13 +5,10 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
 	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 
-	// "github.com/blizzy78/ebitenui/image"
-	// "github.com/blizzy78/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
-
 	render.SetToRender(func(screen *ebiten.Image) {
 		img := imageloader.GetImage("assets/images/menues/background/StartMenu")
 
@@ -46,20 +43,9 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	// i := widget.ButtonImage{Idle:
-	// 	image.NewNineSlice(
-	// 		setting,
-	// 		[3]int{5, 9, 10},
-	// 		[3]int{5, 9, 10},
-	// 	)}
-	// render.SetWidgetToRender(func(screen *ebiten.Image) {
-	// 	b := widget.NewButton(
-	// 		widget.ButtonOpts.Image(&i),
-	// 			// widget.ButtonOpts.TextPadding(widget.Insets{
-	// 			// 	Left: 100, Top: 100,})).Render(screen, nil))
-	// 	)
-	// 	b.Render(screen, nil)
-	// })
+	render.SetToRender(func(i *ebiten.Image) {
+
+	})
 
 	// screen.DrawImage(img, opts)
 	// 	s.winConf.TextAreas.GameLogo.Clear()
