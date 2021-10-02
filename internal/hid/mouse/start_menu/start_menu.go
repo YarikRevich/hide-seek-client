@@ -9,7 +9,8 @@ import (
 
 
 func Exec(){
-	if mousepress.IsMousePressLeftOnce(*metadataloader.MetadataCollection["/images/menues/panels/settingswheel"]){
+	
+	if mousepress.IsMousePressLeftOnce(*metadataloader.GetMetadata("assets/images/menues/buttons/settingswheel")){
 		statemachine.GetInstance().SetState(statemachine.SETTINGS_MENU)
 	}
 }

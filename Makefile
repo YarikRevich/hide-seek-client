@@ -39,12 +39,12 @@ dev: build install_bin
 build:
 	$(call clear)
 	$(call log_print, Builds project)
-	@go build $(CURDIR)/main.go
+	@go build
 
 install_bin: 
 	$(call clear)
 	$(call log_print, Installs project)
-	@go install $(CURDIR)/main.go
+	@go install
 
 update_assets:
 	@$(call clear)

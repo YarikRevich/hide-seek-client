@@ -1,47 +1,50 @@
 package loader
 
 import (
+	"embed"
+	"fmt"
 	_ "image/png"
 	"io/fs"
-	"io/ioutil"
-	"log"
 	"strings"
 	"sync"
+
+	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	"github.com/sirupsen/logrus"
 )
 
-func processResource(motherDir, sourcePath string, files []fs.FileInfo, motherWg *sync.WaitGroup, loaders ...func(string, string, string, *sync.WaitGroup)) {
+func processResource(e embed.FS, sourcePath string, files []fs.DirEntry, motherWg *sync.WaitGroup, loaders ...Loader) {
 	for _, v := range files {
 		path := sourcePath + "/" + v.Name()
 		if v.IsDir() {
-			processResourceDir(motherDir, path, motherWg, loaders...)
+			processResourceDir(e, path, motherWg, loaders...)
 		} else {
 			nameSplit := strings.Split(v.Name(), ".")
 			extension := nameSplit[len(nameSplit)-1]
 
 			for _, l := range loaders {
-				l(motherDir, extension, path, motherWg)
+				l(e, extension, path, motherWg)
 			}
 		}
 	}
 }
 
-func processResourceDir(motherDir, path string, wg *sync.WaitGroup, loaders ...func(string, string, string, *sync.WaitGroup)) {
-	d, err := ioutil.ReadDir(path)
+func processResourceDir(e embed.FS, path string, wg *sync.WaitGroup, loaders ...Loader) {
+	d, err := e.ReadDir(path)
 	if err != nil {
-		log.Fatalln(err)
+		logrus.Fatal("error happened reading dir from embedded fs", err)
 	}
-
-	processResource(motherDir, path, d, wg, loaders...)
+	processResource(e, path, d, wg, loaders...)
 }
 
-func LoadResources(loaders map[string][]func(string, string, string, *sync.WaitGroup)) {
+func LoadResources(loaders map[Component][]Loader) {
 	var wg sync.WaitGroup
-	for mp, l := range loaders {
+	for c, l := range loaders {
 		wg.Add(1)
-		go func(mp string, l []func(string, string, string, *sync.WaitGroup)){
+		go func(c Component, l []Loader){
 			defer wg.Done()
-			processResourceDir(mp, mp, &wg, l...)
-		}(mp, l) 
+			processResourceDir(c.Embed, c.Path, &wg, l...)
+		}(c, l) 
 	}
 	wg.Wait()
+	fmt.Println(metadataloader.MetadataCollection)
 }

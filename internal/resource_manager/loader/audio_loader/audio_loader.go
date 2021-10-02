@@ -1,9 +1,8 @@
 package audioloader
 
 import (
+	"embed"
 	"fmt"
-	"log"
-	"os"
 	"regexp"
 	"sync"
 	"time"
@@ -27,25 +26,24 @@ func GetAudio(path string)func(){
 	return i
 }
 
-func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
+func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 	if extension != "mp3" {
 		return
 	}
 
 	wg.Add(1)
 	go func() {
-		sound, err := os.Open(path)
+		sound, err := e.Open(path)
 		if err != nil {
-			log.Fatalln(err)
+			logrus.Fatal("error happened opening audio file from embedded fs", err)
 		}
 		defer sound.Close()
 
 		streamer, format, err := mp3.Decode(sound)
 		if err != nil {
-			log.Fatalln(err)
+			logrus.Fatal("error happened decoding audio file from embedded fs", err)
 		}
 
-		path = path[len(motherDir):]
 		reg := regexp.MustCompile(`\.[a-z]*$`)
 		if reg.MatchString(path) {
 			mu.Lock()

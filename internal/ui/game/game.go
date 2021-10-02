@@ -19,7 +19,7 @@ func Draw() {
 
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("/images/maps/default/background/Game")
+		img := imageloader.GetImage("assets/images/maps/default/background/Game")
 
 		opts := &ebiten.DrawImageOptions{}
 

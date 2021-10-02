@@ -1,8 +1,8 @@
 package metadataloader
 
 import (
+	"embed"
 	"fmt"
-	"log"
 	"regexp"
 	"sync"
 
@@ -23,7 +23,7 @@ func GetMetadata(path string) *Metadata {
 	return i
 }
 
-func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
+func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 	if extension != "toml" {
 		return
 	}
@@ -31,11 +31,11 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 	wg.Add(1)
 	go func() {
 		var ds Metadata
-		if _, err := toml.DecodeFile(path, &ds); err != nil {
-			log.Fatalln(err)
+
+		if _, err := toml.DecodeFS(e, path, &ds); err != nil {
+			logrus.Fatal("error happened decoding toml metatdata file from embedded FS", err)
 		}
 
-		path = path[len(motherDir):]
 		reg := regexp.MustCompile(`\.[a-z]*$`)
 		if reg.MatchString(path) {
 			mu.Lock()

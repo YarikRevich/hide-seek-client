@@ -4,7 +4,8 @@ import (
 	"flag"
 	"log"
 	"os"
-	"sync"
+
+	"embed"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
@@ -16,6 +17,11 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/hajimehoshi/ebiten/v2"
+)
+
+var (
+	//go:embed assets/images
+	images embed.FS
 )
 
 var (
@@ -43,8 +49,8 @@ func init() {
 	}
 	logrus.SetLevel(logrus.WarnLevel) 
 
-	loader.LoadResources(map[string][]func(string, string, string, *sync.WaitGroup){
-		paths.GAME_ASSETS_DIR: {
+	loader.LoadResources(map[loader.Component][]loader.Loader{
+		{Embed: images, Path: "assets/images"}: {
 			imageloader.Load,
 			metadataloader.Load,
 		},

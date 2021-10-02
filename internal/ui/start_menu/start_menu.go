@@ -13,7 +13,7 @@ import (
 func Draw() {
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("/images/menues/background/StartMenu")
+		img := imageloader.GetImage("assets/images/menues/background/StartMenu")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -25,8 +25,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("/images/menues/buttons/settingswheel")
-		m := metadataloader.GetMetadata("/images/menues/buttons/settingswheel")
+		img := imageloader.GetImage("assets/images/menues/buttons/settingswheel")
+		m := metadataloader.GetMetadata("assets/images/menues/buttons/settingswheel")
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
@@ -35,7 +35,7 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("/images/menues/buttons/button")
+		img := imageloader.GetImage("assets/images/menues/buttons/button")
 
 		opts := &ebiten.DrawImageOptions{}
 

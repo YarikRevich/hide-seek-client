@@ -11,7 +11,7 @@ func Draw() {
 
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("/images/menues/background/WaitRoom")
+		img := imageloader.GetImage("assets/images/menues/background/WaitRoom")
 
 		opts := &ebiten.DrawImageOptions{}
 		imageW, imageH := img.Size()

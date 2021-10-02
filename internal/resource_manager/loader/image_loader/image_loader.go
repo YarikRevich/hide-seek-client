@@ -1,15 +1,17 @@
 package imageloader
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"embed"
 	"fmt"
-	"log"
-	"os"
+	"image"
+	_ "image/png"
 	"regexp"
 	"sync"
 
+
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/sirupsen/logrus"
 )
 
@@ -27,26 +29,31 @@ func GetImage(path string)*ebiten.Image{
 	return i
 }
 
-func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
+func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 	if extension != "png" {
 		return
 	}
 
 	wg.Add(1)
 	go func() {
-		f, err := os.ReadFile(path)
+		f, err := e.ReadFile(path)
 		if err != nil{
-			log.Fatalln(err)
+			logrus.Fatal("error happened opening image file from embedded fs", err)
 		}
 
 		imageHash := sha256.Sum256(f)
 
-		img, _, err := ebitenutil.NewImageFromFile(path)
-		if err != nil {
-			log.Fatalln(err)
+		i, _, err := image.Decode(bytes.NewReader(f))
+		if err != nil{
+			logrus.Fatal("error happened decoding image file from embedded fs to ebiten image", err)
 		}
 
-		path = path[len(motherDir):]
+		
+		img := ebiten.NewImageFromImage(i)
+		// if err != nil {
+		// 	logrus.Fatal("error happened converting image file from embedded fs to ebiten image", err)
+		// }
+
 		reg := regexp.MustCompile(`\.[a-z]*$`)
 		if reg.MatchString(path) {
 			mu.Lock()

@@ -13,18 +13,11 @@ func SyncMetadata(screen *ebiten.Image) {
 
 	if pw != 0 && ph != 0 {
 		for _, v := range MetadataCollection {
+			v.Margins.TopMargin = (v.Margins.TopMargin * shf) / phf
+			v.Margins.LeftMargin = (v.Margins.LeftMargin * swf) / pwf
 
-			t := v.Margins.TopMargin
-			l := v.Margins.LeftMargin
-
-			v.Margins.TopMargin = (t * shf) / phf
-			v.Margins.LeftMargin = (l * swf) / pwf
-
-			sy := v.Scale.CoefficiantY
-			sx := v.Scale.CoefficiantX
-
-			v.Scale.CoefficiantY = (sy * shf) / phf
-			v.Scale.CoefficiantX = (sx * swf) / pwf
+			v.Scale.CoefficiantY = (v.Scale.CoefficiantY * shf) / phf
+			v.Scale.CoefficiantX = (v.Scale.CoefficiantX * swf) / pwf
 		}
 	}
 }
