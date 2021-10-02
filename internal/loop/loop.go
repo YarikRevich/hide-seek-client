@@ -6,7 +6,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/resize"
+	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui"
@@ -28,7 +28,7 @@ func (g *Loop) Update() error {
 }
 
 func (g *Loop) Draw(screen *ebiten.Image) {
-	resize.SyncCoordinates(screen)
+	metadataloader.SyncMetadata(screen)
 
 	for _, dt := range render.GetToRender(){
 		dt(screen)

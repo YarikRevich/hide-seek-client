@@ -3,6 +3,8 @@ package start_menu
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+
 	// "github.com/blizzy78/ebitenui/image"
 	// "github.com/blizzy78/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -23,11 +25,12 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("/images/menues/panels/settingswheel")
+		img := imageloader.GetImage("/images/menues/buttons/settingswheel")
+		m := metadataloader.GetMetadata("/images/menues/buttons/settingswheel")
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Scale(img.)
-
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+	
 		screen.DrawImage(img, opts)
 	})
 
