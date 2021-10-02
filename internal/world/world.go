@@ -15,6 +15,7 @@ type World struct {
 func UseWorld()*World{
 	if w == nil{
 		w = new(World)
+		w.Metadata = *metadataloader.GetMetadata("assets/images/maps/default/background/Game")
 	}
 	return w
 }

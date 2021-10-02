@@ -4,6 +4,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
+	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
@@ -12,7 +13,6 @@ import (
 )
 
 func Draw() {
-	
 
 	render.SetToRender(func(screen *ebiten.Image) {
 		img := imageloader.GetImage("assets/images/maps/default/background/Game")
@@ -26,8 +26,6 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-
-	
 	render.SetToRender(func(screen *ebiten.Image) {
 		p := pc.GetPC()
 		c := animation.WithAnimation(
@@ -44,9 +42,27 @@ func Draw() {
 			opts.GeoM.Scale(1, 1)
 		}
 
+		if len(p.Physics.Jump) != 0 {
+			select {
+			case <-jump.JumpGap.C:
+				j := p.Physics.Jump[0]
+
+				if j == direction.UP {
+					p.Y -= 2
+				}
+
+				if j == direction.DOWN {
+					p.Y += 2
+				}
+
+				p.Physics.Jump = p.Physics.Jump[1:]
+			default:
+			}
+		}
+
 		opts.GeoM.Translate(p.X, p.Y)
 
-		screen.DrawImage(c, opts)		
+		screen.DrawImage(c, opts)
 	})
 
 	// for _, otherC := range pc.PCs{

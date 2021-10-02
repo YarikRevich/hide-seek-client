@@ -49,7 +49,9 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 			mu.Lock()
 			defer mu.Unlock()
 			AudioCollection[reg.Split(path, -1)[0]] = func() {
-				speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+				if err := speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10)); err != nil{
+					logrus.Fatal("error happened initiating audion in audio loader")
+				}
 				speaker.Play(beep.Seq(streamer, nil))
 			}
 		}

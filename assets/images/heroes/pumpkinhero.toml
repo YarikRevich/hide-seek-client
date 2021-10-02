@@ -5,3 +5,8 @@ frameX = 0.0
 frameY = 0.0
 frameWidth = 16.0
 frameHeight = 50.0
+
+[size]
+height = 50.0
+width = 50.0
+

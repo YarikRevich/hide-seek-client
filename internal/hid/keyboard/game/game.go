@@ -4,6 +4,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
+	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -30,6 +31,11 @@ func Exec(){
 	if ebiten.IsKeyPressed(ebiten.KeyA){
 		history.SetDirection(direction.LEFT)
 		pc.GetPC().X -= pc.GetPC().Buffs.Speed
+	}
+	
+	if ebiten.IsKeyPressed(ebiten.KeySpace){
+		jump.CalculateJump()
+		// pc.GetPC().X -= pc.GetPC().Buffs.Speed
 	}
 
 
