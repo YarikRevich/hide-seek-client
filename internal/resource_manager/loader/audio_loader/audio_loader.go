@@ -1,6 +1,7 @@
 package audioloader
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -10,12 +11,21 @@ import (
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
+	"github.com/sirupsen/logrus"
 )
 
 var (
-	Audio = make(map[string]func())
+	AudioCollection = make(map[string]func())
 	mu    = sync.Mutex{}
 )
+
+func GetAudio(path string)func(){
+	i, ok := AudioCollection[path]
+	if !ok{
+		logrus.Fatal(fmt.Sprintf("audio with path '%s' not found", path))
+	}
+	return i
+}
 
 func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 	if extension != "mp3" {
@@ -40,7 +50,7 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 		if reg.MatchString(path) {
 			mu.Lock()
 			defer mu.Unlock()
-			Audio[reg.Split(path, -1)[0]] = func() {
+			AudioCollection[reg.Split(path, -1)[0]] = func() {
 				speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 				speaker.Play(beep.Seq(streamer, nil))
 			}

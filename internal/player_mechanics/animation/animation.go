@@ -59,7 +59,7 @@ import (
 //	)
 //}
 
-func WithAnimation(src *ebiten.Image, m metadataloader.M, p *pc.Animation) *ebiten.Image {
+func WithAnimation(src *ebiten.Image, m metadataloader.Metadata, p *pc.Animation) *ebiten.Image {
 	p.FrameDelayCounter++
 	p.FrameDelayCounter %= p.FrameDelay
 	if p.FrameDelayCounter == 0 {

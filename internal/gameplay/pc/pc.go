@@ -1,6 +1,10 @@
 package pc
 
-import "crypto/sha256"
+import (
+	"crypto/sha256"
+	"github.com/YarikRevich/HideSeek-Client/internal/direction"
+	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+)
 
 const (
 	EMPTY = ""
@@ -43,6 +47,10 @@ type Buffs struct {
 	Speed float64 
 }
 
+type Physics struct {
+	Jump []direction.Direction
+}
+
 type PC struct{
 	Username string
 
@@ -53,7 +61,10 @@ type PC struct{
 
 	Buffs Buffs
 
+	Physics  Physics
 	Equipment Equipment
+
+	Metadata metadataloader.Metadata
 
 	GameCredentials GameCredentials
 }

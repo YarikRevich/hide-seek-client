@@ -1,22 +1,29 @@
 package history
 
-type Direction int
+import "github.com/YarikRevich/HideSeek-Client/internal/direction"
 
-const (
-	UP Direction = iota
-	DOWN
-	RIGHT
-	LEFT
-)
+type ScreenSize struct {
+	Height int
+	Width  int
+}
 
 var (
-	lastDirection Direction
+	lastDirection  direction.Direction
+	lastScreenSize ScreenSize
 )
 
-func SetDirection(d Direction){
+func SetDirection(d direction.Direction) {
 	lastDirection = d
 }
 
-func GetDirection()Direction{
+func GetDirection() direction.Direction {
 	return lastDirection
+}
+
+func SetScreenSize(s ScreenSize) {
+	lastScreenSize = s
+}
+
+func GetScreenSize() (int, int) {
+	return lastScreenSize.Width, lastScreenSize.Height
 }

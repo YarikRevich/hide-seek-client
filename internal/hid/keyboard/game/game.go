@@ -1,29 +1,34 @@
 package game
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Exec(){
+	//currX, currY := ebiten.CursorPosition()
+	//mapName := "/"
+
+	// && !boarders.IsBoarder()
 	if ebiten.IsKeyPressed(ebiten.KeyW){
-		history.SetDirection(history.UP)
+		history.SetDirection(direction.UP)
 		pc.GetPC().Y -= pc.GetPC().Buffs.Speed
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyS){
-		history.SetDirection(history.DOWN)
+		history.SetDirection(direction.DOWN)
 		pc.GetPC().Y += pc.GetPC().Buffs.Speed
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyD){
-		history.SetDirection(history.RIGHT)
+		history.SetDirection(direction.RIGHT)
 		pc.GetPC().X += pc.GetPC().Buffs.Speed
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyA){
-		history.SetDirection(history.LEFT)
+		history.SetDirection(direction.LEFT)
 		pc.GetPC().X -= pc.GetPC().Buffs.Speed
 	}
 

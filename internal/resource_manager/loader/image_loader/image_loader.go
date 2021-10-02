@@ -14,13 +14,13 @@ import (
 )
 
 var (
-	Images = make(map[[sha256.Size]byte]*ebiten.Image)
+	ImageCollection = make(map[[sha256.Size]byte]*ebiten.Image)
 	PathsToHash = make(map[string][sha256.Size]byte)
 	mu     = sync.Mutex{}
 )
 
 func GetImage(path string)*ebiten.Image{
-	i, ok := Images[PathsToHash[path]]
+	i, ok := ImageCollection[PathsToHash[path]]
 	if !ok{
 		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 	}
@@ -51,7 +51,7 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 		if reg.MatchString(path) {
 			mu.Lock()
 			defer mu.Unlock()
-			Images[imageHash] = img
+			ImageCollection[imageHash] = img
 			PathsToHash[reg.Split(path, -1)[0]] = imageHash
 		}
 

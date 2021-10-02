@@ -7,7 +7,7 @@ CURRDIRFULL := $(CURDIR)
 NAME := $(shell uname -s)
 
 define clear
-	clear > $(shell tty)
+	@clear > $(shell tty)
 endef
 
 define exit
@@ -35,17 +35,16 @@ ifeq ($(NAME), Linux)
 endif
 
 dev: build install_bin
-	
 
 build:
 	$(call clear)
 	$(call log_print, Builds project)
-	@go build $(CURDIR)/cmd/HideSeek/main.go
+	@go build $(CURDIR)/main.go
 
 install_bin: 
 	$(call clear)
 	$(call log_print, Installs project)
-	@go install $(CURDIR)/cmd/HideSeek/main.go
+	@go install $(CURDIR)/main.go
 
 update_assets:
 	@$(call clear)

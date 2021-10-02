@@ -1,30 +1,62 @@
 package start_menu
 
 import (
-	// "fmt"
-
-	// "github.com/YarikRevich/HideSeek-Client/internal/connection"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	// "github.com/blizzy78/ebitenui/image"
+	// "github.com/blizzy78/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
-	back := imageloader.GetImage("/images/menues/background/StartMenu")
 
-	render.SetImageToRender(render.Cell{Image: back, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
+	render.SetToRender(func(screen *ebiten.Image) {
+		img := imageloader.GetImage("/images/menues/background/StartMenu")
+
 		opts := &ebiten.DrawImageOptions{}
-		imageW, imageH := back.Size()
+
+		imageW, imageH := img.Size()
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-		return opts
-	}})
+		screen.DrawImage(img, opts)
+	})
 
-	setting := imageloader.GetImage("/images/menues/panels/settingswheel")
-	render.SetImageToRender(render.Cell{Image: setting, CallBack: func(screen *ebiten.Image) *ebiten.DrawImageOptions {
-		return new(ebiten.DrawImageOptions)
-	}})
+	render.SetToRender(func(screen *ebiten.Image) {
+		img := imageloader.GetImage("/images/menues/panels/settingswheel")
+
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Scale(img.)
+
+		screen.DrawImage(img, opts)
+	})
+
+	render.SetToRender(func(screen *ebiten.Image) {
+		img := imageloader.GetImage("/images/menues/buttons/button")
+
+		opts := &ebiten.DrawImageOptions{}
+
+		imageW, imageH := img.Size()
+		screenW, screenH := screen.Size()
+		opts.GeoM.Scale(float64(screenW)/float64(float64(imageW)), float64(screenH)/float64(imageH))
+
+		screen.DrawImage(img, opts)
+	})
+
+	// i := widget.ButtonImage{Idle:
+	// 	image.NewNineSlice(
+	// 		setting,
+	// 		[3]int{5, 9, 10},
+	// 		[3]int{5, 9, 10},
+	// 	)}
+	// render.SetWidgetToRender(func(screen *ebiten.Image) {
+	// 	b := widget.NewButton(
+	// 		widget.ButtonOpts.Image(&i),
+	// 			// widget.ButtonOpts.TextPadding(widget.Insets{
+	// 			// 	Left: 100, Top: 100,})).Render(screen, nil))
+	// 	)
+	// 	b.Render(screen, nil)
+	// })
 
 	// screen.DrawImage(img, opts)
 	// 	s.winConf.TextAreas.GameLogo.Clear()

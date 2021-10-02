@@ -18,7 +18,7 @@ func Draw() {
 	// 	l.userConfig.PersonalInfo.LobbyID,
 	// 	strings.Split(l.userConfig.Conn.RemoteAddr().String(), ":")[0],
 	if cli.GetDebug() {
-		render.SetTextToRender(func(screen *ebiten.Image) {
+		render.SetToRender(func(screen *ebiten.Image) {
 			ebitenutil.DebugPrint(screen,
 				fmt.Sprintf(
 					"%s\n%s",

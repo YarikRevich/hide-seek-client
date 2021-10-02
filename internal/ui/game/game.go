@@ -4,47 +4,51 @@ import (
 	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	//
 
+	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
+	// "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	// metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
-	back := imageloader.GetImage("/images/maps/default/background/Game")
 
-	render.SetImageToRender(render.Cell{Image: back, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
+
+	render.SetToRender(func(screen *ebiten.Image) {
+		img := imageloader.GetImage("/images/maps/default/background/Game")
+
 		opts := &ebiten.DrawImageOptions{}
 
-		imageW, imageH := back.Size()
-		screenW, screenH := i.Size()
+		imageW, imageH := img.Size()
+		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-		return opts
-	}})
+		screen.DrawImage(img, opts)
+	})
 
 	p := pc.GetPC()
-	c := animation.WithAnimation(
-		imageloader.GetImage("/images/heroes/pumpkinhero"),
-		metadataloader.Metadata["/images/heroes/pumpkinhero"],
-		&p.Equipment.Skin.Animation)
-	render.SetImageToRender(render.Cell{Image: c, CallBack: func(i *ebiten.Image) *ebiten.DrawImageOptions {
+	// c := animation.WithAnimation(
+	// 	imageloader.GetImage("/images/heroes/pumpkinhero"),
+	// 	metadataloader.MetadataCollection["/images/heroes/pumpkinhero"],
+	// 	&p.Equipment.Skin.Animation)
+	render.SetToRender(func(i *ebiten.Image) {
 		opts := &ebiten.DrawImageOptions{}
 
-		if history.GetDirection() == history.LEFT {
+		if history.GetDirection() == direction.LEFT {
 			opts.GeoM.Scale(-1, 1)
 		}
-		if history.GetDirection() == history.RIGHT {
+		if history.GetDirection() == direction.RIGHT {
 			opts.GeoM.Scale(1, 1)
 		}
 
 		opts.GeoM.Translate(p.X, p.Y)
-		return opts
-	}})
+		
+
+	})
 
 	// for _, otherC := range pc.PCs{
 

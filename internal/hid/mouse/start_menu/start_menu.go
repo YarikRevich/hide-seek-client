@@ -9,7 +9,7 @@ import (
 
 
 func Exec(){
-	if mousepress.IsMousePressLeftOnce(metadataloader.Metadata["/images/menues/panels/settingswheel"]){
-		statemachine.GetInstance().SetState(statemachine.GAME)
+	if mousepress.IsMousePressLeftOnce(*metadataloader.MetadataCollection["/images/menues/panels/settingswheel"]){
+		statemachine.GetInstance().SetState(statemachine.SETTINGS_MENU)
 	}
 }

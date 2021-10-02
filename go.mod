@@ -7,6 +7,7 @@ require (
 	github.com/SolarLune/resolv v0.0.0-20201206065135-f22ef61a44a3
 	github.com/YarikRevich/game-networking v0.0.0-20210815072908-35cb242516b4 // indirect
 	github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0 // indirect
+	github.com/blizzy78/ebitenui v0.0.0-20210117025656-686fc9c50c07 // indirect
 	github.com/faiface/beep v1.0.2
 	github.com/faiface/pixel v0.10.0
 	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10

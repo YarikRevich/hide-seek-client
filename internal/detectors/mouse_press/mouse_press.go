@@ -10,7 +10,7 @@ import (
 // 	lastPressedButton ebiten.MouseButton
 // )
 
-func IsMousePressLeftOnce(m metadataloader.M) bool {
+func IsMousePressLeftOnce(m metadataloader.Metadata) bool {
 	currX, currY := ebiten.CursorPosition()
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
 		(currX >= int(m.Margins.LeftMargin) && currX <= int(m.Margins.LeftMargin+m.Size.Width)) &&

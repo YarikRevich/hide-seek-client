@@ -11,11 +11,11 @@ import (
 )
 
 var (
-	Metadata = make(map[string]M)
-	mu       = sync.Mutex{}
+	MetadataCollection = make(map[string]*Metadata)
+	mu                 = sync.Mutex{}
 )
 
-type M struct {
+type Metadata struct {
 	Size struct {
 		Width  float64
 		Height float64
@@ -25,8 +25,8 @@ type M struct {
 		TopMargin  float64
 	}
 	Animation struct {
-		Delay float64
-		FrameNum float64
+		Delay       float64
+		FrameNum    float64
 		FrameX      float64
 		FrameY      float64
 		FrameWidth  float64
@@ -36,11 +36,14 @@ type M struct {
 		X float64
 		Y float64
 	}
+	Physics struct {
+		G float64
+	}
 }
 
-func GetMetadata(path string)M{
-	i, ok := Metadata[path]
-	if !ok{
+func GetMetadata(path string) *Metadata {
+	i, ok := MetadataCollection[path]
+	if !ok {
 		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 	}
 	return i
@@ -53,7 +56,7 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 
 	wg.Add(1)
 	go func() {
-		var ds M
+		var ds Metadata
 		if _, err := toml.DecodeFile(path, &ds); err != nil {
 			log.Fatalln(err)
 		}
@@ -63,7 +66,7 @@ func Load(motherDir, extension, path string, wg *sync.WaitGroup) {
 		if reg.MatchString(path) {
 			mu.Lock()
 			defer mu.Unlock()
-			Metadata[reg.Split(path, -1)[0]] = ds
+			MetadataCollection[reg.Split(path, -1)[0]] = &ds
 		}
 
 		wg.Done()
