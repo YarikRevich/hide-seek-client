@@ -11,6 +11,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
 	"github.com/YarikRevich/HideSeek-Client/internal/paths"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader"
+	audioloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/audio_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
 	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
@@ -22,6 +23,9 @@ import (
 var (
 	//go:embed assets/images
 	images embed.FS
+
+	//go:embed assets/audio
+	audio embed.FS
 )
 
 var (
@@ -53,6 +57,9 @@ func init() {
 		{Embed: images, Path: "assets/images"}: {
 			imageloader.Load,
 			metadataloader.Load,
+		},
+		{Embed: audio, Path: "assets/audio"}: {
+			audioloader.Load,
 		},
 	})
 	collisions.ConnectCollisionsToImages()

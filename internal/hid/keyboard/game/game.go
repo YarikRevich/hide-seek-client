@@ -13,22 +13,22 @@ func Exec(){
 	//mapName := "/"
 
 	// && !boarders.IsBoarder()
-	if ebiten.IsKeyPressed(ebiten.KeyW){
+	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp){
 		history.SetDirection(direction.UP)
 		pc.GetPC().Y -= pc.GetPC().Buffs.Speed
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyS){
+	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown){
 		history.SetDirection(direction.DOWN)
 		pc.GetPC().Y += pc.GetPC().Buffs.Speed
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyD){
+	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight){
 		history.SetDirection(direction.RIGHT)
 		pc.GetPC().X += pc.GetPC().Buffs.Speed
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyA){
+	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft){
 		history.SetDirection(direction.LEFT)
 		pc.GetPC().X -= pc.GetPC().Buffs.Speed
 	}

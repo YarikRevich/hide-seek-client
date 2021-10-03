@@ -10,6 +10,7 @@ type ScreenSize struct {
 var (
 	lastDirection  direction.Direction
 	lastScreenSize ScreenSize
+	lastAudioPosition int
 )
 
 func SetDirection(d direction.Direction) {
@@ -26,4 +27,12 @@ func SetScreenSize(s ScreenSize) {
 
 func GetScreenSize() (int, int) {
 	return lastScreenSize.Width, lastScreenSize.Height
+}
+
+func SetAudioPosition(p int){
+	lastAudioPosition = p
+}
+
+func GetAudioPosition() int {
+	return lastAudioPosition
 }

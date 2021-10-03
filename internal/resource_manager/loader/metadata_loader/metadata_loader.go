@@ -36,7 +36,7 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 			logrus.Fatal("error happened decoding toml metatdata file from embedded FS", err)
 		}
 
-		reg := regexp.MustCompile(`\.[a-z]*$`)
+		reg := regexp.MustCompile(`\.[a-z0-9]*$`)
 		if reg.MatchString(path) {
 			mu.Lock()
 			defer mu.Unlock()

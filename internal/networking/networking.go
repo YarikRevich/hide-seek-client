@@ -3,14 +3,15 @@ package networking
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/networking/game"
 	joinlobbymenu "github.com/YarikRevich/HideSeek-Client/internal/networking/join_lobby_menu"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
+
 )
 
 func Process(){
-	switch statemachine.GetInstance().GetState(){
-	case statemachine.JOIN_LOBBY_MENU:
+	switch ui.UseStatus().GetState(){
+	case ui.JOIN_LOBBY_MENU:
 		joinlobbymenu.Exec()
-	case statemachine.GAME:
+	case ui.GAME:
 		game.Exec()
 	}
 }

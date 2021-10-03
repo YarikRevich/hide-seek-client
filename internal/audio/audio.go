@@ -1,21 +1,21 @@
 package audio
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/audio_loader"
-	// "github.com/sirupsen/logrus"
+	"fmt"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/audio/game"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/audio"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
 )
 
-
-
 func Process() {
-	switch statemachine.GetInstance().GetState() {
-	case statemachine.GAME:
-		
-		// play, ok := audioloader.Audio["/audio/game.mp3"]
-		// if !ok{
-		// 	logrus.Fatal("audio is not found")
-		// }
-		// play()
+	if audio.UseStatus().GetState() == audio.DONE {
+		switch ui.UseStatus().GetState() {
+		case ui.GAME:
+			fmt.Println(audio.UseStatus().GetState())
+			audio.UseStatus().SetState(audio.UNDONE)
+			fmt.Println(audio.UseStatus().GetState())
+			game.Exec()
+		}
 	}
 }

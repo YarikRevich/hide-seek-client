@@ -1,5 +1,13 @@
 package metadataloader
 
+type Position string
+
+const (
+	Center Position = "center"
+	Left Position = "left"
+	Right Position = "right"
+)
+
 type Metadata struct {
 	Size struct {
 		Width  float64
@@ -27,5 +35,9 @@ type Metadata struct {
 	Scale struct {
 		CoefficiantX float64
 		CoefficiantY float64
+	}
+	Button struct {
+		Text string
+		Position Position
 	}
 }

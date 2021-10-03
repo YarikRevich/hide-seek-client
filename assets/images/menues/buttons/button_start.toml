@@ -1,0 +1,15 @@
+[margins]
+leftmargin = 91.0
+topmargin = 10.0
+
+[size]
+width = 50.0
+height = 50.0
+
+[scale]
+coefficiantx = 4.0
+coefficianty = 4.0
+
+[button]
+text = "Start game"
+position = "center"

@@ -1,16 +1,8 @@
-package statemachine
+package input
 
 const (
-	START_MENU statusEntry = iota
-	SETTINGS_MENU
-
-	CREATE_LOBBY_MENU
-	JOIN_LOBBY_MENU
-
-	CHOOSE_EQUIPMENT
-
-	WAIT_ROOM
-
+	EMPTY statusEntry = iota
+	SETTINGS_MENU_USERNAME
 	GAME
 )
 
@@ -25,7 +17,6 @@ type Status struct {
 }
 
 func (s *Status) SetState(st statusEntry) {
-	UseMiddlewares()
 	s.status = st
 }
 
@@ -33,9 +24,9 @@ func (s *Status) GetState() statusEntry {
 	return s.status
 }
 
-func GetInstance() *Status {
+func UseStatus() *Status {
 	if stateMachine == nil {
-		stateMachine = &Status{status: START_MENU}
+		stateMachine = &Status{status: EMPTY}
 	}
 	return stateMachine
 }

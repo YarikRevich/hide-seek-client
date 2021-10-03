@@ -6,8 +6,8 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/syncer"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/syncer"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui"
 	"github.com/hajimehoshi/ebiten/v2"
 )

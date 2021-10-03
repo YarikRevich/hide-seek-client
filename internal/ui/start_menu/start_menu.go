@@ -6,6 +6,7 @@ import (
 	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 func Draw() {
@@ -27,27 +28,44 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
-	
+
 		screen.DrawImage(img, opts)
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("assets/images/menues/buttons/button")
+		img := ebiten.NewImageFromImage(imageloader.GetImage("assets/images/menues/buttons/button"))
+		m := metadataloader.GetMetadata("assets/images/menues/buttons/button_start")
 
 		opts := &ebiten.DrawImageOptions{}
 
-		imageW, imageH := img.Size()
-		screenW, screenH := screen.Size()
-		opts.GeoM.Scale(float64(screenW)/float64(float64(imageW)), float64(screenH)/float64(imageH))
+		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+		ebitenutil.DebugPrintAt(
+			img, m.Button.Text,
+			int(m.Size.Width/2.5),
+			int(m.Size.Height/1.3))
 
 		screen.DrawImage(img, opts)
 	})
 
-	render.SetToRender(func(i *ebiten.Image) {
+	render.SetToRender(func(screen *ebiten.Image) {
+		img := ebiten.NewImageFromImage(imageloader.GetImage("assets/images/menues/buttons/button"))
+		m := metadataloader.GetMetadata("assets/images/menues/buttons/button_join")
 
+		opts := &ebiten.DrawImageOptions{}
+
+		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+		ebitenutil.DebugPrintAt(
+			img, m.Button.Text,
+			int(m.Size.Width/2.5),
+			int(m.Size.Height/1.3))
+
+		screen.DrawImage(img, opts)
 	})
 
-	// screen.DrawImage(img, opts)
 	// 	s.winConf.TextAreas.GameLogo.Clear()
 	// 	IsOld := func(value float64, list []float64) bool {
 	// 		//Checks whether new pos is not already used
