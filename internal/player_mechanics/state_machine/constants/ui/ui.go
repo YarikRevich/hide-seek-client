@@ -1,0 +1,15 @@
+package ui
+
+const (
+	START_MENU = iota
+	SETTINGS_MENU
+
+	CREATE_LOBBY_MENU
+	JOIN_LOBBY_MENU
+
+	CHOOSE_EQUIPMENT
+
+	WAIT_ROOM
+
+	GAME
+)

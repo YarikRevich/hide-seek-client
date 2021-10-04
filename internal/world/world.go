@@ -1,6 +1,9 @@
 package world
 
-import metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+import (
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+)
 
 var (
 	w *World
@@ -9,13 +12,13 @@ var (
 type World struct {
 	Map string
 
-	Metadata metadataloader.Metadata
+	Metadata models.Metadata
 }
 
 func UseWorld()*World{
 	if w == nil{
 		w = new(World)
-		w.Metadata = *metadataloader.GetMetadata("assets/images/maps/default/background/Game")
+		w.Metadata = *metadatacollection.GetMetadata("assets/images/maps/default/background/Game")
 	}
 	return w
 }

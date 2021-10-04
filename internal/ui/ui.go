@@ -1,7 +1,8 @@
 package ui
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui/debug"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui/game"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui/pop_up_messages"
@@ -10,7 +11,7 @@ import (
 )
 
 func Process() {
-	switch ui.UseStatus().GetState() {
+	switch statemachine.UseStateMachine().UI().GetState() {
 	case ui.GAME:
 		game.Draw()
 	case ui.START_MENU:

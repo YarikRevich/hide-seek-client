@@ -1,38 +1,34 @@
 package audio
 
-import "sync"
+import (
+	"sync"
 
-const (
-	DONE statusEntry = iota
-	UNDONE
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/common"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
 )
 
-var (
-	stateMachine *Status
-)
-
-type statusEntry int
+var instance common.IState
 
 type Status struct {
 	sync.Mutex
-	status statusEntry
+	status int
 }
 
-func (s *Status) SetState(st statusEntry) {
-	s.Lock()
-	defer s.Unlock()
-	s.status = st
+func (s *Status) SetState(st int) func() {
+	return func() {
+		s.Lock()
+		defer s.Unlock()
+		s.status = st
+	}
 }
 
-func (s *Status) GetState() statusEntry {
-	s.Lock()
-	defer s.Unlock()
+func (s *Status) GetState() int {
 	return s.status
 }
 
-func UseStatus() *Status {
-	if stateMachine == nil {
-		stateMachine = &Status{status: DONE}
+func UseStatus() common.IState {
+	if instance == nil {
+		instance = &Status{status: audio.DONE}
 	}
-	return stateMachine
+	return instance
 }

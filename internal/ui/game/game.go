@@ -7,15 +7,15 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("assets/images/maps/default/background/Game")
+		img := imagecollection.GetImage("assets/images/maps/default/background/Game")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -29,8 +29,8 @@ func Draw() {
 	render.SetToRender(func(screen *ebiten.Image) {
 		p := pc.GetPC()
 		c := animation.WithAnimation(
-			imageloader.GetImage("assets/images/heroes/pumpkinhero"),
-			*metadataloader.GetMetadata("assets/images/heroes/pumpkinhero"),
+			imagecollection.GetImage("assets/images/heroes/pumpkinhero"),
+			*metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero"),
 			&p.Equipment.Skin.Animation)
 
 		opts := &ebiten.DrawImageOptions{}

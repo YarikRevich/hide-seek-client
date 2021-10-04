@@ -1,9 +1,8 @@
 package settingsmenu
 
 import (
-	//"github.com/blizzy78/ebitenui"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	imageloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
+	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -11,7 +10,7 @@ func Draw() {
 
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("assets/images/menues/background/WaitRoom")
+		img := imagecollection.GetImage("assets/images/menues/background/WaitRoom")
 
 		opts := &ebiten.DrawImageOptions{}
 		imageW, imageH := img.Size()

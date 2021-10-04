@@ -1,45 +1,29 @@
 package ui
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/common"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 )
 
-const (
-	START_MENU statusEntry = iota
-	SETTINGS_MENU
-
-	CREATE_LOBBY_MENU
-	JOIN_LOBBY_MENU
-
-	CHOOSE_EQUIPMENT
-
-	WAIT_ROOM
-
-	GAME
-)
-
-var (
-	stateMachine *Status
-)
-
-type statusEntry int
+var instance common.IState
 
 type Status struct {
-	status statusEntry
+	status int
 }
 
-func (s *Status) SetState(st statusEntry) {
-	statemachine.UseMiddlewares()
-	s.status = st
+func (s *Status) SetState(st int) func() {
+	return func() {
+		s.status = st
+	}
 }
 
-func (s *Status) GetState() statusEntry {
+func (s *Status) GetState() int {
 	return s.status
 }
 
-func UseStatus() *Status {
-	if stateMachine == nil {
-		stateMachine = &Status{status: START_MENU}
+func UseStatus() common.IState {
+	if instance == nil {
+		instance = &Status{status: ui.START_MENU}
 	}
-	return stateMachine
+	return instance
 }

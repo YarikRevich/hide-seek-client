@@ -4,11 +4,11 @@ import (
 	"image"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func WithAnimation(src *ebiten.Image, m metadataloader.Metadata, p *pc.Animation) *ebiten.Image {
+func WithAnimation(src *ebiten.Image, m models.Metadata, p *pc.Animation) *ebiten.Image {
 	p.FrameDelayCounter++
 	p.FrameDelayCounter %= p.FrameDelay
 	if p.FrameDelayCounter == 0 {

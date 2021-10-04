@@ -10,10 +10,10 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
 	"github.com/YarikRevich/HideSeek-Client/internal/paths"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader"
-	audioloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/audio_loader"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/sirupsen/logrus"
 
@@ -53,7 +53,8 @@ func init() {
 	}
 	logrus.SetLevel(logrus.WarnLevel) 
 
-	loader.LoadResources(map[loader.Component][]loader.Loader{
+	
+	resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
 		{Embed: images, Path: "assets/images"}: {
 			imageloader.Load,
 			metadataloader.Load,

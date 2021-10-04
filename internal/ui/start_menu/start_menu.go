@@ -2,8 +2,8 @@ package start_menu
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/image_loader"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -11,7 +11,7 @@ import (
 
 func Draw() {
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("assets/images/menues/background/StartMenu")
+		img := imagecollection.GetImage("assets/images/menues/background/StartMenu")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -23,8 +23,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imageloader.GetImage("assets/images/menues/buttons/settingswheel")
-		m := metadataloader.GetMetadata("assets/images/menues/buttons/settingswheel")
+		img := imagecollection.GetImage("assets/images/menues/buttons/settingswheel")
+		m := metadatacollection.GetMetadata("assets/images/menues/buttons/settingswheel")
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
@@ -33,8 +33,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imageloader.GetImage("assets/images/menues/buttons/button"))
-		m := metadataloader.GetMetadata("assets/images/menues/buttons/button_start")
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/menues/buttons/button"))
+		m := metadatacollection.GetMetadata("assets/images/menues/buttons/button_start")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -50,8 +50,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imageloader.GetImage("assets/images/menues/buttons/button"))
-		m := metadataloader.GetMetadata("assets/images/menues/buttons/button_join")
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/menues/buttons/button"))
+		m := metadatacollection.GetMetadata("assets/images/menues/buttons/button_join")
 
 		opts := &ebiten.DrawImageOptions{}
 

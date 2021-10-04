@@ -2,23 +2,20 @@ package networking
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/networking/game"
-	joinlobbymenu "github.com/YarikRevich/HideSeek-Client/internal/networking/join_lobby_menu"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
 
+	joinlobbymenu "github.com/YarikRevich/HideSeek-Client/internal/networking/join_lobby_menu"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 )
 
-func Process(){
-	switch ui.UseStatus().GetState(){
+func Process() {
+	switch statemachine.UseStateMachine().UI().GetState() {
 	case ui.JOIN_LOBBY_MENU:
 		joinlobbymenu.Exec()
 	case ui.GAME:
 		game.Exec()
 	}
 }
-
-
-
-
 
 // func connectToMainServer(adress string)*net.UDPConn{
 

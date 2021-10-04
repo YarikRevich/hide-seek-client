@@ -2,16 +2,24 @@ package startmenu
 
 import (
 	mousepress "github.com/YarikRevich/HideSeek-Client/internal/detectors/mouse_press"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/input"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
+	inputmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/input"
+	uimiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/ui"
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 )
 
-
-
-func Exec(){
-	if mousepress.IsMousePressLeftOnce(*metadataloader.GetMetadata("assets/images/menues/buttons/settingswheel")){
-		ui.UseStatus().SetState(ui.GAME)
-		input.UseStatus().SetState(input.GAME)
+func Exec() {
+	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/menues/buttons/settingswheel")) {
+		applyer.ApplyMiddlewares(
+			statemachine.UseStateMachine().UI().SetState(ui.GAME),
+			uimiddleware.UseUIMiddleware,
+		)
+		applyer.ApplyMiddlewares(
+			statemachine.UseStateMachine().Input().SetState(input.GAME),
+			inputmiddleware.UseInputMiddleware,
+		)
 	}
 }

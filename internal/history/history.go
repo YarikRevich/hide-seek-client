@@ -29,10 +29,3 @@ func GetScreenSize() (int, int) {
 	return lastScreenSize.Width, lastScreenSize.Height
 }
 
-func SetAudioPosition(p int){
-	lastAudioPosition = p
-}
-
-func GetAudioPosition() int {
-	return lastAudioPosition
-}

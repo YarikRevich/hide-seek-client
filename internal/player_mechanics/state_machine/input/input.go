@@ -1,32 +1,29 @@
 package input
 
-const (
-	EMPTY statusEntry = iota
-	SETTINGS_MENU_USERNAME
-	GAME
+import (
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/common"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
 )
 
-var (
-	stateMachine *Status
-)
-
-type statusEntry int
+var instance *Status
 
 type Status struct {
-	status statusEntry
+	status int
 }
 
-func (s *Status) SetState(st statusEntry) {
-	s.status = st
+func (s *Status) SetState(st int) func() {
+	return func() {
+		s.status = st
+	}
 }
 
-func (s *Status) GetState() statusEntry {
+func (s *Status) GetState() int {
 	return s.status
 }
 
-func UseStatus() *Status {
-	if stateMachine == nil {
-		stateMachine = &Status{status: EMPTY}
+func UseStatus() common.IState {
+	if instance == nil {
+		instance = &Status{status: input.EMPTY}
 	}
-	return stateMachine
+	return instance
 }

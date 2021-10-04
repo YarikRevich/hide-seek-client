@@ -1,9 +1,7 @@
 package game
 
-import (
-	audioloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/audio_loader"
-)
+import audiocollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader/collection"
 
 func Exec(){
-	audioloader.GetAudio("assets/audio/game")()
+	audiocollection.GetAudioController("assets/audio/game").Start()
 }

@@ -4,7 +4,8 @@ import (
 	"crypto/sha256"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
-	metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 )
 
 const (
@@ -65,7 +66,7 @@ type PC struct{
 	Physics  Physics
 	Equipment Equipment
 
-	Metadata *metadataloader.Metadata
+	Metadata *models.Metadata
 
 	GameCredentials GameCredentials
 }
@@ -100,7 +101,7 @@ func GetPC()*PC{
 		pc.Buffs.Speed = 2.5
 		pc.Equipment.Skin.Animation.FrameDelay = 5
 		pc.Equipment.Skin.Animation.FrameDelayCounter = 1
-		pc.Metadata = metadataloader.GetMetadata("assets/images/heroes/pumpkinhero")
+		pc.Metadata = metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero")
 	}
 	return pc
 }
