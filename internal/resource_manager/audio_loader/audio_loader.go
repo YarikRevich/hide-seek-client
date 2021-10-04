@@ -37,7 +37,7 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 		volume := &effects.Volume{
 			Streamer: ctrl,
 			Base: 2,
-			Volume: 2,
+			Volume: 0.001,
 		}
 
 		reg := regexp.MustCompile(`\.[a-z0-9]*$`)

@@ -42,6 +42,19 @@ func StartCallback(
 	effect *effects.Volume, ctrl *beep.Ctrl, format beep.Format, streamer beep.StreamSeekCloser) func() {
 	return func() {
 		go func() {
+			tick := time.NewTicker(time.Microsecond * 500)
+
+			for math.Abs(math.Ceil(effect.Volume*100)/100) != 2 {
+				select {
+				case <-tick.C:
+					speaker.Lock()
+					effect.Volume += 0.001
+					speaker.Unlock()
+				default:
+				}
+			}
+			tick.Stop()
+
 			ctrl.Paused = false
 			if err := speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/100)); err != nil{
 				logrus.Fatal("error happened initiating audion in audio loader")
