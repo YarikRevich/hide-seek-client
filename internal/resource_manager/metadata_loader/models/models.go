@@ -1,11 +1,17 @@
 package models
 
-type Position string
+type TextPosition string
+type FontColor string
 
 const (
-	Center Position = "center"
-	Left Position = "left"
-	Right Position = "right"
+	Center TextPosition = "center"
+	Left TextPosition = "left"
+	Right TextPosition = "right"
+)
+
+const (
+	White FontColor = "white"
+	Black FontColor = "black"
 )
 
 type Metadata struct {
@@ -38,6 +44,8 @@ type Metadata struct {
 	}
 	Button struct {
 		Text string
-		Position Position
+		TextPosition TextPosition
+		Font float64
+		FontColor FontColor
 	}
 }

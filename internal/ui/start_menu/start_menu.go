@@ -1,12 +1,20 @@
 package start_menu
 
 import (
+	"fmt"
+	"image/color"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/interface/fonts"
+	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
+	// "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	// "github.com/hajimehoshi/ebiten/v2/text"
+	// "github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func Draw() {
@@ -41,10 +49,11 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		ebitenutil.DebugPrintAt(
-			img, m.Button.Text,
-			int(m.Size.Width/2.5),
-			int(m.Size.Height/1.3))
+		f := fonts.GetFont(*m)
+
+		tx, ty := button.ChooseButtonTextPosition(f, *m)
+
+		text.Draw(img, m.Button.Text, f, tx, ty, color.White)
 
 		screen.DrawImage(img, opts)
 	})
@@ -58,10 +67,17 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		ebitenutil.DebugPrintAt(
-			img, m.Button.Text,
-			int(m.Size.Width/2.5),
-			int(m.Size.Height/1.3))
+		// w, h := positioning.CenterizeButtonText(*m)
+
+		// ebitenutil.DebugPrintAt(
+		// 	img, m.Button.Text,
+		// 	w, h)
+		f := fonts.GetFont(*m)
+
+		e, err := f.GlyphAdvance(rune(m.Button.Text[0]))
+		fmt.Println(err)
+
+		text.Draw(img, m.Button.Text, f, (int(m.Size.Width) - e.Round() * len(m.Button.Text))/2, int(m.Size.Height/2), color.White)
 
 		screen.DrawImage(img, opts)
 	})

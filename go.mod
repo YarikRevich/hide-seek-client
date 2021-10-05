@@ -13,6 +13,7 @@ require (
 	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/go-ping/ping v0.0.0-20210911151512-381826476871
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/gookit/color v1.3.5
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -20,5 +21,5 @@ require (
 	github.com/hajimehoshi/ebiten/v2 v2.1.5
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
 	github.com/sirupsen/logrus v1.8.1
-	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb
+	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d
 )

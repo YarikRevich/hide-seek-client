@@ -26,7 +26,7 @@ func (g *Loop) Update() error {
 }
 
 func (g *Loop) Draw(screen *ebiten.Image) {
-	syncer.SyncCoordinates(screen)
+	syncer.SyncConfValues(screen)
 
 	for _, dt := range render.GetToRender(){
 		dt(screen)

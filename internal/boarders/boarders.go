@@ -1,7 +1,7 @@
 package boarders
 
-import metadataloader "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader/metadata_loader"
+import "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 
-func IsBoarder(x, y float64, mapName string, m *metadataloader.Metadata) bool{
+func IsBoarder(x, y float64, mapName string, m *models.Metadata) bool{
 	return false
 }

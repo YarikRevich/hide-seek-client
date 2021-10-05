@@ -12,6 +12,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/paths"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
@@ -26,6 +27,9 @@ var (
 
 	//go:embed assets/audio
 	audio embed.FS
+
+	//go:embed assets/fonts
+	fonts embed.FS
 )
 
 var (
@@ -51,9 +55,8 @@ func init() {
 	if cli.GetDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
-	logrus.SetLevel(logrus.WarnLevel) 
+	logrus.SetLevel(logrus.WarnLevel)
 
-	
 	resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
 		{Embed: images, Path: "assets/images"}: {
 			imageloader.Load,
@@ -62,13 +65,15 @@ func init() {
 		{Embed: audio, Path: "assets/audio"}: {
 			audioloader.Load,
 		},
+		{Embed: fonts, Path: "assets/fonts"}: {
+			fontloader.Load,
+		},
 	})
 	collisions.ConnectCollisionsToImages()
 }
 
 //Get user's spawn place
 // randomSpawn := Utils.GetRandomSpawn()
-
 
 //Configures map
 // mapComponents := Map.MapConf(new(Map.MapC))

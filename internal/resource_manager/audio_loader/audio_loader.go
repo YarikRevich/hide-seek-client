@@ -44,8 +44,9 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 
 		if reg.MatchString(path) {
 			mu.Lock()
-			collection.AudioControllers[reg.Split(path, -1)[0]] = 
-				controllers.NewController(volume, ctrl, format, streamer)
+			trackPath := reg.Split(path, -1)[0]
+			collection.AudioControllers[trackPath] = 
+				controllers.NewController(volume, ctrl, format, streamer, trackPath)
 			mu.Unlock()
 		}
 

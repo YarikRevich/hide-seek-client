@@ -8,6 +8,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
 	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader/models"
+	audiohistory "github.com/YarikRevich/HideSeek-Client/internal/history/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/effects"
@@ -39,8 +40,10 @@ func StopCallback(effect *effects.Volume, ctrl *beep.Ctrl) func() {
 }
 
 func StartCallback(
-	effect *effects.Volume, ctrl *beep.Ctrl, format beep.Format, streamer beep.StreamSeekCloser) func() {
+	effect *effects.Volume, ctrl *beep.Ctrl, format beep.Format, streamer beep.StreamSeekCloser, path string) func() {
 	return func() {
+		audiohistory.SetLastAudioTrackPath(path)
+
 		go func() {
 			tick := time.NewTicker(time.Microsecond * 500)
 
@@ -75,9 +78,9 @@ func StartCallback(
 }
 
 func NewController(
-	effect *effects.Volume, ctrl *beep.Ctrl, format beep.Format, streamer beep.StreamSeekCloser) models.Controller {
+	effect *effects.Volume, ctrl *beep.Ctrl, format beep.Format, streamer beep.StreamSeekCloser, path string) models.Controller {
 	return models.Controller{
 		Stop:  StopCallback(effect, ctrl),
-		Start: StartCallback(effect, ctrl, format, streamer),
+		Start: StartCallback(effect, ctrl, format, streamer, path),
 	}
 }

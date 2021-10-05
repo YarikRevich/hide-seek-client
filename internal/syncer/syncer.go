@@ -5,7 +5,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func SyncCoordinates(screen *ebiten.Image) {
+func SyncConfValues(screen *ebiten.Image) {
 	sw, sh := screen.Size()
 	swf, shf := float64(sw), float64(sh)
 	pw, ph := history.GetScreenSize()
