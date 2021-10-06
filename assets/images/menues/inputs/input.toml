@@ -1,0 +1,11 @@
+[margins]
+leftmargin = 194.0
+topmargin = 120.0
+
+[size]
+width = 170.0
+height = 75.0
+
+[scale]
+coefficiantx = 2.0
+coefficianty = 1.2

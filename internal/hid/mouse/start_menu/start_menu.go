@@ -14,11 +14,11 @@ import (
 func Exec() {
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/menues/buttons/settingswheel")) {
 		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.GAME),
+			statemachine.UseStateMachine().UI().SetState(ui.SETTINGS_MENU),
 			uimiddleware.UseUIMiddleware,
 		)
 		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.GAME),
+			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
 			inputmiddleware.UseInputMiddleware,
 		)
 	}

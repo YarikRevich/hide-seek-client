@@ -15,6 +15,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/screen"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/sirupsen/logrus"
 
@@ -31,15 +32,6 @@ var (
 	//go:embed assets/fonts
 	fonts embed.FS
 )
-
-var (
-	screenWidth, screenHeight = InitScreenSize()
-	fullWidth, fullHeight     = ebiten.ScreenSizeInFullscreen()
-)
-
-func InitScreenSize() (int, int) {
-	return int(float64(fullWidth) / 1.15), int(float64(fullHeight) / 1.15)
-}
 
 func init() {
 	flag.Parse()
@@ -111,10 +103,10 @@ func init() {
 // }
 
 func main() {
-	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowSize(screen.GetMaxWidth(), screen.GetMaxHeight())
 	ebiten.SetWindowTitle("Hide&Seek")
 	ebiten.SetWindowResizable(true)
-	ebiten.SetWindowSizeLimits(int((fullWidth*60)/100), int((fullHeight*60)/100), -1, -1)
+	ebiten.SetWindowSizeLimits(screen.GetMinWidth(), screen.GetMinHeight(), -1, -1)
 
 	log.Fatalln(ebiten.RunGame(loop.New()))
 }
