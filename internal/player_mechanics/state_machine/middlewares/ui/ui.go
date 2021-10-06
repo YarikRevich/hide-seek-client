@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/buffers/text"
+	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
@@ -9,7 +9,7 @@ import (
 )
 
 func cleanBuffers(){
-	text.UseBuffer().Clean()
+	collection.SettingsMenuNameBuffer.Clean()
 }
 
 func setSuspendedMusicDone(){

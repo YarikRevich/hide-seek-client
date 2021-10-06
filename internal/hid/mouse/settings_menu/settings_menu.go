@@ -11,11 +11,13 @@ import (
 	// uimiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/ui"
 )
 
-func Exec(){
+func Exec()bool{
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/menues/inputs/input")) {
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().Input().SetState(input.SETTINGS_MENU_USERNAME),
 			inputmiddleware.UseInputMiddleware,
 		)
+		return true
 	}
+	return false
 }

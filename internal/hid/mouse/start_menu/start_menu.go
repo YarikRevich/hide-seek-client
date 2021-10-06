@@ -11,7 +11,7 @@ import (
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 )
 
-func Exec() {
+func Exec()bool {
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/menues/buttons/settingswheel")) {
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.SETTINGS_MENU),
@@ -21,5 +21,7 @@ func Exec() {
 			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
 			inputmiddleware.UseInputMiddleware,
 		)
+		return true
 	}
+	return false
 }

@@ -9,3 +9,8 @@ height = 75.0
 [scale]
 coefficiantx = 2.0
 coefficianty = 1.2
+
+[button]
+textposition = "center"
+font = 13.0
+fontcolor = "white"

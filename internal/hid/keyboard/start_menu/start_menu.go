@@ -1,44 +1,27 @@
 package startmenu
 
 import (
-	"fmt"
-
-	"github.com/YarikRevich/HideSeek-Client/internal/buffers/text"
-	"github.com/YarikRevich/HideSeek-Client/internal/cursor"
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/handler"
+	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/collection"
+	buffercollection "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/common"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 func Exec() {
-	b := text.UseBuffer()
-	b.Pop()
-
-	for _, v := range inpututil.PressedKeys() {
-		if inpututil.KeyPressDuration(v) == 1 {
-			switch v {
-			case ebiten.KeyEnter:
-				b.Push('\n')
-			case ebiten.KeyControl:
-				return
-			default:
-				for _, r := range v.String(){
-					b.Push(r)
-				}
-			}
-		}
-	}
-
-	cursor.SetCursorBlink(b)
-
-	render.SetToRender(func(screen *ebiten.Image) {
-		ebitenutil.DebugPrint(screen,
-			fmt.Sprintf(
-				"%s\n",
-				b.Read()))
+	handler.HandleKeyboardPress(buffercollection.SettingsMenuNameBuffer, []handler.PipelineEntity{
+		{Keys: []ebiten.Key{ebiten.KeyEnter}, Callback: func(b common.IBuffer, k rune){
+			b.Push('\n')
+		}},
+		{Keys: []ebiten.Key{ebiten.KeyBackspace}, Callback: func(b common.IBuffer, k rune){
+			b.Pop()
+		}},
+		{Keys: collection.UserKeys, Callback: func(b common.IBuffer, k rune){
+			b.Push(k)
+		}},
 	})
+
 	// 	if (s.winConf.Win.MousePosition().X >= 379 && s.winConf.Win.MousePosition().X <= 590) && (s.winConf.Win.MousePosition().Y >= 320 && s.winConf.Win.MousePosition().Y <= 415){
 	// 		s.winConf.DrawStartMenuPressedCreateButton()
 	// 	}

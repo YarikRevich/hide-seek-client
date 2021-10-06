@@ -47,7 +47,7 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fonts.GetFont(*m)
-		tx, ty := button.ChooseButtonTextPosition(f, *m)
+		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
 		text.Draw(img, m.Button.Text, f, tx, ty, color.White)
 
@@ -64,7 +64,7 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fonts.GetFont(*m)
-		tx, ty := button.ChooseButtonTextPosition(f, *m)
+		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
 		text.Draw(img, m.Button.Text, f, tx, ty,color.White)
 
