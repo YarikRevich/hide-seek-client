@@ -7,6 +7,8 @@ type Control interface {
 type TextBuffer interface {
 	Control
 
-	Write(string)
+	Push(rune)
+	Pop()
+	Last() rune
 	Read()string
 }

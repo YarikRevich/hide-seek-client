@@ -1,14 +1,38 @@
 package cursor
 
-import "time"
+import (
+	"time"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/buffers"
+	"github.com/YarikRevich/HideSeek-Client/internal/buffers/text"
+)
 
 var ticker = time.NewTicker(time.Second)
 
-func GetCursorBlink()rune{
+const (
+	on = '|'
+	off = ' '
+)
+
+var blinkPosition rune
+
+func SetCursorBlink(buffers.TextBuffer){
 	select {
 	case <- ticker.C:
-		return 'j'
+		if blinkPosition == on{
+			blinkPosition = off
+		}else{
+			blinkPosition = on
+		}
 	default:
-		return 'b'
+	}
+
+	b := text.UseBuffer()
+	l := b.Last()
+	if l == on || l == off{
+		b.Pop()
+		b.Push(blinkPosition)
+	}else{
+		b.Push(blinkPosition)
 	}
 }
