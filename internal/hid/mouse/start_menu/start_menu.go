@@ -12,7 +12,7 @@ import (
 )
 
 func Exec()bool {
-	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/menues/buttons/settingswheel")) {
+	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/settingswheel")) {
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.SETTINGS_MENU),
 			uimiddleware.UseUIMiddleware,

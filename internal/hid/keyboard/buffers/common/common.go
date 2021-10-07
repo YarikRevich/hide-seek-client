@@ -8,7 +8,7 @@ type IBuffer interface {
 	CleanBlinkingUnfocus()
 	Push(rune)
 	Pop()
-	ReadClear()string
+	ReadClean()string
 	Last() rune
 	Read()string
 }
@@ -43,7 +43,7 @@ func (t *buff) CleanBlinkingUnfocus(){
 	t.Push(' ')
 }
 
-func (t *buff) 	ReadClear()string{
+func (t *buff) 	ReadClean()string{
 	if len(t.value) != 0{
 		v := t.Read()
 		return v[:len(v)-1]

@@ -11,9 +11,6 @@ import (
 
 func Exec() {
 	handler.HandleKeyboardPress(buffercollection.SettingsMenuNameBuffer, []handler.PipelineEntity{
-		{Keys: []ebiten.Key{ebiten.KeyEnter}, Callback: func(b common.IBuffer, k rune){
-			b.Push('\n')
-		}},
 		{Keys: []ebiten.Key{ebiten.KeyBackspace}, Callback: func(b common.IBuffer, k rune){
 			b.Pop()
 		}},

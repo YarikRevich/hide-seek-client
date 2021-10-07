@@ -1,24 +1,32 @@
 package provider
 
-var (
-	p IProvider
+import (
+	"github.com/YarikRevich/HideSeek-Client/internal/storage/common"
+	"github.com/YarikRevich/HideSeek-Client/internal/storage/db"
+	"github.com/YarikRevich/HideSeek-Client/internal/storage/user"
 )
 
-type Provider struct {
-
-}
-
-func (pr *Provider) User() interface{}{
-	return nil
-}
+var instance IProvider
 
 type IProvider interface {
-	User() interface{}
+	User() common.StorageBlock
+}
+
+type provider struct {
+	userStorage common.StorageBlock
+}
+
+func (pr *provider) User() common.StorageBlock{
+	return pr.userStorage
 }
 
 func UseStorageProvider()IProvider{
-	if p == nil{
-		p = new(Provider)
+	if instance == nil{
+		d := db.NewDB()
+
+		instance = &provider{
+			userStorage: user.NewUserStorage(d),
+		}
 	}
-	return p
+	return instance
 }

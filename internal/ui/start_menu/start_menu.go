@@ -15,7 +15,7 @@ import (
 
 func Draw() {
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/menues/background/StartMenu")
+		img := imagecollection.GetImage("assets/images/system/background/StartMenu")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -27,8 +27,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/menues/buttons/settingswheel")
-		m := metadatacollection.GetMetadata("assets/images/menues/buttons/settingswheel")
+		img := imagecollection.GetImage("assets/images/system/buttons/settingswheel")
+		m := metadatacollection.GetMetadata("assets/images/system/buttons/settingswheel")
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
@@ -38,8 +38,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/menues/buttons/button"))
-		m := metadatacollection.GetMetadata("assets/images/menues/buttons/button_start")
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/buttons/button"))
+		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_start")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -55,8 +55,8 @@ func Draw() {
 	})
 
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/menues/buttons/button"))
-		m := metadatacollection.GetMetadata("assets/images/menues/buttons/button_join")
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/buttons/button"))
+		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_join")
 
 		opts := &ebiten.DrawImageOptions{}
 

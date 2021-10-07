@@ -19,6 +19,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hajimehoshi/ebiten v1.12.12 // indirect
 	github.com/hajimehoshi/ebiten/v2 v2.1.5
+	github.com/mattn/go-sqlite3 v1.14.8 // indirect
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
 	github.com/sirupsen/logrus v1.8.1
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d

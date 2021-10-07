@@ -122,6 +122,8 @@ github.com/lucasb-eyer/go-colorful v0.0.0-20181028223441-12d3b2882a08/go.mod h1:
 github.com/matryer/is v1.2.0/go.mod h1:2fLPjFQM9rhQ15aVEtbuwhJinnOqrmgXPNdZsdwlWXA=
 github.com/matryer/is v1.4.0/go.mod h1:8I/i5uYgLzgsgEloJE1U6xx5HkBQpAZvepWuujKwMRU=
 github.com/mattn/go-runewidth v0.0.4/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
+github.com/mattn/go-sqlite3 v1.14.8 h1:gDp86IdQsN/xWjIEmr9MF6o9mpksUgh0fu+9ByFxzIU=
+github.com/mattn/go-sqlite3 v1.14.8/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea h1:mQncVDBpKkAecPcH2IMGpKUQYhwowlafQbfkz2QFqkc=
 github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea/go.mod h1:QzTGLGoOqLHUBK8/EZ0v4Fa4CdyXmdyRwCHcl0YbeO4=
 github.com/mewkiz/flac v1.0.5/go.mod h1:EHZNU32dMF6alpurYyKHDLYpW1lYpBZ5WrXi/VuNIGs=

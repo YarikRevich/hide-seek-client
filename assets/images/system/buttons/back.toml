@@ -1,0 +1,11 @@
+[size]
+width = 22.0
+height = 23.0
+
+[margins]
+leftmargin = 15.0
+topmargin = 15.0
+
+[scale]
+coefficiantx = 2.5
+coefficianty = 2.5

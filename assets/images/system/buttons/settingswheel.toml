@@ -1,0 +1,11 @@
+[size]
+width = 59.0
+height = 60.0
+
+[margins]
+leftmargin = 50.0
+topmargin = 50.0
+
+[scale]
+coefficiantx = 1.0
+coefficianty = 1.0

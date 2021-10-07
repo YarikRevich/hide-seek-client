@@ -11,7 +11,6 @@ import (
 )
 
 func Process() {
-	
 	switch statemachine.UseStateMachine().UI().GetState(){
 	case ui.CREATE_LOBBY_MENU:
 		if creationlobbymenu.Exec(){
