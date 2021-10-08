@@ -12,13 +12,6 @@ func cleanBuffers() {
 	collection.SettingsMenuNameBuffer.Clean()
 }
 
-func checkIfOnline() {
-	go func() {
-		
-	}()
-
-}
-
 func setSuspendedMusicDone() {
 	applyer.ApplyMiddlewares(
 		statemachine.UseStateMachine().Audio().SetState(audio.DONE),

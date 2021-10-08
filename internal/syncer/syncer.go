@@ -1,6 +1,7 @@
 package syncer
 
 import (
+	"sync"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -11,8 +12,22 @@ func SyncConfValues(screen *ebiten.Image) {
 	pw, ph := history.GetScreenSize()
 	pwf, phf := float64(pw), float64(ph)
 
+	
 	if pw != 0 && ph != 0 {
-		SyncMetadata(swf, shf, pwf, phf)
-		SyncPC(swf, shf, pwf, phf)
+		var wg sync.WaitGroup
+		wg.Add(2)
+
+		go func(){
+			SyncMetadata(swf, shf, pwf, phf)
+			wg.Done()
+		}()
+
+		go func(){
+			SyncPC(swf, shf, pwf, phf)
+			wg.Done()
+		}()
+
+		wg.Wait()
 	}
+
 }

@@ -3,11 +3,11 @@ package start_menu
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/interface/fonts"
 	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -46,7 +46,7 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fonts.GetFont(*m)
+		f := fontcollection.GetFontBySize(m.Fonts.Font)
 		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
 		text.Draw(img, m.Button.Text, f, tx, ty, color.White)
@@ -63,7 +63,7 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fonts.GetFont(*m)
+		f := fontcollection.GetFontBySize(m.Fonts.Font)
 		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
 		text.Draw(img, m.Button.Text, f, tx, ty,color.White)

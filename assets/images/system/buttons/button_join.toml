@@ -13,5 +13,7 @@ coefficianty = 4.0
 [button]
 text = "Join game"
 textposition = "center"
+
+[fonts]
 font = 9.0
 fotntcolor = "white"

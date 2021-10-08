@@ -3,6 +3,7 @@ package screen
 import "github.com/hajimehoshi/ebiten/v2"
 
 var fullWidth, fullHeight = ebiten.ScreenSizeInFullscreen()
+var scaleX, scaleY = 1.0, 1.0
 
 func GetMinWidth() int{
 	return int((GetMaxWidth()*60)/100)

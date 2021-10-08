@@ -23,14 +23,8 @@ import (
 )
 
 var (
-	//go:embed assets/images
-	images embed.FS
-
-	//go:embed assets/audio
-	audio embed.FS
-
-	//go:embed assets/fonts
-	fonts embed.FS
+	//go:embed assets
+	assets embed.FS
 )
 
 func init() {
@@ -50,14 +44,16 @@ func init() {
 	logrus.SetLevel(logrus.WarnLevel)
 
 	resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
-		{Embed: images, Path: "assets/images"}: {
+		{Embed: assets, Path: "assets/images"}: {
 			imageloader.Load,
+		},
+		{Embed: assets, Path: "assets/images:assets/fonts"}: {
 			metadataloader.Load,
 		},
-		{Embed: audio, Path: "assets/audio"}: {
+		{Embed: assets, Path: "assets/audio"}: {
 			audioloader.Load,
 		},
-		{Embed: fonts, Path: "assets/fonts"}: {
+		{Embed: assets, Path: "assets/fonts"}: {
 			fontloader.Load,
 		},
 	})

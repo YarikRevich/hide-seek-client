@@ -23,6 +23,7 @@ func (g *Loop) Update() error {
 	keyboard.Process()
 	audio.Process()
 	networking.Process()
+
 	return nil
 }
 

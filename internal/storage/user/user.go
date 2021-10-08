@@ -17,7 +17,7 @@ func (u *user) Get(f string) interface{} {
 	
 	var name string
 	if err := q.Scan(&name); err != nil{
-		logrus.Errorf("scanning username failed: %w", err)
+		logrus.Fatal("scanning username failed: ", err)
 	}
 
 	return name

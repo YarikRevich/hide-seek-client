@@ -13,5 +13,7 @@ coefficianty = 2.5
 [button]
 text = "Save config"
 textposition = "center"
+
+[fonts]
 font = 9.0
 fontcolor = "white"

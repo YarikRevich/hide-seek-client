@@ -25,12 +25,12 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 	go func() {
 		f, err := e.ReadFile(path)
 		if err != nil {
-			logrus.Errorf("error happened opening font file from embedded fs: %w", err)
+			logrus.Fatal("error happened opening font file from embedded fs: ", err)
 		}
 
 		ff, err := truetype.Parse(f)
-		if err != nil{
-			logrus.Errorf("error happened parsing font file from embedded fs: %w", err)
+		if err != nil {
+			logrus.Fatal("error happened parsing font file from embedded fs: ", err)
 		}
 
 		reg := regexp.MustCompile(`\.[a-z0-9]*$`)
@@ -38,16 +38,15 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 			fontPath := reg.Split(path, -1)[0]
 			mu.Lock()
 
-			for s := 0; s < 100; s++{
-				face := truetype.NewFace(ff, &truetype.Options{
-					Size: float64(s),
-					DPI: 72,
-					Hinting: font.HintingFull,
-				})
-
-				collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)] = face
+			for s := 0; s < 100; s++ {
+				collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)] =
+					truetype.NewFace(ff, &truetype.Options{
+						Size:    float64(s),
+						DPI:     72,
+						Hinting: font.HintingFull,
+					})
 			}
-	
+
 			mu.Unlock()
 		}
 

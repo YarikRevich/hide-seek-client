@@ -37,11 +37,15 @@ func processResourceDir(e embed.FS, path string, wg *sync.WaitGroup, loaders ...
 func LoadResources(loaders map[Component][]Loader) {
 	var wg sync.WaitGroup
 	for c, l := range loaders {
-		wg.Add(1)
-		go func(c Component, l []Loader){
-			defer wg.Done()
-			processResourceDir(c.Embed, c.Path, &wg, l...)
-		}(c, l) 
+		for _, p := range c.SeparatePath() {
+			wg.Add(1)
+			go func(c Component, p string, l []Loader) {
+				defer wg.Done()
+				processResourceDir(c.Embed, p, &wg, l...)
+
+			}(c, p, l)
+		}
+
 	}
 	wg.Wait()
 }

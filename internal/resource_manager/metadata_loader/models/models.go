@@ -45,6 +45,10 @@ type Metadata struct {
 	Button struct {
 		Text string
 		TextPosition TextPosition
+
+	}
+	
+	Fonts struct {
 		Font float64
 		FontColor FontColor
 	}

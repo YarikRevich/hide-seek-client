@@ -12,24 +12,24 @@ import (
 func NewDB() *sql.DB {
 	c, err := sql.Open("sqlite3", "storage.db")
 	if err != nil {
-		logrus.Errorf("connection to db failed: %w", err)
+		logrus.Fatal("connection to db failed: ", err)
 	}
 	go func(){
-		n := make(chan os.Signal)
+		n := make(chan os.Signal, 1)
 		signal.Notify(n, os.Interrupt)
 		for range n{
 			if err := c.Close(); err != nil{
-				logrus.Errorf("closing of db failed: %w", err)
+				logrus.Fatal("closing of db failed: ", err)
 			}
 		}
 	}()
 
 	if _, err := c.Exec("CREATE TABLE IF NOT EXISTS user (name VARCHAR(50) UNIQUE)"); err != nil{
-		logrus.Errorf("initializing of user table failed: %w", err)
+		logrus.Fatal("initializing of user table failed: ", err)
 	}
 
 	if _, err := c.Exec("CREATE TABLE IF NOT EXISTS window (height REAL, width REAL)"); err != nil{
-		logrus.Errorf("initializing of window table failed: %w", err)
+		logrus.Fatal("initializing of window table failed: %w", err)
 	}
 
 	return c

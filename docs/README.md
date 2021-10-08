@@ -1,6 +1,6 @@
 #Hide&Seek🎮
 
-![](./../assets/docs/preview.png)
+![](preview.png)
 
 **_You can install the game using insructions below_**
 
