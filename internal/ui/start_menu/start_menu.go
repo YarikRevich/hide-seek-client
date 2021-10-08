@@ -15,7 +15,7 @@ import (
 
 func Draw() {
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/background/StartMenu")
+		img := imagecollection.GetImage("assets/images/system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 

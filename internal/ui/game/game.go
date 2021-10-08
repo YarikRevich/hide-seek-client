@@ -13,9 +13,8 @@ import (
 )
 
 func Draw() {
-
 	render.SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/maps/default/background/Game")
+		img := imagecollection.GetImage("assets/images/maps/helloween/background/game")
 
 		opts := &ebiten.DrawImageOptions{}
 

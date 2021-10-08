@@ -7,6 +7,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/render/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/syncer"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -31,6 +32,7 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 	for _, dt := range render.GetToRender(){
 		dt(screen)
 	}
+	middlewares.UseRenderMiddlewares()
 	render.CleanRenderPool()
 
 	w, h := screen.Size()

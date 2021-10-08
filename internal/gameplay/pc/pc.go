@@ -4,8 +4,10 @@ import (
 	"crypto/sha256"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	"github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -69,6 +71,14 @@ type PC struct{
 	Metadata *models.Metadata
 
 	GameCredentials GameCredentials
+}
+
+func (p *PC) InitUsername(){
+	n, ok := provider.UseStorageProvider().User().Get("name").(string)
+	if !ok{
+		logrus.Fatal("username can't be converted to string type")
+	}
+	p.Username = n
 }
 
 type PCs []PC

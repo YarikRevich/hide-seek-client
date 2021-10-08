@@ -13,7 +13,14 @@ type user struct {
 }
 
 func (u *user) Get(f string) interface{} {
-	return nil
+	q := u.db.QueryRow("SELECT name FROM user")
+	
+	var name string
+	if err := q.Scan(&name); err != nil{
+		logrus.Errorf("scanning username failed: %w", err)
+	}
+
+	return name
 }
 
 func (u *user) Save(q common.DBQuery) {

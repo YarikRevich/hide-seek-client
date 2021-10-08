@@ -3,22 +3,17 @@ package popupmessages
 import (
 	"image/color"
 
+	popupmessagescollection "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font/basicfont"
 )
-var (
-	MessageChan = make(chan error, 20 * 1024)
-)
 
 func Draw() {
-	select {
-	case msg := <- MessageChan:
-		render.SetToRender(func(screen *ebiten.Image) {
-			text.Draw(screen, msg.Error(), basicfont.Face7x13, 40, 40, color.RGBA{0xff, 0x00, 0x00, 0xff})
-		})
-	default:
-		return
-	}
+	render.SetToRender(func(screen *ebiten.Image) {
+		for _, m := range popupmessagescollection.PopUpMessages.Read(){
+			text.Draw(screen, m.Message, basicfont.Face7x13, 40, 40, color.RGBA{0xff, 0x00, 0x00, 0xff})
+		}
+	})
 }

@@ -8,18 +8,25 @@ import (
 	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
 )
 
-func cleanBuffers(){
+func cleanBuffers() {
 	collection.SettingsMenuNameBuffer.Clean()
 }
 
-func setSuspendedMusicDone(){
+func checkIfOnline() {
+	go func() {
+		
+	}()
+
+}
+
+func setSuspendedMusicDone() {
 	applyer.ApplyMiddlewares(
 		statemachine.UseStateMachine().Audio().SetState(audio.DONE),
 		audiomiddleware.UseAudioMiddleware,
 	)
 }
 
-func UseUIMiddleware(c func()){
+func UseUIMiddleware(c func()) {
 	cleanBuffers()
 	setSuspendedMusicDone()
 	c()
