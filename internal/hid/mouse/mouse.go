@@ -5,12 +5,15 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/unfocus"
 	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 
 	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/settings_menu"
 	startmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/start_menu"
 )
 
 func Process() {
+	profiling.UseProfiler().StartMonitoring(profiling.MOUSE_HANDLER)
+
 	switch statemachine.UseStateMachine().UI().GetState(){
 	case ui.CREATE_LOBBY_MENU:
 		if creationlobbymenu.Exec(){
@@ -29,4 +32,6 @@ func Process() {
 	if IsMousePressed(){
 		unfocus.Exec()
 	}
+
+	profiling.UseProfiler().EndMonitoring()
 }

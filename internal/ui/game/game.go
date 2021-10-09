@@ -13,7 +13,7 @@ import (
 )
 
 func Draw() {
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := imagecollection.GetImage("assets/images/maps/helloween/background/game")
 
 		opts := &ebiten.DrawImageOptions{}
@@ -25,7 +25,7 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := pc.GetPC()
 		c := animation.WithAnimation(
 			imagecollection.GetImage("assets/images/heroes/pumpkinhero"),

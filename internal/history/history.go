@@ -1,6 +1,9 @@
 package history
 
-import "github.com/YarikRevich/HideSeek-Client/internal/direction"
+import (
+	"github.com/YarikRevich/HideSeek-Client/internal/direction"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type ScreenSize struct {
 	Height int
@@ -20,11 +23,12 @@ func GetDirection() direction.Direction {
 	return lastDirection
 }
 
-func SetScreenSize(s ScreenSize) {
-	lastScreenSize = s
+func UpdateScreenSize(screen *ebiten.Image) {
+	w, h := screen.Size()
+	lastScreenSize = ScreenSize{
+		Height: h, Width: w}
 }
 
 func GetScreenSize() (int, int) {
 	return lastScreenSize.Width, lastScreenSize.Height
 }
-

@@ -11,7 +11,7 @@ import (
 )
 
 func Draw() {
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		for _, m := range popupmessagescollection.PopUpMessages.Read(){
 			text.Draw(screen, m.Message, basicfont.Face7x13, 40, 40, color.RGBA{0xff, 0x00, 0x00, 0xff})
 		}

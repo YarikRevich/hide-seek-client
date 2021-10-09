@@ -3,6 +3,7 @@ package ui
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui/debug"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui/game"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui/pop_up_messages"
@@ -13,6 +14,8 @@ import (
 )
 
 func Process() {
+	profiling.UseProfiler().StartMonitoring(profiling.UI)
+	
 	switch statemachine.UseStateMachine().UI().GetState() {
 	case ui.GAME:
 		game.Draw()
@@ -31,6 +34,7 @@ func Process() {
 	if cli.GetDebug() {
 		debug.Draw()
 	}
-
 	popupmessages.Draw()
+
+	profiling.UseProfiler().EndMonitoring()
 }

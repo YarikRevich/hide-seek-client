@@ -15,7 +15,7 @@ import (
 )
 
 func Draw() {
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := imagecollection.GetImage("assets/images/system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
@@ -26,7 +26,7 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := imagecollection.GetImage("assets/images/system/buttons/back")
 		m := metadatacollection.GetMetadata("assets/images/system/buttons/back")
 
@@ -38,7 +38,7 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/inputs/input"))
 		m := metadatacollection.GetMetadata("assets/images/system/inputs/input")
 
@@ -56,7 +56,7 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	render.SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/buttons/button"))
 		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_save_config")
 

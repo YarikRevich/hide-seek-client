@@ -1,10 +1,9 @@
 package debug
 
 import (
-	"fmt"
 	"image/color"
-	"strconv"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -21,12 +20,9 @@ func Draw() {
 	// 	l.userConfig.PersonalInfo.LobbyID,
 	// 	strings.Split(l.userConfig.Conn.RemoteAddr().String(), ":")[0],
 
-	render.SetToRender(func(screen *ebiten.Image) {
-
+	render.UseRender().SetToPostRender(func(screen *ebiten.Image) {
 		f := fontcollection.GetFontBySize(metadatacollection.GetMetadata("assets/fonts/debug/debug").Fonts.Font)
-		text.Draw(screen, fmt.Sprintf(
-			"!!!\n%s\n%s\n!!!",
-			strconv.FormatFloat(ebiten.CurrentFPS(), 'f', 0, 32),
-			strconv.FormatFloat(ebiten.CurrentTPS(), 'f', 0, 32)), f, 0, 15, color.White)
+		
+		text.Draw(screen, profiling.UseProfiler().GetFormattedMonitoringLog(), f, 0, 0, color.White)
 	})
 }

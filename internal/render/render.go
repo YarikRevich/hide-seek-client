@@ -1,20 +1,74 @@
 package render
 
 import (
+	"fmt"
+	"github.com/YarikRevich/HideSeek-Client/internal/render/middlewares"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-type RenderCallback func(*ebiten.Image)
+var instance IRender
 
-var toRender = make([]RenderCallback, 0, 100)
+type callback func(*ebiten.Image)
 
-func SetToRender(c RenderCallback){
-	toRender = append(toRender, c)
+type render struct {
+	screen *ebiten.Image
+
+	renderList     []callback
+	postRenderList []callback
 }
-func GetToRender()[]RenderCallback{
-	return toRender
+
+type IRender interface {
+	UpdateScreen(*ebiten.Image)
+	SetToRender(callback)
+	SetToPostRender(callback)
+
+	rawRender([]callback)
+	Render()
+	PostRender()
+
+	CleanRenderPool()
 }
 
-func CleanRenderPool(){
-	toRender = toRender[:0]
+func (r *render) UpdateScreen(screen *ebiten.Image) {
+	r.screen = screen
+}
+
+func (r *render) SetToRender(c callback) {
+	r.renderList = append(r.renderList, c)
+}
+
+func (r *render) SetToPostRender(c callback) {
+	r.postRenderList = append(r.postRenderList, c)
+}
+
+func (r *render) rawRender(lc []callback) {
+	for _, v := range lc {
+		v(r.screen)
+	}
+}
+
+func (r *render) Render() {
+	fmt.Println(r.renderList)
+	r.rawRender(r.renderList)
+}
+
+func (r *render) PostRender() {
+	r.rawRender(r.postRenderList)
+
+	middlewares.UseRenderMiddlewares()
+}
+
+func (r *render) CleanRenderPool() {
+	r.renderList = r.renderList[:0]
+	r.postRenderList = r.postRenderList[:0]
+}
+
+func UseRender() IRender {
+	if instance == nil {
+		instance = &render{
+			renderList:     make([]callback, 0, 100),
+			postRenderList: make([]callback, 0, 100),
+		}
+	}
+	return instance
 }
