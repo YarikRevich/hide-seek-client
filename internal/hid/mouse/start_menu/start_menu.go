@@ -10,6 +10,7 @@ import (
 	inputmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/input"
 	uimiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/ui"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/world"
 )
 
 func Exec()bool {
@@ -25,7 +26,8 @@ func Exec()bool {
 		return true
 	}
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
-		pc.GetPC().InitUsername()
+		pc.UsePC().Init()
+		world.UseWorld().Init("assets/images/maps/helloween/background/background")
 		
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.WAIT_ROOM),

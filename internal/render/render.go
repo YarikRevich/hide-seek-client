@@ -1,7 +1,6 @@
 package render
 
 import (
-	"fmt"
 	"github.com/YarikRevich/HideSeek-Client/internal/render/middlewares"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -48,7 +47,6 @@ func (r *render) rawRender(lc []callback) {
 }
 
 func (r *render) Render() {
-	fmt.Println(r.renderList)
 	r.rawRender(r.renderList)
 }
 

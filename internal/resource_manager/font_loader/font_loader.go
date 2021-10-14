@@ -41,7 +41,7 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 			for s := 0; s < 100; s++ {
 				collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)] =
 					truetype.NewFace(ff, &truetype.Options{
-						Size:    float64(s),
+						Size:    9,
 						DPI:     72,
 						Hinting: font.HintingFull,
 					})

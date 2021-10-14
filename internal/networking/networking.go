@@ -2,6 +2,7 @@ package networking
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/networking/game"
+	waitroom "github.com/YarikRevich/HideSeek-Client/internal/networking/wait_room"
 
 	joinlobbymenu "github.com/YarikRevich/HideSeek-Client/internal/networking/join_lobby_menu"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
@@ -14,6 +15,8 @@ func Process() {
 		joinlobbymenu.Exec()
 	case ui.GAME:
 		game.Exec()
+	case ui.WAIT_ROOM:
+		waitroom.Exec()
 	}
 }
 

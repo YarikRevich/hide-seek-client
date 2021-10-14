@@ -7,6 +7,7 @@ import (
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,7 +17,7 @@ const (
 )
 
 var (
-	pc *PC
+	instance *PC
 )
 
 type Animation struct {
@@ -56,6 +57,8 @@ type Physics struct {
 }
 
 type PC struct{
+	ID uuid.UUID
+
 	Username string
 
 	Health uint64
@@ -73,7 +76,13 @@ type PC struct{
 	GameCredentials GameCredentials
 }
 
-func (p *PC) InitUsername(){
+func (p *PC) Init(){
+	id, err := uuid.NewUUID()
+	if err != nil{
+		logrus.Fatal("failed to create uuid for world:", err)
+	}
+	p.ID = id
+
 	n, ok := provider.UseStorageProvider().User().Get("name").(string)
 	if !ok{
 		logrus.Fatal("username can't be converted to string type")
@@ -103,17 +112,17 @@ type PCs []PC
 // }
 
 
-func GetPC()*PC{
-	if pc == nil{
-		pc = new(PC)
-		pc.Username = EMPTY
-		pc.Health = DEFAULT_HEALTH
-		pc.Buffs.Speed = 2.5
-		pc.Equipment.Skin.Animation.FrameDelay = 5
-		pc.Equipment.Skin.Animation.FrameDelayCounter = 1
-		pc.Metadata = metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero")
+func UsePC()*PC{
+	if instance == nil{
+		instance = new(PC)
+		instance.Username = EMPTY
+		instance.Health = DEFAULT_HEALTH
+		instance.Buffs.Speed = 2.5
+		instance.Equipment.Skin.Animation.FrameDelay = 5
+		instance.Equipment.Skin.Animation.FrameDelayCounter = 1
+		instance.Metadata = metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero")
 	}
-	return pc
+	return instance
 }
 
 

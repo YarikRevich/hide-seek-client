@@ -1,0 +1,23 @@
+[margins]
+leftmargin = 107.0
+topmargin = 100.0
+
+[size]
+width = 70.0
+height = 40.0
+
+[scale]
+coefficiantx = 2.5
+coefficianty = 2.5
+
+[button]
+text = "Confirm game"
+textposition = "center"
+
+[fonts]
+font = 9.0
+fontcolor = "white"
+
+# [fonts]
+# # font = 7.0
+# fontcolor = "white"

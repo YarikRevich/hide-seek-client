@@ -64,7 +64,14 @@ func StartCallback(
 			}
 			speaker.Play(effect)
 			go func(){
-				for streamer.Position() != streamer.Len(){}
+				ticker := time.NewTicker(time.Millisecond * 500)
+				for range ticker.C{
+					if streamer.Position() == streamer.Len(){
+						break
+					}
+				}
+				ticker.Stop()
+				
 				ctrl.Paused = true
 
 				applyer.ApplyMiddlewares(

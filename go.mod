@@ -15,7 +15,9 @@ require (
 )
 
 require (
+	github.com/YarikRevich/game-networking v1.1.4-0.20211014065053-d527f9afb0bf // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210727001814-0db043d8d5be // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/hajimehoshi/go-mp3 v0.3.2 // indirect
 	github.com/hajimehoshi/oto v0.7.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -23,7 +25,7 @@ require (
 	golang.org/x/exp v0.0.0-20201221025956-e89b829e73ea // indirect
 	golang.org/x/mobile v0.0.0-20210220033013-bdb1ca9a1e08 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20210502180810-71e4cd670f79 // indirect
+	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
 )
 
 replace github.com/YarikRevich/lru => github.com/YarikRevich/caching v0.0.0-20211008094010-9f23bdf6c975

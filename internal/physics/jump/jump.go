@@ -12,11 +12,10 @@ import (
 var JumpGap = time.NewTicker(time.Millisecond * 20)
 
 func CalculateJump() {
-	p := pc.GetPC()
+	p := pc.UsePC()
 	if len(p.Physics.Jump) == 0 {
-		w := world.UseWorld()
 
-		t := int(math.Round((math.Sqrt((2*p.Metadata.Size.Height)/w.Metadata.Physics.G) / 2)))
+		t := int(math.Round((math.Sqrt((2*p.Metadata.Size.Height)/world.UseWorld().Location.Metadata.Physics.G) / 2)))
 
 		for t%2 != 0{
 			t++

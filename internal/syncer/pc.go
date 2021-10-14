@@ -5,7 +5,7 @@ import (
 )
 
 func SyncPC(swf, shf, pwf, phf float64){
-	p := pc.GetPC()
+	p := pc.UsePC()
 
 	p.Y = (p.Y * shf) / phf
 	p.X = (p.X * swf) / pwf

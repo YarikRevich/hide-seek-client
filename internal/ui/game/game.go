@@ -26,7 +26,7 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := pc.GetPC()
+		p := pc.UsePC()
 		c := animation.WithAnimation(
 			imagecollection.GetImage("assets/images/heroes/pumpkinhero"),
 			*metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero"),
