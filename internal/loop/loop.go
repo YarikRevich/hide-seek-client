@@ -1,7 +1,7 @@
 package loop
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/audio"
+	// "github.com/YarikRevich/HideSeek-Client/internal/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
@@ -23,7 +23,7 @@ func (g *Loop) Update() error {
 	ui.Process()
 	mouse.Process()
 	keyboard.Process()
-	audio.Process()
+	// audio.Process()
 	networking.Process()
 	return nil
 }

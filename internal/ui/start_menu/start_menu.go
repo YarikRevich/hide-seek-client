@@ -3,11 +3,12 @@ package start_menu
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
+	// "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
+	positioning "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
-	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -47,9 +48,19 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
-		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
-		text.Draw(img, m.Button.Text, f, tx, ty, color.White)
+		p := positioning.NewPositionSession(
+			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
+		)
+		for p.Next(){
+			tx, ty := p.GetPosition()
+			text.Draw(
+				img,
+				p.GetText(),
+				f,
+				tx, ty,
+				color.White)
+		}
 
 		screen.DrawImage(img, opts)
 	})
@@ -64,9 +75,19 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
-		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
-		text.Draw(img, m.Button.Text, f, tx, ty,color.White)
+		p := positioning.NewPositionSession(
+			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
+		)
+		for p.Next(){
+			tx, ty := p.GetPosition()
+			text.Draw(
+				img,
+				p.GetText(),
+				f,
+				tx, ty,
+				color.White)
+		}
 
 		screen.DrawImage(img, opts)
 	})

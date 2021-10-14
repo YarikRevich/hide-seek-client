@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/sirupsen/logrus"
-
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 
@@ -27,6 +26,7 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 		if err != nil {
 			logrus.Fatal("error happened opening font file from embedded fs: ", err)
 		}
+		
 
 		ff, err := truetype.Parse(f)
 		if err != nil {
@@ -41,10 +41,11 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 			for s := 0; s < 100; s++ {
 				collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)] =
 					truetype.NewFace(ff, &truetype.Options{
-						Size:    9,
-						DPI:     72,
+						Size: float64(s),
+						// DPI:     72,
 						Hinting: font.HintingFull,
 					})
+					// collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)].
 			}
 
 			mu.Unlock()

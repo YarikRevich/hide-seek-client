@@ -47,11 +47,22 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
+
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
 		t := buffercollection.SettingsMenuNameBuffer.Read()
-		tx, ty := button.ChooseButtonTextPosition(f, t, *m)
 
-		text.Draw(img, t, f, tx, ty, color.White)
+		p := positioning.NewPositionSession(
+			f, t, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
+		)
+		for p.Next(){
+			tx, ty := p.GetPosition()
+			text.Draw(
+				img,
+				p.GetText(),
+				f,
+				tx, ty,
+				color.White)
+		}
 
 		screen.DrawImage(img, opts)
 	})
@@ -66,9 +77,19 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
-		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
 
-		text.Draw(img, m.Button.Text, f, tx, ty,color.White)
+		p := positioning.NewPositionSession(
+			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
+		)
+		for p.Next(){
+			tx, ty := p.GetPosition()
+			text.Draw(
+				img,
+				p.GetText(),
+				f,
+				tx, ty,
+				color.White)
+		}
 
 		screen.DrawImage(img, opts)
 	})

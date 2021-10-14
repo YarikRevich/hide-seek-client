@@ -39,16 +39,15 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/textareas/textarea")
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/textareas/textarea"))
 		m := metadatacollection.GetMetadata("assets/images/system/textareas/textarea")
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		// fmt.Println(m.Fonts.Font)
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
-		text.Draw(img, world.UseWorld().FormatUsersUsername(), f, 10, 25, &color.RGBA{100, 100, 100, 255})
+		text.Draw(img, world.UseWorld().FormatUsersUsername(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})
@@ -58,15 +57,23 @@ func Draw() {
 		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")
 
 		opts := &ebiten.DrawImageOptions{}
-
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
-		tx, ty := button.ChooseButtonTextPosition(f, m.Button.Text, *m)
-		
-		text.Draw(img, m.Button.Text, f, tx, ty, color.White)
 
+		p := positioning.NewPositionSession(
+			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
+		)
+		for p.Next(){
+			tx, ty := p.GetPosition()
+			text.Draw(
+				img,
+				p.GetText(),
+				f,
+				tx, ty,
+				color.White)
+		}
 		screen.DrawImage(img, opts)
 	})
 	// l.winConf.TextAreas.NewMembersAnnouncement.Clear()
