@@ -9,7 +9,7 @@ import (
 	inputmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/input"
 	uimiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/ui"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
-	"github.com/YarikRevich/HideSeek-Client/internal/world"
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 )
 
 func Exec()bool{

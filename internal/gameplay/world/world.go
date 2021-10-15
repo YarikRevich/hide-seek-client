@@ -1,5 +1,6 @@
 package world
 
+
 import (
 	"fmt"
 	"strings"
@@ -7,7 +8,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	metadatamodels "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/google/uuid"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"
@@ -19,7 +20,7 @@ type Location struct {
 	Name string
 	Path string
 	Image *ebiten.Image `json:"-"`
-	Metadata models.Metadata
+	Metadata metadatamodels.Metadata
 }
 
 type World struct {

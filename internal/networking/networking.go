@@ -10,6 +10,7 @@ import (
 )
 
 func Process() {
+	
 	switch statemachine.UseStateMachine().UI().GetState() {
 	case ui.JOIN_LOBBY_MENU:
 		joinlobbymenu.Exec()

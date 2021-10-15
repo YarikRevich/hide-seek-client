@@ -4,10 +4,10 @@ import (
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
-	"github.com/YarikRevich/HideSeek-Client/internal/world"
 )
 
 var ticker = time.NewTicker(time.Second)

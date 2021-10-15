@@ -6,7 +6,7 @@ import (
 
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
-	"github.com/YarikRevich/HideSeek-Client/internal/world"
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 )
 
 var JumpGap = time.NewTicker(time.Millisecond * 20)

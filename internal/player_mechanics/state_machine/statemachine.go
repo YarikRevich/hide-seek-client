@@ -5,6 +5,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/common"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/input"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/networking"
 )
 
 var instance IStateMachine
@@ -15,6 +16,7 @@ type IStateMachine interface {
 	Audio() common.IState
 	UI() common.IState
 	Input() common.IState
+	Networking() common.IState
 }
 
 func (s *StateMachine) Audio() common.IState {
@@ -27,6 +29,10 @@ func (s *StateMachine) UI() common.IState {
 
 func (s *StateMachine) Input() common.IState {
 	return input.UseStatus()
+}
+
+func (s *StateMachine) Networking() common.IState {
+	return networking.UseStatus()
 }
 
 func UseStateMachine() IStateMachine {

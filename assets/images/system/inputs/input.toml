@@ -12,5 +12,5 @@ coefficianty = 1.2
 
 [button]
 textposition = "center"
-font = 17.0
+font = 9.0
 fontcolor = "white"

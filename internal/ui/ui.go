@@ -23,7 +23,6 @@ func Process() {
 		startmenu.Draw()
 	case ui.SETTINGS_MENU:
 		settingsmenu.Draw()
-	case ui.CREATE_LOBBY_MENU:
 	case ui.JOIN_LOBBY_MENU:
 
 	case ui.CHOOSE_EQUIPMENT:
