@@ -9,3 +9,10 @@ Fix:
 	Fixed mismarshaling of fields when call function(networking) is called
 
 ---
+
+---
+[15.10.2021]
+Feature:
+	Improved networking check
+
+---
