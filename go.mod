@@ -15,7 +15,7 @@ require (
 )
 
 require (
-	github.com/YarikRevich/game-networking v1.1.4-0.20211014065053-d527f9afb0bf // indirect
+	github.com/YarikRevich/game-networking v1.1.4-0.20211015141309-a9a7c3e19797 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210727001814-0db043d8d5be // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hajimehoshi/go-mp3 v0.3.2 // indirect

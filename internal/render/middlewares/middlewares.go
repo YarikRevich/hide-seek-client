@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
 	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
@@ -14,7 +15,7 @@ import (
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
-var ticker = time.NewTicker(time.Second * 1)
+var ticker = time.NewTicker(time.Second * 2)
 var once sync.Once
 var m sync.Mutex
 
@@ -35,7 +36,7 @@ func checkPopUpMessagesToClean() {
 
 func checkIfOnlineInitial() {
 	once.Do(func() {
-		if isconnect.IsOnline() {
+		if isconnect.IsOnline() && connection.UseConnection().IsConnected() {
 			applyer.ApplyMiddlewares(
 				statemachine.UseStateMachine().Networking().SetState(networking.ONLINE),
 				networkingmiddleware.UseNetworkingMiddleware,
@@ -48,19 +49,21 @@ func checkIfOnline() {
 	go func() {
 		m.Lock()
 
-		if !isconnect.IsOnline() {
-			popupmessagescollection.PopUpMessages.WriteError("You are offline!")
+		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected(){
+			popupmessagescollection.PopUpMessages.WriteError("Servers are offline!")
 			applyer.ApplyMiddlewares(
 				statemachine.UseStateMachine().Networking().SetState(networking.OFFLINE),
 				networkingmiddleware.UseNetworkingMiddleware,
 			)
-			m.Unlock()
+
 		} else {
 			applyer.ApplyMiddlewares(
 				statemachine.UseStateMachine().Networking().SetState(networking.ONLINE),
 				networkingmiddleware.UseNetworkingMiddleware,
 			)
 		}
+
+		m.Unlock()
 	}()
 }
 

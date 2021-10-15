@@ -35,6 +35,16 @@ github.com/YarikRevich/game-networking v1.1.4-0.20211013202537-3e904a6dba93 h1:T
 github.com/YarikRevich/game-networking v1.1.4-0.20211013202537-3e904a6dba93/go.mod h1:VwKbbQ+vvQuLahtdiuIKrZ7uIL0ooyM8Ycc+zTd88rY=
 github.com/YarikRevich/game-networking v1.1.4-0.20211014065053-d527f9afb0bf h1:SLb9PMTjZD7GAAKz06gPPW65GcmBGGV2bbd+1N7Ir+k=
 github.com/YarikRevich/game-networking v1.1.4-0.20211014065053-d527f9afb0bf/go.mod h1:VwKbbQ+vvQuLahtdiuIKrZ7uIL0ooyM8Ycc+zTd88rY=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015091403-28d5f3c096dc h1:nj517yq1DO4yLnk1+qVYw/wZ/bmVALPk9uJtOnTXOBo=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015091403-28d5f3c096dc/go.mod h1:gSL3+YT95jFTHsOErMTULUUflkK66Tvi/LEGSy+b9Jo=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015105513-131a940864a3 h1:PZvLRWx55VZvW9kftN6WzwBCzBKa2dHDsLPGkrTRlRg=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015105513-131a940864a3/go.mod h1:gSL3+YT95jFTHsOErMTULUUflkK66Tvi/LEGSy+b9Jo=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015110738-ea9437e52dd9 h1:VsGPVWXNP7trCzmW8TB2mzXxVQSL/qKxIPtB8Ol9vzU=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015110738-ea9437e52dd9/go.mod h1:gSL3+YT95jFTHsOErMTULUUflkK66Tvi/LEGSy+b9Jo=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015121201-042b2e973b05 h1:wa+1kqHgqHOhNZ4v3kkfL0QC7CcoBbX6eGetBTwnpAs=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015121201-042b2e973b05/go.mod h1:gSL3+YT95jFTHsOErMTULUUflkK66Tvi/LEGSy+b9Jo=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015141309-a9a7c3e19797 h1:kHC0ViuvyGDuBBo/D4fG9i+JRrqPpCEu3sIxuuED9qc=
+github.com/YarikRevich/game-networking v1.1.4-0.20211015141309-a9a7c3e19797/go.mod h1:gSL3+YT95jFTHsOErMTULUUflkK66Tvi/LEGSy+b9Jo=
 github.com/YarikRevich/wrapper v0.0.0-20210919192625-fd9de6c41066/go.mod h1:cH6oCR/g/lSsb0qfjiIH2IFD0nUyD3LFCVFoX45e/Q0=
 github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0 h1:W51dH0udo7NVhSJJI6hMCI2ELQlqWhTre8yRbFBo5/I=
 github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0/go.mod h1:b3xgOUlKx/XrCrXcM/nXkvr+/micjpqdP1i1g5OVZWs=
