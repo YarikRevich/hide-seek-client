@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"path/filepath"
 
 	"embed"
 
@@ -32,7 +33,7 @@ func init() {
 
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	lgf, err := os.OpenFile(paths.GAME_LOG_DIR+"/log.log", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "/log.log"), os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		log.Fatalln(err)
 	}

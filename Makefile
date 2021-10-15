@@ -38,6 +38,14 @@ dev: build install_bin
 
 build:
 	$(call clear)
+
+	@$(call log_print, Assets transfer)
+	@mkdir -p /usr/local/share/games/HideSeek/assets
+	@mkdir -p /usr/local/share/games/HideSeek/log
+	@mkdir -p /usr/local/share/games/HideSeek/db
+
+	$(call clear)
+
 	$(call log_print, Builds project)
 	@go build
 
@@ -47,11 +55,7 @@ install_bin:
 	@go install
 
 update_assets:
-	@$(call clear)
-	@$(call log_print, Assets transfer)
-	@mkdir -p /usr/local/share/games/HideSeek/assets
-	@mkdir -p /usr/local/share/games/HideSeek/log
-	@cp -r $(CURDIR)/assets/* /usr/local/share/games/HideSeek/assets
+
 
 full_install:
 	$(MAKE) go_install
