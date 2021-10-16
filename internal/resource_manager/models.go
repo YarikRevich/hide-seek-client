@@ -13,6 +13,6 @@ type Component struct {
 	Path  string
 }
 
-func (c *Component) SeparatePath()[]string{
+func (c *Component) SeparatePath() []string {
 	return strings.Split(c.Path, ":")
 }

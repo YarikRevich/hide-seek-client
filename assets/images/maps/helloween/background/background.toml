@@ -1,6 +1,6 @@
 [size]
-width = 50.0
-height = 60.0
+width = 1550.0
+height = 1050.0
 
 [[spawns]]
 x = 10.0
@@ -14,6 +14,10 @@ y = 32.0
 [[spawns]]
 x = 6.0
 y = 89.0
+
+[scale]
+coefficiantx = 1.0
+coefficianty = 1.0
 
 [physics]
 g = 10.0

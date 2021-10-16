@@ -15,14 +15,14 @@ require (
 )
 
 require (
-	github.com/YarikRevich/game-networking v1.1.4-0.20211015150625-86d96e1221b6 // indirect
+	github.com/YarikRevich/game-networking v1.1.4-0.20211015150625-86d96e1221b6 // direct
+	// github.com/atotto/clipboard v0.1.4 // direct
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210727001814-0db043d8d5be // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.3.0 // direct
 	github.com/hajimehoshi/go-mp3 v0.3.2 // indirect
 	github.com/hajimehoshi/oto v0.7.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/rs/xid v1.3.0 // indirect
-	github.com/sony/sonyflake v1.0.0 // indirect
+	github.com/rs/xid v1.3.0 // direct
 	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/exp v0.0.0-20201221025956-e89b829e73ea // indirect
 	golang.org/x/mobile v0.0.0-20210220033013-bdb1ca9a1e08 // indirect

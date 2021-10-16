@@ -20,10 +20,10 @@ type handler string
 type handlers []*monitoring
 
 type monitoring struct {
-	handler handler
+	handler     handler
 	currentTime time.Time
-	time    []float64
-	avg     float64
+	time        []float64
+	avg         float64
 }
 
 type profiler struct {
@@ -45,10 +45,10 @@ func (p *profiler) StartMonitoring(name handler) {
 	if GetMonitoringByHandler(p.current, p.handlers) == nil {
 		p.handlers = append(p.handlers, &monitoring{handler: p.current})
 	}
-	GetMonitoringByHandler(p.current, p.handlers).currentTime  = time.Now()
+	GetMonitoringByHandler(p.current, p.handlers).currentTime = time.Now()
 }
 
-func (p *profiler) EndMonitoring(){
+func (p *profiler) EndMonitoring() {
 	h := GetMonitoringByHandler(p.current, p.handlers)
 	h.time = append(h.time, float64(time.Since(h.currentTime).Seconds()))
 }
@@ -56,7 +56,7 @@ func (p *profiler) EndMonitoring(){
 func (p *profiler) SumUpMonitoring() {
 	select {
 	case <-p.delay.C:
-		for _, h := range p.handlers{
+		for _, h := range p.handlers {
 			var sum float64
 			for _, t := range h.time {
 				sum += t

@@ -12,20 +12,20 @@ import (
 
 var ticker = time.NewTicker(time.Second)
 
-func Exec(){
+func Exec() {
 	collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
 		connection.UseConnection().Call("reg_user", pc.UsePC(), nil)
 
-		connection.UseConnection().Call("reg_world", struct{
+		connection.UseConnection().Call("reg_world", struct {
 			World world.World
-			PC pc.PC
+			PC    pc.PC
 		}{
 			*world.UseWorld(), *pc.UsePC(),
 		}, nil)
 	})
 
 	select {
-	case <- ticker.C:
+	case <-ticker.C:
 		connection.UseConnection().Call("update_world_users", world.UseWorld(), &world.UseWorld().Users)
 	default:
 	}
@@ -38,7 +38,7 @@ func Exec(){
 	// 		server.Write()
 	// 		response := server.ReadGame(parser.Unparse)
 	// 		responseUser :=  GetUserFromList(l.userConfig.PersonalInfo.Username, response)
-			
+
 	// 		if responseUser != nil{
 	// 			switch responseUser.Error{
 	// 			case "60":

@@ -17,31 +17,31 @@ func NewDB() *sql.DB {
 	if err != nil {
 		logrus.Fatal("connection to db failed: ", err)
 	}
-	go func(){
+	go func() {
 		n := make(chan os.Signal, 1)
 		signal.Notify(n, os.Interrupt)
-		for range n{
-			if err := c.Close(); err != nil{
+		for range n {
+			if err := c.Close(); err != nil {
 				logrus.Fatal("closing of db failed: ", err)
 			}
 		}
 	}()
 
-	if _, err := c.Exec("CREATE TABLE IF NOT EXISTS user (name VARCHAR(50) UNIQUE)"); err != nil{
+	if _, err := c.Exec("CREATE TABLE IF NOT EXISTS user (name VARCHAR(50) UNIQUE)"); err != nil {
 		logrus.Fatal("initializing of user table failed: ", err)
 	}
 
-	if _, err = c.Exec("CREATE TABLE IF NOT EXISTS window (height REAL, width REAL)"); err != nil{
+	if _, err = c.Exec("CREATE TABLE IF NOT EXISTS window (height REAL, width REAL)"); err != nil {
 		logrus.Fatal("initializing of window table failed: ", err)
 	}
 
 	q := c.QueryRow("SELECT COUNT(*) FROM user")
 	var count int
-	if err := q.Scan(&count); err != nil{
+	if err := q.Scan(&count); err != nil {
 		logrus.Fatal("selecting count of rows user failed: ", err)
 	}
 
-	if _, err = c.Exec("INSERT INTO user (name) VALUES (?)", xid.New().String()); err != nil{
+	if _, err = c.Exec("INSERT INTO user (name) VALUES (?)", xid.New().String()); err != nil {
 		logrus.Fatal("inserting default username failed:", err)
 	}
 

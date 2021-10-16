@@ -3,7 +3,6 @@ package start_menu
 import (
 	"image/color"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
 	positioning "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
@@ -17,7 +16,7 @@ import (
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := imagecollection.GetImage("assets/images/system/background/background")
-		
+
 		opts := &ebiten.DrawImageOptions{}
 
 		imageW, imageH := img.Size()
@@ -52,7 +51,7 @@ func Draw() {
 		p := positioning.NewPositionSession(
 			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
 		)
-		for p.Next(){
+		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(
 				img,
@@ -79,7 +78,7 @@ func Draw() {
 		p := positioning.NewPositionSession(
 			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
 		)
-		for p.Next(){
+		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(
 				img,
@@ -92,33 +91,33 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-		// s.winConf.TextAreas.GameLogo.Clear()
-		// IsOld := func(value float64, list []float64) bool {
-		// 	//Checks whether new pos is not already used
+	// s.winConf.TextAreas.GameLogo.Clear()
+	// IsOld := func(value float64, list []float64) bool {
+	// 	//Checks whether new pos is not already used
 
-		// 	for _, i := range list {
-		// 		if value == i {
-		// 			return true
-		// 		}
-		// 	}
-		// 	return false
-		// }
+	// 	for _, i := range list {
+	// 		if value == i {
+	// 			return true
+	// 		}
+	// 	}
+	// 	return false
+	// }
 
-		// max := float64(4)
+	// max := float64(4)
 
-		// ChangeLogo := func(i float64){
-		// 	//It draws logo applying a new color
-		// 	//and a new rotation pos appending new
-		// 	//params to the 'already used' list
+	// ChangeLogo := func(i float64){
+	// 	//It draws logo applying a new color
+	// 	//and a new rotation pos appending new
+	// 	//params to the 'already used' list
 
-		// 	fmt.Fprint(s.winConf.TextAreas.GameLogo, "Hide&Seek")
-		// 	s.winConf.TextAreas.GameLogo.Color = colornames.Orange
-		// 	s.winConf.TextAreas.GameLogo.Draw(
-		// 		s.winConf.Win,
-		// 		pixel.IM.Scaled(s.winConf.TextAreas.GameLogo.Orig, max-i).Rotated(s.winConf.TextAreas.GameLogo.Orig, -.6),
-		// 	)
-		// 	s.winConf.StartMenu.DrawedTemporally = append(s.winConf.StartMenu.DrawedTemporally, math.Round(i*10)/10)
-		// }
+	// 	fmt.Fprint(s.winConf.TextAreas.GameLogo, "Hide&Seek")
+	// 	s.winConf.TextAreas.GameLogo.Color = colornames.Orange
+	// 	s.winConf.TextAreas.GameLogo.Draw(
+	// 		s.winConf.Win,
+	// 		pixel.IM.Scaled(s.winConf.TextAreas.GameLogo.Orig, max-i).Rotated(s.winConf.TextAreas.GameLogo.Orig, -.6),
+	// 	)
+	// 	s.winConf.StartMenu.DrawedTemporally = append(s.winConf.StartMenu.DrawedTemporally, math.Round(i*10)/10)
+	// }
 
 	// 	switch s.winConf.StartMenu.Regime {
 	// 	case 0:

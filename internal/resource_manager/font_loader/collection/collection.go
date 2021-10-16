@@ -10,7 +10,7 @@ import (
 
 var FontCollection = make(map[string]font.Face)
 
-func GetFont(path string)font.Face{
+func GetFont(path string) font.Face {
 	i, ok := FontCollection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("font with path '%s' not found", path))
@@ -18,7 +18,7 @@ func GetFont(path string)font.Face{
 	return i
 }
 
-func GetFontBySize(rawSize float64)font.Face{
+func GetFontBySize(rawSize float64) font.Face {
 	size := strconv.FormatFloat(rawSize, 'f', 0, 64)
 	return GetFont(fmt.Sprintf("assets/fonts/base_%s", size))
 }

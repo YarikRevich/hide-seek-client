@@ -10,7 +10,7 @@ import (
 
 var (
 	ImageCollection = make(map[[sha256.Size]byte]*ebiten.Image)
-	PathsToHash = make(map[string][sha256.Size]byte)
+	PathsToHash     = make(map[string][sha256.Size]byte)
 )
 
 func GetImage(path string) *ebiten.Image {

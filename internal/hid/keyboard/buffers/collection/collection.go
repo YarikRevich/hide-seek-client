@@ -6,6 +6,6 @@ var (
 	SettingsMenuNameBuffer = common.NewBuffer()
 )
 
-func CleanBlinking(){
+func CleanBlinking() {
 	SettingsMenuNameBuffer.CleanBlinkingUnfocus()
 }

@@ -1,6 +1,6 @@
 package creationlobbymenu
 
-func Exec(){
+func Exec() {
 	// c.winConf.TextAreas.CreateLobbyInput.InputLobbyIDTextArea.Clear()
 	// if c.winConf.Win.Pressed(pixelgl.KeyBackspace){
 	// 	if c.winConf.WindowUpdation.CreationMenuFrame % 8 == 0{

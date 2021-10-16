@@ -9,7 +9,7 @@ import (
 )
 
 type PipelineEntity struct {
-	Keys []ebiten.Key
+	Keys     []ebiten.Key
 	Callback func(common.IBuffer, rune)
 }
 
@@ -19,12 +19,12 @@ func HandleKeyboardPress(b common.IBuffer, pe []PipelineEntity) {
 	for _, pk := range inpututil.PressedKeys() {
 		if inpututil.KeyPressDuration(pk) == 1 {
 			for _, e := range pe {
-				if collection.IsKeyInList(pk, e.Keys){
-					if collection.IsServiceKey(pk){
+				if collection.IsKeyInList(pk, e.Keys) {
+					if collection.IsServiceKey(pk) {
 						e.Callback(b, '0')
 						break
 					}
-					for _, k := range pk.String(){
+					for _, k := range pk.String() {
 						e.Callback(b, k)
 					}
 					break

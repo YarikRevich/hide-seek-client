@@ -22,7 +22,7 @@ func Draw() {
 
 	render.UseRender().SetToPostRender(func(screen *ebiten.Image) {
 		f := fontcollection.GetFontBySize(metadatacollection.GetMetadata("assets/fonts/debug/debug").Fonts.Font)
-		
+
 		text.Draw(screen, profiling.UseProfiler().GetFormattedMonitoringLog(), f, 0, 0, color.White)
 	})
 }

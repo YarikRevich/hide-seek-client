@@ -8,6 +8,6 @@ var (
 	debug = flag.Bool("debug", false, "Enables debug mode")
 )
 
-func GetDebug()bool{
+func GetDebug() bool {
 	return *debug
 }

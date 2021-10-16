@@ -14,7 +14,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
 )
 
-func Exec()bool{
+func Exec() bool {
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/inputs/input")) {
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().Input().SetState(input.SETTINGS_MENU_USERNAME),
@@ -38,7 +38,7 @@ func Exec()bool{
 			common.DBQuery{{
 				Field: "name", Value: collection.SettingsMenuNameBuffer.ReadClean(),
 			}})
-		
+
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
 			inputmiddleware.UseInputMiddleware,

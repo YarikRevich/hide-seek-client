@@ -6,8 +6,8 @@ import (
 )
 
 func stopPreviousTrack() {
-	if p := audio.GetLastAudioTrackPath(); p != ""{
-		audiocollection.GetAudioController(p).Stop()	
+	if p := audio.GetLastAudioTrackPath(); p != "" {
+		audiocollection.GetAudioController(p).Stop()
 	}
 }
 

@@ -1,5 +1,5 @@
 package joinlobbymenu
 
-func Exec() bool{
+func Exec() bool {
 	return false
 }

@@ -20,7 +20,6 @@ var _ ebiten.Game = (*Loop)(nil)
 func (g *Loop) Update() error {
 	render.UseRender().CleanRenderPool()
 
-	
 	ui.Process()
 	mouse.Process()
 	keyboard.Process()
@@ -40,7 +39,7 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 	render.UseRender().Render()
 
 	history.UpdateScreenSize(screen)
-	
+
 	profiling.UseProfiler().EndMonitoring()
 	profiling.UseProfiler().SumUpMonitoring()
 

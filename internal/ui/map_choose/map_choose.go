@@ -2,12 +2,12 @@ package map_choose
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	"github.com/hajimehoshi/ebiten/v2"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
+	"github.com/hajimehoshi/ebiten/v2"
 	// metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 )
 
-func Draw(){
+func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := imagecollection.GetImage("assets/images/system/background/background")
 

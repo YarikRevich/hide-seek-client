@@ -49,7 +49,7 @@ func checkIfOnline() {
 	go func() {
 		m.Lock()
 
-		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected(){
+		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected() {
 			popupmessagescollection.PopUpMessages.WriteError("Servers are offline!")
 			applyer.ApplyMiddlewares(
 				statemachine.UseStateMachine().Networking().SetState(networking.OFFLINE),

@@ -47,14 +47,13 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-
 		f := fontcollection.GetFontBySize(m.Fonts.Font)
 		t := buffercollection.SettingsMenuNameBuffer.Read()
 
 		p := positioning.NewPositionSession(
 			f, t, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
 		)
-		for p.Next(){
+		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(
 				img,
@@ -81,7 +80,7 @@ func Draw() {
 		p := positioning.NewPositionSession(
 			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
 		)
-		for p.Next(){
+		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(
 				img,

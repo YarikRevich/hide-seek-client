@@ -24,7 +24,7 @@ func (u *user) Get(f string) interface{} {
 			logrus.Fatal("scaning username failed: ", err)
 		}
 	}
-	if err = q.Close(); err != nil{
+	if err = q.Close(); err != nil {
 		logrus.Fatal("failed closing query: ", err)
 	}
 

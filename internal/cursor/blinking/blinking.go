@@ -11,22 +11,22 @@ var ticker = time.NewTicker(time.Second)
 
 var blinkPosition rune
 
-func SetCursorBlink(b common.IBuffer){
+func SetCursorBlink(b common.IBuffer) {
 	select {
-	case <- ticker.C:
-		if blinkPosition == collection.BlinkingOn{
+	case <-ticker.C:
+		if blinkPosition == collection.BlinkingOn {
 			blinkPosition = collection.BlinkingOff
-		}else{
+		} else {
 			blinkPosition = collection.BlinkingOn
 		}
 	default:
 	}
 
 	l := b.Last()
-	if l == collection.BlinkingOn || l == collection.BlinkingOff{
+	if l == collection.BlinkingOn || l == collection.BlinkingOff {
 		b.Pop()
 		b.Push(blinkPosition)
-	}else{
+	} else {
 		b.Push(blinkPosition)
 	}
 }

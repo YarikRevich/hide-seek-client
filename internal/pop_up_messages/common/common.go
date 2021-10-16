@@ -58,7 +58,7 @@ func (p *popUpMessageBuff) WriteDebug(m string) {
 func (p *popUpMessageBuff) Read() []PopUpEntity {
 	m := p.queue.Get()
 	r := make([]PopUpEntity, len(m))
-	for _, v := range m{
+	for _, v := range m {
 		r = append(r, *v.(*PopUpEntity))
 	}
 	return r

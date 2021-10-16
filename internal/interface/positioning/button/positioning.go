@@ -83,9 +83,10 @@ func NewPositionSession(
 		p.stickHeight = sh
 		p.position = pos
 
-		if len(p.examined) == 1{
-			p.indent = (int(p.stickHeight/4) - font.Metrics().Ascent.Round())
-		}else{
+		if len(p.examined) == 1 {
+			// p.indent = 15
+			p.indent = (int(p.stickHeight/2) - font.Metrics().Ascent.Round())
+		} else {
 			p.indent = -5
 		}
 	}

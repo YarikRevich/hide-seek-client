@@ -42,15 +42,15 @@ var UserKeys = []ebiten.Key{
 	ebiten.Key9,
 }
 
-func IsKeyInList(k ebiten.Key, l []ebiten.Key)bool{
-	for _, v := range l{
-		if v == k{
+func IsKeyInList(k ebiten.Key, l []ebiten.Key) bool {
+	for _, v := range l {
+		if v == k {
 			return true
 		}
 	}
 	return false
 }
 
-func IsServiceKey(k ebiten.Key)bool{
+func IsServiceKey(k ebiten.Key) bool {
 	return len(k.String()) != 1
 }

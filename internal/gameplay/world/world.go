@@ -1,6 +1,5 @@
 package world
 
-
 import (
 	"fmt"
 	"strings"
@@ -17,9 +16,9 @@ import (
 var instance *World
 
 type Location struct {
-	Name string
-	Path string
-	Image *ebiten.Image `json:"-"`
+	Name     string
+	Path     string
+	Image    *ebiten.Image `json:"-"`
 	Metadata metadatamodels.Metadata
 }
 
@@ -31,13 +30,12 @@ type World struct {
 	Users []pc.PC
 }
 
-func (w *World) Init(path string){
+func (w *World) Init(path string) {
 	id, err := uuid.NewUUID()
-	if err != nil{
+	if err != nil {
 		logrus.Fatal("failed to create uuid for world:", err)
 	}
 	w.ID = id
-
 
 	w.Path = path
 	split := strings.Split(path, "/")
@@ -46,20 +44,20 @@ func (w *World) Init(path string){
 	w.Metadata = *metadatacollection.GetMetadata(w.Path)
 }
 
-func (w *World) Reset(){
+func (w *World) Reset() {
 	w.Users = w.Users[:0]
 }
 
-func (w *World) FormatUsersUsername()string{
+func (w *World) FormatUsersUsername() string {
 	var r string
-	for _, v := range w.Users{
+	for _, v := range w.Users {
 		r += fmt.Sprintf("%s\n", v.Username)
 	}
 	return r
 }
 
-func UseWorld()*World{
-	if instance == nil{
+func UseWorld() *World {
+	if instance == nil {
 		instance = new(World)
 	}
 	return instance

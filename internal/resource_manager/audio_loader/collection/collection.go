@@ -9,9 +9,9 @@ import (
 
 var AudioControllers = make(map[string]models.Controller)
 
-func GetAudioController(path string)models.Controller{
+func GetAudioController(path string) models.Controller {
 	i, ok := AudioControllers[path]
-	if !ok{
+	if !ok {
 		logrus.Fatal(fmt.Sprintf("audio with path '%s' not found", path))
 	}
 	return i

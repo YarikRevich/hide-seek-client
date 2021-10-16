@@ -16,12 +16,12 @@ type provider struct {
 	userStorage common.StorageBlock
 }
 
-func (pr *provider) User() common.StorageBlock{
+func (pr *provider) User() common.StorageBlock {
 	return pr.userStorage
 }
 
-func UseStorageProvider()IProvider{
-	if instance == nil{
+func UseStorageProvider() IProvider {
+	if instance == nil {
 		d := db.NewDB()
 
 		instance = &provider{

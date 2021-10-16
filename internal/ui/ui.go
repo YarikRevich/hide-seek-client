@@ -15,7 +15,7 @@ import (
 
 func Process() {
 	profiling.UseProfiler().StartMonitoring(profiling.UI)
-	
+
 	switch statemachine.UseStateMachine().UI().GetState() {
 	case ui.GAME:
 		game.Draw()

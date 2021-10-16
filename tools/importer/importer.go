@@ -45,7 +45,7 @@ package importer
 
 // func GetAvailableHeroImages()map[string]*pixel.Sprite{
 // 	/* Saves to map all the available hero images in
-// 	   current directory. Choses files with png extension 
+// 	   current directory. Choses files with png extension
 // 	   and if it contains 'hero' suffix
 // 	*/
 
@@ -75,7 +75,7 @@ package importer
 
 // func GetAvailableWeaponImages()map[string]*pixel.Sprite{
 // 	/* Saves to map all the available weapon images in
-// 	   current directory. Choses files with png extension 
+// 	   current directory. Choses files with png extension
 // 	   and if it contains 'hero' suffix
 // 	*/
 
@@ -105,7 +105,7 @@ package importer
 
 // func GetAvailableWeaponIconImages()map[string]*pixel.Sprite{
 // 	/* Saves to map all the available hero images in
-// 	   current directory. Choses files with png extension 
+// 	   current directory. Choses files with png extension
 // 	   and if it contains 'hero' suffix
 // 	*/
 

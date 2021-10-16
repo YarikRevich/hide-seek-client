@@ -1,6 +1,6 @@
 package creationlobbymenu
 
-func Exec(){
+func Exec() {
 	// if c.currState.SendStates.CreateRoom{
 
 	// 	c.userConfig.PersonalInfo.LobbyID = strings.Join(c.winConf.TextAreas.CreateLobbyInput.WrittenText, "")

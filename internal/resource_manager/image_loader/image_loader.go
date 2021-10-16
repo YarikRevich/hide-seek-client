@@ -17,8 +17,6 @@ import (
 
 var mu = sync.Mutex{}
 
-
-
 func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 	if extension != "png" {
 		return

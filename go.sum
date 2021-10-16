@@ -50,6 +50,8 @@ github.com/YarikRevich/game-networking v1.1.4-0.20211015150625-86d96e1221b6/go.m
 github.com/YarikRevich/wrapper v0.0.0-20210919192625-fd9de6c41066/go.mod h1:cH6oCR/g/lSsb0qfjiIH2IFD0nUyD3LFCVFoX45e/Q0=
 github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0 h1:W51dH0udo7NVhSJJI6hMCI2ELQlqWhTre8yRbFBo5/I=
 github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0/go.mod h1:b3xgOUlKx/XrCrXcM/nXkvr+/micjpqdP1i1g5OVZWs=
+github.com/atotto/clipboard v0.1.4 h1:EH0zSVneZPSuFR11BlR9YppQTVDbh5+16AmcJi4g1z4=
+github.com/atotto/clipboard v0.1.4/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

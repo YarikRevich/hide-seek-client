@@ -10,7 +10,7 @@ package mapp
 
 // type HeroBorder interface {
 // 	//It has all the important methods
-// 	//for hero border tracking 
+// 	//for hero border tracking
 
 // 	//Returns a right border of map
 // 	Right() int
@@ -47,7 +47,7 @@ package mapp
 
 // type CamBorder interface {
 // 	//It has all the important methods
-// 	//for cam border tracking 
+// 	//for cam border tracking
 
 // 	//Inits fullmap for the futher
 // 	//border tracking
@@ -90,11 +90,7 @@ package mapp
 // 	return c.FullMap.Picture().Bounds().Center().Y / 17
 // }
 
-
-
 // //!!! IT IS A PART OF GENERAL COLLISIONS !!!
-
-
 
 // type UtilCollisions interface{
 // 	//Main utilible methods for collisions checking ...
@@ -103,7 +99,6 @@ package mapp
 // }
 
 // type UC struct{}
-
 
 // func (c UC) Beetwen(x float64, cx float64, coefp float64, coefn float64) bool {
 // 	//Checks whether current coords are in the
@@ -114,7 +109,6 @@ package mapp
 // 	}
 // 	return false
 // }
-
 
 // type MapCollisions interface{
 // 	//Configures map collisions ...
@@ -309,7 +303,6 @@ package mapp
 // 	}
 // }
 
-
 // //Main configurator for hero icon collisions ...
 
 // type HeroCollisions interface{
@@ -317,7 +310,6 @@ package mapp
 // }
 
 // type HC struct{}
-
 
 // type heroPosControllers interface{
 // 	Top(float64, float64)    (bool, string)
@@ -385,7 +377,6 @@ package mapp
 // 	return false, ""
 // }
 
-
 // func (h *HC) IsHero(vector pixel.Vec, othervectors []*Users.User) heroPosControllers{
 
 // 	return heroPosControllers(&hP{
@@ -393,7 +384,6 @@ package mapp
 // 		othervectors: othervectors,
 // 	})
 // }
-
 
 // //Inits all the types of collisions
 // type Collisions interface {
@@ -421,19 +411,18 @@ package mapp
 // 	mapcoll.Init()
 // 	c.MapCollisions = mapcoll
 // 	c.UtilCollisions = UtilCollisions(new(UC))
-	
+
 // }
 
 // func (c *C) IsCritical(vector pixel.Vec, otherusers []*Users.User, types string)bool{
 // 	//Checks whether each of beneath probable issues are existing
 // 	//If though only one does it returns true ...
 
-	
 // 	if c.GetMapCollisions().IsColumn(vector, c.GetUtilCollisions()){
 // 		return true
 // 	}
 // 	switch types{
-// 	case "top": 
+// 	case "top":
 // 		ok, _ := c.GetHeroCollisions().IsHero(vector, otherusers).Top(10, 17)
 // 		return ok
 // 	case "bottom":
@@ -465,11 +454,7 @@ package mapp
 // 	return c.UtilCollisions
 // }
 
-
-
 // ///!!! IT IS A PART OF MAP ANALIZER !!!
-
-
 
 // type Analizer interface {
 // 	Init(float64, float64, []int, Collisions)
@@ -525,10 +510,10 @@ package mapp
 // 	//Analizes all the available places due to
 // 	//beneath algorithm. It has two regimes.
 // 	//At the first one it checks whether there is
-// 	//any available place goes to top if there is 
+// 	//any available place goes to top if there is
 // 	//any block it tries to go to the right and does all
 // 	//the places actions before. If there is regime 'bottom'
-// 	//it does everything vice verse. At last it returns 
+// 	//it does everything vice verse. At last it returns
 // 	//massive with all the available places.
 
 // 	for i:=0; i<=150; i++{
@@ -614,11 +599,7 @@ package mapp
 // 	return A.BeingPlaces
 // }
 
-
-
 // //!!! IT IS A PART OF GENERAL CAMERA SETTINGS !!!
-
-
 
 // type Cam interface{
 // 	//Special interface to get into the functionality of camera
@@ -652,7 +633,7 @@ package mapp
 // }
 
 // type CM struct{
-// 	//Structure for camera. Conatains 
+// 	//Structure for camera. Conatains
 // 	//all the important dependences
 
 // 	winconf    *Window.WindowConfig
@@ -702,10 +683,10 @@ package mapp
 // 	for{
 // 		if float64(X) >= left{
 // 			return float64(X)
-// 		}  
+// 		}
 // 		X++
 // 	}
-// } 
+// }
 
 // func (c *CM)collibrateRight()float64{
 // 	//Collibrates camera due to	right position
@@ -754,7 +735,6 @@ package mapp
 // 	c.winconf.Win.SetMatrix(cam)
 // }
 
-
 // func (c *CM)UpdateCam(){
 // 	//Sets camera as matrix scaling it
 
@@ -762,11 +742,7 @@ package mapp
 // 	c.winconf.Win.SetMatrix(cam)
 // }
 
-
-
 // //!!! IT IS A PART OF GENERAL MAP CONFIGURATOR !!!
-
-
 
 // type MapConf interface{
 // 	//It is a main interface for map configuration
@@ -813,7 +789,7 @@ package mapp
 // 	CamBorder   CamBorder
 // 	Analizer    Analizer
 // 	Collisions  Collisions
-// 	Cam         Cam   
+// 	Cam         Cam
 // }
 
 // func (MC *MapC)Init(){
@@ -838,14 +814,14 @@ package mapp
 
 // func (MC *MapC)ConfAnalizer(){
 // 	MC.Analizer.Init(
-// 		float64(MC.HeroBorder.Left()), 
-// 		float64(MC.HeroBorder.Bottom()), 
+// 		float64(MC.HeroBorder.Left()),
+// 		float64(MC.HeroBorder.Bottom()),
 // 		[]int{
-// 			MC.HeroBorder.Left(), 
-// 			MC.HeroBorder.Bottom(), 
-// 			MC.HeroBorder.Right(), 
+// 			MC.HeroBorder.Left(),
+// 			MC.HeroBorder.Bottom(),
+// 			MC.HeroBorder.Right(),
 // 			MC.HeroBorder.Top(),
-// 		}, 
+// 		},
 // 		MC.Collisions,
 // 		)
 // }

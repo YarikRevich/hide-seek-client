@@ -8,9 +8,9 @@ type IBuffer interface {
 	CleanBlinkingUnfocus()
 	Push(rune)
 	Pop()
-	ReadClean()string
+	ReadClean() string
 	Last() rune
-	Read()string
+	Read() string
 }
 
 type buff struct {
@@ -32,19 +32,19 @@ func (t *buff) Clean() {
 	t.value = t.value[:0]
 }
 
-func (t *buff) CleanBlinking(){
-	if l := t.Last(); l == collection.BlinkingOn || l == collection.BlinkingOff{
+func (t *buff) CleanBlinking() {
+	if l := t.Last(); l == collection.BlinkingOn || l == collection.BlinkingOff {
 		t.Pop()
 	}
 }
 
-func (t *buff) CleanBlinkingUnfocus(){
+func (t *buff) CleanBlinkingUnfocus() {
 	t.CleanBlinking()
 	t.Push(' ')
 }
 
-func (t *buff) 	ReadClean()string{
-	if len(t.value) != 0{
+func (t *buff) ReadClean() string {
+	if len(t.value) != 0 {
 		v := t.Read()
 		return v[:len(v)-1]
 	}

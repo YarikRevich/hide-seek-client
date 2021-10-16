@@ -61,44 +61,6 @@ func init() {
 	collisions.ConnectCollisionsToImages()
 }
 
-//Get user's spawn place
-// randomSpawn := Utils.GetRandomSpawn()
-
-//Configures map
-// mapComponents := Map.MapConf(new(Map.MapC))
-// mapComponents.Init()
-// mapComponents.ConfAll(&winConf, userConfig)
-
-// winConf.Components.AvPlacesForSpaws = mapComponents.GetAnailizer().AnalizeAvailablePlaces()
-
-//Starts pinger
-// go log.GetPing()
-
-// for !winConf.Win.Closed() {
-
-// 	//fmt.Println(currState.MainStates)
-// 	//Shows statistics about user if argument is placed
-// 	log.Show()
-
-// 	frames++
-// 	select {
-// 	case <-second:
-// 		//Sets title of the window with frame rate
-// 		winConf.Win.SetTitle(fmt.Sprintf("Hide and seek| %d", frames))
-// 		frames = 0
-// 	default:
-// 		//Upgrades background
-// 		winConf.UpdateBackground()
-
-// 		//Goes to the action gate to chose an important one
-// 		choseActionGate(&winConf, &currState, &userConfig, mapComponents)
-
-// 		winConf.Win.Update()
-// 	}
-// }
-// color.Green.Println("Goodbye!")
-// }
-
 func main() {
 	ebiten.SetWindowSize(screen.GetMaxWidth(), screen.GetMaxHeight())
 	ebiten.SetWindowTitle("Hide&Seek")

@@ -5,8 +5,8 @@ type FontColor string
 
 const (
 	Center TextPosition = "center"
-	Left TextPosition = "left"
-	Right TextPosition = "right"
+	Left   TextPosition = "left"
+	Right  TextPosition = "right"
 )
 
 const (
@@ -14,7 +14,18 @@ const (
 	Black FontColor = "black"
 )
 
+type Animation struct {
+	Delay       float64
+	FrameNum    float64
+	FrameX      float64
+	FrameY      float64
+	FrameWidth  float64
+	FrameHeight float64
+}
+
 type Metadata struct {
+	Animation Animation
+
 	Size struct {
 		Width  float64
 		Height float64
@@ -22,14 +33,6 @@ type Metadata struct {
 	Margins struct {
 		LeftMargin float64
 		TopMargin  float64
-	}
-	Animation struct {
-		Delay       float64
-		FrameNum    float64
-		FrameX      float64
-		FrameY      float64
-		FrameWidth  float64
-		FrameHeight float64
 	}
 	Spawns []struct {
 		X float64
@@ -43,13 +46,12 @@ type Metadata struct {
 		CoefficiantY float64
 	}
 	Button struct {
-		Text string
+		Text         string
 		TextPosition TextPosition
-
 	}
-	
+
 	Fonts struct {
-		Font float64
+		Font      float64
 		FontColor FontColor
 	}
 }

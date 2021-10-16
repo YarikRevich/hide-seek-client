@@ -4,12 +4,12 @@ import (
 	"math"
 	"time"
 
+	audiohistory "github.com/YarikRevich/HideSeek-Client/internal/history/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
 	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader/models"
-	audiohistory "github.com/YarikRevich/HideSeek-Client/internal/history/audio"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/effects"
 	"github.com/faiface/beep/speaker"
@@ -59,27 +59,27 @@ func StartCallback(
 			tick.Stop()
 
 			ctrl.Paused = false
-			if err := speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/100)); err != nil{
+			if err := speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/100)); err != nil {
 				logrus.Fatal("error happened initiating audion in audio loader")
 			}
 			speaker.Play(effect)
-			go func(){
+			go func() {
 				ticker := time.NewTicker(time.Millisecond * 500)
-				for range ticker.C{
-					if streamer.Position() == streamer.Len(){
+				for range ticker.C {
+					if streamer.Position() == streamer.Len() {
 						break
 					}
 				}
 				ticker.Stop()
-				
+
 				ctrl.Paused = true
 
 				applyer.ApplyMiddlewares(
 					statemachine.UseStateMachine().Audio().SetState(audio.DONE),
 					audiomiddleware.UseAudioMiddleware,
 				)
-				
-			}()	
+
+			}()
 		}()
 	}
 }

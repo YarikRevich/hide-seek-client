@@ -1,5 +1,5 @@
 package input
 
-func UseInputMiddleware(c func()){
+func UseInputMiddleware(c func()) {
 	c()
 }

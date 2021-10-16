@@ -2,7 +2,9 @@ package game
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
@@ -14,25 +16,33 @@ import (
 
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/maps/helloween/background/game")
+		w := world.UseWorld()
 
 		opts := &ebiten.DrawImageOptions{}
-
-		imageW, imageH := img.Size()
+		
+		imageW, imageH := w.Location.Image.Size()
 		screenW, screenH := screen.Size()
-		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-		screen.DrawImage(img, opts)
+		cameraScale := float64(imageW) / float64(imageH)
+
+		cx, cy := camera.UseCamera().GetCameraPosition()
+		opts.GeoM.Translate(cx, cy)
+		opts.GeoM.Scale(((float64(screenW) / float64(imageW)) * cameraScale), float64(screenH)/float64(imageH)*cameraScale)
+
+		screen.DrawImage(w.Location.Image, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := pc.UsePC()
+		m := metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero")
 		c := animation.WithAnimation(
 			imagecollection.GetImage("assets/images/heroes/pumpkinhero"),
-			*metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero"),
+			&m.Animation,
 			&p.Equipment.Skin.Animation)
 
 		opts := &ebiten.DrawImageOptions{}
+
+		camera.UseCamera().MoveIfBoarderCrossed()
 
 		if history.GetDirection() == direction.LEFT {
 			opts.GeoM.Scale(-1, 1)
@@ -59,7 +69,13 @@ func Draw() {
 			}
 		}
 
+		img := imagecollection.GetImage("assets/images/maps/helloween/background/background")
+
+		imageW, imageH := img.Size()
+		cameraScale := float64(imageW) / float64(imageH)
+
 		opts.GeoM.Translate(p.X, p.Y)
+		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX/cameraScale, p.Metadata.Scale.CoefficiantY/cameraScale)
 
 		screen.DrawImage(c, opts)
 	})

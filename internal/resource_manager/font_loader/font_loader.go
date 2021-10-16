@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/sirupsen/logrus"
 	"github.com/golang/freetype/truetype"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/image/font"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
@@ -26,7 +26,6 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 		if err != nil {
 			logrus.Fatal("error happened opening font file from embedded fs: ", err)
 		}
-		
 
 		ff, err := truetype.Parse(f)
 		if err != nil {
@@ -45,7 +44,7 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 						// DPI:     72,
 						Hinting: font.HintingFull,
 					})
-					// collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)].
+				// collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)].
 			}
 
 			mu.Unlock()

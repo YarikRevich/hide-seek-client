@@ -1,6 +1,6 @@
 package collection
 
 const (
-	BlinkingOn = '|'
+	BlinkingOn  = '|'
 	BlinkingOff = ' '
 )

@@ -1,7 +1,7 @@
 package game
 
 func Exec() {
-	
+
 	// if !g.currState.NetworkingStates.GameProcess {
 	// 	g.currState.NetworkingStates.GameProcess = true
 	// 	go func() {

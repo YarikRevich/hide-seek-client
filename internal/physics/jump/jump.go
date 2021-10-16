@@ -17,7 +17,7 @@ func CalculateJump() {
 
 		t := int(math.Round((math.Sqrt((2*p.Metadata.Size.Height)/world.UseWorld().Location.Metadata.Physics.G) / 2)))
 
-		for t%2 != 0{
+		for t%2 != 0 {
 			t++
 		}
 

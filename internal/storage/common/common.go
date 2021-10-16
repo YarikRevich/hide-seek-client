@@ -17,17 +17,17 @@ type QueryEntity struct {
 
 type DBQuery []QueryEntity
 
-func (d *DBQuery) FormattedFields() string{
+func (d *DBQuery) FormattedFields() string {
 	l := make([]string, len(*d))
-	for _, v := range *d{
+	for _, v := range *d {
 		l = append(l, v.Field)
 	}
 	return strings.Join(l, ",")[1:]
 }
 
-func (d *DBQuery) FormattedValues() []interface{}{
+func (d *DBQuery) FormattedValues() []interface{} {
 	l := make([]interface{}, len(*d)-1)
-	for _, v := range *d{
+	for _, v := range *d {
 		l = append(l, v.Value)
 	}
 	return l

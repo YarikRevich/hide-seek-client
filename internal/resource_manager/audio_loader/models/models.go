@@ -1,6 +1,6 @@
 package models
 
 type Controller struct {
-	Stop func()
+	Stop  func()
 	Start func()
 }

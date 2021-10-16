@@ -11,8 +11,8 @@ import (
 	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
 )
 
-func updateNetworkCollection(){
-	for k := range networkingcollection.OnceCollection{
+func updateNetworkCollection() {
+	for k := range networkingcollection.OnceCollection {
 		networkingcollection.OnceCollection[k] = new(sync.Once)
 	}
 }

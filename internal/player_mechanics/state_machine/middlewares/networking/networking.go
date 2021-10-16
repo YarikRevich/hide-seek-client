@@ -1,5 +1,5 @@
 package networking
 
-func UseNetworkingMiddleware(c func()){
+func UseNetworkingMiddleware(c func()) {
 	c()
 }

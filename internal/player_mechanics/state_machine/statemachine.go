@@ -3,9 +3,9 @@ package statemachine
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/common"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/input"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/networking"
+	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/ui"
 )
 
 var instance IStateMachine
