@@ -3,7 +3,7 @@ package mouse
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/join_lobby_menu"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/unfocus"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/wait_room"
+	waitroom "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/wait_room"
 	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"

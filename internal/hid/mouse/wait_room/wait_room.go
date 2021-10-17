@@ -2,7 +2,6 @@ package waitroom
 
 import (
 	mousepress "github.com/YarikRevich/HideSeek-Client/internal/detectors/mouse_press"
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
@@ -28,8 +27,6 @@ func Exec() bool {
 		return true
 	}
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")) {
-		camera.UseCamera().InitCamera()
-		
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().Input().SetState(input.GAME),
 			inputmiddleware.UseInputMiddleware,

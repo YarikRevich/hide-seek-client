@@ -15,25 +15,27 @@ import (
 )
 
 func Draw() {
+	camera.UseCamera().UpdateCamera()
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		w := world.UseWorld()
 
 		opts := &ebiten.DrawImageOptions{}
-		
-		imageW, imageH := w.Location.Image.Size()
+
 		screenW, screenH := screen.Size()
+		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
+		p := pc.UsePC()
 
-		cameraScale := float64(imageW) / float64(imageH)
+		opts.GeoM.Translate(-p.X, -p.Y)
+		opts.GeoM.Scale(cvx, cvy)
 
-		cx, cy := camera.UseCamera().GetCameraPosition()
-		opts.GeoM.Translate(cx, cy)
-		opts.GeoM.Scale(((float64(screenW) / float64(imageW)) * cameraScale), float64(screenH)/float64(imageH)*cameraScale)
 
 		screen.DrawImage(w.Location.Image, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := pc.UsePC()
+		// w := world.UseWorld()
 		m := metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero")
 		c := animation.WithAnimation(
 			imagecollection.GetImage("assets/images/heroes/pumpkinhero"),
@@ -41,8 +43,6 @@ func Draw() {
 			&p.Equipment.Skin.Animation)
 
 		opts := &ebiten.DrawImageOptions{}
-
-		camera.UseCamera().MoveIfBoarderCrossed()
 
 		if history.GetDirection() == direction.LEFT {
 			opts.GeoM.Scale(-1, 1)
@@ -69,13 +69,13 @@ func Draw() {
 			}
 		}
 
-		img := imagecollection.GetImage("assets/images/maps/helloween/background/background")
+		screenW, screenH := screen.Size()
+		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
+		sx, sy := camera.UseCamera().GetCameraViewSize(screenW, screenH)
 
-		imageW, imageH := img.Size()
-		cameraScale := float64(imageW) / float64(imageH)
 
-		opts.GeoM.Translate(p.X, p.Y)
-		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX/cameraScale, p.Metadata.Scale.CoefficiantY/cameraScale)
+		opts.GeoM.Translate((sx + sx/2)/2, (sy + sy/2)/2)
+		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX/cvx, p.Metadata.Scale.CoefficiantY/cvy)
 
 		screen.DrawImage(c, opts)
 	})

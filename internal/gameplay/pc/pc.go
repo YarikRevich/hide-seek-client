@@ -151,12 +151,16 @@ func (p *PC) SetSpeed(speedX float64){
 	p.Buffs.SpeedY = speedX * float64(wy) / float64(wx) + .5
 }
 
+//Checks if pc model executes animation
+func (p *PC) IsAnimatied()bool{
+	return len(p.Physics.Jump) != 0
+}
+
 func UsePC() *PC {
 	if instance == nil {
 		instance = new(PC)
 		instance.Username = EMPTY
 		instance.PositionHistory = zeroshifter.New(2)
-	
 
 		instance.Health = DEFAULT_HEALTH
 		instance.SetSpeed(1.2)

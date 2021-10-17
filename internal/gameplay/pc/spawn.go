@@ -5,5 +5,5 @@ func GetSpawn(spawnPoints []struct {
 	Y float64
 }) (float64, float64) {
 	// world.UseWorld().Metadata.Spawns
-	return 0, 0
+	return 500, 500
 }

@@ -1,9 +1,10 @@
 package syncer
 
 import (
+	"sync"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/hajimehoshi/ebiten/v2"
-	"sync"
 )
 
 func SyncConfValues(screen *ebiten.Image) {

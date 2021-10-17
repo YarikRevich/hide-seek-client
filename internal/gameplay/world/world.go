@@ -56,6 +56,25 @@ func (w *World) FormatUsersUsername() string {
 	return r
 }
 
+func (w *World) RelativeMapSizeScale(screenW, screenH int)(float64, float64){
+	imageW := int(w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX)
+	imageH := int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY)
+
+	var sx, sy float64
+	if screenW > imageW {
+		sx = float64(imageW) / float64(screenW)
+	} else {
+		sx = float64(screenW) / float64(imageW)
+	}
+
+	if screenH > imageH {
+		sy = float64(imageH) / float64(screenH)
+	} else {
+		sy = float64(screenH) / float64(imageH)
+	}
+	return sx, sy
+}
+
 func UseWorld() *World {
 	if instance == nil {
 		instance = new(World)

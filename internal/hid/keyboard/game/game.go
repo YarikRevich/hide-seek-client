@@ -2,7 +2,6 @@ package game
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
@@ -34,8 +33,6 @@ func Exec() {
 		jump.CalculateJump()
 		// pc.GetPC().X -= pc.GetPC().Buffs.Speed
 	}
-
-	camera.UseCamera().MoveIfBoarderCrossed()
 
 	// 	currPosition := pixel.V(float64(g.userConfig.Pos.X), float64(g.userConfig.Pos.Y))
 	// 	g.mapComponents.GetCollisions().GetDoorsCollisions().DoorTraker(currPosition)
