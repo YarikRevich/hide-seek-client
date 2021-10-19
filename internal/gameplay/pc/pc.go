@@ -2,6 +2,7 @@ package pc
 
 import (
 	"crypto/sha256"
+	"image"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
@@ -82,13 +83,6 @@ type PC struct {
 	GameCredentials GameCredentials
 }
 
-//Sets pc spawn by using configured map spawns
-func (p *PC) SetSpawn(spawns []struct {X,Y float64}){
-	x, y := GetSpawn(spawns)
-	instance.X = x
-	instance.Y = y
-}
-
 //Initializes pc username by requesting storage
 func (p *PC) InitUsername() {
 	n, ok := provider.UseStorageProvider().User().Get("name").(string)
@@ -98,51 +92,58 @@ func (p *PC) InitUsername() {
 	p.Username = n
 }
 
-func (p *PC) savePositionHistory() {
-	p.PositionHistory.Add(struct{ X, Y float64 }{X: p.X, Y: p.Y})
+//Sets pc spawn by using configured map spawns
+func (p *PC) SetSpawn(spawns []image.Point){
+	x, y := GetSpawn(spawns)
+	instance.X = x
+	instance.Y = y
 }
+
+// func (p *PC) savePositionHistory() {
+// 	p.PositionHistory.Add(struct{ X, Y float64 }{X: p.X, Y: p.Y})
+// }
 
 func (p *PC) SetX(x float64) {
 	p.X = x
-	p.savePositionHistory()
+	// p.savePositionHistory()
 }
 
 func (p *PC) SetY(y float64) {
 	p.Y = y
-	p.savePositionHistory()
+	// p.savePositionHistory()
 }
 
-func (p *PC) IsXChanged() bool {
-	var prevX float64
-	for _, v := range p.PositionHistory.Get() {
-		pos := v.(struct{ X, Y float64 })
+// func (p *PC) IsXChanged() bool {
+// 	var prevX float64
+// 	for _, v := range p.PositionHistory.Get() {
+// 		pos := v.(struct{ X, Y float64 })
 
-		if prevX == 0 {
-			prevX = pos.X
-			continue
-		}
-		if prevX == pos.X {
-			return false
-		}
-	}
-	return true
-}
+// 		if prevX == 0 {
+// 			prevX = pos.X
+// 			continue
+// 		}
+// 		if prevX == pos.X {
+// 			return false
+// 		}
+// 	}
+// 	return true
+// }
 
-func (p *PC) IsYChanged() bool {
-	var prevY float64
-	for _, v := range p.PositionHistory.Get() {
-		pos := v.(struct{ X, Y float64 })
+// func (p *PC) IsYChanged() bool {
+// 	var prevY float64
+// 	for _, v := range p.PositionHistory.Get() {
+// 		pos := v.(struct{ X, Y float64 })
 
-		if prevY == 0 {
-			prevY = pos.Y
-			continue
-		}
-		if prevY == pos.Y {
-			return false
-		}
-	}
-	return true
-}
+// 		if prevY == 0 {
+// 			prevY = pos.Y
+// 			continue
+// 		}
+// 		if prevY == pos.Y {
+// 			return false
+// 		}
+// 	}
+// 	return true
+// }
 
 func (p *PC) SetSpeed(speedX float64) {
 	p.Buffs.SpeedX = speedX
@@ -161,7 +162,7 @@ func (p *PC) GetMovementRotation() float64 {
 	if history.GetDirection() == direction.LEFT {
 		return -1
 	}
-	return 0
+	return 1
 }
 
 func UsePC() *PC {
@@ -178,7 +179,7 @@ func UsePC() *PC {
 		instance.PositionHistory = zeroshifter.New(2)
 
 		instance.Health = DEFAULT_HEALTH
-		instance.SetSpeed(1.2)
+		instance.SetSpeed(1.5)
 		instance.Equipment.Skin.Animation.FrameDelay = 5
 		instance.Equipment.Skin.Animation.FrameDelayCounter = 1
 

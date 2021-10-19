@@ -1,13 +1,10 @@
 package camera
 
 import (
-	// "fmt"
 	"image"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-	// "github.com/YarikRevich/HideSeek-Client/internal/screen"
 )
 
 var instance *Camera
@@ -93,8 +90,10 @@ type Camera struct {
 //Checks if pc at camera sleep zone
 func (c *Camera) IsSleepZone(x, y float64) bool {
 	for _, v := range c.SleepZones {
+
 		if (x <= float64(v.Max.X) && x >= float64(v.Min.X)) &&
 			(y <= float64(v.Max.Y) && y >= float64(v.Min.Y)) {
+			// fmt.Println(x, y, v.Min, v.Max)
 			return true
 		}
 	}
@@ -113,20 +112,20 @@ func (c *Camera) UpdateSleepZones() {
 	c.SleepZones = []struct{ Min, Max image.Point }{
 		{image.Point{X: 0,
 			Y: 0},
-			image.Point{X: int(w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX / c.Scale.X / 2),
-				Y: int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY / c.Scale.Y / 2)}},
-		{image.Point{X: int(w.Metadata.Size.Width*w.Metadata.Scale.CoefficiantX - w.Metadata.Size.Width*w.Metadata.Scale.CoefficiantX/c.Scale.X/2),
+			image.Point{X: int(w.Metadata.Size.Width / c.Scale.X / 2),
+				Y: int(w.Metadata.Size.Height / c.Scale.Y / 2)}},
+		{image.Point{X: int(w.Metadata.Size.Width - w.Metadata.Size.Width/c.Scale.X/2),
 			Y: 0},
-			image.Point{X: int(w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX),
-				Y: int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY / c.Scale.Y / 2)}},
+			image.Point{X: int(w.Metadata.Size.Width),
+				Y: int(w.Metadata.Size.Height/ c.Scale.Y / 2)}},
 		{image.Point{X: 0,
-			Y: int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY)},
-			image.Point{X: int(w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX / c.Scale.X / 2),
-				Y: int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY)}},
-		{image.Point{X: int(w.Metadata.Size.Width*w.Metadata.Scale.CoefficiantX - w.Metadata.Size.Width*w.Metadata.Scale.CoefficiantX/c.Scale.X/2),
-			Y: int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY)},
-			image.Point{X: int(w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX),
-				Y: int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY),
+			Y: int(w.Metadata.Size.Height)},
+			image.Point{X: int(w.Metadata.Size.Width / c.Scale.X / 2),
+				Y: int(w.Metadata.Size.Height)}},
+		{image.Point{X: int(w.Metadata.Size.Width - w.Metadata.Size.Width/c.Scale.X/2),
+			Y: int(w.Metadata.Size.Height)},
+			image.Point{X: int(w.Metadata.Size.Width),
+				Y: int(w.Metadata.Size.Height),
 			}},
 	}
 }
@@ -138,7 +137,6 @@ func (c *Camera) UpdateScale() {
 	c.Scale.X = w.Metadata.Size.Width / (w.Metadata.Size.Width / 100 * c.Zoom)
 	c.Scale.Y = w.Metadata.Size.Height / (w.Metadata.Size.Height / 100 * c.Zoom)
 }
-
 
 //Updates camera properties
 //-> Scale coefficients
@@ -207,55 +205,64 @@ func (c *Camera) UpdateCamera() {
 func (c *Camera) ZoomIn()  {}
 func (c *Camera) ZoomOut() {}
 
-func (c *Camera) GetCameraViewSize(screenW, screenH int)(float64, float64){
-	w := world.UseWorld()
-	imageW := w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX
-	imageH := w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY
+// func (c *Camera) GetCameraViewSize(screenW, screenH int) (float64, float64) {
+// 	w := world.UseWorld()
+// 	imageW := w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX
+// 	imageH := w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY
 
-	sx, sy := w.RelativeMapSizeScale(screenW, screenH)
-	return imageW * sx / c.Scale.X, imageH * sy / c.Scale.Y
-}
+// 	sx, sy := w.RelativeMapSizeScale(screenW, screenH)
+// 	return imageW * sx / c.Scale.X, imageH * sy / c.Scale.Y
+// }
 
+//Returns camera view scale
 func (c *Camera) GetCameraViewScale(screenW, screenH int) (float64, float64) {
 	w := world.UseWorld()
 	sx, sy := w.RelativeMapSizeScale(screenW, screenH)
 	return sx * c.Scale.X, sy * c.Scale.Y
 }
 
-func (c *Camera) GetCharacterTranslation() (float64, float64) {
+//Returns translation for camera view
+//related by camera scale
+func (c *Camera) GetCameraViewTranslation(sx, sy float64)(float64, float64){
 	p := pc.UsePC()
-	if c.IsSleepZone(c.Translation.X, c.Translation.Y) {
-		return p.X, p.Y
-	}
-	return 0, 0
+	w := world.UseWorld()
+	return -(p.X - w.Metadata.Size.Width / c.Scale.X / 2), -(p.Y - w.Metadata.Size.Height / c.Scale.Y / 2)
 }
 
-func (c *Camera) GetCameraTranslation(cvx, cvy float64) (float64, float64) {
-	p := pc.UsePC()
-
-	if c.IsGoneOuttaSleepZone() {
-		c.Translation.X = p.X
-		c.Translation.Y = p.Y
-	}
-
-	if !c.IsSleepZone(p.X, p.Y) {
-		c.LastTranslation.X = c.Translation.X
-		c.LastTranslation.Y = c.Translation.Y
-
-		c.Translation.X = p.X
-		c.Translation.Y = p.Y
-	}
-
-	// if p.X > 300{
+func (c *Camera) GetCharacterTranslation() (float64, float64) {
+	// if c.IsSleepZone(c.Translation.X, c.Translation.Y) {
+	// 	return p.X, p.Y
 	// }
-	// if len(c.Transmition) != 0{
-	// 	r := c.Transmition[len(c.Transmition)-1]
-	// 	c.Transmition = c.Transmition[:len(c.Transmition)-1]
-	// 	return r.X, r.Y
-	// }
+	// return 0, 0
+	return 220, 100
+}
 
-	return -c.Translation.X, -c.Translation.Y
-	// return -c.Position.X, -c.Position.Y
+// func (c *Camera) GetCameraTranslation(cvx, cvy float64) (float64, float64) {
+// 	p := pc.UsePC()
+
+// 	if c.IsGoneOuttaSleepZone() {
+// 		c.Translation.X = p.X
+// 		c.Translation.Y = p.Y
+// 	}
+
+// 	if !c.IsSleepZone(p.X, p.Y) {
+// 		c.LastTranslation.X = c.Translation.X
+// 		c.LastTranslation.Y = c.Translation.Y
+
+// 		c.Translation.X = p.X
+// 		c.Translation.Y = p.Y
+// 	}
+
+// 	// if p.X > 300{
+// 	// }
+// 	// if len(c.Transmition) != 0{
+// 	// 	r := c.Transmition[len(c.Transmition)-1]
+// 	// 	c.Transmition = c.Transmition[:len(c.Transmition)-1]
+// 	// 	return r.X, r.Y
+// 	// }
+
+// 	return -c.Translation.X, -c.Translation.Y
+// 	// return -c.Position.X, -c.Position.Y
 	// initialCameraPos := p.X + 20
 
 	// fmt.Println()
@@ -284,7 +291,7 @@ func (c *Camera) GetCameraTranslation(cvx, cvy float64) (float64, float64) {
 	// }
 
 	// return cx, cy
-}
+// }
 
 //Uses or creates a new instance of camera
 func UseCamera() *Camera {

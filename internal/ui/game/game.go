@@ -2,9 +2,11 @@ package game
 
 import (
 	// "github.com/YarikRevich/HideSeek-Client/internal/direction"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
+
 	// "github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
@@ -16,15 +18,15 @@ func Draw() {
 	camera.UseCamera().UpdateCamera()
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := pc.UsePC()
 		w := world.UseWorld()
 
 		opts := &ebiten.DrawImageOptions{}
 
 		screenW, screenH := screen.Size()
 		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
-		
-		opts.GeoM.Translate(-p.X, -p.Y)
+		ctx, cty := camera.UseCamera().GetCameraViewTranslation(cvx, cvy)		
+
+		opts.GeoM.Translate(ctx, cty)
 		opts.GeoM.Scale(cvx, cvy)
 
 		screen.DrawImage(w.Location.Image, opts)
@@ -43,29 +45,13 @@ func Draw() {
 
 		opts.GeoM.Scale(p.GetMovementRotation(), 1)
 
-		screenW, screenH := screen.Size()
-		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
-		sx, sy := camera.UseCamera().GetCameraViewSize(screenW, screenH)
-
-
-		opts.GeoM.Translate((sx + sx/2)/2, (sy + sy/2)/2)
-		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX/cvx, p.Metadata.Scale.CoefficiantY/cvy)
+		tx, ty := camera.UseCamera().GetCharacterTranslation()
+		opts.GeoM.Translate(tx, ty)
+		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX, p.Metadata.Scale.CoefficiantY)
 
 		screen.DrawImage(c, opts)
 	})
-
-	// for _, otherC := range pc.PCs{
-
-	// }
-
-	// for _, otherPCs := range {
-	// 	img := 	imageloader.Images[players.Equipment.Skin.ImageHash]
-	// 	render.SetImageToRender(img, func(i *ebiten.Image) *ebiten.DrawImageOptions {
-	// 		return &ebiten.DrawImageOptions{}
-	// 	})
-	// }
-	// screen.DrawImage(, &ebiten.DrawImageOptions{})
-	// g.winConf.DrawGameBackground()
+	
 
 	// // g.winConf.DrawGoldChest()
 

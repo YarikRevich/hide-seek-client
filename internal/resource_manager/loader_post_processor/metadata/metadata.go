@@ -21,3 +21,7 @@ func ConnectImageSizeToMetadata() {
 		}
 	}
 }
+
+//Postprocessor which connects metadata info
+//to collision collection
+func ConnectMetadataToCollisions(){}

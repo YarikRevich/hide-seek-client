@@ -1,5 +1,7 @@
 package models
 
+import "image"
+
 type TextPosition string
 type FontColor string
 
@@ -52,10 +54,8 @@ type Metadata struct {
 		TopMargin  float64
 	}
 
-	Spawns []struct {
-		X float64
-		Y float64
-	}
+	Spawns []image.Point
+	
 	Physics struct {
 		G float64
 	}
