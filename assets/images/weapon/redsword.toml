@@ -1,3 +1,6 @@
+[info]
+parent="redsword"
+
 # // 	case 0:
 # // 		frame = getFrame(18, 52, 1.7, 0)
 # // 	case 1:

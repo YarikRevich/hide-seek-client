@@ -3,6 +3,7 @@ package models
 type TextPosition string
 type FontColor string
 
+//Predefined options of allowed text positions
 const (
 	Center TextPosition = "center"
 	Left   TextPosition = "left"
@@ -23,17 +24,34 @@ type Animation struct {
 	FrameHeight float64
 }
 
+
+
 type Metadata struct {
 	Animation Animation
 
+	//Information about metadata file
+	Info struct {
+		//Parent file metadata one related to
+		Parent string
+	}
+
+	//HIDDEN: should not be defined by user by configuration
 	Size struct {
 		Width  float64
 		Height float64
 	}
+
+	//MUSTN'T be changed over the project
+	RawSize struct {
+		Width  float64
+		Height float64
+	}
+
 	Margins struct {
 		LeftMargin float64
 		TopMargin  float64
 	}
+
 	Spawns []struct {
 		X float64
 		Y float64
@@ -41,17 +59,23 @@ type Metadata struct {
 	Physics struct {
 		G float64
 	}
+
 	Scale struct {
 		CoefficiantX float64
 		CoefficiantY float64
 	}
+	
 	Button struct {
 		Text         string
 		TextPosition TextPosition
 	}
 
 	Fonts struct {
-		Font      float64
 		FontColor FontColor
 	}
+}
+
+//Multiples margins by related coefficients
+func (m *Metadata) FastenMarginsWithCoefficients()(float64, float64){
+	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
 }

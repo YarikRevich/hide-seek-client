@@ -1,6 +1,5 @@
-[size]
-width = 1550.0
-height = 1050.0
+[info]
+parent="background"
 
 [[spawns]]
 x = 10.0

@@ -1,16 +1,14 @@
 package game
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/direction"
+	// "github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-	"github.com/YarikRevich/HideSeek-Client/internal/history"
-	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
+	// "github.com/YarikRevich/HideSeek-Client/internal/history"
+	"github.com/YarikRevich/HideSeek-Client/internal/physics"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -18,56 +16,32 @@ func Draw() {
 	camera.UseCamera().UpdateCamera()
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		p := pc.UsePC()
 		w := world.UseWorld()
 
 		opts := &ebiten.DrawImageOptions{}
 
 		screenW, screenH := screen.Size()
 		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
-		p := pc.UsePC()
-
+		
 		opts.GeoM.Translate(-p.X, -p.Y)
 		opts.GeoM.Scale(cvx, cvy)
-
 
 		screen.DrawImage(w.Location.Image, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := pc.UsePC()
-		// w := world.UseWorld()
-		m := metadatacollection.GetMetadata("assets/images/heroes/pumpkinhero")
+		physics.ProcessAnimation(p)
+		
 		c := animation.WithAnimation(
-			imagecollection.GetImage("assets/images/heroes/pumpkinhero"),
-			&m.Animation,
+			p.Image,
+			&p.Metadata.Animation,
 			&p.Equipment.Skin.Animation)
 
 		opts := &ebiten.DrawImageOptions{}
 
-		if history.GetDirection() == direction.LEFT {
-			opts.GeoM.Scale(-1, 1)
-		}
-		if history.GetDirection() == direction.RIGHT {
-			opts.GeoM.Scale(1, 1)
-		}
-
-		if len(p.Physics.Jump) != 0 {
-			select {
-			case <-jump.JumpGap.C:
-				j := p.Physics.Jump[0]
-
-				if j == direction.UP {
-					p.Y -= 2
-				}
-
-				if j == direction.DOWN {
-					p.Y += 2
-				}
-
-				p.Physics.Jump = p.Physics.Jump[1:]
-			default:
-			}
-		}
+		opts.GeoM.Scale(p.GetMovementRotation(), 1)
 
 		screenW, screenH := screen.Size()
 		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)

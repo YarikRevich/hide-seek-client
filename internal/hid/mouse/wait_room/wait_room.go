@@ -14,7 +14,7 @@ import (
 
 func Exec() bool {
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
-		world.UseWorld().Reset()
+		world.UseWorld().ResetUsers()
 
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().Input().SetState(input.EMPTY),

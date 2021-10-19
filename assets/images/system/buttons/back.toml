@@ -1,6 +1,5 @@
-[size]
-width = 29.0
-height = 23.0
+[info]
+parent="back"
 
 [margins]
 leftmargin = 15.0

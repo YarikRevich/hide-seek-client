@@ -9,7 +9,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 )
 
 func Draw() {
@@ -21,7 +20,7 @@ func Draw() {
 	// 	strings.Split(l.userConfig.Conn.RemoteAddr().String(), ":")[0],
 
 	render.UseRender().SetToPostRender(func(screen *ebiten.Image) {
-		f := fontcollection.GetFontBySize(metadatacollection.GetMetadata("assets/fonts/debug/debug").Fonts.Font)
+		f := fontcollection.GetFont("assets/fonts/base")
 
 		text.Draw(screen, profiling.UseProfiler().GetFormattedMonitoringLog(), f, 0, 0, color.White)
 	})

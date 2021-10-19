@@ -30,13 +30,9 @@ type World struct {
 	Users []pc.PC
 }
 
-func (w *World) Init(path string) {
-	id, err := uuid.NewUUID()
-	if err != nil {
-		logrus.Fatal("failed to create uuid for world:", err)
-	}
-	w.ID = id
-
+//Sets location properties
+//Image, Metadata, Name of map
+func (w *World) SetLocation(path string) {
 	w.Path = path
 	split := strings.Split(path, "/")
 	w.Name = split[len(split)-1]
@@ -44,11 +40,13 @@ func (w *World) Init(path string) {
 	w.Metadata = *metadatacollection.GetMetadata(w.Path)
 }
 
-func (w *World) Reset() {
+//Resets the list of users on the map
+func (w *World) ResetUsers() {
 	w.Users = w.Users[:0]
 }
 
-func (w *World) FormatUsersUsername() string {
+//Formats users' username 
+func (w *World) String() string {
 	var r string
 	for _, v := range w.Users {
 		r += fmt.Sprintf("%s\n", v.Username)
@@ -78,6 +76,11 @@ func (w *World) RelativeMapSizeScale(screenW, screenH int)(float64, float64){
 func UseWorld() *World {
 	if instance == nil {
 		instance = new(World)
+		id, err := uuid.NewUUID()
+		if err != nil {
+			logrus.Fatal("failed to create uuid for world:", err)
+		}
+		instance.ID = id
 	}
 	return instance
 }

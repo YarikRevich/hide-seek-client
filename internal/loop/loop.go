@@ -23,7 +23,6 @@ func (g *Loop) Update() error {
 	ui.Process()
 	mouse.Process()
 	keyboard.Process()
-
 	networking.Process()
 	// audio.Process()
 

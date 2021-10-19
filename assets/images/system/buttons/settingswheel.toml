@@ -1,6 +1,5 @@
-[size]
-width = 59.0
-height = 60.0
+[info]
+parent="settingswheel"
 
 [margins]
 leftmargin = 50.0

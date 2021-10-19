@@ -4,7 +4,7 @@ import (
 	"image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
+	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
@@ -46,8 +46,8 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFontBySize(m.Fonts.Font)
-		text.Draw(img, world.UseWorld().FormatUsersUsername(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		f := fontcollection.GetFont("assets/fonts/base")
+		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})
@@ -60,11 +60,14 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFontBySize(m.Fonts.Font)
-
+		f := fontcollection.GetFont("assets/fonts/base")
 		p := positioning.NewPositionSession(
-			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
-		)
+			f, 
+			m.Button.Text, 
+			m.RawSize.Width, 
+			m.RawSize.Height, 
+			m.Button.TextPosition)
+
 		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(

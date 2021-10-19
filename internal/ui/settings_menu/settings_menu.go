@@ -6,7 +6,7 @@ import (
 	buffercollection "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning/button"
+	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
@@ -47,12 +47,15 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFontBySize(m.Fonts.Font)
+		f := fontcollection.GetFont("assets/fonts/base")
 		t := buffercollection.SettingsMenuNameBuffer.Read()
-
 		p := positioning.NewPositionSession(
-			f, t, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
-		)
+			f, 
+			t, 
+			m.RawSize.Width,
+			m.RawSize.Height, 
+			m.Button.TextPosition)
+
 		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(
@@ -75,11 +78,14 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFontBySize(m.Fonts.Font)
-
+		f := fontcollection.GetFont("assets/fonts/base")
 		p := positioning.NewPositionSession(
-			f, m.Button.Text, m.Size.Width, m.Size.Height, m.Scale.CoefficiantX, m.Scale.CoefficiantY, m.Button.TextPosition,
-		)
+			f, 
+			m.Button.Text, 
+			m.RawSize.Width,
+			m.RawSize.Height, 
+			m.Button.TextPosition)
+
 		for p.Next() {
 			tx, ty := p.GetPosition()
 			text.Draw(

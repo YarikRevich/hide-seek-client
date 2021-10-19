@@ -8,7 +8,9 @@ import (
 
 func IsMousePressLeftOnce(m models.Metadata) bool {
 	currX, currY := ebiten.CursorPosition()
+	mx, my := m.FastenMarginsWithCoefficients()
+
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-	(currX >= int(m.Margins.LeftMargin*m.Scale.CoefficiantX) && currX <= int((m.Size.Width*m.Scale.CoefficiantX)+(m.Margins.LeftMargin*m.Scale.CoefficiantX))) &&
-	(currY >= int(m.Margins.TopMargin*m.Scale.CoefficiantY) && currY <= int((m.Size.Height*m.Scale.CoefficiantY)+(m.Margins.TopMargin*m.Scale.CoefficiantY)))
+	(currX >= int(mx) && currX <= int((m.Size.Width)+(mx))) &&
+	(currY >= int(my) && currY <= int((m.Size.Height)+(my)))
 }

@@ -8,7 +8,7 @@ import (
 
 	"embed"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
+	// "github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
 	"github.com/YarikRevich/HideSeek-Client/internal/paths"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
@@ -33,16 +33,19 @@ func init() {
 
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "/log.log"), os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "/log.log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	logrus.SetOutput(lgf)
 
+
 	if cli.GetDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
+	}else{
+		logrus.SetLevel(logrus.WarnLevel)
 	}
-	logrus.SetLevel(logrus.WarnLevel)
+
 
 	resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
 		{Embed: assets, Path: "assets/images"}: {
@@ -58,7 +61,7 @@ func init() {
 			fontloader.Load,
 		},
 	})
-	collisions.ConnectCollisionsToImages()
+	// collisions.ConnectCollisionsToImages()
 }
 
 func main() {

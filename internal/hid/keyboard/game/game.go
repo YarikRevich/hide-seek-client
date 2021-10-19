@@ -30,8 +30,7 @@ func Exec() {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
-		jump.CalculateJump()
-		// pc.GetPC().X -= pc.GetPC().Buffs.Speed
+		jump.CalculateJump(pc.UsePC())
 	}
 
 	// 	currPosition := pixel.V(float64(g.userConfig.Pos.X), float64(g.userConfig.Pos.Y))

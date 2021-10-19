@@ -72,7 +72,7 @@ func (p *positionSession) getLeftCoords() (int, int) {
 }
 
 func NewPositionSession(
-	font font.Face, text string, sw, sh, cw, ch float64, pos models.TextPosition) IPositionSession {
+	font font.Face, text string, sw, sh float64, pos models.TextPosition) IPositionSession {
 	p := new(positionSession)
 
 	if len(text) != 0 {
@@ -83,10 +83,7 @@ func NewPositionSession(
 		p.stickHeight = sh
 		p.position = pos
 
-		if len(p.examined) == 1 {
-			// p.indent = 15
-			p.indent = (int(p.stickHeight/2) - font.Metrics().Ascent.Round())
-		} else {
+		if len(p.examined) != 1 {
 			p.indent = -5
 		}
 	}

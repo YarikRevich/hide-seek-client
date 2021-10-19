@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 
+	loaderpostprocessor "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader_post_processor"
+	metadatapostprocessor "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/loader_post_processor/metadata"
 	"github.com/sirupsen/logrus"
 )
 
@@ -45,7 +47,9 @@ func LoadResources(loaders map[Component][]Loader) {
 
 			}(c, p, l)
 		}
-
 	}
 	wg.Wait()
+
+	loaderpostprocessor.ApplyPostProcessors(
+		metadatapostprocessor.ConnectImageSizeToMetadata)
 }

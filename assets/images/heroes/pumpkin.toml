@@ -1,3 +1,6 @@
+[info]
+parent="pumpkin"
+
 [animation]
 delay = 1.0
 framenum = 5.0

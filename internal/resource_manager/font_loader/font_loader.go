@@ -2,7 +2,6 @@ package fontloader
 
 import (
 	"embed"
-	"fmt"
 	"regexp"
 	"sync"
 
@@ -15,6 +14,7 @@ import (
 
 var mu = sync.Mutex{}
 
+//Process loading of font assets
 func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 	if extension != "ttf" {
 		return
@@ -37,15 +37,11 @@ func Load(e embed.FS, extension, path string, wg *sync.WaitGroup) {
 			fontPath := reg.Split(path, -1)[0]
 			mu.Lock()
 
-			for s := 0; s < 100; s++ {
-				collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)] =
-					truetype.NewFace(ff, &truetype.Options{
-						Size: float64(s),
-						// DPI:     72,
-						Hinting: font.HintingFull,
-					})
-				// collection.FontCollection[fmt.Sprintf("%s_%d", fontPath, s)].
-			}
+			collection.FontCollection[fontPath] =
+				truetype.NewFace(ff, &truetype.Options{
+					Size:    9,
+					Hinting: font.HintingFull,
+				})
 
 			mu.Unlock()
 		}

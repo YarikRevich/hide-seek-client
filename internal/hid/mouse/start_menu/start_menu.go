@@ -26,8 +26,9 @@ func Exec() bool {
 		return true
 	}
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
-		world.UseWorld().Init("assets/images/maps/helloween/background/background")
-		pc.UsePC().Init(world.UseWorld().Metadata.Spawns)
+		world.UseWorld().SetLocation("assets/images/maps/helloween/background/background")
+		pc.UsePC().InitUsername()
+		pc.UsePC().SetSpawn(world.UseWorld().Metadata.Spawns)
 
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.WAIT_ROOM),
