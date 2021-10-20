@@ -14,6 +14,9 @@ func ConnectImageSizeToMetadata() {
 		if len(v.Info.Parent) != 0 {
 			dir, _ := filepath.Split(k)
 			imageW, imageH := imagecollection.GetImage(filepath.Join(dir, v.Info.Parent)).Size()
+			if v.Animation.FrameNum != 0{
+				imageW /= int(v.Animation.FrameNum)
+			}
 			v.Size.Width = float64(imageW)
 			v.Size.Height = float64(imageH)
 			v.RawSize.Width = float64(imageW)

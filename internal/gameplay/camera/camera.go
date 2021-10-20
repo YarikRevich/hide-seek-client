@@ -1,15 +1,20 @@
 package camera
 
 import (
+	// "fmt"
+	"fmt"
 	"image"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 var instance *Camera
 
 type Camera struct {
+	Matrix *ebiten.GeoM
+
 	SleepZones []struct {
 		Min, Max image.Point
 	}
@@ -134,8 +139,12 @@ func (c *Camera) UpdateSleepZones() {
 func (c *Camera) UpdateScale() {
 	w := world.UseWorld()
 
-	c.Scale.X = w.Metadata.Size.Width / (w.Metadata.Size.Width / 100 * c.Zoom)
-	c.Scale.Y = w.Metadata.Size.Height / (w.Metadata.Size.Height / 100 * c.Zoom)
+	c.Scale.X = w.Metadata.RawSize.Width / (w.Metadata.RawSize.Width / 100 * c.Zoom)
+	c.Scale.Y = w.Metadata.RawSize.Height / (w.Metadata.RawSize.Height / 100 * c.Zoom)
+}
+
+func (c *Camera) UpdateCharachterTranslation(){
+
 }
 
 //Updates camera properties
@@ -144,6 +153,7 @@ func (c *Camera) UpdateScale() {
 func (c *Camera) UpdateCamera() {
 	c.UpdateScale()
 	c.UpdateSleepZones()
+	c.UpdateCharachterTranslation()
 }
 
 // func (c *Camera) Disconnect
@@ -217,8 +227,9 @@ func (c *Camera) ZoomOut() {}
 //Returns camera view scale
 func (c *Camera) GetCameraViewScale(screenW, screenH int) (float64, float64) {
 	w := world.UseWorld()
-	sx, sy := w.RelativeMapSizeScale(screenW, screenH)
-	return sx * c.Scale.X, sy * c.Scale.Y
+	sx, sy := w.GetMapScale(screenW, screenH)
+	fmt.Println(sx, sy)
+	return c.Scale.X, c.Scale.Y
 }
 
 //Returns translation for camera view
@@ -226,15 +237,37 @@ func (c *Camera) GetCameraViewScale(screenW, screenH int) (float64, float64) {
 func (c *Camera) GetCameraViewTranslation(sx, sy float64)(float64, float64){
 	p := pc.UsePC()
 	w := world.UseWorld()
-	return -(p.X - w.Metadata.Size.Width / c.Scale.X / 2), -(p.Y - w.Metadata.Size.Height / c.Scale.Y / 2)
+	return -(p.X - (w.Metadata.RawSize.Width / c.Scale.X / 2)), -((p.Y - (w.Metadata.RawSize.Height / c.Scale.Y / 2)))
 }
 
-func (c *Camera) GetCharacterTranslation() (float64, float64) {
+func (c *Camera) GetCharacterTranslation(screenW, screenH int) (float64, float64) {
 	// if c.IsSleepZone(c.Translation.X, c.Translation.Y) {
 	// 	return p.X, p.Y
 	// }
 	// return 0, 0
-	return 220, 100
+
+	
+	
+	
+	// p := pc.UsePC()
+	// w := world.UseWorld()
+
+
+	// cvx, cvy := c.GetCameraViewScale(screenW, screenH)
+
+	// fmt.Println(p.X / c.Scale.X,
+	// 	w.Metadata.Size.Width / cvx / c.Scale.X / 2 + (p.Metadata.RawSize.Width*2))
+
+	p := pc.UsePC()
+	if c.IsSleepZone(p.X, p.Y){
+		return p.X, 110
+		// return p.X / c.Scale.X,  w.Metadata.Size.Height / cvy / c.Scale.Y / 2 - p.Metadata.RawSize.Height
+	}
+	
+	// return p.X, p.Y
+		return 245, 110
+	// return w.Metadata.RawSize.Width / cvx / c.Scale.X / 2 + (p.Metadata.RawSize.Width*2), 
+	// w.Metadata.RawSize.Height / cvy / c.Scale.Y / 2 - p.Metadata.RawSize.Height
 }
 
 // func (c *Camera) GetCameraTranslation(cvx, cvy float64) (float64, float64) {

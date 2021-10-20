@@ -11,7 +11,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/YarikRevich/HideSeek-Client/internal/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
-	"github.com/YarikRevich/caching/pkg/zeroshifter"
+	// "github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"
@@ -67,10 +67,15 @@ type PC struct {
 
 	Health uint64
 
-	X float64
-	Y float64
+	//Coords of the user 
+	X, Y float64
 
-	PositionHistory zeroshifter.IZeroShifter `json:"-"`
+	//Spawn generated before the game start
+	Spawn image.Point
+
+	// PositionHistory zeroshifter.IZeroShifter `json:"-"`
+
+	Team Team
 
 	Buffs Buffs
 
@@ -176,10 +181,10 @@ func UsePC() *PC {
 		instance.ID = id
 
 		instance.Username = EMPTY
-		instance.PositionHistory = zeroshifter.New(2)
+		// instance.PositionHistory = zeroshifter.New(2)
 
 		instance.Health = DEFAULT_HEALTH
-		instance.SetSpeed(1.5)
+		instance.SetSpeed(5)
 		instance.Equipment.Skin.Animation.FrameDelay = 5
 		instance.Equipment.Skin.Animation.FrameDelayCounter = 1
 

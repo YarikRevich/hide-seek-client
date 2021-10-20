@@ -2,6 +2,7 @@ package world
 
 import (
 	"fmt"
+	"image"
 	"strings"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
@@ -15,6 +16,21 @@ import (
 
 var instance *World
 
+type regime int
+
+const (
+	//Players are separated on two teams
+	//If player dies it will respawn
+	//If the biggest part of the players is
+	//on the oposite teritory, spawns will be swapped
+	deathmatch regime = iota
+
+	//Players are separated on two teams
+	//The game will end if all members of the team
+	//will dir
+	teamToTeam
+)
+
 type Location struct {
 	Name     string
 	Path     string
@@ -26,6 +42,8 @@ type World struct {
 	Location
 
 	ID uuid.UUID
+
+	Regime regime
 
 	Users []pc.PC
 }
@@ -54,23 +72,46 @@ func (w *World) String() string {
 	return r
 }
 
-func (w *World) RelativeMapSizeScale(screenW, screenH int)(float64, float64){
-	imageW := int(w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX)
-	imageH := int(w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY)
-
+//Returns map scale in relating map image
+//to current screen sizes
+func (w *World) GetMapScale(screenW, screenH int)(float64, float64){
 	var sx, sy float64
-	if screenW > imageW {
-		sx = float64(imageW) / float64(screenW)
+	if screenW > int(w.Metadata.Size.Width) {
+		sx = w.Metadata.Size.Width / float64(screenW)
 	} else {
-		sx = float64(screenW) / float64(imageW)
+		sx = float64(screenW) / w.Metadata.Size.Width
 	}
 
-	if screenH > imageH {
-		sy = float64(imageH) / float64(screenH)
+	if screenH > int(w.Metadata.Size.Height) {
+		sy = w.Metadata.Size.Height / float64(screenH)
 	} else {
-		sy = float64(screenH) / float64(imageH)
+		sy = float64(screenH) / w.Metadata.Size.Height
 	}
 	return sx, sy
+}
+
+//Swaps spawns of the teams
+func (w *World) SwapSpawns(){
+	// map[pc.Team]map[uuid.UUID]image.Point{}
+	newTeam1Swaps := map[uuid.UUID]image.Point{}
+	newTeam2Swaps := map[uuid.UUID]image.Point{}
+	for _, u := range w.Users{
+		switch u.Team {
+		case pc.Team1:
+			newTeam2Swaps[u.ID] = u.Spawn
+		case pc.Team2:
+			newTeam1Swaps[u.ID] = u.Spawn
+		}
+	}	
+
+	for _, u := range w.Users{
+		switch u.Team {
+		case pc.Team1:
+			u.Spawn = newTeam2Swaps[u.ID]
+		case pc.Team2:
+			u.Spawn = newTeam1Swaps[u.ID]
+		}
+	}
 }
 
 func UseWorld() *World {

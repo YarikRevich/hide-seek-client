@@ -66,7 +66,7 @@ func init() {
 
 func main() {
 	ebiten.SetWindowSize(screen.GetMaxWidth(), screen.GetMaxHeight())
-	ebiten.SetWindowTitle("Hide&Seek")
+	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(screen.GetMinWidth(), screen.GetMinHeight(), -1, -1)
 

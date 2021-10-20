@@ -1,13 +1,9 @@
 package game
 
 import (
-	// "github.com/YarikRevich/HideSeek-Client/internal/direction"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-
-	// "github.com/YarikRevich/HideSeek-Client/internal/history"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
@@ -17,17 +13,37 @@ import (
 func Draw() {
 	camera.UseCamera().UpdateCamera()
 
+	o := ebiten.DrawImageOptions{}
+	p := pc.UsePC()
+		o.GeoM.Scale(2, 2)
+	o.GeoM.Translate(-p.X, -p.Y)
+
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image){
+
+		// img := ebiten.NewImage(screen.Size())
+
+		// opts := ebiten.DrawImageOptions{}
+		// opts.GeoM.Scale(20, 20)
+
+		// screen.DrawImage(img, &opts)
+	})
+
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		w := world.UseWorld()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		screenW, screenH := screen.Size()
-		cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
-		ctx, cty := camera.UseCamera().GetCameraViewTranslation(cvx, cvy)		
+		// screenW, screenH := screen.Size()
+		// cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
+		// ctx, cty := camera.UseCamera().GetCameraViewTranslation(cvx, cvy)		
 
-		opts.GeoM.Translate(ctx, cty)
-		opts.GeoM.Scale(cvx, cvy)
+
+		// opts.GeoM.Translate(ctx, cty)
+		// opts.GeoM.Scale(cvx, cvy)
+
+		opts.GeoM.Concat(o.GeoM)
 
 		screen.DrawImage(w.Location.Image, opts)
 	})
@@ -45,13 +61,15 @@ func Draw() {
 
 		opts.GeoM.Scale(p.GetMovementRotation(), 1)
 
-		tx, ty := camera.UseCamera().GetCharacterTranslation()
-		opts.GeoM.Translate(tx, ty)
+		tx, ty := camera.UseCamera().GetCharacterTranslation(screen.Size())
+		
 		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX, p.Metadata.Scale.CoefficiantY)
+		opts.GeoM.Translate(tx, ty)
 
 		screen.DrawImage(c, opts)
 	})
-	
+
+
 
 	// // g.winConf.DrawGoldChest()
 

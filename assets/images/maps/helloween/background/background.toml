@@ -2,17 +2,17 @@
 parent="background"
 
 [[spawns]]
-x = 10.0
-y = 15.0
+x = 10
+y = 15
 [[spawns]]
-x = 5.0
-y = 25.0
+x = 5
+y = 25
 [[spawns]]
-x = 50.0
-y = 32.0
+x = 50
+y = 32
 [[spawns]]
-x = 6.0
-y = 89.0
+x = 6
+y = 89
 
 [scale]
 coefficiantx = 1.0
