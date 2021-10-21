@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
@@ -9,27 +11,43 @@ import (
 )
 
 func Exec() {
-	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
+
+	for _, v := range ebiten.GamepadIDs() {
+		fmt.Println(v)
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton0), "0")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton1), "1")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton2), "2")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton3), "3")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton4), "4")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton5), "5")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton6), "6")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton7), "7")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton8), "8")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton9), "9")
+		fmt.Println(ebiten.IsGamepadButtonPressed(v, ebiten.GamepadButton10), "10")
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || isGamepadButtonPressed(gamepadUPButton) {
 		history.SetDirection(direction.UP)
 		pc.UsePC().SetY(pc.UsePC().Y - pc.UsePC().Buffs.SpeedY)
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
+	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || isGamepadButtonPressed(gamepadDOWNButton)  {
 		history.SetDirection(direction.DOWN)
 		pc.UsePC().SetY(pc.UsePC().Y + pc.UsePC().Buffs.SpeedY)
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
+	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || isGamepadButtonPressed(gamepadRIGHTButton)  {
 		history.SetDirection(direction.RIGHT)
 		pc.UsePC().SetX(pc.UsePC().X + pc.UsePC().Buffs.SpeedX)
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
+	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || isGamepadButtonPressed(gamepadLEFTButton)  {
 		history.SetDirection(direction.LEFT)
 		pc.UsePC().SetX(pc.UsePC().X - pc.UsePC().Buffs.SpeedX)
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeySpace) {
+	if ebiten.IsKeyPressed(ebiten.KeySpace) || isGamepadButtonPressed(gamepadRIGHTUPPERCLICKERButton) {
 		jump.CalculateJump(pc.UsePC())
 	}
 
