@@ -1,0 +1,6 @@
+[info]
+parent="horizontaldoor"
+
+[scale]
+coefficiantx = 1.0
+coefficianty = 1.0

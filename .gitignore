@@ -1,1 +1,8 @@
+#service files
 
+.DS_Store
+.vscode
+
+
+main
+storage.db

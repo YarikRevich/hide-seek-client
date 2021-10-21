@@ -1,0 +1,10 @@
+[info]
+parent="redsword"
+
+# // 	case 0:
+# // 		frame = getFrame(18, 52, 1.7, 0)
+# // 	case 1:
+# // 		frame = getFrame(17, 50, 3, 0)
+# // 	case 2:
+# // 		frame = getFrame(22, 52, 3.7, 0)
+# // 	}

@@ -1,0 +1,18 @@
+[info]
+parent="button"
+
+[margins]
+leftmargin = 105.0
+topmargin = 125.0
+
+[scale]
+coefficiantx = 4.0
+coefficianty = 4.0
+
+[button]
+text = "Confirm\ngame"
+textposition = "center"
+
+[fonts]
+font = 9.0
+fontcolor = "white"

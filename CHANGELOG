@@ -1,0 +1,18 @@
+#Changelog
+
+---
+[14.10.2021]
+Feature:
+	Improved positioning having added the opportunity to draw multiline
+	text
+Fix:
+	Fixed mismarshaling of fields when call function(networking) is called
+
+---
+
+---
+[15.10.2021]
+Feature:
+	Improved networking check
+
+---

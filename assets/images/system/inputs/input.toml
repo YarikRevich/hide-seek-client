@@ -1,0 +1,15 @@
+[info]
+parent="input"
+
+[margins]
+leftmargin = 194.0
+topmargin = 120.0
+
+[scale]
+coefficiantx = 2.0
+coefficianty = 1.2
+
+[button]
+textposition = "center"
+font = 9.0
+fontcolor = "white"

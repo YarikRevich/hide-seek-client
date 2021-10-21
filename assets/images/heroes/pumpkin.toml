@@ -1,0 +1,15 @@
+[info]
+parent="pumpkin"
+
+[animation]
+delay = 1.0
+framenum = 5.0
+frameX = 0.0
+frameY = 0.0
+frameWidth = 16.0
+frameHeight = 50.0
+
+[scale]
+coefficiantx = 2.5
+coefficianty = 2.5
+
