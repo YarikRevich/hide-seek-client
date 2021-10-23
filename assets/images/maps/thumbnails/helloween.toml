@@ -1,0 +1,11 @@
+[info]
+parent="helloween"
+
+[margins]
+leftmargin = 750.0
+topmargin = 70.0
+
+[scale]
+coefficiantx = 0.5
+coefficianty = 0.5
+

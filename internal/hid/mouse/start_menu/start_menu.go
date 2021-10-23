@@ -31,7 +31,7 @@ func Exec() bool {
 		pc.UsePC().SetSpawn(world.UseWorld().Metadata.Spawns)
 
 		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.WAIT_ROOM),
+			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
 			uimiddleware.UseUIMiddleware,
 		)
 		applyer.ApplyMiddlewares(

@@ -11,6 +11,7 @@ import (
 
 	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/settings_menu"
 	startmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/start_menu"
+	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/map_choose"
 )
 
 func Process() {
@@ -22,6 +23,7 @@ func Process() {
 			if waitroom.Exec() {
 				return
 			}
+		
 		case ui.JOIN_LOBBY_MENU:
 			if joinlobbymenu.Exec() {
 				return
@@ -30,8 +32,13 @@ func Process() {
 			if startmenu.Exec() {
 				return
 			}
+			
 		case ui.SETTINGS_MENU:
 			if settingsmenu.Exec() {
+				return
+			}
+		case ui.MAP_CHOOSE:
+			if mapchoose.Exec(){
 				return
 			}
 		}

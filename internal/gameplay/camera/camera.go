@@ -219,6 +219,7 @@ func (c *Camera) UpdateMapMatrix(screen *ebiten.Image) {
 	// fmt.Println(c.Scale)
 
 	c.MapMatrix.Scale(float64(c.MapScale.X), float64(c.MapScale.Y))
+	c.MapMatrix.Translate(0, 0);
 }
 
 func (c *Camera) saveScaledTranslation() {

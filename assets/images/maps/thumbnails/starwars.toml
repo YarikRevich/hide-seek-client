@@ -1,0 +1,11 @@
+[info]
+parent="starwars"
+
+[margins]
+leftmargin = 750.0
+topmargin = 700.0
+
+[scale]
+coefficiantx = 0.5
+coefficianty = 0.5
+
