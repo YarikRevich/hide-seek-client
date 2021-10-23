@@ -57,6 +57,8 @@ type Camera struct {
 	// Transmition []struct {
 	// 	X, Y float64
 	// }
+	LastZoom float64
+
 	InitialZoomInBreakpoint float64
 	LastZoomIn              float64
 
@@ -218,36 +220,30 @@ func (c *Camera) UpdateMapMatrix(screen *ebiten.Image) {
 }
 
 func (c *Camera) saveScaledTranslation() {
-	// fmt.Println(c.LastHeroTranslation.Y, c.HeroScale.Y, c.LastHeroScale.Y, c.ScaledTranslation)
-	// p := pc.UsePC()
+	c.ScaledTranslation.X = c.LastHeroTranslation.X * c.HeroScale.X / c.LastHeroScale.X
+	c.ScaledTranslation.Y = c.LastHeroTranslation.Y * c.HeroScale.Y / c.LastHeroScale.Y
 
-	sx := c.LastHeroTranslation.X * c.HeroScale.X / c.LastHeroScale.X
-	// if c.HeroScale.X != c.LastHeroScale.X {
-		// fmt.Println("INCREASE X")
-		c.ScaledTranslation.X = sx
-	// }
-	sy := c.LastHeroTranslation.Y * c.HeroScale.Y / c.LastHeroScale.Y
-	// if c.HeroScale.Y != c.LastHeroScale.Y {
-		// fmt.Println("INCREASE Y")
-		c.ScaledTranslation.Y = sy
-	// }
+	fmt.Println(c.LastHeroTranslation)
 }
 
 func (c *Camera) saveLastHeroTranslation() {
 	p := pc.UsePC()
 
-	if (math.IsNaN(c.LastHeroTranslation.X) || math.IsNaN(c.LastHeroTranslation.Y)){
+	// fmt.Println(p.RawPos.X, c.HeroScale.X, c.LastHeroScale.X, "CHANGED")
+
+	if math.IsNaN(c.LastHeroTranslation.X) || math.IsNaN(c.LastHeroTranslation.Y) {
 		c.LastHeroTranslation.X = p.RawPos.X
 		c.LastHeroTranslation.Y = p.RawPos.Y
-	}else{
+	} else {
 		c.LastHeroTranslation.X = c.ScaledTranslation.X
 		c.LastHeroTranslation.Y = c.ScaledTranslation.Y
 	}
 
-	if p.IsXChanged() || p.IsYChanged(){
+	if p.IsXChanged() || p.IsYChanged() {
 		c.LastHeroTranslation.X = p.RawPos.X
 		c.LastHeroTranslation.Y = p.RawPos.Y
 	}
+
 }
 
 func (c *Camera) saveLastHeroScale() {
@@ -261,7 +257,6 @@ func (c *Camera) UpdateHeroMatrix() {
 	c.HeroMatrix.Scale(c.HeroScale.X, c.HeroScale.Y)
 
 	if !c.IsHeroMovementBlocked {
-		fmt.Println(c.ScaledTranslation)
 		c.HeroMatrix.Translate(c.ScaledTranslation.X, c.ScaledTranslation.Y)
 
 		// if c.IsCrossedAxisX() {
@@ -279,9 +274,7 @@ func (c *Camera) UpdateHeroMatrix() {
 }
 
 func (c *Camera) UpdateHistory() {
-	p := pc.UsePC()
-	p.UpdatePositionChanges()
-
+	pc.UsePC().UpdatePositionChanges()
 
 	c.saveScaledTranslation()
 	c.saveLastHeroScale()
@@ -368,6 +361,7 @@ func (c *Camera) setZoomInBreakpoint() {
 
 func (c *Camera) ZoomIn() {
 	if c.Zoom < 35 {
+		// c.LastZoom = c.Zoom
 		c.Zoom++
 	}
 }

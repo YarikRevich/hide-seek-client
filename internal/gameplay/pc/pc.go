@@ -188,7 +188,7 @@ func (p *PC) IsAnimatied() bool {
 //Returns movement rotation related to the last
 //movement direction
 func (p *PC) GetMovementRotation() float64 {
-	if history.GetDirection() == direction.LEFT {
+	if history.GetDirection() == direction.LEFT && p.RawPos.X != 0 {
 		return -1
 	}
 	return 1

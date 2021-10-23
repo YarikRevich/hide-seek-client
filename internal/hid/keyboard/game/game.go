@@ -10,20 +10,21 @@ import (
 )
 
 func Exec() {
-	if areGamepadButtonsCombined(gamepadUPButton, gamepadLEFTUPPERCLICKERButton){
+	if areGamepadButtonsCombined(gamepadUPButton, gamepadLEFTUPPERCLICKERButton) {
 		camera.UseCamera().ZoomIn()
 		return
 	}
 
-	if areGamepadButtonsCombined(gamepadDOWNButton, gamepadLEFTUPPERCLICKERButton){
+	if areGamepadButtonsCombined(gamepadDOWNButton, gamepadLEFTUPPERCLICKERButton) {
 		camera.UseCamera().ZoomOut()
 		return
 	}
 
-
 	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || isGamepadButtonPressed(gamepadUPButton) {
-		history.SetDirection(direction.UP)
-		pc.UsePC().SetY(pc.UsePC().RawPos.Y - pc.UsePC().Buffs.SpeedY)
+		if pc.UsePC().RawPos.Y > 0 {
+			history.SetDirection(direction.UP)
+			pc.UsePC().SetY(pc.UsePC().RawPos.Y - pc.UsePC().Buffs.SpeedY)
+		}
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || isGamepadButtonPressed(gamepadDOWNButton) {
@@ -37,13 +38,15 @@ func Exec() {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || isGamepadButtonPressed(gamepadLEFTButton) {
-		history.SetDirection(direction.LEFT)
-		pc.UsePC().SetX(pc.UsePC().RawPos.X - pc.UsePC().Buffs.SpeedX)
+		if pc.UsePC().RawPos.X > 0 {
+			history.SetDirection(direction.LEFT)
+
+			pc.UsePC().SetX(pc.UsePC().RawPos.X - pc.UsePC().Buffs.SpeedX)
+		}
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) || isGamepadButtonPressed(gamepadRIGHTUPPERCLICKERButton) {
 		jump.CalculateJump(pc.UsePC())
 	}
 
-	
 }
