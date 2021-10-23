@@ -1,4 +1,4 @@
-package game
+package gamepad_press
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,16 +14,16 @@ import (
 //Правий нижній курок 7
 //Правий верхній курок 5
 const (
-	gamepadUPButton                ebiten.GamepadButton = 0
-	gamepadRIGHTButton             ebiten.GamepadButton = 1
-	gamepadDOWNButton              ebiten.GamepadButton = 2
-	gamepadLEFTButton              ebiten.GamepadButton = 3
-	gamepadLEFTUPPERCLICKERButton ebiten.GamepadButton = 4
-	gamepadRIGHTUPPERCLICKERButton ebiten.GamepadButton = 5
+	GamepadUPButton                ebiten.GamepadButton = 0
+	GamepadRIGHTButton             ebiten.GamepadButton = 1
+	GamepadDOWNButton              ebiten.GamepadButton = 2
+	GamepadLEFTButton              ebiten.GamepadButton = 3
+	GamepadLEFTUPPERCLICKERButton ebiten.GamepadButton = 4
+	GamepadRIGHTUPPERCLICKERButton ebiten.GamepadButton = 5
 	
 )
 
-func isGamepadButtonPressedOnce(button ebiten.GamepadButton) bool {
+func IsGamepadButtonPressedOnce(button ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if inpututil.IsGamepadButtonJustPressed(v, button) {
 			return true
@@ -32,7 +32,7 @@ func isGamepadButtonPressedOnce(button ebiten.GamepadButton) bool {
 	return false
 }
 
-func isGamepadButtonPressed(button ebiten.GamepadButton) bool {
+func IsGamepadButtonPressed(button ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if ebiten.IsGamepadButtonPressed(v, button) {
 			return true
@@ -41,7 +41,7 @@ func isGamepadButtonPressed(button ebiten.GamepadButton) bool {
 	return false
 }
 
-func areGamepadButtonsCombinedOnce(button1, button2 ebiten.GamepadButton) bool {
+func AreGamepadButtonsCombinedOnce(button1, button2 ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if inpututil.IsGamepadButtonJustPressed(v, button1) && inpututil.IsGamepadButtonJustPressed(v, button2) {
 			return true
@@ -50,7 +50,7 @@ func areGamepadButtonsCombinedOnce(button1, button2 ebiten.GamepadButton) bool {
 	return false
 }
 
-func areGamepadButtonsCombined(button1, button2 ebiten.GamepadButton) bool {
+func AreGamepadButtonsCombined(button1, button2 ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if ebiten.IsGamepadButtonPressed(v, button1) && ebiten.IsGamepadButtonPressed(v, button2) {
 			return true
