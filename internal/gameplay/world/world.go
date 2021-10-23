@@ -35,7 +35,7 @@ type Location struct {
 	Name     string
 	Path     string
 	Image    *ebiten.Image `json:"-"`
-	Metadata metadatamodels.Metadata
+	Metadata *metadatamodels.Metadata
 }
 
 type World struct {
@@ -55,7 +55,7 @@ func (w *World) SetLocation(path string) {
 	split := strings.Split(path, "/")
 	w.Name = split[len(split)-1]
 	w.Image = imagecollection.GetImage(w.Path)
-	w.Metadata = *metadatacollection.GetMetadata(w.Path)
+	w.Metadata = metadatacollection.GetMetadata(w.Path)
 }
 
 //Resets the list of users on the map
@@ -76,16 +76,16 @@ func (w *World) String() string {
 //to current screen sizes
 func (w *World) GetMapScale(screenW, screenH int)(float64, float64){
 	var sx, sy float64
-	if screenW > int(w.Metadata.Size.Width) {
-		sx = w.Metadata.Size.Width / float64(screenW)
+	if screenW > int(w.Metadata.RawSize.Width) {
+		sx = w.Metadata.RawSize.Width / float64(screenW)
 	} else {
-		sx = float64(screenW) / w.Metadata.Size.Width
+		sx = float64(screenW) / w.Metadata.RawSize.Width
 	}
 
-	if screenH > int(w.Metadata.Size.Height) {
-		sy = w.Metadata.Size.Height / float64(screenH)
+	if screenH > int(w.Metadata.RawSize.Height) {
+		sy = w.Metadata.RawSize.Height / float64(screenH)
 	} else {
-		sy = float64(screenH) / w.Metadata.Size.Height
+		sy = float64(screenH) / w.Metadata.RawSize.Height
 	}
 	return sx, sy
 }

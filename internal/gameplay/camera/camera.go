@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	"fmt"
 	"image"
+	"math"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
@@ -13,7 +14,7 @@ import (
 var instance *Camera
 
 type Camera struct {
-	Matrix *ebiten.GeoM
+	HeroMatrix, MapMatrix ebiten.GeoM
 
 	SleepZones []struct {
 		Min, Max image.Point
@@ -22,18 +23,45 @@ type Camera struct {
 	Size struct {
 		Width, Height float64
 	}
-	Scale struct {
+
+	//Map scale which updates deps between
+	//standard coefficient map background scales
+	MapScale struct {
 		X, Y float64
 	}
-	Translation struct {
+
+	//Hero scale which updates deps between
+	//standard coefficient pc skin scales
+	HeroScale struct {
 		X, Y float64
 	}
-	LastTranslation struct {
+
+	ConnectedPos struct {
 		X, Y float64
 	}
-	Transmition []struct {
+
+	//States if pc crossed any axis
+	IsHeroMovementBlocked bool
+
+	ScaledTranslation struct {
 		X, Y float64
 	}
+
+	LastHeroScale struct {
+		X, Y float64
+	}
+
+	LastHeroTranslation struct {
+		X, Y float64
+	}
+	// Transmition []struct {
+	// 	X, Y float64
+	// }
+	InitialZoomInBreakpoint float64
+	LastZoomIn              float64
+
+	InitialZoomOutBreakpoint float64
+	LastZoomOut              float64
 }
 
 // //Checks if pc inside the camera view
@@ -92,13 +120,17 @@ type Camera struct {
 // 	}
 // }
 
+func (c *Camera) attachHero() {}
+
+func (c *Camera) disconnectHero() {
+
+}
+
 //Checks if pc at camera sleep zone
 func (c *Camera) IsSleepZone(x, y float64) bool {
 	for _, v := range c.SleepZones {
-
 		if (x <= float64(v.Max.X) && x >= float64(v.Min.X)) &&
 			(y <= float64(v.Max.Y) && y >= float64(v.Min.Y)) {
-			// fmt.Println(x, y, v.Min, v.Max)
 			return true
 		}
 	}
@@ -106,54 +138,172 @@ func (c *Camera) IsSleepZone(x, y float64) bool {
 	return false
 }
 
-func (c *Camera) IsGoneOuttaSleepZone() bool {
-	return c.IsSleepZone(c.LastTranslation.X, c.LastTranslation.Y) && !c.IsSleepZone(c.Translation.X, c.Translation.Y)
-}
+// func (c *Camera) IsGoneOuttaSleepZone() bool {
+// 	return c.IsSleepZone(c.LastTranslation.X, c.LastTranslation.Y) && !c.IsSleepZone(c.Translation.X, c.Translation.Y)
+// }
 
 //Updates the sleep zones of the camera
 func (c *Camera) UpdateSleepZones() {
+	// w := world.UseWorld()
+
+	// c.SleepZones = []struct{ Min, Max image.Point }{
+	// 	{image.Point{X: 0,
+	// 		Y: 0},
+	// 		image.Point{X: w.Metadata.Size.Width / c.Scale.X / 2,
+	// 			Y: int(w.Metadata.Size.Height) / c.Scale.Y / 2}},
+	// 	{image.Point{X: int(w.Metadata.Size.Width-w.Metadata.Size.Width) / c.Scale.X / 2,
+	// 		Y: 0},
+	// 		image.Point{X: int(w.Metadata.Size.Width),
+	// 			Y: int(w.Metadata.Size.Height) / c.Scale.Y / 2}},
+	// 	{image.Point{X: 0,
+	// 		Y: int(w.Metadata.Size.Height)},
+	// 		image.Point{X: int(w.Metadata.Size.Width) / c.Scale.X / 2,
+	// 			Y: int(w.Metadata.Size.Height)}},
+	// 	{image.Point{X: int(w.Metadata.Size.Width-w.Metadata.Size.Width) / c.Scale.X / 2,
+	// 		Y: int(w.Metadata.Size.Height)},
+	// 		image.Point{X: int(w.Metadata.Size.Width),
+	// 			Y: int(w.Metadata.Size.Height),
+	// 		}},
+	// }
+}
+
+func (c *Camera) IsCrossedAxisX() bool {
+	p := pc.UsePC()
 	w := world.UseWorld()
 
-	c.SleepZones = []struct{ Min, Max image.Point }{
-		{image.Point{X: 0,
-			Y: 0},
-			image.Point{X: int(w.Metadata.Size.Width / c.Scale.X / 2),
-				Y: int(w.Metadata.Size.Height / c.Scale.Y / 2)}},
-		{image.Point{X: int(w.Metadata.Size.Width - w.Metadata.Size.Width/c.Scale.X/2),
-			Y: 0},
-			image.Point{X: int(w.Metadata.Size.Width),
-				Y: int(w.Metadata.Size.Height/ c.Scale.Y / 2)}},
-		{image.Point{X: 0,
-			Y: int(w.Metadata.Size.Height)},
-			image.Point{X: int(w.Metadata.Size.Width / c.Scale.X / 2),
-				Y: int(w.Metadata.Size.Height)}},
-		{image.Point{X: int(w.Metadata.Size.Width - w.Metadata.Size.Width/c.Scale.X/2),
-			Y: int(w.Metadata.Size.Height)},
-			image.Point{X: int(w.Metadata.Size.Width),
-				Y: int(w.Metadata.Size.Height),
-			}},
-	}
+	return int(p.RawPos.X) == int(w.Metadata.Size.Width/c.MapScale.X)
+}
+
+func (c *Camera) IsCrossedAxisY() bool {
+	p := pc.UsePC()
+	w := world.UseWorld()
+
+	return int(p.RawPos.Y) == int(w.Metadata.Size.Height/c.MapScale.Y)
 }
 
 //Updates scale coeffients
-func (c *Camera) UpdateScale() {
+func (c *Camera) UpdateMapScale(screen *ebiten.Image) {
 	w := world.UseWorld()
 
-	c.Scale.X = w.Metadata.RawSize.Width / (w.Metadata.RawSize.Width / 100 * c.Zoom)
-	c.Scale.Y = w.Metadata.RawSize.Height / (w.Metadata.RawSize.Height / 100 * c.Zoom)
+	sx, sy := w.GetMapScale(screen.Size())
+
+	c.MapScale.X = (w.Metadata.RawSize.Width / 100 * c.Zoom) * sx / 100
+	c.MapScale.Y = (w.Metadata.RawSize.Height / 100 * c.Zoom) / sy / 1.5 / 100
 }
 
-func (c *Camera) UpdateCharachterTranslation(){
+func (c *Camera) UpdateHeroScale() {
+	p := pc.UsePC()
+	c.HeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.Zoom) * 3
+	c.HeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.Zoom) * 3
+}
+
+func (c *Camera) ClearMatrices() {
+	c.MapMatrix = ebiten.GeoM{}
+	c.HeroMatrix = ebiten.GeoM{}
+}
+
+func (c *Camera) UpdateMapMatrix(screen *ebiten.Image) {
+	// p := pc.UsePC()
+	// w := world.UseWorld()
+	// if p.IsAnimatied() {
+	// 	x, y := p.GetPositionBeforeAnimation()
+	// 	c.MapMatrix.Translate(-x, -y)
+	// } else {
+	// 	c.MapMatrix.Translate(-p.X, -p.Y)
+	// }
+
+	// fmt.Println(c.Scale)
+
+	c.MapMatrix.Scale(float64(c.MapScale.X), float64(c.MapScale.Y))
+}
+
+func (c *Camera) saveScaledTranslation() {
+	// fmt.Println(c.LastHeroTranslation.Y, c.HeroScale.Y, c.LastHeroScale.Y, c.ScaledTranslation)
+	// p := pc.UsePC()
+
+	sx := c.LastHeroTranslation.X * c.HeroScale.X / c.LastHeroScale.X
+	// if c.HeroScale.X != c.LastHeroScale.X {
+		// fmt.Println("INCREASE X")
+		c.ScaledTranslation.X = sx
+	// }
+	sy := c.LastHeroTranslation.Y * c.HeroScale.Y / c.LastHeroScale.Y
+	// if c.HeroScale.Y != c.LastHeroScale.Y {
+		// fmt.Println("INCREASE Y")
+		c.ScaledTranslation.Y = sy
+	// }
+}
+
+func (c *Camera) saveLastHeroTranslation() {
+	p := pc.UsePC()
+
+	if (math.IsNaN(c.LastHeroTranslation.X) || math.IsNaN(c.LastHeroTranslation.Y)){
+		c.LastHeroTranslation.X = p.RawPos.X
+		c.LastHeroTranslation.Y = p.RawPos.Y
+	}else{
+		c.LastHeroTranslation.X = c.ScaledTranslation.X
+		c.LastHeroTranslation.Y = c.ScaledTranslation.Y
+	}
+
+	if p.IsXChanged() || p.IsYChanged(){
+		c.LastHeroTranslation.X = p.RawPos.X
+		c.LastHeroTranslation.Y = p.RawPos.Y
+	}
+}
+
+func (c *Camera) saveLastHeroScale() {
+	c.LastHeroScale.X = c.HeroScale.X
+	c.LastHeroScale.Y = c.HeroScale.Y
+}
+
+func (c *Camera) UpdateHeroMatrix() {
+	p := pc.UsePC()
+	c.HeroMatrix.Scale(p.GetMovementRotation(), 1)
+	c.HeroMatrix.Scale(c.HeroScale.X, c.HeroScale.Y)
+
+	if !c.IsHeroMovementBlocked {
+		fmt.Println(c.ScaledTranslation)
+		c.HeroMatrix.Translate(c.ScaledTranslation.X, c.ScaledTranslation.Y)
+
+		// if c.IsCrossedAxisX() {
+		// 	c.ConnectedPos.X = p.RawPos.X
+		// 	c.IsHeroMovementBlocked = true
+		// }
+
+		// if c.IsCrossedAxisY() {
+		// 	c.ConnectedPos.Y = p.RawPos.Y
+		// 	c.IsHeroMovementBlocked = true
+		// }
+	} else {
+		c.HeroMatrix.Translate(c.ConnectedPos.X, p.RawPos.Y)
+	}
+}
+
+func (c *Camera) UpdateHistory() {
+	p := pc.UsePC()
+	p.UpdatePositionChanges()
+
+
+	c.saveScaledTranslation()
+	c.saveLastHeroScale()
+	c.saveLastHeroTranslation()
 
 }
 
 //Updates camera properties
 //-> Scale coefficients
 //-> Sleep zones
-func (c *Camera) UpdateCamera() {
-	c.UpdateScale()
-	c.UpdateSleepZones()
-	c.UpdateCharachterTranslation()
+func (c *Camera) UpdateCamera(screen *ebiten.Image) {
+	c.UpdateMapScale(screen)
+	c.UpdateHeroScale()
+	// c.UpdateSleepZones()
+	// c.UpdateCharachterTranslation()
+
+	c.ClearMatrices()
+
+	c.UpdateMapMatrix(screen)
+	c.UpdateHeroMatrix()
+
+	c.UpdateHistory()
 }
 
 // func (c *Camera) Disconnect
@@ -212,8 +362,20 @@ func (c *Camera) UpdateCamera() {
 // 	// fmt.Println()
 // }
 
-func (c *Camera) ZoomIn()  {}
-func (c *Camera) ZoomOut() {}
+func (c *Camera) setZoomInBreakpoint() {
+
+}
+
+func (c *Camera) ZoomIn() {
+	if c.Zoom < 35 {
+		c.Zoom++
+	}
+}
+func (c *Camera) ZoomOut() {
+	if c.Zoom > 15 {
+		c.Zoom--
+	}
+}
 
 // func (c *Camera) GetCameraViewSize(screenW, screenH int) (float64, float64) {
 // 	w := world.UseWorld()
@@ -225,50 +387,45 @@ func (c *Camera) ZoomOut() {}
 // }
 
 //Returns camera view scale
-func (c *Camera) GetCameraViewScale(screenW, screenH int) (float64, float64) {
-	w := world.UseWorld()
-	sx, sy := w.GetMapScale(screenW, screenH)
-	fmt.Println(sx, sy)
-	return c.Scale.X, c.Scale.Y
-}
+// func (c *Camera) GetCameraViewScale(screenW, screenH int) (float64, float64) {
+// 	// w := world.UseWorld()
+// 	// sx, sy := w.GetMapScale(screenW, screenH)
+// 	return c.Scale.X, c.Scale.Y
+// }
 
-//Returns translation for camera view
-//related by camera scale
-func (c *Camera) GetCameraViewTranslation(sx, sy float64)(float64, float64){
-	p := pc.UsePC()
-	w := world.UseWorld()
-	return -(p.X - (w.Metadata.RawSize.Width / c.Scale.X / 2)), -((p.Y - (w.Metadata.RawSize.Height / c.Scale.Y / 2)))
-}
+// //Returns translation for camera view
+// //related by camera scale
+// func (c *Camera) GetCameraViewTranslation(sx, sy float64) (float64, float64) {
+// 	p := pc.UsePC()
+// 	w := world.UseWorld()
+// 	return -(p.X - (w.Metadata.RawSize.Width / c.Scale.X / 2)), -(p.Y - (w.Metadata.RawSize.Height / c.Scale.Y / 2))
+// }
 
-func (c *Camera) GetCharacterTranslation(screenW, screenH int) (float64, float64) {
-	// if c.IsSleepZone(c.Translation.X, c.Translation.Y) {
-	// 	return p.X, p.Y
-	// }
-	// return 0, 0
+// func (c *Camera) GetCharacterTranslation(screenW, screenH int) (float64, float64) {
+// if c.IsSleepZone(c.Translation.X, c.Translation.Y) {
+// 	return p.X, p.Y
+// }
+// return 0, 0
 
-	
-	
-	
-	// p := pc.UsePC()
-	// w := world.UseWorld()
+// p := pc.UsePC()
+// w := world.UseWorld()
 
+// cvx, cvy := c.GetCameraViewScale(screenW, screenH)
 
-	// cvx, cvy := c.GetCameraViewScale(screenW, screenH)
+// fmt.Println(p.X / c.Scale.X,
+// 	w.Metadata.Size.Width / cvx / c.Scale.X / 2 + (p.Metadata.RawSize.Width*2))
 
-	// fmt.Println(p.X / c.Scale.X,
-	// 	w.Metadata.Size.Width / cvx / c.Scale.X / 2 + (p.Metadata.RawSize.Width*2))
+// 	p := pc.UsePC()
+// 	if c.IsSleepZone(p.X, p.Y){
+// 		return p.X, 110
+// 		// return p.X / c.Scale.X,  w.Metadata.Size.Height / cvy / c.Scale.Y / 2 - p.Metadata.RawSize.Height
+// 	}
 
-	p := pc.UsePC()
-	if c.IsSleepZone(p.X, p.Y){
-		return p.X, 110
-		// return p.X / c.Scale.X,  w.Metadata.Size.Height / cvy / c.Scale.Y / 2 - p.Metadata.RawSize.Height
-	}
-	
-	// return p.X, p.Y
-		return 245, 110
-	// return w.Metadata.RawSize.Width / cvx / c.Scale.X / 2 + (p.Metadata.RawSize.Width*2), 
-	// w.Metadata.RawSize.Height / cvy / c.Scale.Y / 2 - p.Metadata.RawSize.Height
-}
+// 	// return p.X, p.Y
+// 		return 245, 110
+// 	// return w.Metadata.RawSize.Width / cvx / c.Scale.X / 2 + (p.Metadata.RawSize.Width*2),
+// 	// w.Metadata.RawSize.Height / cvy / c.Scale.Y / 2 - p.Metadata.RawSize.Height
+// }
 
 // func (c *Camera) GetCameraTranslation(cvx, cvy float64) (float64, float64) {
 // 	p := pc.UsePC()
@@ -296,40 +453,41 @@ func (c *Camera) GetCharacterTranslation(screenW, screenH int) (float64, float64
 
 // 	return -c.Translation.X, -c.Translation.Y
 // 	// return -c.Position.X, -c.Position.Y
-	// initialCameraPos := p.X + 20
+// initialCameraPos := p.X + 20
 
-	// fmt.Println()
+// fmt.Println()
 
-	// imageW, imageH := w.Location.Image.Size()
-	// screenW, screenH := screen.Size()
-	// cx, cy := -p.Buffs.SpeedX * p.X, -p.Buffs.SpeedY * p.Y
+// imageW, imageH := w.Location.Image.Size()
+// screenW, screenH := screen.Size()
+// cx, cy := -p.Buffs.SpeedX * p.X, -p.Buffs.SpeedY * p.Y
 
-	// fmt.Println(p.IsXChanged(), p.IsYChanged(), cx, cy)
-	// fmt.Println(cy, (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY), !p.IsXChanged())
+// fmt.Println(p.IsXChanged(), p.IsYChanged(), cx, cy)
+// fmt.Println(cy, (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY), !p.IsXChanged())
 
-	// if cy > (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY) && !p.IsXChanged(){
-	// 	return 0, 0
-	// }
+// if cy > (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY) && !p.IsXChanged(){
+// 	return 0, 0
+// }
 
-	// if cx > (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX) && !p.IsYChanged(){
-	// 	return 0, 0
-	// }
+// if cx > (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX) && !p.IsYChanged(){
+// 	return 0, 0
+// }
 
-	// if cx > (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX) && cy < (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY){
-	// 	return 0, cy
-	// }
+// if cx > (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX) && cy < (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY){
+// 	return 0, cy
+// }
 
-	// if cy > (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY) && cx < (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX){
-	// 	return cx, 0
-	// }
+// if cy > (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY) && cx < (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX){
+// 	return cx, 0
+// }
 
-	// return cx, cy
+// return cx, cy
 // }
 
 //Uses or creates a new instance of camera
 func UseCamera() *Camera {
 	if instance == nil {
-		instance = &Camera{Zoom: 40}
+		instance = &Camera{
+			Zoom: 25}
 	}
 	return instance
 }

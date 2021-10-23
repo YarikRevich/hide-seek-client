@@ -1,14 +1,14 @@
 package syncer
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 )
 
 func SyncPC(swf, shf, pwf, phf float64) {
-	p := pc.UsePC()
+	// p := pc.UsePC()
 
-	p.Y = (p.Y * shf) / phf
-	p.X = (p.X * swf) / pwf
+	// p.Y = (p.Y * shf) / phf
+	// p.X = (p.X * swf) / pwf
 
 	// p.Metadata.Scale.CoefficiantX =
 

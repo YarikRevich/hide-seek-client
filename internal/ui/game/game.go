@@ -11,31 +11,15 @@ import (
 )
 
 func Draw() {
-	camera.UseCamera().UpdateCamera()
-
-	o := ebiten.DrawImageOptions{}
-	p := pc.UsePC()
-		o.GeoM.Scale(2, 2)
-	o.GeoM.Translate(-p.X, -p.Y)
-
-
 	render.UseRender().SetToRender(func(screen *ebiten.Image){
-
-		// img := ebiten.NewImage(screen.Size())
-
-		// opts := ebiten.DrawImageOptions{}
-		// opts.GeoM.Scale(20, 20)
-
-		// screen.DrawImage(img, &opts)
+		camera.UseCamera().UpdateCamera(screen)
 	})
-
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		w := world.UseWorld()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		// screenW, screenH := screen.Size()
 		// cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
 		// ctx, cty := camera.UseCamera().GetCameraViewTranslation(cvx, cvy)		
 
@@ -43,7 +27,7 @@ func Draw() {
 		// opts.GeoM.Translate(ctx, cty)
 		// opts.GeoM.Scale(cvx, cvy)
 
-		opts.GeoM.Concat(o.GeoM)
+		opts.GeoM.Concat(camera.UseCamera().MapMatrix)
 
 		screen.DrawImage(w.Location.Image, opts)
 	})
@@ -59,12 +43,14 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Scale(p.GetMovementRotation(), 1)
+		opts.GeoM.Concat(camera.UseCamera().HeroMatrix)
 
-		tx, ty := camera.UseCamera().GetCharacterTranslation(screen.Size())
+		// opts.GeoM.Scale(p.GetMovementRotation(), 1)
+
+		// tx, ty := camera.UseCamera().GetCharacterTranslation(screen.Size())
 		
-		opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX, p.Metadata.Scale.CoefficiantY)
-		opts.GeoM.Translate(tx, ty)
+		// opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX, p.Metadata.Scale.CoefficiantY)
+		// opts.GeoM.Translate(tx, ty)
 
 		screen.DrawImage(c, opts)
 	})

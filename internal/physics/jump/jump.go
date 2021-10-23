@@ -39,11 +39,11 @@ func ProcessJump(p *pc.PC){
 			j := p.Physics.Jump[0]
 
 			if j == direction.UP {
-				p.Y -= 2
+				p.RawPos.Y -= 2
 			}
 
 			if j == direction.DOWN {
-				p.Y += 2
+				p.RawPos.Y += 2
 			}
 
 			p.Physics.Jump = p.Physics.Jump[1:]
