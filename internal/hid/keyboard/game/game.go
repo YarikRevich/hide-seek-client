@@ -10,12 +10,12 @@ import (
 )
 
 func Exec() {
-	if areGamepadButtonsCombined(gamepadUPButton, gamepadLEFTUPPERCLICKERButton) {
+	if areGamepadButtonsCombined(gamepadUPButton, gamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		camera.UseCamera().ZoomIn()
 		return
 	}
 
-	if areGamepadButtonsCombined(gamepadDOWNButton, gamepadLEFTUPPERCLICKERButton) {
+	if areGamepadButtonsCombined(gamepadDOWNButton, gamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
 		camera.UseCamera().ZoomOut()
 		return
 	}

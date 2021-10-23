@@ -171,7 +171,7 @@ func (p *PC) IsYChanged() bool {
 func (p *PC) SetSpeed(speedX float64) {
 	p.Buffs.SpeedX = speedX
 	wx, wy := screen.GetMaxWidth(), screen.GetMaxHeight()
-	p.Buffs.SpeedY = speedX*float64(wy)/float64(wx) + .5
+	p.Buffs.SpeedY = speedX*float64(wy)/float64(wx) * 2
 }
 
 //Returns position saved before animation processing

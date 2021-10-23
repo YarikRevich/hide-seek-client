@@ -1,8 +1,6 @@
 package camera
 
 import (
-	// "fmt"
-	"fmt"
 	"image"
 	"math"
 
@@ -33,6 +31,10 @@ type Camera struct {
 	//Hero scale which updates deps between
 	//standard coefficient pc skin scales
 	HeroScale struct {
+		X, Y float64
+	}
+
+	MaxHeroScale struct {
 		X, Y float64
 	}
 
@@ -223,7 +225,12 @@ func (c *Camera) saveScaledTranslation() {
 	c.ScaledTranslation.X = c.LastHeroTranslation.X * c.HeroScale.X / c.LastHeroScale.X
 	c.ScaledTranslation.Y = c.LastHeroTranslation.Y * c.HeroScale.Y / c.LastHeroScale.Y
 
-	fmt.Println(c.LastHeroTranslation)
+	// fmt.Println(c.ScaledTranslation, "SCALED TRANSLATION")
+	// fmt.Println(c.LastHeroTranslation, "LAST HERO TRANSLATION")
+	
+	// fmt.Println(c.HeroScale, "HERO SCALE")
+
+	// fmt.Println(c.LastHeroScale, "LAST SCALE")
 }
 
 func (c *Camera) saveLastHeroTranslation() {
@@ -240,8 +247,8 @@ func (c *Camera) saveLastHeroTranslation() {
 	}
 
 	if p.IsXChanged() || p.IsYChanged() {
-		c.LastHeroTranslation.X = p.RawPos.X
-		c.LastHeroTranslation.Y = p.RawPos.Y
+		c.LastHeroTranslation.X = p.RawPos.X * c.HeroScale.X / c.MaxHeroScale.X
+		c.LastHeroTranslation.Y = p.RawPos.Y * c.HeroScale.Y / c.MaxHeroScale.Y
 	}
 
 }
@@ -251,6 +258,12 @@ func (c *Camera) saveLastHeroScale() {
 	c.LastHeroScale.Y = c.HeroScale.Y
 }
 
+func (c *Camera) saveMaxHeroScale(){
+	p := pc.UsePC()
+	c.MaxHeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * 35) * 3
+	c.MaxHeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * 35) * 3
+}
+
 func (c *Camera) UpdateHeroMatrix() {
 	p := pc.UsePC()
 	c.HeroMatrix.Scale(p.GetMovementRotation(), 1)
@@ -258,7 +271,7 @@ func (c *Camera) UpdateHeroMatrix() {
 
 	if !c.IsHeroMovementBlocked {
 		c.HeroMatrix.Translate(c.ScaledTranslation.X, c.ScaledTranslation.Y)
-
+		// c.HeroMatrix.Translate(p.RawPos.X, p.RawPos.Y)
 		// if c.IsCrossedAxisX() {
 		// 	c.ConnectedPos.X = p.RawPos.X
 		// 	c.IsHeroMovementBlocked = true
@@ -354,10 +367,6 @@ func (c *Camera) UpdateCamera(screen *ebiten.Image) {
 
 // 	// fmt.Println()
 // }
-
-func (c *Camera) setZoomInBreakpoint() {
-
-}
 
 func (c *Camera) ZoomIn() {
 	if c.Zoom < 35 {
@@ -482,6 +491,7 @@ func UseCamera() *Camera {
 	if instance == nil {
 		instance = &Camera{
 			Zoom: 25}
+		instance.saveMaxHeroScale()
 	}
 	return instance
 }
