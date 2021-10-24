@@ -8,4 +8,5 @@ import (
 
 var OnceCollection = map[int]*sync.Once{
 	ui.WAIT_ROOM: new(sync.Once),
+	ui.GAME: new(sync.Once),
 }

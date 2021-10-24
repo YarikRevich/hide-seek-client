@@ -10,6 +10,6 @@ frameWidth = 16.0
 frameHeight = 50.0
 
 [scale]
-coefficiantx = 2.5
-coefficianty = 2.5
+coefficiantx = 3.0
+coefficianty = 3.0
 

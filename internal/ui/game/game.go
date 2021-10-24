@@ -11,6 +11,8 @@ import (
 )
 
 func Draw() {
+	
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image){
 		camera.UseCamera().UpdateCamera(screen)
 	})

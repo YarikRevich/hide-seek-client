@@ -15,7 +15,7 @@ import (
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
-var ticker = time.NewTicker(time.Second * 2)
+var ticker = time.NewTicker(time.Second * 3)
 var once sync.Once
 var m sync.Mutex
 

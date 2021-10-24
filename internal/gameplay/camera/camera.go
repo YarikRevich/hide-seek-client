@@ -1,6 +1,7 @@
 package camera
 
 import (
+	"fmt"
 	"image"
 	"math"
 
@@ -13,6 +14,13 @@ var instance *Camera
 
 type Camera struct {
 	HeroMatrix, MapMatrix ebiten.GeoM
+
+	//Boarders of the camera view user sees
+	MapViewBoarders struct {
+		Min, Max struct {
+			X, Y float64
+		}
+	}
 
 	SleepZones []struct {
 		Min, Max image.Point
@@ -27,7 +35,6 @@ type Camera struct {
 	MapScale struct {
 		X, Y float64
 	}
-
 	//Hero scale which updates deps between
 	//standard coefficient pc skin scales
 	HeroScale struct {
@@ -56,16 +63,14 @@ type Camera struct {
 	LastHeroTranslation struct {
 		X, Y float64
 	}
-	// Transmition []struct {
-	// 	X, Y float64
-	// }
-	LastZoom float64
 
-	InitialZoomInBreakpoint float64
-	LastZoomIn              float64
+	// LastZoom float64
 
-	InitialZoomOutBreakpoint float64
-	LastZoomOut              float64
+	// InitialZoomInBreakpoint float64
+	// LastZoomIn              float64
+
+	// InitialZoomOutBreakpoint float64
+	// LastZoomOut              float64
 }
 
 // //Checks if pc inside the camera view
@@ -171,41 +176,49 @@ func (c *Camera) UpdateSleepZones() {
 	// }
 }
 
+//Checks if pc has crossed the X axis
 func (c *Camera) IsCrossedAxisX() bool {
-	p := pc.UsePC()
 	w := world.UseWorld()
 
-	return int(p.RawPos.X) == int(w.Metadata.Size.Width/c.MapScale.X)
+	a := (w.Metadata.RawSize.Width - (w.Metadata.RawSize.Width / (c.MapScale.X + w.Metadata.Scale.CoefficiantX))) / 2
+	b := (w.Metadata.Size.Width - (w.Metadata.Size.Width / (c.MapScale.X + w.Metadata.Scale.CoefficiantX))) / 2
+	return c.ScaledTranslation.X >= (a + b) / 2
 }
 
+
+//Checks if pc has crossed the Y axis
 func (c *Camera) IsCrossedAxisY() bool {
-	p := pc.UsePC()
 	w := world.UseWorld()
 
-	return int(p.RawPos.Y) == int(w.Metadata.Size.Height/c.MapScale.Y)
+	a := (w.Metadata.RawSize.Height - (w.Metadata.RawSize.Height / (c.MapScale.Y + w.Metadata.Scale.CoefficiantY))) / 2
+	b := (w.Metadata.Size.Height - (w.Metadata.Size.Height / (c.MapScale.Y + w.Metadata.Scale.CoefficiantY))) / 2
+	return c.ScaledTranslation.Y >= (a + b) / 2
 }
 
-//Updates scale coeffients
+//Updates scale coeffients for map matrix
 func (c *Camera) UpdateMapScale(screen *ebiten.Image) {
 	w := world.UseWorld()
 
 	sx, sy := w.GetMapScale(screen.Size())
 
-	c.MapScale.X = (w.Metadata.RawSize.Width / 100 * c.Zoom) * sx / 100
-	c.MapScale.Y = (w.Metadata.RawSize.Height / 100 * c.Zoom) / sy / 1.5 / 100
+	c.MapScale.X = ((sx + w.Metadata.Scale.CoefficiantX) / 100 * c.Zoom) * 3
+	c.MapScale.Y = ((sy + w.Metadata.Scale.CoefficiantY) / 100 * c.Zoom) * 3
 }
 
+//Updates scale coeffients for hero matrix
 func (c *Camera) UpdateHeroScale() {
 	p := pc.UsePC()
-	c.HeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.Zoom) * 3
-	c.HeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.Zoom) * 3
+	c.HeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.Zoom)
+	c.HeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.Zoom)
 }
 
+//Clears all the metrics for map and hero matrices
 func (c *Camera) ClearMatrices() {
 	c.MapMatrix = ebiten.GeoM{}
 	c.HeroMatrix = ebiten.GeoM{}
 }
 
+//Updates general metrics for map matrix
 func (c *Camera) UpdateMapMatrix(screen *ebiten.Image) {
 	// p := pc.UsePC()
 	// w := world.UseWorld()
@@ -219,7 +232,11 @@ func (c *Camera) UpdateMapMatrix(screen *ebiten.Image) {
 	// fmt.Println(c.Scale)
 
 	c.MapMatrix.Scale(float64(c.MapScale.X), float64(c.MapScale.Y))
-	c.MapMatrix.Translate(0, 0);
+	if c.IsHeroMovementBlocked {
+		// fmt.Println()
+		p := pc.UsePC()
+		c.MapMatrix.Translate(-p.RawPos.X, -p.RawPos.Y)
+	}
 }
 
 func (c *Camera) saveScaledTranslation() {
@@ -228,7 +245,7 @@ func (c *Camera) saveScaledTranslation() {
 
 	// fmt.Println(c.ScaledTranslation, "SCALED TRANSLATION")
 	// fmt.Println(c.LastHeroTranslation, "LAST HERO TRANSLATION")
-	
+
 	// fmt.Println(c.HeroScale, "HERO SCALE")
 
 	// fmt.Println(c.LastHeroScale, "LAST SCALE")
@@ -236,8 +253,6 @@ func (c *Camera) saveScaledTranslation() {
 
 func (c *Camera) saveLastHeroTranslation() {
 	p := pc.UsePC()
-
-	// fmt.Println(p.RawPos.X, c.HeroScale.X, c.LastHeroScale.X, "CHANGED")
 
 	if math.IsNaN(c.LastHeroTranslation.X) || math.IsNaN(c.LastHeroTranslation.Y) {
 		c.LastHeroTranslation.X = p.RawPos.X
@@ -254,17 +269,22 @@ func (c *Camera) saveLastHeroTranslation() {
 
 }
 
+//Saves last hero scale
 func (c *Camera) saveLastHeroScale() {
 	c.LastHeroScale.X = c.HeroScale.X
 	c.LastHeroScale.Y = c.HeroScale.Y
 }
 
-func (c *Camera) saveMaxHeroScale(){
+//Saves max hero scale which is used for
+//scaled translation calculation after pc
+//had moved
+func (c *Camera) saveMaxHeroScale() {
 	p := pc.UsePC()
-	c.MaxHeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * 35) * 3
-	c.MaxHeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * 35) * 3
+	c.MaxHeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * 55) * 3
+	c.MaxHeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * 55) * 3
 }
 
+//Updates general metrics for hero matrix
 func (c *Camera) UpdateHeroMatrix() {
 	p := pc.UsePC()
 	c.HeroMatrix.Scale(p.GetMovementRotation(), 1)
@@ -273,8 +293,10 @@ func (c *Camera) UpdateHeroMatrix() {
 	if !c.IsHeroMovementBlocked {
 		c.HeroMatrix.Translate(c.ScaledTranslation.X, c.ScaledTranslation.Y)
 		// c.HeroMatrix.Translate(p.RawPos.X, p.RawPos.Y)
+		fmt.Println(c.IsCrossedAxisX(), c.IsCrossedAxisY())
 		// if c.IsCrossedAxisX() {
-		// 	c.ConnectedPos.X = p.RawPos.X
+		// 	c.ConnectedPos.X = c.ScaledTranslation.X
+		// 	c.ConnectedPos.Y = c.ScaledTranslation.Y
 		// 	c.IsHeroMovementBlocked = true
 		// }
 
@@ -283,11 +305,13 @@ func (c *Camera) UpdateHeroMatrix() {
 		// 	c.IsHeroMovementBlocked = true
 		// }
 	} else {
-		c.HeroMatrix.Translate(c.ConnectedPos.X, p.RawPos.Y)
+		c.HeroMatrix.Translate(c.ConnectedPos.X, c.ConnectedPos.Y)
 	}
 }
 
-func (c *Camera) UpdateHistory() {
+//Updates the properties used for other
+//camera calculations
+func (c *Camera) UpdateDepsProperties() {
 	pc.UsePC().UpdatePositionChanges()
 
 	c.saveScaledTranslation()
@@ -297,8 +321,6 @@ func (c *Camera) UpdateHistory() {
 }
 
 //Updates camera properties
-//-> Scale coefficients
-//-> Sleep zones
 func (c *Camera) UpdateCamera(screen *ebiten.Image) {
 	c.UpdateMapScale(screen)
 	c.UpdateHeroScale()
@@ -310,7 +332,7 @@ func (c *Camera) UpdateCamera(screen *ebiten.Image) {
 	c.UpdateMapMatrix(screen)
 	c.UpdateHeroMatrix()
 
-	c.UpdateHistory()
+	c.UpdateDepsProperties()
 }
 
 // func (c *Camera) Disconnect
@@ -369,12 +391,15 @@ func (c *Camera) UpdateCamera(screen *ebiten.Image) {
 // 	// fmt.Println()
 // }
 
+//Increments zoom property
 func (c *Camera) ZoomIn() {
-	if c.Zoom < 35 {
+	if c.Zoom < 55 {
 		// c.LastZoom = c.Zoom
 		c.Zoom++
 	}
 }
+
+//Decrements zoom property
 func (c *Camera) ZoomOut() {
 	if c.Zoom > 15 {
 		c.Zoom--
@@ -491,7 +516,7 @@ func (c *Camera) ZoomOut() {
 func UseCamera() *Camera {
 	if instance == nil {
 		instance = &Camera{
-			Zoom: 25}
+			Zoom: 50}
 		instance.saveMaxHeroScale()
 	}
 	return instance

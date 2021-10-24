@@ -18,6 +18,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/screen"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/tools/printer"
 	"github.com/sirupsen/logrus"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -39,13 +40,11 @@ func init() {
 	}
 	logrus.SetOutput(lgf)
 
-
 	if cli.GetDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
-	}else{
+	} else {
 		logrus.SetLevel(logrus.WarnLevel)
 	}
-
 
 	resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
 		{Embed: assets, Path: "assets/images"}: {
@@ -61,6 +60,10 @@ func init() {
 			fontloader.Load,
 		},
 	})
+
+	printer.PrintCliMessage("HideSeek\nClient!")
+
+
 	// collisions.ConnectCollisionsToImages()
 }
 
@@ -69,6 +72,8 @@ func main() {
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(screen.GetMinWidth(), screen.GetMinHeight(), -1, -1)
+
+	
 
 	log.Fatalln(ebiten.RunGame(loop.New()))
 }
