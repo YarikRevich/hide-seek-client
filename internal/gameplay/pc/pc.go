@@ -208,7 +208,7 @@ func UsePC() *PC {
 		instance.PositionHistory = zeroshifter.New(2)
 
 		instance.Health = DEFAULT_HEALTH
-		instance.SetSpeed(5)
+		instance.SetSpeed(10)
 		instance.Equipment.Skin.Animation.FrameDelay = 5
 		instance.Equipment.Skin.Animation.FrameDelayCounter = 1
 
