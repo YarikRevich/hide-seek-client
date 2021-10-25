@@ -26,8 +26,6 @@ type Animation struct {
 	FrameHeight float64
 }
 
-
-
 type Metadata struct {
 	Animation Animation
 
@@ -35,6 +33,7 @@ type Metadata struct {
 	Info struct {
 		//Parent file metadata one related to
 		Parent string
+		Scrollable bool
 	}
 
 	//HIDDEN: should not be defined by user by configuration
@@ -43,7 +42,7 @@ type Metadata struct {
 		Height float64
 	}
 
-	//MUSTN'T be changed over the project
+	//MUSTN'T be changed over the game
 	RawSize struct {
 		Width  float64
 		Height float64
@@ -54,8 +53,14 @@ type Metadata struct {
 		TopMargin  float64
 	}
 
+	//MUSTN'T be changed over the game
+	RawMargins struct {
+		LeftMargin float64
+		TopMargin  float64
+	}
+
 	Spawns []image.Point
-	
+
 	Physics struct {
 		G float64
 	}
@@ -64,7 +69,7 @@ type Metadata struct {
 		CoefficiantX float64
 		CoefficiantY float64
 	}
-	
+
 	Button struct {
 		Text         string
 		TextPosition TextPosition
@@ -73,9 +78,11 @@ type Metadata struct {
 	Fonts struct {
 		FontColor FontColor
 	}
+
+
 }
 
 //Multiples margins by related coefficients
-func (m *Metadata) FastenMarginsWithCoefficients()(float64, float64){
+func (m *Metadata) FastenMarginsWithCoefficients() (float64, float64) {
 	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
 }

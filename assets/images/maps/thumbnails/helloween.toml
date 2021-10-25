@@ -1,9 +1,10 @@
 [info]
 parent="helloween"
+scrollable=true
 
 [margins]
 leftmargin = 750.0
-topmargin = 70.0
+topmargin = 370.0
 
 [scale]
 coefficiantx = 0.5

@@ -2,8 +2,6 @@ package startmenu
 
 import (
 	mousepress "github.com/YarikRevich/HideSeek-Client/internal/detectors/mouse_press"
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
@@ -26,12 +24,8 @@ func Exec() bool {
 		return true
 	}
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
-		world.UseWorld().SetLocation("assets/images/maps/helloween/background/background")
-		pc.UsePC().InitUsername()
-		pc.UsePC().SetSpawn(world.UseWorld().Metadata.Spawns)
-
 		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.WAIT_ROOM),
+			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
 			uimiddleware.UseUIMiddleware,
 		)
 		applyer.ApplyMiddlewares(

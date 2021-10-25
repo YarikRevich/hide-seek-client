@@ -21,6 +21,7 @@ func ConnectImageSizeToMetadata() {
 			v.Size.Height = float64(imageH)
 			v.RawSize.Width = float64(imageW)
 			v.RawSize.Height = float64(imageH)
+			v.RawMargins = v.Margins
 		}
 	}
 }

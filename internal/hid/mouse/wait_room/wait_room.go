@@ -17,24 +17,27 @@ func Exec() bool {
 		world.UseWorld().ResetUsers()
 
 		applyer.ApplyMiddlewares(
+			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
+			uimiddleware.UseUIMiddleware,
+		)
+		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
 			inputmiddleware.UseInputMiddleware,
 		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
-			uimiddleware.UseUIMiddleware,
-		)
+
 		return true
 	}
 	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")) {
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.GAME),
-			inputmiddleware.UseInputMiddleware,
-		)
+		
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.GAME),
 			uimiddleware.UseUIMiddleware,
 		)
+		applyer.ApplyMiddlewares(
+			statemachine.UseStateMachine().Input().SetState(input.GAME),
+			inputmiddleware.UseInputMiddleware,
+		)
+
 		return true
 	}
 	return false
