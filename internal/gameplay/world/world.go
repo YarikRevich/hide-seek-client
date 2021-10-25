@@ -53,7 +53,7 @@ type World struct {
 func (w *World) SetLocation(path string) {
 	w.Path = path
 	split := strings.Split(path, "/")
-	w.Name = split[len(split)-1]
+	w.Name = split[len(split)-3]
 	w.Image = imagecollection.GetImage(w.Path)
 	w.Metadata = metadatacollection.GetMetadata(w.Path)
 }
