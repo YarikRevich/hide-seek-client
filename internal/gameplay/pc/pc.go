@@ -3,7 +3,7 @@ package pc
 import (
 	"image"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/direction"
+	// "github.com/YarikRevich/HideSeek-Client/internal/direction"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
+
 
 const (
 	DEFAULT_HEALTH = 10
