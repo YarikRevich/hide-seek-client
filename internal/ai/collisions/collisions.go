@@ -3,10 +3,10 @@ package collisions
 import (
 	"crypto/sha256"
 
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	// imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
+	// metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
-	"github.com/YarikRevich/HideSeek-Client/tools/utils"
+	// "github.com/YarikRevich/HideSeek-Client/tools/utils"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -15,14 +15,14 @@ var (
 )
 
 func ConnectCollisionsToImages() {
-	for hash := range imagecollection.ImageCollection {
+	// for hash := range imagecollection.ImageCollection {
 
-		path := utils.GetPathByHash(hash, imagecollection.PathsToHash)
-		coll, ok := metadatacollection.MetadataCollection[path]
-		if ok {
-			Collisions[hash] = coll
-		}
-	}
+	// 	// path := utils.GetPathByHash(hash, imagecollection.PathsToHash)
+	// 	// coll, ok := metadatacollection.MetadataCollection[path]
+	// 	// if ok {
+	// 	// 	Collisions[hash] = coll
+	// 	// }
+	// }
 }
 
 func SyncCollisionWithImage(screen *ebiten.Image, i *ebiten.Image) {

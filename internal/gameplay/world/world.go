@@ -5,6 +5,7 @@ import (
 	"image"
 	"strings"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
@@ -46,6 +47,8 @@ type World struct {
 	Regime regime
 
 	Users []pc.PC
+
+	Elements []objects.Object
 }
 
 //Sets location properties

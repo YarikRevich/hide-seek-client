@@ -1,2 +1,9 @@
 [info]
 parent="background"
+
+[scale]
+coefficiantx = 1.0
+coefficianty = 1.0
+
+[physics]
+g = 10.0

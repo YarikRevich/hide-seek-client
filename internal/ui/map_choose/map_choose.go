@@ -1,9 +1,6 @@
 package map_choose
 
 import (
-	"fmt"
-
-	mousewheel "github.com/YarikRevich/HideSeek-Client/internal/detectors/mouse_wheel"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
@@ -11,7 +8,6 @@ import (
 )
 
 func Draw() {
-	fmt.Println(mousewheel.MouseWheelX, mousewheel.MouseWheelY)
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := imagecollection.GetImage("assets/images/system/background/background")
 

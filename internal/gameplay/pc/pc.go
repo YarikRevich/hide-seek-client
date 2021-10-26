@@ -1,45 +1,25 @@
 package pc
 
 import (
-	"crypto/sha256"
 	"image"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/direction"
+	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/history"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/YarikRevich/HideSeek-Client/internal/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"
 )
 
 const (
-	EMPTY          = ""
 	DEFAULT_HEALTH = 10
 )
 
 var instance *PC
-
-type Animation struct {
-	PositionBeforeAnimation image.Point
-	FrameCount              uint32
-	FrameDelay              uint32
-	FrameDelayCounter       uint32
-	CurrentFrameMatrix      []float64
-}
-
-type GameCredentials struct {
-	LobbyID string
-}
-
-type Skin struct {
-	ImageHash [sha256.Size]byte
-	Animation Animation
-}
 
 type Weapon struct {
 	Name      string
@@ -62,26 +42,12 @@ type Physics struct {
 }
 
 type PC struct {
-	ID uuid.UUID
-
+	objects.Object
+	
 	Username string
-
 	Health uint64
-
-	//Raw pos input by user
-	RawPos struct {
-		X, Y float64
-	}
-
-	//Pos which is influenced by scalers
-	Pos struct {
-		X, Y float64
-	}
-
 	//Spawn generated before the game start
 	Spawn image.Point
-
-	PositionHistory zeroshifter.IZeroShifter `json:"-"`
 
 	Team Team
 
@@ -89,11 +55,6 @@ type PC struct {
 
 	Physics   Physics
 	Equipment Equipment
-
-	Image    *ebiten.Image `json:"-"`
-	Metadata *models.Metadata
-
-	GameCredentials GameCredentials
 }
 
 //Initializes pc username by requesting storage
@@ -110,62 +71,6 @@ func (p *PC) SetSpawn(spawns []image.Point) {
 	x, y := GetSpawn(spawns)
 	instance.RawPos.X = x
 	instance.RawPos.Y = y
-}
-
-func (p *PC) savePositionHistory() {
-	p.PositionHistory.Add(struct{ X, Y float64 }{X: p.RawPos.X, Y: p.RawPos.Y})
-	// p.LastRawPos = p.RawPos
-}
-
-func (p *PC) savePositionBeforeAnimation() {
-	p.Equipment.Skin.Animation.PositionBeforeAnimation = image.Point{X: int(p.RawPos.X), Y: int(p.RawPos.Y)}
-}
-
-
-func (p *PC) SetX(x float64) {
-	p.RawPos.X = x
-	p.savePositionBeforeAnimation()
-	
-}
-
-func (p *PC) SetY(y float64) {
-	p.RawPos.Y = y
-	p.savePositionBeforeAnimation()
-}
-
-func (p *PC) UpdatePositionChanges(){
-	p.savePositionHistory()
-}
-
-func (p *PC) IsXChanged() bool {
-	var prevX float64
-	for _, v := range p.PositionHistory.Get() {
-		pos := v.(struct{ X, Y float64 })
-		if prevX == 0 {
-			prevX = pos.X
-			continue
-		}
-		if prevX == pos.X {
-			return false
-		}
-	}
-	return true
-}
-
-func (p *PC) IsYChanged() bool {
-	var prevY float64
-	for _, v := range p.PositionHistory.Get() {
-		pos := v.(struct{ X, Y float64 })
-
-		if prevY == 0 {
-			prevY = pos.Y
-			continue
-		}
-		if prevY == pos.Y {
-			return false
-		}
-	}
-	return true
 }
 
 func (p *PC) SetSpeed(speedX float64) {
@@ -204,7 +109,6 @@ func UsePC() *PC {
 		}
 		instance.ID = id
 
-		instance.Username = EMPTY
 		instance.PositionHistory = zeroshifter.New(2)
 
 		instance.Health = DEFAULT_HEALTH

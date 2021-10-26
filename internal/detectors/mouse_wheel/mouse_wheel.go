@@ -7,21 +7,22 @@ import (
 
 var MouseWheelX, MouseWheelY float64
 
+const moveCoefficient = 2
+
 //Saves mouse wheel offsets using ebiten API
 //or uses offsets gotten from gamepad
 func SaveMouseWheelOffsets() {
 	if gamepadpress.IsGamepadButtonPressed(gamepadpress.GamepadUPButton) {
-		MouseWheelY -= .2
+		MouseWheelY -= moveCoefficient
 	} else if gamepadpress.IsGamepadButtonPressed(gamepadpress.GamepadDOWNButton) {
-		MouseWheelY += .2
+		MouseWheelY += moveCoefficient
 	} else if gamepadpress.IsGamepadButtonPressed(gamepadpress.GamepadLEFTButton) {
-		MouseWheelX -= .2
+		MouseWheelX -= moveCoefficient
 	} else if gamepadpress.IsGamepadButtonPressed(gamepadpress.GamepadRIGHTButton) {
-		MouseWheelX += .2
+		MouseWheelX += moveCoefficient
 	} else {
 		sx, sy := ebiten.Wheel()
 		MouseWheelX += sx
 		MouseWheelY += sy
 	}
-
 }
