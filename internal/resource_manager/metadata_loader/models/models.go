@@ -18,7 +18,7 @@ const (
 )
 
 type Animation struct {
-	Delay       float64
+	FrameDelay  float64
 	FrameNum    float64
 	FrameX      float64
 	FrameY      float64
@@ -32,7 +32,7 @@ type Metadata struct {
 	//Information about metadata file
 	Info struct {
 		//Parent file metadata one related to
-		Parent string
+		Parent     string
 		Scrollable bool
 	}
 
@@ -65,6 +65,10 @@ type Metadata struct {
 		G float64
 	}
 
+	Buffs struct {
+		Speed float64
+	}
+
 	Scale struct {
 		CoefficiantX float64
 		CoefficiantY float64
@@ -78,8 +82,6 @@ type Metadata struct {
 	Fonts struct {
 		FontColor FontColor
 	}
-
-
 }
 
 //Multiples margins by related coefficients

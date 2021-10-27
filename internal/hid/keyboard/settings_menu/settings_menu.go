@@ -1,22 +1,18 @@
 package settingsmenu
 
 import (
-	"fmt"
-
-	buffercollection "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/common"
-	// "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/collection"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/handler"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Exec() {
-	handler.HandleKeyboardPress(buffercollection.SettingsMenuNameBuffer, []handler.PipelineEntity{
-		{Keys: []ebiten.Key{ebiten.KeyBackspace}, Callback: func(b common.IBuffer, k rune) {
+	events.UseEvents().Keyboard().HandleKeyPress(events.UseEvents().Input().SettingsMenuNameBuffer, []events.KeyBoardEntity{
+		{Keys: []ebiten.Key{ebiten.KeyBackspace}, Callback: func(b events.IBuffer, k rune) {
 			b.Pop()
 		}},
-		{Keys: collection.UserKeys, Callback: func(b common.IBuffer, k rune) {
+		{Keys: keycodes.UserKeys, Callback: func(b events.IBuffer, k rune) {
 			b.Push(k)
 		}},
 	})

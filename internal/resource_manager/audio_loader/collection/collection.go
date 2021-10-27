@@ -7,7 +7,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var AudioControllers = make(map[string]models.Controller)
+var (
+	lastAudioPath    string
+	AudioControllers = make(map[string]models.Controller)
+)
+
+func SetLastAudioTrackPath(p string) {
+	lastAudioPath = p
+}
+
+func GetLastAudioTrackPath() string {
+	return lastAudioPath
+}
 
 func GetAudioController(path string) models.Controller {
 	i, ok := AudioControllers[path]

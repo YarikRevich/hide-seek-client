@@ -1,7 +1,7 @@
 package startmenu
 
 import (
-	mousepress "github.com/YarikRevich/HideSeek-Client/internal/detectors/mouse_press"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
@@ -12,7 +12,8 @@ import (
 )
 
 func Exec() bool {
-	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/settingswheel")) {
+	m := events.UseEvents().Mouse()
+	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/settingswheel")) {
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.SETTINGS_MENU),
 			uimiddleware.UseUIMiddleware,
@@ -23,7 +24,9 @@ func Exec() bool {
 		)
 		return true
 	}
-	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
+	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
+		
+
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
 			uimiddleware.UseUIMiddleware,
@@ -35,7 +38,7 @@ func Exec() bool {
 		return true
 	}
 
-	if mousepress.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_join")) {
+	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_join")) {
 		// world.UseWorld().Init("assets/images/maps/helloween/background/background")
 		// pc.UsePC().Init(world.UseWorld().Metadata.Spawns)
 

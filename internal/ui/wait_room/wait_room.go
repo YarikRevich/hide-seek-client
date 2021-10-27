@@ -3,14 +3,14 @@ package wait_room
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-	"github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	ebitentext "github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func Draw() {
@@ -47,7 +47,8 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFont("assets/fonts/base")
-		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		
+		ebitentext.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})
@@ -61,7 +62,7 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFont("assets/fonts/base")
-		p := positioning.NewPositionSession(
+		p := text.NewPositionSession(
 			f, 
 			m.Button.Text, 
 			m.RawSize.Width, 
@@ -70,7 +71,7 @@ func Draw() {
 
 		for p.Next() {
 			tx, ty := p.GetPosition()
-			text.Draw(
+			ebitentext.Draw(
 				img,
 				p.GetText(),
 				f,

@@ -3,7 +3,8 @@ package ui
 import (
 	"sync"
 
-	buffercollection "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
+	// buffercollection "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	networkingcollection "github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
@@ -18,7 +19,7 @@ func updateNetworkCollection() {
 }
 
 func cleanBuffers() {
-	buffercollection.SettingsMenuNameBuffer.Clean()
+	events.UseEvents().Input().SettingsMenuNameBuffer.Clean()
 }
 
 func setSuspendedMusicDone() {

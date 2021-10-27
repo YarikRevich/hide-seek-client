@@ -1,10 +1,10 @@
 package physics
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 )
 
-func ProcessAnimation(p *pc.PC){
-	jump.ProcessJump(p)
+func ProcessAnimation(o *objects.Object){
+	jump.ProcessJump(o)
 }

@@ -1,6 +1,7 @@
 package events
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -42,13 +43,13 @@ type MouseWheel struct {
 func (p *MouseWheel) UpdateMouseWheelOffsets() {
 	e := UseEvents().Gamepad()
 
-	if e.IsGamepadButtonPressed(GamepadUPButton) {
+	if e.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 		p.MouseWheelY -= p.moveCoefficient
-	} else if e.IsGamepadButtonPressed(GamepadDOWNButton) {
+	} else if e.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
 		p.MouseWheelY += p.moveCoefficient
-	} else if e.IsGamepadButtonPressed(GamepadLEFTButton) {
+	} else if e.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
 		p.MouseWheelX -= p.moveCoefficient
-	} else if e.IsGamepadButtonPressed(GamepadRIGHTButton) {
+	} else if e.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
 		p.MouseWheelX += p.moveCoefficient
 	} else {
 		sx, sy := ebiten.Wheel()

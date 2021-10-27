@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"path/filepath"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/paths"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"

@@ -1,7 +1,7 @@
 package keyboard
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/game"
 	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/settings_menu"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
@@ -15,6 +15,6 @@ func Process() {
 	case input.GAME:
 		game.Exec()
 	default:
-		collection.CleanBlinking()
+		events.UseEvents().Input().InputBuffers.CleanBuffersBlinking()
 	}
 }

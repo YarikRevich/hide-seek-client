@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	audiohistory "github.com/YarikRevich/HideSeek-Client/internal/history/audio"
+	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
@@ -42,7 +42,7 @@ func StopCallback(effect *effects.Volume, ctrl *beep.Ctrl) func() {
 func StartCallback(
 	effect *effects.Volume, ctrl *beep.Ctrl, format beep.Format, streamer beep.StreamSeekCloser, path string) func() {
 	return func() {
-		audiohistory.SetLastAudioTrackPath(path)
+		collection.SetLastAudioTrackPath(path)
 
 		go func() {
 			tick := time.NewTicker(time.Microsecond * 500)

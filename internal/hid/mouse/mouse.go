@@ -1,6 +1,7 @@
 package mouse
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/join_lobby_menu"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/unfocus"
 	waitroom "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/wait_room"
@@ -9,9 +10,9 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 
+	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/map_choose"
 	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/settings_menu"
 	startmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/start_menu"
-	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/map_choose"
 )
 
 func Process() {
@@ -43,7 +44,8 @@ func Process() {
 			}
 		}
 
-		if IsMousePressed() {
+		
+		if events.UseEvents().Mouse().IsAnyMouseButtonsPressed() {
 			unfocus.Exec()
 		}
 	}

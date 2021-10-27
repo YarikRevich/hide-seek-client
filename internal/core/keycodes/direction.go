@@ -1,12 +1,12 @@
 package keycodes
 
-type direction int
+type Direction int
 
 /*Direction which represent what
 direction user goes to
 */
 const (
-	UP direction = iota
+	UP Direction = iota
 	DOWN
 	RIGHT
 	LEFT

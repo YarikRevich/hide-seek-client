@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"image/color"
 
-	positioning "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
+	// positioning "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	ebitentext "github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func Draw() {
@@ -50,7 +51,7 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFont("assets/fonts/base")
-		p := positioning.NewPositionSession(
+		p := text.NewPositionSession(
 			f, 
 			m.Button.Text, 
 			m.RawSize.Width,
@@ -59,7 +60,7 @@ func Draw() {
 
 		for p.Next() {
 			tx, ty := p.GetPosition()
-			text.Draw(
+			ebitentext.Draw(
 				img,
 				p.GetText(),
 				f,
@@ -80,7 +81,7 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		f := fontcollection.GetFont("assets/fonts/base")
-		p := positioning.NewPositionSession(
+		p := text.NewPositionSession(
 			f, 
 			m.Button.Text, 
 			m.RawSize.Width,
@@ -89,7 +90,7 @@ func Draw() {
 
 		for p.Next() {
 			tx, ty := p.GetPosition()
-			text.Draw(
+			ebitentext.Draw(
 				img,
 				p.GetText(),
 				f,

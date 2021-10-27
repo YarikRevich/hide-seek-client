@@ -9,15 +9,22 @@ import (
 var instance IProvider
 
 type IProvider interface {
-	User() common.StorageBlock
+	GetUsername() string
+	SetUsername(username string) 
 }
 
 type provider struct {
 	userStorage common.StorageBlock
 }
 
-func (pr *provider) User() common.StorageBlock {
-	return pr.userStorage
+func (pr *provider) GetUsername() string {
+	return pr.userStorage.Get("name").(string)
+}
+
+func (pr *provider) SetUsername(username string)  {
+	pr.userStorage.Save(common.DBQuery{{
+		Field: "name", Value: username,
+	}})
 }
 
 func UseStorageProvider() IProvider {

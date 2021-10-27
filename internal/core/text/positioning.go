@@ -1,4 +1,4 @@
-package positioning
+package text
 
 import (
 	"strings"

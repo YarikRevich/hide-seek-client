@@ -1,33 +1,40 @@
 package events
 
-var instance *Events
+var instance EventsProvider
 
-type Events struct {
+type provider struct {
 	mouse    *Mouse
 	gamepad  *Gamepad
 	keyboard *KeyBoard
 	input    *Input
 }
 
-func (e *Events) Mouse() *Mouse {
-	return e.mouse
+type EventsProvider interface {
+	Mouse() *Mouse
+	Gamepad() *Gamepad
+	Keyboard() *KeyBoard
+	Input() *Input
 }
 
-func (e *Events) Gamepad() *Gamepad {
-	return e.gamepad
+func (p *provider) Mouse() *Mouse {
+	return p.mouse
 }
 
-func (e *Events) Keyboard() *KeyBoard {
-	return e.keyboard
+func (p *provider) Gamepad() *Gamepad {
+	return p.gamepad
 }
 
-func (e *Events) Input() *Input {
-	return e.input
+func (p *provider) Keyboard() *KeyBoard {
+	return p.keyboard
 }
 
-func UseEvents() *Events {
+func (p *provider) Input() *Input {
+	return p.input
+}
+
+func UseEvents() EventsProvider {
 	if instance == nil {
-		instance = &Events{
+		instance = &provider{
 			mouse:    NewMouse(),
 			gamepad:  NewGamepad(),
 			keyboard: NewKeyBoard(),

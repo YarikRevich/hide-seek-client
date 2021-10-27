@@ -1,9 +1,8 @@
 package game
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/camera"
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
-	"github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
@@ -16,41 +15,24 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		w := world.UseWorld()
+		w := objects.UseObjects().World()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		// cvx, cvy := camera.UseCamera().GetCameraViewScale(screenW, screenH)
-		// ctx, cty := camera.UseCamera().GetCameraViewTranslation(cvx, cvy)		
-
-
-		// opts.GeoM.Translate(ctx, cty)
-		// opts.GeoM.Scale(cvx, cvy)
-
 		opts.GeoM.Concat(camera.UseCamera().MapMatrix)
 
-		screen.DrawImage(w.Location.Image, opts)
+		screen.DrawImage(w.Image, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := pc.UsePC()
-		physics.ProcessAnimation(p)
+		p := objects.UseObjects().PC()
+		physics.ProcessAnimation(&p.Object)
 		
-		c := animation.WithAnimation(
-			p.Image,
-			&p.Metadata.Animation,
-			&p.Equipment.Skin.Animation)
+		c := animation.WithAnimation(&p.Object)
 
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Concat(camera.UseCamera().HeroMatrix)
-
-		// opts.GeoM.Scale(p.GetMovementRotation(), 1)
-
-		// tx, ty := camera.UseCamera().GetCharacterTranslation(screen.Size())
-		
-		// opts.GeoM.Scale(p.Metadata.Scale.CoefficiantX, p.Metadata.Scale.CoefficiantY)
-		// opts.GeoM.Translate(tx, ty)
 
 		screen.DrawImage(c, opts)
 	})
