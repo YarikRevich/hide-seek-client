@@ -31,15 +31,15 @@ func (g *Loop) Update() error {
 
 func (g *Loop) Draw(screen *ebiten.Image) {
 	profiling.UseProfiler().StartMonitoring(profiling.RENDER)
+	screenhistory.SetScreen(screen)
 
 	s := syncer.NewSyncer()
-	s.UpdateScreenDeps(screen)
+	s.UpdateScreenDeps()
 	s.Sync()
 
-	render.UseRender().UpdateScreen(screen)
 	render.UseRender().Render()
 
-	screenhistory.SetLastScreenSize(screen)
+	screenhistory.SetLastScreenSize()
 
 	profiling.UseProfiler().EndMonitoring()
 	profiling.UseProfiler().SumUpMonitoring()

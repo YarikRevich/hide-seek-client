@@ -1,12 +1,12 @@
 package game
 
 import (
-	// gamepadpress "github.com/YarikRevich/HideSeek-Client/internal/detectors/gamepad_press"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	// "github.com/YarikRevich/HideSeek-Client/internal/history"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -14,6 +14,7 @@ import (
 func Exec() {
 	g := events.UseEvents().Gamepad()
 	p := objects.UseObjects().PC()
+	fmt.Println(p.Metadata.Buffs.Speed)
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		camera.UseCamera().ZoomIn()
@@ -27,29 +28,28 @@ func Exec() {
 
 	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 		if p.RawPos.Y > 0 {
-			p.SetY(p.RawPos.Y - p.Buffs.SpeedY)
+			p.SetY(p.RawPos.Y - p.Metadata.Buffs.Speed.Y)
 		}
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
 	
-		p.SetY(p.RawPos.Y + p.Buffs.SpeedY)
+		p.SetY(p.RawPos.Y + p.Metadata.Buffs.Speed.Y)
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
 	
-		p.SetX(p.RawPos.X + p.Buffs.SpeedX)
+		p.SetX(p.RawPos.X + p.Metadata.Buffs.Speed.X)
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
 		if p.RawPos.X > 0 {
 	
-			p.SetX(p.RawPos.X - p.Buffs.SpeedX)
+			p.SetX(p.RawPos.X - p.Metadata.Buffs.Speed.X)
 		}
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTUPPERCLICKERButton) {
 		jump.CalculateJump(&p.Object)
 	}
-
 }

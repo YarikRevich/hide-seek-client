@@ -18,11 +18,11 @@ const (
 )
 
 type Animation struct {
-	FrameDelay  float64
-	FrameNum    float64
-	FrameX      float64
-	FrameY      float64
-	FrameWidth  float64
+	FrameDelay,
+	FrameNum,
+	FrameX,
+	FrameY,
+	FrameWidth,
 	FrameHeight float64
 }
 
@@ -38,25 +38,21 @@ type Metadata struct {
 
 	//HIDDEN: should not be defined by user by configuration
 	Size struct {
-		Width  float64
-		Height float64
+		Width, Height float64
 	}
 
 	//MUSTN'T be changed over the game
 	RawSize struct {
-		Width  float64
-		Height float64
+		Width, Height float64
 	}
 
 	Margins struct {
-		LeftMargin float64
-		TopMargin  float64
+		LeftMargin, TopMargin float64
 	}
 
 	//MUSTN'T be changed over the game
 	RawMargins struct {
-		LeftMargin float64
-		TopMargin  float64
+		LeftMargin, TopMargin float64
 	}
 
 	Spawns []image.Point
@@ -66,12 +62,18 @@ type Metadata struct {
 	}
 
 	Buffs struct {
-		Speed float64
+		//MUSTN"T be changed over the game
+		RawSpeed struct {
+			X, Y float64
+		}
+
+		Speed struct {
+			X, Y float64
+		}
 	}
 
 	Scale struct {
-		CoefficiantX float64
-		CoefficiantY float64
+		CoefficiantX, CoefficiantY float64
 	}
 
 	Button struct {

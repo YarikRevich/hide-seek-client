@@ -16,8 +16,10 @@ import (
 type Role int
 
 const (
-	// PC Role = iota
-	// Element
+	PCRole Role = iota
+	ElementRole
+	WeaponRole
+	AmmoRole
 )
 
 type Physics struct {

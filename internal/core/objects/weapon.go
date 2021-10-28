@@ -5,3 +5,5 @@ type Weapon struct {
 
 	Name, Radius string
 }
+
+func NewWeapon(){}

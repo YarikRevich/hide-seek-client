@@ -1,13 +1,10 @@
 package objects
 
 import (
-	// imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	// metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"fmt"
-	"image"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -29,7 +26,7 @@ const (
 
 type PC struct {
 	Object
-	Buffs
+	// Buffs
 
 	Username string
 	Health   uint64
@@ -38,7 +35,7 @@ type PC struct {
 
 func (p *PC) SetSkin(path string){
 	p.Object.SetSkin(path)
-	p.SetSpeed(p.Metadata.Buffs.Speed)
+	// p.SetSpeed(p.Metadata.Buffs.Speed)
 	fmt.Println(p.Metadata, "METEDATA")
 }
 
@@ -47,11 +44,12 @@ func (p *PC) InitUsername() {
 	// p.Username = .UseStorageProvider().GetUsername()
 }
 
-func (p *PC) SetSpeed(speedX float64) {
-	p.Buffs.SpeedX = speedX
-	wx, wy := screen.GetMaxWidth(), screen.GetMaxHeight()
-	p.Buffs.SpeedY = speedX * float64(wy) / float64(wx) * 2
-}
+// func (p *PC) SetSpeed(speedX float64) {
+// 	p.Buffs.SpeedX = speedX
+// 	p.Buffs.SpeedY = spe
+// 	// wx, wy := screen.GetMaxWidth(), screen.GetMaxHeight()
+// 	// p.Buffs.SpeedY = speedX * float64(wy) / float64(wx) * 2
+// }
 
 // //Returns movement rotation related to the last
 // //movement direction
@@ -69,10 +67,10 @@ func NewPC() *PC {
 		logrus.Fatal("failed to create uuid for world:", err)
 	}
 	pc.ID = id
-
+	// pc.RawPos.X = 1500 * 4
 	pc.PositionHistory = zeroshifter.New(2)
 	pc.Health = 10
-	pc.Spawn = image.Point{X: 1500, Y: 0}
+	// pc.Spawn = image.Point{X: 1500, Y: 0}
 	// instance.Animation.FrameDelay = 5
 	// instance.Animation.FrameDelayCounter = 1
 

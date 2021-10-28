@@ -2,9 +2,8 @@ package syncer
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/hajimehoshi/ebiten/v2"
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 )
 
 type syncer struct {
@@ -12,20 +11,22 @@ type syncer struct {
 }
 
 type SyncerProvider interface {
-	UpdateScreenDeps(screen *ebiten.Image)
+	UpdateScreenDeps()
 	Sync()
 }
 
 //Updates screen deps which syncer depends on
-func (s *syncer) UpdateScreenDeps(screen *ebiten.Image){
-	sw, sh := screen.Size()
-	s.sw = float64(sw); s.sh = float64(sh)
+func (s *syncer) UpdateScreenDeps() {
+	sw, sh := screenhistory.GetScreen().Size()
+	s.sw = float64(sw)
+	s.sh = float64(sh)
 	pw, ph := screenhistory.GetLastScreenSize()
-	s.pw = float64(pw); s.ph = float64(ph)
+	s.pw = float64(pw)
+	s.ph = float64(ph)
 }
 
 //Sync data which depends on screen resize
-func (s *syncer) Sync(){
+func (s *syncer) Sync() {
 	if s.pw != 0 && s.ph != 0 {
 		e := events.UseEvents().Mouse()
 		for _, v := range metadatacollection.MetadataCollection {
@@ -40,6 +41,14 @@ func (s *syncer) Sync(){
 				v.Size.Height = v.RawSize.Height * v.Scale.CoefficiantY
 			}
 
+			if v.Buffs.RawSpeed.X*v.Scale.CoefficiantX != v.Buffs.Speed.X {
+				v.Buffs.Speed.X = v.Buffs.RawSpeed.X * v.Scale.CoefficiantX
+			}
+
+			if v.Buffs.RawSpeed.Y*v.Scale.CoefficiantY != v.Buffs.Speed.Y {
+				v.Buffs.Speed.Y = v.Buffs.RawSpeed.Y * v.Scale.CoefficiantY
+			}
+
 			if v.Info.Scrollable {
 				if v.RawMargins.TopMargin+e.MouseWheelY != v.Margins.TopMargin {
 					v.Margins.TopMargin = v.RawMargins.TopMargin + e.MouseWheelY
@@ -48,8 +57,7 @@ func (s *syncer) Sync(){
 		}
 	}
 }
-	
 
-func NewSyncer() SyncerProvider{
+func NewSyncer() SyncerProvider {
 	return new(syncer)
 }

@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -90,121 +91,26 @@ type Camera struct {
 	}
 }
 
-// //Checks if pc inside the camera view
-// func (c *Camera) InCameraView(x, y float64) bool {
-// 	return (x <= float64(c.CamBoarders.Max.X) && x >= float64(c.CamBoarders.Min.X)) &&
-// 		(y <= float64(c.CamBoarders.Max.Y) && y >= float64(c.CamBoarders.Min.Y))
-// }
-
-// //Checks if camera view is outta passed coords
-// func (c *Camera) isCameraOuttaCoords(x, y float64) bool {
-// 	return false
-// }
-
-// //Checks if pc crossed min x
-// func (c *Camera) isCrossedMinX(x float64) bool {
-// 	return x <= float64(c.CamBoarders.Min.X)
-// }
-
-// //Checks if pc crossed min Y
-// func (c *Camera) isCrossedMinY(y float64) bool {
-// 	return y <= float64(c.CamBoarders.Min.Y)
-// }
-
-// //Checks if pc crossed max x
-// func (c *Camera) isCrossedMaxX(x float64) bool {
-// 	return x >= float64(c.CamBoarders.Max.X)
-// }
-
-// //Checks if pc crossed max Y
-// func (c *Camera) isCrossedMaxY(y float64) bool {
-// 	return y >= float64(c.CamBoarders.Max.Y)
-// }
-
-// p := pc.UsePC()
-// w := world.UseWorld()
-
-// wx := (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX)
-// wy := (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY)
-
-// cx := (w.Metadata.Size.Width * w.Metadata.Scale.CoefficiantX) / 100 * c.Zoom
-// cy := (w.Metadata.Size.Height * w.Metadata.Scale.CoefficiantY) / 100 * c.Zoom
-// // cc := math.Sqrt(math.Pow(cx, 2)+math.Pow(cy, 2)) / 2
-
-// c.Position.X = p.X + (cx / 2)
-// for (p.X != c.Position.X+(cx/2) && p.Y != c.Position.Y+(cy/2)) || c.isCameraOuttaCoords(wx, wy){
-// 	if p.X > c.Position.X {
-// 		c.Position.X++
-// 	}else{
-// 		c.Position.X--
-// 	}
-
-// 	if p.Y > c.Position.Y {
-// 		c.Position.Y++
-// 	}else{
-// 		c.Position.Y--
-// 	}
-// }
 func (c *Camera) isHeroTranslationBlocked() bool {
 	return c.isHeroMovementBlockedX || c.isHeroMovementBlockedY
 }
 
-//Checks if pc at camera sleep zone
-// func (c *Camera) IsSleepZone(x, y float64) bool {
-// 	for _, v := range c.SleepZones {
-// 		if (x <= float64(v.Max.X) && x >= float64(v.Min.X)) &&
-// 			(y <= float64(v.Max.Y) && y >= float64(v.Min.Y)) {
-// 			return true
-// 		}
-// 	}
-
-// 	return false
-// }
-
-// func (c *Camera) IsGoneOuttaSleepZone() bool {
-// 	return c.IsSleepZone(c.LastTranslation.X, c.LastTranslation.Y) && !c.IsSleepZone(c.Translation.X, c.Translation.Y)
-// }
-
-//Updates the sleep zones of the camera
-// func (c *Camera) updateSleepZones() {
-// w := world.UseWorld()
-
-// c.SleepZones = []struct{ Min, Max image.Point }{
-// 	{image.Point{X: 0,
-// 		Y: 0},
-// 		image.Point{X: w.Metadata.Size.Width / c.Scale.X / 2,
-// 			Y: int(w.Metadata.Size.Height) / c.Scale.Y / 2}},
-// 	{image.Point{X: int(w.Metadata.Size.Width-w.Metadata.Size.Width) / c.Scale.X / 2,
-// 		Y: 0},
-// 		image.Point{X: int(w.Metadata.Size.Width),
-// 			Y: int(w.Metadata.Size.Height) / c.Scale.Y / 2}},
-// 	{image.Point{X: 0,
-// 		Y: int(w.Metadata.Size.Height)},
-// 		image.Point{X: int(w.Metadata.Size.Width) / c.Scale.X / 2,
-// 			Y: int(w.Metadata.Size.Height)}},
-// 	{image.Point{X: int(w.Metadata.Size.Width-w.Metadata.Size.Width) / c.Scale.X / 2,
-// 		Y: int(w.Metadata.Size.Height)},
-// 		image.Point{X: int(w.Metadata.Size.Width),
-// 			Y: int(w.Metadata.Size.Height),
-// 		}},
-// }
-// }
-
 //Checks if pc has crossed the X axis
 func (c *Camera) isCrossedAxisX() bool {
-	return int(c.scaledHeroTranslation.X) >= int(c.mapAxis.X)
+	return (int(c.scaledHeroTranslation.X) - 5) <= int(c.mapAxis.X) && int(c.mapAxis.X) <= (int(c.scaledHeroTranslation.X) + 5)
 }
 
 //Checks if pc has crossed the Y axis
 func (c *Camera) isCrossedAxisY() bool {
-	return int(c.scaledHeroTranslation.Y) >= int(c.mapAxis.Y)
+	return (int(c.scaledHeroTranslation.Y) - 5) <= int(c.mapAxis.Y) && int(c.mapAxis.Y) <= (int(c.scaledHeroTranslation.Y) + 5)
 }
 
 //Updates scale coeffients for map matrix
-func (c *Camera) updateMapScale(screen *ebiten.Image) {
+func (c *Camera) updateMapScale() {
 	w := objects.UseObjects().World()
 
-	sx, sy := w.GetMapScale(screen.Size())
+	
+	sx, sy := w.GetMapScale(screenhistory.GetScreen().Size())
 
 	c.mapScale.X = ((sx + w.Metadata.Scale.CoefficiantX) / 100 * c.zoom) * 3
 	c.mapScale.Y = ((sy + w.Metadata.Scale.CoefficiantY) / 100 * c.zoom) * 3
@@ -224,38 +130,43 @@ func (c *Camera) clearMatrices() {
 }
 
 //Updates general metrics for map matrix
-func (c *Camera) updateMapMatrix(screen *ebiten.Image) {
+func (c *Camera) updateMapMatrix() {
 	c.MapMatrix.Scale(float64(c.mapScale.X), float64(c.mapScale.Y))
 
+	// w := objects.UseObjects().World()
+
+	// fmt.Println()
+	// if c.isHeroTranslationBlocked() {
+	// 	if c.isHeroMovementBlockedX {
+	// 		if (c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X <= w.Metadata.Size.Width*c.mapScale.X) &&
+	// 			(c.scaledHeroTranslation.X-c.scaledConnectedHeroPos.X) >= 0 {
+	// 			c.MapMatrix.Translate(-(c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X), 0)
+	// 		} else {
+	// 			c.isHeroMovementBlockedX = false
+	// 			c.scaledMapTranslation.X = (c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X)
+	// 			c.scaledMapTranslation.Y = 0
+
+	// 		}
+	// 	}
+
+	// 	if c.isHeroMovementBlockedY {
+	// 		if (c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y <= w.Metadata.Size.Height*c.mapScale.Y) &&
+	// 			(c.scaledHeroTranslation.Y-c.scaledConnectedHeroPos.Y) >= 0 {
+	// 			c.MapMatrix.Translate(0, -(c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y))
+	// 		} else {
+	// 			c.isHeroMovementBlockedY = false
+	// 			c.scaledMapTranslation.X = 0
+	// 			c.scaledMapTranslation.Y = (c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y)
+
+	// 		}
+	// 	}
+	// }
+
 	w := objects.UseObjects().World()
-	if c.isHeroTranslationBlocked() {
-		if c.isHeroMovementBlockedX {
-			if (c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X <= w.Metadata.Size.Width*c.mapScale.X) &&
-				(c.scaledHeroTranslation.X-c.scaledConnectedHeroPos.X) >= 0 {
-				c.MapMatrix.Translate(-(c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X), 0)
-			} else {
-				c.isHeroMovementBlockedX = false
-				c.scaledMapTranslation.X = (c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X)
-				c.scaledMapTranslation.Y = 0
-			}
-		}
-
-		if c.isHeroMovementBlockedY {
-			if (c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y <= w.Metadata.Size.Height*c.mapScale.Y) &&
-				(c.scaledHeroTranslation.Y-c.scaledConnectedHeroPos.Y) >= 0 {
-				c.MapMatrix.Translate(0, -(c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y))
-			} else {
-				c.isHeroMovementBlockedY = false
-				c.scaledMapTranslation.X = 0
-				c.scaledMapTranslation.Y = (c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y)
-			}
-		}
-	}
-	fmt.Println(c.scaledMapTranslation, c.isHeroMovementBlockedX, c.isHeroMovementBlockedY)
-
-	if !c.isHeroMovementBlockedX || !c.isHeroMovementBlockedY{
-			c.MapMatrix.Translate(-c.scaledMapTranslation.X, -c.scaledMapTranslation.Y)
-	}
+	p := objects.UseObjects().PC()
+	fmt.Println("JESTEM TU", c.scaledHeroTranslation, p.RawPos, c.mapScale, )
+	fmt.Println(w.GetMapScale(screenhistory.GetScreen().Size()))
+	c.MapMatrix.Translate(-c.scaledHeroTranslation.X, -c.scaledHeroTranslation.Y)
 }
 
 func (c *Camera) updateScaledHeroTranslation() {
@@ -304,12 +215,18 @@ func (c *Camera) updateLastConnectedPos() {
 }
 
 func (c *Camera) updateScaledMapTranslation() {
-	c.scaledMapTranslation.X = c.lastScaledMapTranslation.X * c.heroScale.X / c.lastHeroScale.X
-	c.scaledMapTranslation.Y = c.lastScaledMapTranslation.Y * c.heroScale.Y / c.lastHeroScale.Y
+	c.scaledMapTranslation.X = c.lastScaledMapTranslation.X * c.mapScale.X / c.lastMapScale.X
+	c.scaledMapTranslation.Y = c.lastScaledMapTranslation.Y * c.mapScale.Y / c.lastMapScale.Y
 }
 
 func (c *Camera) updateLastScaledMapTranslation() {
-	c.lastScaledMapTranslation = c.scaledMapTranslation
+	if c.lastScaledMapTranslation.X == 0 && c.lastScaledMapTranslation.Y == 0 {
+		p := objects.UseObjects().PC()
+		c.scaledMapTranslation.X = p.RawPos.X * c.heroScale.X / c.maxHeroScale.X
+		c.scaledMapTranslation.Y = p.RawPos.Y * c.heroScale.Y / c.maxHeroScale.Y
+	} else {
+		c.lastScaledMapTranslation = c.scaledMapTranslation
+	}
 }
 
 func (c *Camera) updateScaledConnectedPos() {
@@ -333,21 +250,21 @@ func (c *Camera) updateHeroMatrix() {
 		c.isHeroMovementBlockedY = true
 	}
 
-	if !c.isHeroTranslationBlocked() {
-		c.HeroMatrix.Translate(c.scaledHeroTranslation.X, c.scaledHeroTranslation.Y)
-	} else {
-		if c.isHeroMovementBlockedX && c.isHeroMovementBlockedY {
-			c.HeroMatrix.Translate(c.scaledConnectedHeroPos.X, c.scaledConnectedHeroPos.Y)
-		}
+	// if !c.isHeroTranslationBlocked() {
+	// 	c.HeroMatrix.Translate(c.scaledHeroTranslation.X, c.scaledHeroTranslation.Y)
+	// } else {
+	// 	if c.isHeroMovementBlockedX && c.isHeroMovementBlockedY {
+	// 		c.HeroMatrix.Translate(c.scaledConnectedHeroPos.X, c.scaledConnectedHeroPos.Y)
+	// 	}
 
-		if c.isHeroMovementBlockedX && !c.isHeroMovementBlockedY {
-			c.HeroMatrix.Translate(c.scaledConnectedHeroPos.X, c.scaledHeroTranslation.Y)
-		}
+	// 	if c.isHeroMovementBlockedX && !c.isHeroMovementBlockedY {
+	// 		c.HeroMatrix.Translate(c.scaledConnectedHeroPos.X, c.scaledHeroTranslation.Y)
+	// 	}
 
-		if !c.isHeroMovementBlockedX && c.isHeroMovementBlockedY {
-			c.HeroMatrix.Translate(c.scaledHeroTranslation.X, c.scaledConnectedHeroPos.Y)
-		}
-	}
+	// 	if !c.isHeroMovementBlockedX && c.isHeroMovementBlockedY {
+	// 		c.HeroMatrix.Translate(c.scaledHeroTranslation.X, c.scaledConnectedHeroPos.Y)
+	// 	}
+	// }
 }
 
 func (c *Camera) updateMapAxis() {
@@ -377,21 +294,20 @@ func (c *Camera) updatePreDeps() {
 	c.updateLastScaledMapTranslation()
 }
 func (c *Camera) updatePostDeps() {
-
 	c.updateLastConnectedPos()
 	c.updateScaledConnectedPos()
 }
 
 //Updates camera properties
 func (c *Camera) UpdateCamera(screen *ebiten.Image) {
-	c.updateMapScale(screen)
+	c.updateMapScale()
 	c.updateHeroScale()
 
 	c.clearMatrices()
 
 	c.updatePreDeps()
 
-	c.updateMapMatrix(screen)
+	c.updateMapMatrix()
 	c.updateHeroMatrix()
 
 	c.updatePostDeps()

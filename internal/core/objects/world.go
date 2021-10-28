@@ -31,8 +31,12 @@ type World struct {
 	Object
 
 	Regime regime
+
+	//Describes the objects are on the map
 	PCs []*PC
-	// Elements []
+	Elements []*Object
+	Weapons []*Weapon
+	Ammo []*Weapon
 }
 
 //Resets the list of users on the map

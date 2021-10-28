@@ -1,6 +1,7 @@
 package render
 
 import (
+	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/render/middlewares"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -17,7 +18,6 @@ type render struct {
 }
 
 type IRender interface {
-	UpdateScreen(*ebiten.Image)
 	SetToRender(callback)
 	SetToPostRender(callback)
 
@@ -41,8 +41,9 @@ func (r *render) SetToPostRender(c callback) {
 }
 
 func (r *render) rawRender(lc []callback) {
+	screen := screenhistory.GetScreen()
 	for _, v := range lc {
-		v(r.screen)
+		v(screen)
 	}
 }
 
