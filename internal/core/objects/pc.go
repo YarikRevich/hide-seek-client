@@ -66,7 +66,6 @@ func NewPC() *PC {
 		logrus.Fatal("failed to create uuid for world:", err)
 	}
 	pc.ID = id
-	// pc.RawPos.X = 1500 * 4
 	pc.PositionHistory = zeroshifter.New(2)
 	pc.Health = 10
 	// pc.Spawn = image.Point{X: 1500, Y: 0}
