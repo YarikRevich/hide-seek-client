@@ -49,7 +49,13 @@ func (s *syncer) Sync() {
 				v.Buffs.Speed.Y = v.Buffs.RawSpeed.Y * v.Scale.CoefficiantY
 			}
 
-			if v.Info.Scrollable {
+			if v.Info.ScrollableX{
+				if v.RawMargins.LeftMargin+e.MouseWheelX != v.Margins.LeftMargin {
+					v.Margins.LeftMargin = v.RawMargins.LeftMargin + e.MouseWheelX
+				}
+			}
+
+			if v.Info.ScrollableY {
 				if v.RawMargins.TopMargin+e.MouseWheelY != v.Margins.TopMargin {
 					v.Margins.TopMargin = v.RawMargins.TopMargin + e.MouseWheelY
 				}

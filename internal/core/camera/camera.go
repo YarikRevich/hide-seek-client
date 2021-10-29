@@ -5,7 +5,6 @@ import (
 	"math"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -110,8 +109,7 @@ func (c *Camera) updateMapScale() {
 	w := objects.UseObjects().World()
 
 	
-	sx, sy := w.GetMapScale(screenhistory.GetScreen().Size())
-
+	sx, sy := w.GetMapScale()
 	c.mapScale.X = ((sx + w.Metadata.Scale.CoefficiantX) / 100 * c.zoom) * 3
 	c.mapScale.Y = ((sy + w.Metadata.Scale.CoefficiantY) / 100 * c.zoom) * 3
 }
@@ -165,7 +163,7 @@ func (c *Camera) updateMapMatrix() {
 	w := objects.UseObjects().World()
 	p := objects.UseObjects().PC()
 	fmt.Println("JESTEM TU", c.scaledHeroTranslation, p.RawPos, c.mapScale, )
-	fmt.Println(w.GetMapScale(screenhistory.GetScreen().Size()))
+	fmt.Println(w.GetMapScale())
 	c.MapMatrix.Translate(-c.scaledHeroTranslation.X, -c.scaledHeroTranslation.Y)
 }
 

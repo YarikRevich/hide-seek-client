@@ -10,6 +10,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 
+	herochoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/hero_choose"
 	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/map_choose"
 	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/settings_menu"
 	startmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/start_menu"
@@ -24,7 +25,7 @@ func Process() {
 			if waitroom.Exec() {
 				return
 			}
-		
+
 		case ui.JOIN_LOBBY_MENU:
 			if joinlobbymenu.Exec() {
 				return
@@ -33,18 +34,21 @@ func Process() {
 			if startmenu.Exec() {
 				return
 			}
-			
+
 		case ui.SETTINGS_MENU:
 			if settingsmenu.Exec() {
 				return
 			}
 		case ui.MAP_CHOOSE:
-			if mapchoose.Exec(){
+			if mapchoose.Exec() {
+				return
+			}
+		case ui.HERO_CHOOSE:
+			if herochoose.Exec() {
 				return
 			}
 		}
 
-		
 		if events.UseEvents().Mouse().IsAnyMouseButtonsPressed() {
 			unfocus.Exec()
 		}

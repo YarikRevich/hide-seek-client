@@ -33,7 +33,7 @@ type Metadata struct {
 	Info struct {
 		//Parent file metadata one related to
 		Parent     string
-		Scrollable bool
+		ScrollableX, ScrollableY bool
 	}
 
 	//HIDDEN: should not be defined by user by configuration

@@ -7,6 +7,7 @@ import (
 
 	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/objects"
 	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/google/uuid"
 	// "github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"
@@ -14,18 +15,18 @@ import (
 
 type regime int
 
-const (
-	//Players are separated on two teams
-	//If player dies it will respawn
-	//If the biggest part of the players is
-	//on the oposite teritory, spawns will be swapped
-	deathmatch regime = iota
+// const (
+// 	//Players are separated on two teams
+// 	//If player dies it will respawn
+// 	//If the biggest part of the players is
+// 	//on the oposite teritory, spawns will be swapped
+// 	deathmatch regime = iota
 
-	//Players are separated on two teams
-	//The game will end if all members of the team
-	//will dir
-	teamToTeam
-)
+// 	//Players are separated on two teams
+// 	//The game will end if all members of the team
+// 	//will dir
+// 	teamToTeam
+// )
 
 type World struct {
 	Object
@@ -36,8 +37,31 @@ type World struct {
 	PCs []*PC
 	Elements []*Object
 	Weapons []*Weapon
-	Ammo []*Weapon
+	Ammo []*Ammo
+	LootSet []*LootSet
 }
+
+func (w *World) GetWeaponByPC(p *PC)*Weapon{
+	for _, v := range w.Weapons{
+		if v.ParentID == p.ID{
+			return v
+		}
+	}
+	return nil
+}
+
+func (w *World) GetAmmoByWeapon(p *Weapon)*Ammo{
+	if p == nil{
+		return nil
+	}
+	for _, v := range w.Ammo{
+		if v.ParentID == p.ID{
+			return v
+		}
+	}
+	return nil
+}
+
 
 //Resets the list of users on the map
 func (w *World) ResetPCs() {
@@ -55,8 +79,10 @@ func (w *World) String() string {
 
 //Returns map scale in relating map image
 //to current screen sizes
-func (w *World) GetMapScale(screenW, screenH int) (float64, float64) {
-	var sx, sy float64
+func (w *World) GetMapScale() (float64, float64) {
+	var sx, sy float64 
+	screenW, screenH := screen.GetScreen().Size()
+	
 	if screenW > int(w.Metadata.RawSize.Width) {
 		sx = w.Metadata.RawSize.Width / float64(screenW)
 	} else {

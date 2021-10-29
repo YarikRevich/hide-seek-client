@@ -64,6 +64,10 @@ type Object struct {
 	Role Role
 }
 
+func (o *Object) IsByObject(ob Object)bool{
+	return o.ParentID == ob.ID
+}
+
 func (o *Object) SaveLastPosition() {
 	o.PositionHistory.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
 }

@@ -1,4 +1,5 @@
-package map_choose
+package herochoose
+
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
@@ -32,9 +33,10 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/maps/thumbnails/helloween")
-		m := metadatacollection.GetMetadata("assets/images/maps/thumbnails/helloween")
+		img := imagecollection.GetImage("assets/images/heroes/thumbnails/pumpkin")
+		m := metadatacollection.GetMetadata("assets/images/heroes/thumbnails/pumpkin")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -44,15 +46,27 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/maps/thumbnails/starwars")
-		m := metadatacollection.GetMetadata("assets/images/maps/thumbnails/starwars")
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	img := imagecollection.GetImage("assets/images/maps/thumbnails/helloween")
+	// 	m := metadatacollection.GetMetadata("assets/images/maps/thumbnails/helloween")
 
-		opts := &ebiten.DrawImageOptions{}
+	// 	opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+	// 	opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+	// 	opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		screen.DrawImage(img, opts)
-	})
+	// 	screen.DrawImage(img, opts)
+	// })
+
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	img := imagecollection.GetImage("assets/images/maps/thumbnails/starwars")
+	// 	m := metadatacollection.GetMetadata("assets/images/maps/thumbnails/starwars")
+
+	// 	opts := &ebiten.DrawImageOptions{}
+
+	// 	opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+	// 	opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+	// 	screen.DrawImage(img, opts)
+	// })
 }

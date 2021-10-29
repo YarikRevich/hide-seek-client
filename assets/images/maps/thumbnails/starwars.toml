@@ -1,6 +1,6 @@
 [info]
 parent="starwars"
-scrollable=true
+scrollabley=true
 
 [margins]
 leftmargin = 750.0

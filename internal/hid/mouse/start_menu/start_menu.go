@@ -2,6 +2,7 @@ package startmenu
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
@@ -25,7 +26,7 @@ func Exec() bool {
 		return true
 	}
 	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
-		
+		objects.UseObjects().PC().SetUsername()
 
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
@@ -39,8 +40,7 @@ func Exec() bool {
 	}
 
 	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_join")) {
-		// world.UseWorld().Init("assets/images/maps/helloween/background/background")
-		// pc.UsePC().Init(world.UseWorld().Metadata.Spawns)
+		objects.UseObjects().PC().SetUsername()
 
 		applyer.ApplyMiddlewares(
 			statemachine.UseStateMachine().UI().SetState(ui.JOIN_LOBBY_MENU),

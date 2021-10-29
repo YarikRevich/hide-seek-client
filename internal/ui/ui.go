@@ -11,6 +11,7 @@ import (
 	startmenu "github.com/YarikRevich/HideSeek-Client/internal/ui/start_menu"
 	waitroom "github.com/YarikRevich/HideSeek-Client/internal/ui/wait_room"
 	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/ui/map_choose"
+	herochoose "github.com/YarikRevich/HideSeek-Client/internal/ui/hero_choose"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
 
@@ -26,6 +27,8 @@ func Process() {
 		settingsmenu.Draw()
 	case ui.MAP_CHOOSE:
 		mapchoose.Draw()
+	case ui.HERO_CHOOSE:
+		herochoose.Draw()
 	case ui.JOIN_LOBBY_MENU:
 
 	case ui.CHOOSE_EQUIPMENT:

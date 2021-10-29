@@ -1,9 +1,8 @@
 package objects
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	strorageprovider "github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
 	// "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
@@ -16,12 +15,12 @@ type Buffs struct {
 	SpeedX, SpeedY float64
 }
 
-type Team int
+// type Team int
 
-const (
-	Team1 Team = iota
-	Team2
-)
+// const (
+// 	Team1 Team = iota
+// 	Team2
+// )
 
 
 type PC struct {
@@ -33,15 +32,15 @@ type PC struct {
 	// Team Team
 }
 
-func (p *PC) SetSkin(path string){
-	p.Object.SetSkin(path)
-	// p.SetSpeed(p.Metadata.Buffs.Speed)
-	fmt.Println(p.Metadata, "METEDATA")
-}
+// func (p *PC) SetSkin(path string){
+// 	p.Object.SetSkin(path)
+// 	// p.SetSpeed(p.Metadata.Buffs.Speed)
+// 	fmt.Println(p.Metadata, "METEDATA")
+// }
 
 //Initializes pc username by requesting storage
-func (p *PC) InitUsername() {
-	// p.Username = .UseStorageProvider().GetUsername()
+func (p *PC) SetUsername() {
+	p.Username = strorageprovider.UseStorageProvider().GetUsername()
 }
 
 // func (p *PC) SetSpeed(speedX float64) {
