@@ -33,9 +33,7 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 	profiling.UseProfiler().StartMonitoring(profiling.RENDER)
 	screenhistory.SetScreen(screen)
 
-	s := syncer.NewSyncer()
-	s.UpdateScreenDeps()
-	s.Sync()
+	syncer.NewSyncer().Sync()
 
 	render.UseRender().Render()
 

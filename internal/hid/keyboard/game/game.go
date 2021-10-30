@@ -13,8 +13,10 @@ import (
 
 func Exec() {
 	g := events.UseEvents().Gamepad()
+	
+	// w := objects.UseObjects().World()
 	p := objects.UseObjects().PC()
-	fmt.Println(p.Metadata.Buffs.Speed)
+	fmt.Println(p.Metadata.Buffs.Speed.X)
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		camera.UseCamera().ZoomIn()
@@ -33,16 +35,19 @@ func Exec() {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-
-		if p.RawPos.Y < objects.UseObjects().World().Metadata.Size.Height-objects.UseObjects().PC().Metadata.Size.Height {
+		// if p.RawPos.Y+p.Metadata.Buffs.Speed.Y < w.Metadata.Size.Height {
 			p.SetY(p.RawPos.Y + p.Metadata.Buffs.Speed.Y)
-		}
+		// }else{
+			// p.SetY(p.RawPos.Y + (w.Metadata.Size.Height - p.RawPos.Y))
+		// }
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
-		if p.RawPos.X < objects.UseObjects().World().Metadata.Size.Width-objects.UseObjects().PC().Metadata.Size.Width {
+		// if p.RawPos.X+p.Metadata.Buffs.Speed.X < w.Metadata.Size.Width {
 			p.SetX(p.RawPos.X + p.Metadata.Buffs.Speed.X)
-		}
+		// }else{
+			// p.SetX(p.RawPos.X + (w.Metadata.Size.Width - p.RawPos.X))
+		// }
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {

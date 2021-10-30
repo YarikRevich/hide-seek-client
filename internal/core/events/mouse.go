@@ -34,8 +34,11 @@ func (p *Mouse) IsAnyMouseButtonsPressed() bool {
 }
 
 type MouseWheel struct {
-	MouseWheelX, MouseWheelY float64
-	moveCoefficient          float64
+	IsMoved bool
+
+	LastMouseWheelX, LastMouseWheelY float64
+	MouseWheelX, MouseWheelY         float64
+	moveCoefficient                  float64
 }
 
 //Saves mouse wheel offsets using ebiten API
@@ -56,6 +59,9 @@ func (p *MouseWheel) UpdateMouseWheelOffsets() {
 		p.MouseWheelX += sx
 		p.MouseWheelY += sy
 	}
+	p.IsMoved = p.LastMouseWheelX != p.MouseWheelX && p.LastMouseWheelY != p.MouseWheelY
+	p.LastMouseWheelX = p.MouseWheelX
+	p.LastMouseWheelY = p.MouseWheelY
 }
 
 func NewMouse() *Mouse {

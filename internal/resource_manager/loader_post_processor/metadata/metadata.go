@@ -9,7 +9,7 @@ import (
 
 //Postprocesor which connects loaded
 //image sizes to the proper metadata entry
-func ConnectImageSizeToMetadata() {
+func ConnectAdditionalStatementsToMetadata() {
 	for k, v := range metadatacollection.MetadataCollection {
 		if len(v.Info.Parent) != 0 {
 			dir, _ := filepath.Split(k)
@@ -21,9 +21,12 @@ func ConnectImageSizeToMetadata() {
 			v.Size.Height = float64(imageH)
 			v.RawSize.Width = float64(imageW)
 			v.RawSize.Height = float64(imageH)
+
+
 			v.RawMargins = v.Margins
 			v.RawSize = v.Size
 			v.Buffs.RawSpeed = v.Buffs.Speed
+			v.RawScale = v.Scale
 		}
 	}
 }

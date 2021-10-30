@@ -1,6 +1,8 @@
 package syncer
 
 import (
+
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
@@ -11,18 +13,7 @@ type syncer struct {
 }
 
 type SyncerProvider interface {
-	UpdateScreenDeps()
 	Sync()
-}
-
-//Updates screen deps which syncer depends on
-func (s *syncer) UpdateScreenDeps() {
-	sw, sh := screenhistory.GetScreen().Size()
-	s.sw = float64(sw)
-	s.sh = float64(sh)
-	pw, ph := screenhistory.GetLastScreenSize()
-	s.pw = float64(pw)
-	s.ph = float64(ph)
 }
 
 //Sync data which depends on screen resize
@@ -30,8 +21,11 @@ func (s *syncer) Sync() {
 	if s.pw != 0 && s.ph != 0 {
 		e := events.UseEvents().Mouse()
 		for _, v := range metadatacollection.MetadataCollection {
-			v.Scale.CoefficiantY = (v.Scale.CoefficiantY * s.sh) / s.ph
+
 			v.Scale.CoefficiantX = (v.Scale.CoefficiantX * s.sw) / s.pw
+			v.Scale.CoefficiantY = (v.Scale.CoefficiantY * s.sh) / s.ph
+
+			// if s.sw != s.pw || s.sh != s.ph {
 
 			if v.RawSize.Width*v.Scale.CoefficiantX != v.Size.Width {
 				v.Size.Width = v.RawSize.Width * v.Scale.CoefficiantX
@@ -49,7 +43,10 @@ func (s *syncer) Sync() {
 				v.Buffs.Speed.Y = v.Buffs.RawSpeed.Y * v.Scale.CoefficiantY
 			}
 
-			if v.Info.ScrollableX{
+
+			// }
+
+			if v.Info.ScrollableX {
 				if v.RawMargins.LeftMargin+e.MouseWheelX != v.Margins.LeftMargin {
 					v.Margins.LeftMargin = v.RawMargins.LeftMargin + e.MouseWheelX
 				}
@@ -60,10 +57,18 @@ func (s *syncer) Sync() {
 					v.Margins.TopMargin = v.RawMargins.TopMargin + e.MouseWheelY
 				}
 			}
+
 		}
 	}
 }
 
 func NewSyncer() SyncerProvider {
-	return new(syncer)
+	s := new(syncer)
+	sw, sh := screenhistory.GetScreen().Size()
+	s.sw = float64(sw)
+	s.sh = float64(sh)
+	pw, ph := screenhistory.GetLastScreenSize()
+	s.pw = float64(pw)
+	s.ph = float64(ph)
+	return s
 }

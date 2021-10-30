@@ -1,10 +1,6 @@
 package camera
 
 import (
-	// "fmt"
-
-	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -48,9 +44,9 @@ type Camera struct {
 		X, Y float64
 	}
 
-	maxHeroScale struct {
-		X, Y float64
-	}
+	// maxHeroScale struct {
+	// 	X, Y float64
+	// }
 
 	connectedHeroPos struct {
 		X, Y float64
@@ -64,9 +60,9 @@ type Camera struct {
 		X, Y float64
 	}
 
-	lastConnectedMapPos struct {
-		X, Y float64
-	}
+	// lastConnectedMapPos struct {
+	// 	X, Y float64
+	// }
 
 	scaledConnectedHeroPos struct {
 		X, Y float64
@@ -120,14 +116,14 @@ func (c *Camera) updateMapMatrix() {
 					c.connectedMapPos.X = 0
 				} else {
 					mapWidth := w.Metadata.Size.Width * c.mapScale.X
-					if c.scaledHeroTranslation.X + c.scaledConnectedHeroPos.X >= mapWidth {
+					if c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X >= mapWidth {
 						c.connectedMapPos.X = (cx - (mapWidth - (c.scaledHeroTranslation.X + c.scaledConnectedHeroPos.X))) - p.Metadata.Size.Width
 					} else {
 						c.connectedMapPos.X = cx
 					}
 				}
 				c.isHeroMovementBlockedX = false
-				if c.connectedHeroPos.X != 0{
+				if c.connectedHeroPos.X != 0 {
 					c.scaledHeroTranslation.X = c.connectedHeroPos.X
 				}
 				c.connectedHeroPos.X = 0
@@ -144,14 +140,14 @@ func (c *Camera) updateMapMatrix() {
 				if cy < 0 {
 					c.connectedMapPos.Y = 0
 				} else {
-					if c.scaledHeroTranslation.Y + c.scaledConnectedHeroPos.Y >= mapHeight {
+					if c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y >= mapHeight {
 						c.connectedMapPos.Y = (cy - (mapHeight - (c.scaledHeroTranslation.Y + c.scaledConnectedHeroPos.Y))) - p.Metadata.Size.Height
 					} else {
 						c.connectedMapPos.Y = cy
 					}
 				}
 				c.isHeroMovementBlockedY = false
-				if c.connectedHeroPos.Y != 0{
+				if c.connectedHeroPos.Y != 0 {
 					c.scaledHeroTranslation.Y = c.connectedHeroPos.Y
 				}
 				c.connectedHeroPos.Y = 0
@@ -171,7 +167,7 @@ func (c *Camera) updateMapMatrix() {
 		c.MapMatrix.Translate(0, -c.connectedMapPos.Y)
 	}
 
-	fmt.Println(c.scaledHeroTranslation)
+	// fmt.Println(p.RawPos, c.scaledHeroTranslation)
 }
 
 //Updates general metrics for hero matrix
@@ -247,12 +243,12 @@ func (c *Camera) updateMapScale() {
 
 //Saves max hero scale which is used for
 //scaled translation calculation after pc
-//had moved
-func (c *Camera) saveMaxHeroScale() {
-	p := objects.UseObjects().PC()
-	c.maxHeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * 55) * 3
-	c.maxHeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * 55) * 3
-}
+// //had moved
+// func (c *Camera) saveMaxHeroScale() {
+// 	p := objects.UseObjects().PC()
+// 	c.maxHeroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * 55) * 3
+// 	c.maxHeroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * 55) * 3
+// }
 
 func (c *Camera) updateScaledMapTranslation() {
 	c.scaledMapTranslation.X = c.lastScaledMapTranslation.X * c.mapScale.X / c.lastMapScale.X
@@ -260,13 +256,16 @@ func (c *Camera) updateScaledMapTranslation() {
 }
 
 func (c *Camera) updateScaledConnectedPos() {
-	c.scaledConnectedHeroPos.X = c.lastConnectedHeroPos.X * c.heroScale.X / c.lastHeroScale.X
-	c.scaledConnectedHeroPos.Y = c.lastConnectedHeroPos.Y * c.heroScale.Y / c.lastHeroScale.Y
+	// c.scaledConnectedHeroPos.X = c.lastConnectedHeroPos.X * c.heroScale.X / c.lastHeroScale.X
+	// c.scaledConnectedHeroPos.Y = c.lastConnectedHeroPos.Y * c.heroScale.Y / c.lastHeroScale.Y
+	c.scaledConnectedHeroPos.X = c.connectedHeroPos.X * c.mapScale.X
+	c.scaledConnectedHeroPos.Y = c.connectedHeroPos.Y * c.mapScale.Y 
 }
 
 func (c *Camera) updateScaledHeroTranslation() {
-	c.scaledHeroTranslation.X = c.lastHeroTranslation.X * c.heroScale.X / c.maxHeroScale.X
-	c.scaledHeroTranslation.Y = c.lastHeroTranslation.Y * c.heroScale.Y / c.maxHeroScale.Y
+	p := objects.UseObjects().PC()
+	c.scaledHeroTranslation.X = p.RawPos.X * c.mapScale.X
+	c.scaledHeroTranslation.Y = p.RawPos.Y * c.mapScale.Y
 }
 
 //Updates scale coeffients for hero matrix
@@ -298,15 +297,15 @@ func (c *Camera) updateLastHeroTranslation() {
 	}
 }
 
-//Saves last hero scale
-func (c *Camera) updateLastHeroScale() {
-	c.lastHeroScale = c.heroScale
-	// if c.stubHeroScale == c.heroScale{
-	// 	c.lastHeroScale = c.maxHeroScale
-	// }else {
-	// 	c.lastHeroScale = c.stubHeroScale
-	// }
-}
+// //Saves last hero scale
+// func (c *Camera) updateLastHeroScale() {
+// 	c.lastHeroScale = c.heroScale
+// 	// if c.stubHeroScale == c.heroScale{
+// 	// 	c.lastHeroScale = c.maxHeroScale
+// 	// }else {
+// 	// 	c.lastHeroScale = c.stubHeroScale
+// 	// }
+// }
 
 func (c *Camera) updateLastConnectedPos() {
 	if c.lastConnectedHeroPos.X == 0 || c.lastConnectedHeroPos.Y == 0 {
@@ -316,15 +315,15 @@ func (c *Camera) updateLastConnectedPos() {
 	}
 }
 
-func (c *Camera) updateLastScaledMapTranslation() {
-	// if c.lastScaledMapTranslation.X == 0 && c.lastScaledMapTranslation.Y == 0 {
-	// 	p := objects.UseObjects().PC()
-	// 	c.scaledMapTranslation.X = p.RawPos.X * c.heroScale.X / c.maxHeroScale.X
-	// 	c.scaledMapTranslation.Y = p.RawPos.Y * c.heroScale.Y / c.maxHeroScale.Y
-	// } else {
-	c.lastScaledMapTranslation = c.scaledMapTranslation
-	// }
-}
+// func (c *Camera) updateLastScaledMapTranslation() {
+// 	// if c.lastScaledMapTranslation.X == 0 && c.lastScaledMapTranslation.Y == 0 {
+// 	// 	p := objects.UseObjects().PC()
+// 	// 	c.scaledMapTranslation.X = p.RawPos.X * c.heroScale.X / c.maxHeroScale.X
+// 	// 	c.scaledMapTranslation.Y = p.RawPos.Y * c.heroScale.Y / c.maxHeroScale.Y
+// 	// } else {
+// 	c.lastScaledMapTranslation = c.scaledMapTranslation
+// 	// }
+// }
 
 /*
 Update pipeline components
@@ -350,10 +349,10 @@ func (c *Camera) updatePreDeps() {
 	c.updateLastHeroTranslation()
 	c.updateScaledHeroTranslation()
 
-	c.updateLastHeroScale()
+	// c.updateLastHeroScale()
 
 	c.updateScaledMapTranslation()
-	c.updateLastScaledMapTranslation()
+	// c.updateLastScaledMapTranslation()
 
 }
 func (c *Camera) updatePostDeps() {
@@ -376,10 +375,10 @@ func (c *Camera) UpdateCamera() {
 	c.updatePostDeps()
 }
 
-//Updates camera propertices calling init system before
-func (c *Camera) updateCameraWithInit() {
+// //Updates camera propertices calling init system before
+// func (c *Camera) updateCameraWithInit() {
 
-}
+// }
 
 // func (c *Camera) Disconnect
 //Moves camera if position of the pc gets outta boarders of the cam
@@ -560,8 +559,8 @@ func (c *Camera) ZoomOut() {
 //Uses or creates a new instance of camera
 func UseCamera() *Camera {
 	if instance == nil {
-		instance = &Camera{zoom: 50}
-		instance.saveMaxHeroScale()
+		instance = &Camera{zoom: 40}
+		// instance.saveMaxHeroScale()
 	}
 	return instance
 }

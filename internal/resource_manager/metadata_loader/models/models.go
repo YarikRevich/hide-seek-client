@@ -76,6 +76,11 @@ type Metadata struct {
 		CoefficiantX, CoefficiantY float64
 	}
 
+	//MUSN'T be changed over the game
+	RawScale struct {
+		CoefficiantX, CoefficiantY float64
+	}
+
 	Button struct {
 		Text         string
 		TextPosition TextPosition

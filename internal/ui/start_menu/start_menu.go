@@ -1,10 +1,7 @@
 package start_menu
 
 import (
-	"fmt"
 	"image/color"
-
-	// positioning "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
@@ -44,8 +41,6 @@ func Draw() {
 		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_start")
 
 		opts := &ebiten.DrawImageOptions{}
-
-		fmt.Println(m.Size)
 
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)

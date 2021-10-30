@@ -51,5 +51,5 @@ func LoadResources(loaders map[Component][]Loader) {
 	wg.Wait()
 
 	loaderpostprocessor.ApplyPostProcessors(
-		metadatapostprocessor.ConnectImageSizeToMetadata)
+		metadatapostprocessor.ConnectAdditionalStatementsToMetadata)
 }
