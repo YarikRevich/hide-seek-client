@@ -14,32 +14,35 @@ import (
 
 func Exec() bool {
 	m := events.UseEvents().Mouse()
-	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
-		objects.UseObjects().World().ResetPCs()
 
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
-			uimiddleware.UseUIMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
+	if m.IsAnyMouseButtonsPressed() {
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
+			objects.UseObjects().World().ResetPCs()
 
-		return true
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
+				uimiddleware.UseUIMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+				inputmiddleware.UseInputMiddleware,
+			)
+
+			return true
+		}
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")) {
+
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.GAME),
+				uimiddleware.UseUIMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.GAME),
+				inputmiddleware.UseInputMiddleware,
+			)
+			return true
+		}
 	}
-	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")) {
-		
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.GAME),
-			uimiddleware.UseUIMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.GAME),
-			inputmiddleware.UseInputMiddleware,
-		)
 
-		return true
-	}
 	return false
 }

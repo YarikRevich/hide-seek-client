@@ -57,6 +57,11 @@ func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity){
 	b.UpdateCursorBlink()
 }
 
+//Checks if any keyboard key pressed
+func (k *KeyBoard) IsAnyKeyPressed()bool{
+	return len(inpututil.PressedKeys()) != 0
+}
+
 func NewKeyBoard() *KeyBoard{
 	return new(KeyBoard)
 }

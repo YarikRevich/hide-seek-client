@@ -10,8 +10,9 @@ import (
 )
 
 func Draw() {
+	p := objects.UseObjects().PC()
 	render.UseRender().SetToRender(func(screen *ebiten.Image){
-		objects.UseObjects().PC().SaveLastPosition()
+		p.SaveLastPosition()
 		camera.UseCamera().UpdateCamera()
 	})
 
@@ -19,20 +20,16 @@ func Draw() {
 		w := objects.UseObjects().World()
 
 		opts := &ebiten.DrawImageOptions{}
-
 		opts.GeoM.Concat(camera.UseCamera().MapMatrix)
 
 		screen.DrawImage(w.Image, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := objects.UseObjects().PC()
 		physics.ProcessAnimation(&p.Object)
-		
 		c := animation.WithAnimation(&p.Object)
 
 		opts := &ebiten.DrawImageOptions{}
-
 		opts.GeoM.Concat(camera.UseCamera().HeroMatrix)
 
 		screen.DrawImage(c, opts)

@@ -14,43 +14,46 @@ import (
 
 func Exec() bool {
 	m := events.UseEvents().Mouse()
-	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/settingswheel")) {
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.SETTINGS_MENU),
-			uimiddleware.UseUIMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
-		return true
-	}
-	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
-		objects.UseObjects().PC().SetUsername()
 
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
-			uimiddleware.UseUIMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
-		return true
-	}
+	if m.IsAnyMouseButtonsPressed() {
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/settingswheel")) {
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.SETTINGS_MENU),
+				uimiddleware.UseUIMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+				inputmiddleware.UseInputMiddleware,
+			)
+			return true
+		}
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_start")) {
+			objects.UseObjects().PC().SetUsername()
 
-	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_join")) {
-		objects.UseObjects().PC().SetUsername()
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.MAP_CHOOSE),
+				uimiddleware.UseUIMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+				inputmiddleware.UseInputMiddleware,
+			)
+			return true
+		}
 
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.JOIN_LOBBY_MENU),
-			uimiddleware.UseUIMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
-		return true
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_join")) {
+			objects.UseObjects().PC().SetUsername()
+
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.JOIN_LOBBY_MENU),
+				uimiddleware.UseUIMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+				inputmiddleware.UseInputMiddleware,
+			)
+			return true
+		}
 	}
 	return false
 }

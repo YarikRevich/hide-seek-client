@@ -2,14 +2,15 @@ package loop
 
 import (
 	// "github.com/YarikRevich/HideSeek-Client/internal/audio"
+	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse"
-	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
 	"github.com/YarikRevich/HideSeek-Client/internal/ui"
+	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -30,19 +31,21 @@ func (g *Loop) Update() error {
 }
 
 func (g *Loop) Draw(screen *ebiten.Image) {
-	profiling.UseProfiler().StartMonitoring(profiling.RENDER)
 	screenhistory.SetScreen(screen)
-
 	syncer.NewSyncer().Sync()
 
+	defer func(){
+		screenhistory.SetLastScreenSize()
+		render.UseRender().PostRender()
+	}()
+	if cli.GetDebug() {
+		profiling.UseProfiler().StartMonitoring(profiling.RENDER)
+		defer func() {
+			profiling.UseProfiler().EndMonitoring()
+			// profiling.UseProfiler().SumUpMonitoring()
+		}()
+	}
 	render.UseRender().Render()
-
-	screenhistory.SetLastScreenSize()
-
-	profiling.UseProfiler().EndMonitoring()
-	profiling.UseProfiler().SumUpMonitoring()
-
-	render.UseRender().PostRender()
 }
 
 func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {

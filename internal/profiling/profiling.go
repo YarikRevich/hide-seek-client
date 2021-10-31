@@ -1,21 +1,30 @@
 package profiling
 
 import (
+	"container/list"
 	"fmt"
+	"os"
+	"runtime/pprof"
 	"time"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
+	"github.com/sirupsen/logrus"
 )
 
 var instance IProfiler
 
-const (
-	RENDER           handler = "render"
-	UI               handler = "ui"
-	MOUSE_HANDLER    handler = "mouse_handler"
-	KEYBOARD_HANDLER handler = "keyboard_handler"
-	AUDIO_HANDLER    handler = "audio_handler"
-)
-
 type handler string
+
+const (
+	RENDER        handler = "render"
+	UI            handler = "ui"
+	UI_START_MENU handler = "ui_start_menu"
+	UI_GAME_MENU  handler = "ui_game_menu"
+
+	MOUSE    handler = "mouse"
+	KEYBOARD handler = "keyboard"
+	AUDIO    handler = "audio"
+)
 
 type handlers []*monitoring
 
@@ -27,48 +36,78 @@ type monitoring struct {
 }
 
 type profiler struct {
-	current handler
-
-	delay    *time.Ticker
-	handlers handlers
+	delay           *time.Ticker
+	handlers        handlers
+	monitoringQueue *list.List
 }
 
 type IProfiler interface {
+	Init()
 	StartMonitoring(handler)
 	EndMonitoring()
-	SumUpMonitoring()
-	GetFormattedMonitoringLog() string
+	// SumUpMonitoring()
+	String() string
 }
 
-func (p *profiler) StartMonitoring(name handler) {
-	p.current = name
-	if GetMonitoringByHandler(p.current, p.handlers) == nil {
-		p.handlers = append(p.handlers, &monitoring{handler: p.current})
+func (p *profiler) Init() {
+	mem, err := os.OpenFile(paths.GAME_PPROF_DIR+"/mem.prof", os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		logrus.Fatal(err)
 	}
-	GetMonitoringByHandler(p.current, p.handlers).currentTime = time.Now()
+
+	if err := pprof.WriteHeapProfile(mem); err != nil {
+		logrus.Fatal(err)
+	}
+
+	p.handlers = []*monitoring{
+		{handler: UI},
+		{handler: UI_START_MENU},
+		{handler: UI_GAME_MENU},
+		{handler: MOUSE},
+		{handler: KEYBOARD},
+		{handler: AUDIO},
+		{handler: RENDER},
+	}
+}
+
+func (p *profiler) getMonitoring(name handler) *monitoring {
+	for _, v := range p.handlers {
+		if v != nil && v.handler == name {
+			return v
+		}
+	}
+	return nil
+}
+
+
+func (p *profiler) StartMonitoring(name handler) {
+	p.monitoringQueue.PushBack(name)
+	m := p.getMonitoring(name)
+	m.currentTime = time.Now()
 }
 
 func (p *profiler) EndMonitoring() {
-	h := GetMonitoringByHandler(p.current, p.handlers)
-	h.time = append(h.time, float64(time.Since(h.currentTime).Seconds()))
-}
+	b := p.monitoringQueue.Back()
+	m := p.getMonitoring(b.Value.(handler))
+	p.monitoringQueue.Remove(b)
 
-func (p *profiler) SumUpMonitoring() {
 	select {
 	case <-p.delay.C:
-		for _, h := range p.handlers {
+		for _, v := range p.handlers {
 			var sum float64
-			for _, t := range h.time {
+			for _, t := range v.time {
 				sum += t
 			}
-			h.avg = sum / float64(len(h.time))
-			h.time = h.time[:0]
+			v.avg = sum / float64(len(v.time))
+			v.time = v.time[:0]
 		}
 	default:
 	}
+
+	m.time = append(m.time, float64(time.Since(m.currentTime).Seconds() / float64(time.Millisecond)))
 }
 
-func (p *profiler) GetFormattedMonitoringLog() string {
+func (p *profiler) String() string {
 	var r string
 	for _, v := range p.handlers {
 		r += fmt.Sprintf("\n%s: %g", v.handler, v.avg)
@@ -79,8 +118,10 @@ func (p *profiler) GetFormattedMonitoringLog() string {
 func UseProfiler() IProfiler {
 	if instance == nil {
 		instance = &profiler{
-			handlers: handlers{},
-			delay:    time.NewTicker(time.Millisecond * 400)}
+			handlers:        handlers{},
+			delay:           time.NewTicker(time.Millisecond * 300),
+			monitoringQueue: list.New(),
+		}
 	}
 	return instance
 }

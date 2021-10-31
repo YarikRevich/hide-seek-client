@@ -10,14 +10,15 @@ import (
 
 	// "github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
-	
+	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/YarikRevich/HideSeek-Client/tools/printer"
 	"github.com/sirupsen/logrus"
@@ -64,7 +65,9 @@ func init() {
 
 	printer.PrintCliMessage("HideSeek\nClient!")
 
-
+	if cli.GetDebug(){
+		profiling.UseProfiler().Init()
+	}
 	// collisions.ConnectCollisionsToImages()
 }
 

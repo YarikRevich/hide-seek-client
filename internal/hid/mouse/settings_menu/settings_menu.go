@@ -13,37 +13,41 @@ import (
 )
 
 func Exec() bool {
-	e := events.UseEvents().Mouse()
-	if e.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/inputs/input")) {
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.SETTINGS_MENU_USERNAME),
-			inputmiddleware.UseInputMiddleware,
-		)
-		return true
-	}
-	if e.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
-			uimiddleware.UseUIMiddleware,
-		)
-		return true
-	}
-	if e.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_save_config")) {
-		provider.UseStorageProvider().SetUsername(events.UseEvents().Input().SettingsMenuNameBuffer.ReadClean())
+	m := events.UseEvents().Mouse()
 
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
-			uimiddleware.UseUIMiddleware,
-		)
-		return true
+	if m.IsAnyMouseButtonsPressed() {
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/inputs/input")) {
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.SETTINGS_MENU_USERNAME),
+				inputmiddleware.UseInputMiddleware,
+			)
+			return true
+		}
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+				inputmiddleware.UseInputMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
+				uimiddleware.UseUIMiddleware,
+			)
+			return true
+		}
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_save_config")) {
+			provider.UseStorageProvider().SetUsername(events.UseEvents().Input().SettingsMenuNameBuffer.ReadClean())
+
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+				inputmiddleware.UseInputMiddleware,
+			)
+			applyer.ApplyMiddlewares(
+				statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
+				uimiddleware.UseUIMiddleware,
+			)
+			return true
+		}
 	}
+
 	return false
 }

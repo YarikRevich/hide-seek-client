@@ -47,6 +47,11 @@ func (g *GamepadPress) AreGamepadButtonsCombined(button1, button2 ebiten.Gamepad
 	return false
 }
 
+//Checks if any gamepad is connected
+func (g *GamepadPress) IsGamepadConnected()bool{
+	return len(ebiten.GamepadIDs()) != 0
+}
+
 func NewGamepad() *Gamepad {
 	return new(Gamepad)
 }

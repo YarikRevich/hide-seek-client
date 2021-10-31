@@ -9,6 +9,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
+	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 
 	herochoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/hero_choose"
 	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/map_choose"
@@ -17,15 +18,19 @@ import (
 )
 
 func Process() {
-	profiling.UseProfiler().StartMonitoring(profiling.MOUSE_HANDLER)
+	if cli.GetDebug() {
+		profiling.UseProfiler().StartMonitoring(profiling.MOUSE)
+		defer profiling.UseProfiler().EndMonitoring()
+	}
 
 	if statemachine.UseStateMachine().Networking().GetState() == networking.ONLINE {
 		switch statemachine.UseStateMachine().UI().GetState() {
+		case ui.GAME:
+			return
 		case ui.WAIT_ROOM:
 			if waitroom.Exec() {
 				return
 			}
-
 		case ui.JOIN_LOBBY_MENU:
 			if joinlobbymenu.Exec() {
 				return
@@ -53,6 +58,4 @@ func Process() {
 			unfocus.Exec()
 		}
 	}
-
-	profiling.UseProfiler().EndMonitoring()
 }

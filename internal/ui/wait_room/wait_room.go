@@ -38,6 +38,8 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
+	f := fontcollection.GetFont("assets/fonts/base")
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/textareas/textarea"))
 		m := metadatacollection.GetMetadata("assets/images/system/textareas/textarea")
@@ -46,8 +48,6 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFont("assets/fonts/base")
-		
 		ebitentext.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
@@ -61,12 +61,11 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFont("assets/fonts/base")
 		p := text.NewPositionSession(
-			f, 
-			m.Button.Text, 
-			m.RawSize.Width, 
-			m.RawSize.Height, 
+			f,
+			m.Button.Text,
+			m.RawSize.Width,
+			m.RawSize.Height,
 			m.Button.TextPosition)
 
 		for p.Next() {

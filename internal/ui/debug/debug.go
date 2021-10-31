@@ -22,6 +22,6 @@ func Draw() {
 	render.UseRender().SetToPostRender(func(screen *ebiten.Image) {
 		f := fontcollection.GetFont("assets/fonts/base")
 
-		text.Draw(screen, profiling.UseProfiler().GetFormattedMonitoringLog(), f, 0, 0, color.White)
+		text.Draw(screen, profiling.UseProfiler().String(), f, 0, 0, color.White)
 	})
 }

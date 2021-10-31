@@ -36,6 +36,9 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
+
+	f := fontcollection.GetFont("assets/fonts/base")
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/buttons/button"))
 		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_start")
@@ -45,7 +48,6 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFont("assets/fonts/base")
 		p := text.NewPositionSession(
 			f, 
 			m.Button.Text, 
@@ -75,7 +77,6 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFont("assets/fonts/base")
 		p := text.NewPositionSession(
 			f, 
 			m.Button.Text, 

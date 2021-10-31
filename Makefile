@@ -43,6 +43,7 @@ build:
 	@mkdir -p /usr/local/share/games/HideSeek/assets
 	@mkdir -p /usr/local/share/games/HideSeek/log
 	@mkdir -p /usr/local/share/games/HideSeek/db
+	@mkdir -p /usr/local/share/games/HideSeek/pprof
 
 	$(call clear)
 

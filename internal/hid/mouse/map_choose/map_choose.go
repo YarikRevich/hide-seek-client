@@ -15,27 +15,11 @@ import (
 func Exec() bool {
 	m := events.UseEvents().Mouse()
 	m.UpdateMouseWheelOffsets()
-	if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
-			uimiddleware.UseUIMiddleware,
-		)
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Input().SetState(input.EMPTY),
-			inputmiddleware.UseInputMiddleware,
-		)
-		return true
-	}
 
-	for k, v := range map[string]string{
-		"assets/images/maps/thumbnails/helloween": "assets/images/maps/helloween/background/background",
-		"assets/images/maps/thumbnails/starwars" : "assets/images/maps/starwars/background/background",
-	} {
-		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata(k)) {
-			objects.UseObjects().World().SetSkin(v)
-
+	if m.IsAnyMouseButtonsPressed() {
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/back")) {
 			applyer.ApplyMiddlewares(
-				statemachine.UseStateMachine().UI().SetState(ui.HERO_CHOOSE),
+				statemachine.UseStateMachine().UI().SetState(ui.START_MENU),
 				uimiddleware.UseUIMiddleware,
 			)
 			applyer.ApplyMiddlewares(
@@ -43,6 +27,25 @@ func Exec() bool {
 				inputmiddleware.UseInputMiddleware,
 			)
 			return true
+		}
+
+		for k, v := range map[string]string{
+			"assets/images/maps/thumbnails/helloween": "assets/images/maps/helloween/background/background",
+			"assets/images/maps/thumbnails/starwars":  "assets/images/maps/starwars/background/background",
+		} {
+			if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata(k)) {
+				objects.UseObjects().World().SetSkin(v)
+
+				applyer.ApplyMiddlewares(
+					statemachine.UseStateMachine().UI().SetState(ui.HERO_CHOOSE),
+					uimiddleware.UseUIMiddleware,
+				)
+				applyer.ApplyMiddlewares(
+					statemachine.UseStateMachine().Input().SetState(input.EMPTY),
+					inputmiddleware.UseInputMiddleware,
+				)
+				return true
+			}
 		}
 	}
 

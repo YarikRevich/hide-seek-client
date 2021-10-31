@@ -46,22 +46,22 @@ type MouseWheel struct {
 func (p *MouseWheel) UpdateMouseWheelOffsets() {
 	e := UseEvents().Gamepad()
 
-	if e.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
-		p.MouseWheelY -= p.moveCoefficient
-	} else if e.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-		p.MouseWheelY += p.moveCoefficient
-	} else if e.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
-		p.MouseWheelX -= p.moveCoefficient
-	} else if e.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
-		p.MouseWheelX += p.moveCoefficient
-	} else {
-		sx, sy := ebiten.Wheel()
-		p.MouseWheelX += sx
-		p.MouseWheelY += sy
+	if e.IsGamepadConnected() {
+		if e.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
+			p.MouseWheelY -= p.moveCoefficient
+		} else if e.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
+			p.MouseWheelY += p.moveCoefficient
+		} else if e.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
+			p.MouseWheelX -= p.moveCoefficient
+		} else if e.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
+			p.MouseWheelX += p.moveCoefficient
+		}
+	} else if sx, sy := ebiten.Wheel(); sx != 0 || sy != 0 {
+		p.MouseWheelX += sx; p.MouseWheelY += sy
 	}
+
 	p.IsMoved = p.LastMouseWheelX != p.MouseWheelX && p.LastMouseWheelY != p.MouseWheelY
-	p.LastMouseWheelX = p.MouseWheelX
-	p.LastMouseWheelY = p.MouseWheelY
+	p.LastMouseWheelX = p.MouseWheelX; p.LastMouseWheelY = p.MouseWheelY
 }
 
 func NewMouse() *Mouse {

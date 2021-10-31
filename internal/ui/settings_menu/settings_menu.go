@@ -3,12 +3,9 @@ package settingsmenu
 import (
 	"image/color"
 
-	// buffercollection "github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard/buffers/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
 	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
-
-	// "github.com/YarikRevich/HideSeek-Client/internal/interface/positioning"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
@@ -40,6 +37,8 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
+	f := fontcollection.GetFont("assets/fonts/base")
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/inputs/input"))
 		m := metadatacollection.GetMetadata("assets/images/system/inputs/input")
@@ -49,11 +48,9 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFont("assets/fonts/base")
-		
-		
+	
 		t := events.UseEvents().Input().SettingsMenuNameBuffer.Read()
-		
+
 		p := text.NewPositionSession(
 			f, 
 			t, 
@@ -83,7 +80,6 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		f := fontcollection.GetFont("assets/fonts/base")
 		p := text.NewPositionSession(
 			f, 
 			m.Button.Text, 
