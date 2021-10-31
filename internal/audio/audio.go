@@ -9,10 +9,14 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
 	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
+	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
 
 func Process() {
-	profiling.UseProfiler().StartMonitoring(profiling.AUDIO_HANDLER)
+	if cli.GetDebug() {
+		profiling.UseProfiler().StartMonitoring(profiling.AUDIO)
+		defer profiling.UseProfiler().EndMonitoring()
+	}
 
 	if statemachine.UseStateMachine().Audio().GetState() == audio.DONE {
 		switch statemachine.UseStateMachine().UI().GetState() {
@@ -28,6 +32,4 @@ func Process() {
 			statemachine.UseStateMachine().Audio().SetState(audio.UNDONE),
 			audiomiddleware.UseAudioMiddleware)
 	}
-
-	profiling.UseProfiler().EndMonitoring()
 }

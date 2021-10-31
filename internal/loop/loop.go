@@ -1,11 +1,11 @@
 package loop
 
 import (
-	// "github.com/YarikRevich/HideSeek-Client/internal/audio"
 	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard"
 	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse"
+	"github.com/YarikRevich/HideSeek-Client/internal/audio"
 	"github.com/YarikRevich/HideSeek-Client/internal/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
@@ -25,7 +25,9 @@ func (g *Loop) Update() error {
 	mouse.Process()
 	keyboard.Process()
 	networking.Process()
-	// audio.Process()
+	if !cli.GetDebug() {
+		audio.Process()
+	}
 
 	return nil
 }
@@ -34,7 +36,7 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 	screenhistory.SetScreen(screen)
 	syncer.NewSyncer().Sync()
 
-	defer func(){
+	defer func() {
 		screenhistory.SetLastScreenSize()
 		render.UseRender().PostRender()
 	}()

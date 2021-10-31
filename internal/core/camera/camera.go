@@ -2,6 +2,7 @@ package camera
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -36,6 +37,10 @@ type Camera struct {
 		X, Y float64
 	}
 
+	maxMapScale struct {
+		X, Y float64
+	}
+
 	lastMapScale struct {
 		X, Y float64
 	}
@@ -54,9 +59,9 @@ type Camera struct {
 		X, Y float64
 	}
 
-	lastConnectedHeroPos struct {
-		X, Y float64
-	}
+	// lastConnectedHeroPos struct {
+	// 	X, Y float64
+	// }
 
 	connectedMapPos struct {
 		X, Y float64
@@ -88,13 +93,13 @@ type Camera struct {
 		X, Y float64
 	}
 
-	lastHeroScale struct {
-		X, Y float64
-	}
+	// lastHeroScale struct {
+	// 	X, Y float64
+	// }
 
-	lastHeroTranslation struct {
-		X, Y float64
-	}
+	// lastHeroTranslation struct {
+	// 	X, Y float64
+	// }
 }
 
 func (c *Camera) isHeroTranslationBlocked() bool {
@@ -157,8 +162,6 @@ func (c *Camera) updateMapMatrix() {
 		}
 	}
 
-	fmt.Println(c.connectedMapPos)
-
 	if !c.isHeroMovementBlockedX && !c.isHeroMovementBlockedY {
 		c.MapMatrix.Translate(-c.connectedMapPos.X, -c.connectedMapPos.Y)
 	}
@@ -170,8 +173,6 @@ func (c *Camera) updateMapMatrix() {
 	if c.isHeroMovementBlockedX && !c.isHeroMovementBlockedY {
 		c.MapMatrix.Translate(0, -c.connectedMapPos.Y)
 	}
-
-	// fmt.Println(p.RawPos, c.scaledHeroTranslation)
 }
 
 //Updates general metrics for hero matrix
@@ -181,21 +182,19 @@ func (c *Camera) updateHeroMatrix() {
 	c.HeroMatrix.Scale(c.heroScale.X, c.heroScale.Y)
 
 	if !c.isHeroMovementBlockedX && c.isCrossedAxisX() {
-		c.connectedHeroPos.X = c.scaledHeroTranslation.X
+		c.connectedHeroPos.X = p.RawPos.X
 		c.isHeroMovementBlockedX = true
 	}
 
 	if !c.isHeroMovementBlockedY && c.isCrossedAxisY() {
-		c.connectedHeroPos.Y = c.scaledHeroTranslation.Y
+		c.connectedHeroPos.Y = p.RawPos.Y
 		c.isHeroMovementBlockedY = true
 	}
 
-	// fmt.Println(c.lastHeroTranslation, c.scaledHeroTranslation)
+	// fmt.Println(c.isHeroMovementBlockedX, c.isHeroMovementBlockedY)
 	if !c.isHeroTranslationBlocked() {
 		c.HeroMatrix.Translate(c.scaledHeroTranslation.X, c.scaledHeroTranslation.Y)
 	} else {
-		fmt.Println(c.isHeroMovementBlockedX, c.isHeroMovementBlockedY)
-
 		if c.isHeroMovementBlockedX && c.isHeroMovementBlockedY {
 			c.HeroMatrix.Translate(c.scaledConnectedHeroPos.X, c.scaledConnectedHeroPos.Y)
 		}
@@ -216,9 +215,11 @@ Map axis declarations
 
 func (c *Camera) updateMapAxis() {
 	w := objects.UseObjects().World()
-
-	c.mapAxis.X = ((w.Metadata.Size.Width / c.mapScale.X) + (w.Metadata.Size.Width / c.mapScale.X / 2)) / 2
-	c.mapAxis.Y = ((w.Metadata.Size.Height / c.mapScale.Y) + (w.Metadata.Size.Height / c.mapScale.Y / 2)) / 2.3
+	fmt.Println(c.mapAxis, c.scaledHeroTranslation, w.Metadata.Size.Width, w.Metadata.RawSize.Width, c.mapScale.X, c.maxMapScale.X)
+	fmt.Println(c.scaledHeroTranslation.X, (w.Metadata.RawSize.Width*c.mapScale.X)/c.maxMapScale.X, (w.Metadata.Size.Width*c.mapScale.X)/c.maxMapScale.X/2)
+	c.mapAxis.X = math.Abs(((w.Metadata.RawSize.Width*c.mapScale.X)/c.maxMapScale.X)+
+		((w.Metadata.Size.Width*c.mapScale.X)/c.maxMapScale.X/2)) / 2
+	c.mapAxis.Y = (w.Metadata.RawSize.Height * c.mapScale.Y) / c.maxMapScale.Y / 2.3
 }
 
 //Checks if pc has crossed the X axis
@@ -237,12 +238,26 @@ func (c *Camera) isCrossedAxisY() bool {
 Updates for scales
 */
 
+func (c *Camera) saveMaxMapScale() {
+	w := objects.UseObjects().World()
+	sx, sy := w.GetMapScale()
+	c.maxMapScale.X = ((sx + w.Metadata.RawScale.CoefficiantX) / 100 * 55) * 3
+	c.maxMapScale.Y = ((sy + w.Metadata.RawScale.CoefficiantY) / 100 * 55) * 3
+}
+
 //Updates scale coeffients for map matrix
 func (c *Camera) updateMapScale() {
 	w := objects.UseObjects().World()
 	sx, sy := w.GetMapScale()
 	c.mapScale.X = ((sx + w.Metadata.Scale.CoefficiantX) / 100 * c.zoom) * 3
 	c.mapScale.Y = ((sy + w.Metadata.Scale.CoefficiantY) / 100 * c.zoom) * 3
+}
+
+//Updates scale coeffients for hero matrix
+func (c *Camera) updateHeroScale() {
+	p := objects.UseObjects().PC()
+	c.heroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.zoom)
+	c.heroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.zoom)
 }
 
 //Saves max hero scale which is used for
@@ -260,23 +275,14 @@ func (c *Camera) updateScaledMapTranslation() {
 }
 
 func (c *Camera) updateScaledConnectedPos() {
-	// c.scaledConnectedHeroPos.X = c.lastConnectedHeroPos.X * c.heroScale.X / c.lastHeroScale.X
-	// c.scaledConnectedHeroPos.Y = c.lastConnectedHeroPos.Y * c.heroScale.Y / c.lastHeroScale.Y
-	c.scaledConnectedHeroPos.X = c.connectedHeroPos.X
-	c.scaledConnectedHeroPos.Y = c.connectedHeroPos.Y 
+	c.scaledConnectedHeroPos.X = c.connectedHeroPos.X * c.mapScale.X
+	c.scaledConnectedHeroPos.Y = c.connectedHeroPos.Y * c.mapScale.Y
 }
 
 func (c *Camera) updateScaledHeroTranslation() {
 	p := objects.UseObjects().PC()
 	c.scaledHeroTranslation.X = p.RawPos.X * c.mapScale.X
 	c.scaledHeroTranslation.Y = p.RawPos.Y * c.mapScale.Y
-}
-
-//Updates scale coeffients for hero matrix
-func (c *Camera) updateHeroScale() {
-	p := objects.UseObjects().PC()
-	c.heroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.zoom)
-	c.heroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.zoom)
 }
 
 /*
@@ -298,24 +304,6 @@ Last property saves
 // 	if p.IsXChanged() || p.IsYChanged() || p.IsAnimatied() {
 // 		c.lastHeroTranslation.X = p.RawPos.X / (c.heroScale.X / c.lastHeroScale.X)
 // 		c.lastHeroTranslation.Y = p.RawPos.Y / (c.heroScale.Y / c.lastHeroScale.Y)
-// 	}
-// }
-
-// //Saves last hero scale
-// func (c *Camera) updateLastHeroScale() {
-// 	c.lastHeroScale = c.heroScale
-// 	// if c.stubHeroScale == c.heroScale{
-// 	// 	c.lastHeroScale = c.maxHeroScale
-// 	// }else {
-// 	// 	c.lastHeroScale = c.stubHeroScale
-// 	// }
-// }
-
-// func (c *Camera) updateLastConnectedPos() {
-// 	if c.lastConnectedHeroPos.X == 0 || c.lastConnectedHeroPos.Y == 0 {
-// 		c.lastConnectedHeroPos = c.connectedHeroPos
-// 	} else {
-// 		c.lastConnectedHeroPos = c.scaledConnectedHeroPos
 // 	}
 // }
 
@@ -360,7 +348,6 @@ func (c *Camera) updatePreDeps() {
 
 }
 func (c *Camera) updatePostDeps() {
-	// c.updateLastConnectedPos()
 	c.updateScaledConnectedPos()
 }
 
@@ -564,6 +551,7 @@ func (c *Camera) ZoomOut() {
 func UseCamera() *Camera {
 	if instance == nil {
 		instance = &Camera{zoom: 40}
+		instance.saveMaxMapScale()
 		// instance.saveMaxHeroScale()
 	}
 	return instance
