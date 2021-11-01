@@ -79,20 +79,42 @@ func (w *World) String() string {
 
 //Returns map scale in relating map image
 //to current screen sizes
-func (w *World) GetMapScale() (float64, float64) {
+func (w *World) GetMaxMapScale() (float64, float64) {
 	var sx, sy float64 
-	screenW, screenH := screen.GetScreen().Size()
+	screenW := float64(screen.GetMaxWidth())
+	screenH := float64(screen.GetMaxHeight())
 	
-	if screenW > int(w.Metadata.RawSize.Width) {
-		sx = w.Metadata.RawSize.Width / float64(screenW)
+	if screenW > w.Metadata.RawSize.Width {
+		sx = w.Metadata.RawSize.Width / screenW
 	} else {
-		sx = float64(screenW) / w.Metadata.RawSize.Width
+		sx = screenW / w.Metadata.RawSize.Width
 	}
 
-	if screenH > int(w.Metadata.RawSize.Height) {
-		sy = w.Metadata.RawSize.Height / float64(screenH)
+	if screenH > w.Metadata.RawSize.Height {
+	sy = w.Metadata.RawSize.Height / screenH
 	} else {
-		sy = float64(screenH) / w.Metadata.RawSize.Height
+		sy = screenH / w.Metadata.RawSize.Height
+	}
+	return sx, sy
+}
+
+
+func (w *World) GetMapScale() (float64, float64) {
+	var sx, sy float64 
+	screenIW, screenIH := screen.GetScreen().Size()
+	screenW := float64(screenIW)
+	screenH := float64(screenIH)
+	
+	if screenW > w.Metadata.RawSize.Width {
+		sx = w.Metadata.RawSize.Width / screenW
+	} else {
+		sx = screenW / w.Metadata.RawSize.Width
+	}
+
+	if screenH > w.Metadata.RawSize.Height {
+	sy = w.Metadata.RawSize.Height / screenH
+	} else {
+		sy = screenH / w.Metadata.RawSize.Height
 	}
 	return sx, sy
 }

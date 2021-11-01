@@ -1,9 +1,10 @@
 package camera
 
 import (
-	"fmt"
-	"math"
+	// "fmt"
 
+	// "fmt"
+// 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -215,10 +216,7 @@ Map axis declarations
 
 func (c *Camera) updateMapAxis() {
 	w := objects.UseObjects().World()
-	fmt.Println(c.mapAxis, c.scaledHeroTranslation, w.Metadata.Size.Width, w.Metadata.RawSize.Width, c.mapScale.X, c.maxMapScale.X)
-	fmt.Println(c.scaledHeroTranslation.X, (w.Metadata.RawSize.Width*c.mapScale.X)/c.maxMapScale.X, (w.Metadata.Size.Width*c.mapScale.X)/c.maxMapScale.X/2)
-	c.mapAxis.X = math.Abs(((w.Metadata.RawSize.Width*c.mapScale.X)/c.maxMapScale.X)+
-		((w.Metadata.Size.Width*c.mapScale.X)/c.maxMapScale.X/2)) / 2
+	c.mapAxis.X = (w.Metadata.RawSize.Width * c.mapScale.X) / c.maxMapScale.X / 2
 	c.mapAxis.Y = (w.Metadata.RawSize.Height * c.mapScale.Y) / c.maxMapScale.Y / 2.3
 }
 
@@ -240,17 +238,17 @@ Updates for scales
 
 func (c *Camera) saveMaxMapScale() {
 	w := objects.UseObjects().World()
-	sx, sy := w.GetMapScale()
-	c.maxMapScale.X = ((sx + w.Metadata.RawScale.CoefficiantX) / 100 * 55) * 3
-	c.maxMapScale.Y = ((sy + w.Metadata.RawScale.CoefficiantY) / 100 * 55) * 3
+	sx, sy := w.GetMaxMapScale()
+	c.maxMapScale.X = (sx + w.Metadata.RawScale.CoefficiantX) / 100 * 55 * 3
+	c.maxMapScale.Y = (sy + w.Metadata.RawScale.CoefficiantY) / 100 * 55 * 3
 }
 
 //Updates scale coeffients for map matrix
 func (c *Camera) updateMapScale() {
 	w := objects.UseObjects().World()
 	sx, sy := w.GetMapScale()
-	c.mapScale.X = ((sx + w.Metadata.Scale.CoefficiantX) / 100 * c.zoom) * 3
-	c.mapScale.Y = ((sy + w.Metadata.Scale.CoefficiantY) / 100 * c.zoom) * 3
+	c.mapScale.X = (sx + w.Metadata.Scale.CoefficiantX) / 100 * c.zoom * 3
+	c.mapScale.Y = (sy + w.Metadata.Scale.CoefficiantY) / 100 * c.zoom * 3
 }
 
 //Updates scale coeffients for hero matrix
