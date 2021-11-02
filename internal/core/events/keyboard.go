@@ -1,10 +1,8 @@
 package events
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -17,14 +15,15 @@ type KeyBoardEntity struct {
 	SingleKeys []ebiten.Key
 
 	//Describes combined keys like: "CTRL+V" or "CTRL+C"
-	CombinedKeys []ebiten.Key
-	Pressed      bool
-	Callback     func(IBuffer, rune)
+	Combination struct {
+		AwaitKey, ControlKey ebiten.Key
+	}
+	Pressed  bool
+	Callback func(IBuffer, rune)
 }
 
 type KeyBoard struct {
-	queue       zeroshifter.IZeroShifter
-	combinationTimer time.Time
+	awaitKeyTimer time.Time
 }
 
 func (b *KeyBoard) IsKeyInList(k ebiten.Key, l []ebiten.Key) bool {
@@ -47,39 +46,17 @@ func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
 	for _, pk := range inpututil.PressedKeys() {
 	entities:
 		for _, e := range ke {
-			if len(k.queue.Get()) == 2 {
-				e.Callback(b, '0')
-				k.queue.Clean()
+			if pk == e.Combination.AwaitKey {
+				k.awaitKeyTimer = time.Now().Add(time.Millisecond * 700)
+			}
+			if inpututil.KeyPressDuration(pk) == 1 && pk == e.Combination.ControlKey {
+				if time.Since(k.awaitKeyTimer) <= 0 {
+					e.Callback(b, '0')
+					break entities
+				}
 			}
 
-			if inpututil.KeyPressDuration(pk) == 1 && len(e.CombinedKeys) != 0 {
-
-			queueCheck:
-				for i, v := range k.queue.Get() {
-					if v != e.CombinedKeys[i] {
-						k.queue.Clean()
-						break queueCheck
-					}
-				}
-
-				for _, v := range e.CombinedKeys {
-					if v == pk {
-						// if len(k.queue.Get()) > 0 {
-						// 	if k.queue.Get()[0] == pk {
-						// 		k.queue.Clean()
-						// 	}
-						// }
-						fmt.Println(pk, k.queue.Get())
-						k.queue.Add(pk)
-						// k.queueAwaits++
-						break entities
-
-					}
-				}
-
-			}
-
-			if inpututil.KeyPressDuration(pk) == 1 || (e.Pressed && inpututil.KeyPressDuration(pk)%12 == 0) {
+			if inpututil.KeyPressDuration(pk) == 1 || (e.Pressed && inpututil.KeyPressDuration(pk)%11 == 0) {
 				if k.IsKeyInList(pk, e.SingleKeys) {
 					if k.IsServiceKey(pk) {
 						e.Callback(b, '0')
@@ -103,5 +80,5 @@ func (k *KeyBoard) IsAnyKeyPressed() bool {
 }
 
 func NewKeyBoard() *KeyBoard {
-	return &KeyBoard{queue: zeroshifter.New(2)}
+	return new(KeyBoard)
 }

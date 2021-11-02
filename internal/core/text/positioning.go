@@ -6,16 +6,26 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
+)
+
+type PositioningType int
+
+const (
+	Button PositioningType = iota
+	Input
 )
 
 type positionSession struct {
-	indent      int
-	examined    []string
-	index       int
-	font        font.Face
-	stickWidth  float64
-	stickHeight float64
-	position    models.TextPosition
+	indent               int
+	examined             []string
+	actualExaminedLength int
+	index                int
+	font                 font.Face
+	stickWidth           float64
+	stickHeight          float64
+	position             models.TextPosition
+	posType              PositioningType
 }
 
 type IPositionSession interface {
@@ -45,16 +55,36 @@ func (p *positionSession) GetPosition() (int, int) {
 	return 0, 0
 }
 
-func (p *positionSession) GetText() string {
-	return p.examined[p.index]
-}
-
-func (p *positionSession) getCenterCoords() (int, int) {
+func (p *positionSession) getFontMetrics() fixed.Int26_6 {
 	a, ok := p.font.GlyphAdvance(rune(p.examined[p.index][0]))
 	if !ok {
 		logrus.Fatal("error happened getting metrics of font")
 	}
+	return a
+}
 
+func (p *positionSession) GetText() string {
+	if p.posType == Input {
+		a := p.getFontMetrics()
+		curr := a.Round()*len(p.examined[p.index]) + (a.Round() * 5)
+		if p.stickWidth < float64(curr) {
+			t := p.examined[p.index]
+			return string(t[:len(t)-int((float64(curr)-p.stickWidth)/float64(a.Round()))] + "...")
+		}
+	}
+	return p.examined[p.index]
+}
+
+func (p *positionSession) getCenterCoords() (int, int) {
+	a := p.getFontMetrics()
+	if p.posType == Input {
+		curr := a.Round()*len(p.examined[p.index]) + (a.Round() * 5)
+		if p.stickWidth < float64(curr) {
+			t := p.examined[p.index]
+			s := string(t[:len(t)-int((float64(curr)-p.stickWidth)/float64(a.Round()))] + "...")
+			return (int(p.stickWidth) - a.Round()*len(s)) / 2, int(p.stickHeight/2) + p.indent
+		}
+	}
 	return (int(p.stickWidth) - a.Round()*len(p.examined[p.index])) / 2, int(p.stickHeight/2) + p.indent
 }
 
@@ -72,7 +102,7 @@ func (p *positionSession) getLeftCoords() (int, int) {
 }
 
 func NewPositionSession(
-	font font.Face, text string, sw, sh float64, pos models.TextPosition) IPositionSession {
+	posType PositioningType, font font.Face, text string, sw, sh float64, pos models.TextPosition) IPositionSession {
 	p := new(positionSession)
 
 	if len(text) != 0 {
@@ -82,6 +112,7 @@ func NewPositionSession(
 		p.stickWidth = sw
 		p.stickHeight = sh
 		p.position = pos
+		p.posType = posType
 
 		if len(p.examined) != 1 {
 			p.indent = -5

@@ -10,8 +10,6 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
 	networkingmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/networking"
-	//  "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/collection"
-	// popupmessagescommon "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/common"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	isconnect "github.com/alimasyhur/is-connect"
 )

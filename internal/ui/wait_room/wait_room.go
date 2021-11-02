@@ -75,6 +75,7 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		p := text.NewPositionSession(
+			text.Button,
 			f,
 			m.Button.Text,
 			m.RawSize.Width,

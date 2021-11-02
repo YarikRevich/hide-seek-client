@@ -5,8 +5,8 @@ import (
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
-	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -48,14 +48,14 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-	
 		t := events.UseEvents().Input().SettingsMenuNameBuffer.Read()
 
 		p := text.NewPositionSession(
-			f, 
-			t, 
+			text.Input,
+			f,
+			t,
 			m.RawSize.Width,
-			m.RawSize.Height, 
+			m.RawSize.Height,
 			m.Button.TextPosition)
 
 		for p.Next() {
@@ -81,10 +81,11 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		p := text.NewPositionSession(
-			f, 
-			m.Button.Text, 
+			text.Button,
+			f,
+			m.Button.Text,
 			m.RawSize.Width,
-			m.RawSize.Height, 
+			m.RawSize.Height,
 			m.Button.TextPosition)
 
 		for p.Next() {
