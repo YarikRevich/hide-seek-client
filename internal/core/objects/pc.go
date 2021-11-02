@@ -3,7 +3,6 @@ package objects
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	strorageprovider "github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -11,9 +10,7 @@ import (
 
 const DEFAULT_HEALTH = 10
 
-type Buffs struct {
-	SpeedX, SpeedY float64
-}
+type Buffs struct{ SpeedX, SpeedY float64 }
 
 // type Team int
 
@@ -22,10 +19,8 @@ type Buffs struct {
 // 	Team2
 // )
 
-
 type PC struct {
 	Object
-	// Buffs
 
 	Username string
 	Health   uint64

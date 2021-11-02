@@ -10,8 +10,9 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
 	networkingmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/networking"
-	popupmessagescollection "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/collection"
-	popupmessagescommon "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/common"
+	//  "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/collection"
+	// popupmessagescommon "github.com/YarikRevich/HideSeek-Client/internal/pop_up_messages/common"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
@@ -29,7 +30,7 @@ func isAllowedToUseMiddlewares() bool {
 }
 
 func checkPopUpMessagesToClean() {
-	popupmessagescollection.PopUpMessages.Filter(func(e *popupmessagescommon.PopUpEntity) bool {
+	notifications.PopUp.Filter(func(e *notifications.NotificatorEntity) bool {
 		return math.Signbit(float64(time.Now().Unix() - e.Timestamp))
 	})
 }
@@ -50,12 +51,11 @@ func checkIfOnline() {
 		m.Lock()
 
 		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected() {
-			popupmessagescollection.PopUpMessages.WriteError("Servers are offline!")
+			notifications.PopUp.WriteError("Servers are offline!")
 			applyer.ApplyMiddlewares(
 				statemachine.UseStateMachine().Networking().SetState(networking.OFFLINE),
 				networkingmiddleware.UseNetworkingMiddleware,
 			)
-
 		} else {
 			applyer.ApplyMiddlewares(
 				statemachine.UseStateMachine().Networking().SetState(networking.ONLINE),

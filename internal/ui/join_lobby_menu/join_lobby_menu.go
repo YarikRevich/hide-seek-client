@@ -1,44 +1,82 @@
 package joinlobbymenu
 
-func Exec() {
-	// j.winConf.TextAreas.JoinLobbyAnnouncement.Clear()
-	// j.winConf.TextAreas.JoinLobbyAnnouncement.Write([]byte("Write your lobby ID!"))
-	// j.winConf.TextAreas.JoinLobbyAnnouncement.Draw(j.winConf.Win, pixel.IM.Scaled(j.winConf.TextAreas.JoinLobbyAnnouncement.Orig, 3))
+import (
+	"image/color"
 
-	// j.winConf.TextAreas.JoinLobbyInput.InputLobbyIDTextArea.Clear()
-	// if j.winConf.Win.Pressed(pixelgl.KeyBackspace) {
-	// 	if j.winConf.WindowUpdation.JoinLobbyMenuFrame%8 == 0 {
-	// 		if len(j.winConf.TextAreas.JoinLobbyInput.WrittenText) > 0 {
-	// 			j.winConf.TextAreas.JoinLobbyInput.WrittenText = Utils.RemoveIndex(j.winConf.TextAreas.JoinLobbyInput.WrittenText, len(j.winConf.TextAreas.JoinLobbyInput.WrittenText)-1)
-	// 		}
-	// 	}
-	// }
-	// if len(j.winConf.Win.Typed()) != 0 && len(j.winConf.TextAreas.JoinLobbyInput.WrittenText) < 10 {
-	// 	j.winConf.TextAreas.JoinLobbyInput.WrittenText = append(j.winConf.TextAreas.JoinLobbyInput.WrittenText, j.winConf.Win.Typed())
-	// }
-	// for _, value := range j.winConf.TextAreas.JoinLobbyInput.WrittenText {
-	// 	fmt.Fprint(j.winConf.TextAreas.JoinLobbyInput.InputLobbyIDTextArea, value)
-	// }
-	// j.winConf.WindowUpdation.JoinLobbyMenuFrame++
-	// j.winConf.TextAreas.JoinLobbyInput.InputLobbyIDTextArea.Draw(j.winConf.Win, pixel.IM.Scaled(j.winConf.TextAreas.JoinLobbyInput.InputLobbyIDTextArea.Orig, 3))
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
+	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
+	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
+	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	"github.com/hajimehoshi/ebiten/v2"
+	ebitentext "github.com/hajimehoshi/ebiten/v2/text"
+)
 
+func Draw() {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := imagecollection.GetImage("assets/images/system/background/background")
+
+		opts := &ebiten.DrawImageOptions{}
+
+		imageW, imageH := img.Size()
+		screenW, screenH := screen.Size()
+		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
+
+		screen.DrawImage(img, opts)
+	})
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := imagecollection.GetImage("assets/images/system/buttons/back")
+		m := metadatacollection.GetMetadata("assets/images/system/buttons/back")
+
+		opts := &ebiten.DrawImageOptions{}
+
+		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+		screen.DrawImage(img, opts)
+	})
+
+	f := fontcollection.GetFont("assets/fonts/base")
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/textareas/textarea"))
+		m := metadatacollection.GetMetadata("assets/images/system/textareas/textarea")
+
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+		ebitentext.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+
+		screen.DrawImage(img, opts)
+	})
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/buttons/button"))
+		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_join_game")
+
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+		p := text.NewPositionSession(
+			f,
+			m.Button.Text,
+			m.RawSize.Width,
+			m.RawSize.Height,
+			m.Button.TextPosition)
+
+		for p.Next() {
+			tx, ty := p.GetPosition()
+			ebitentext.Draw(
+				img,
+				p.GetText(),
+				f,
+				tx, ty,
+				color.White)
+		}
+		screen.DrawImage(img, opts)
+	})
 }
-
-// func (j *JoinLobbyMenu)DrawElements(){
-
-// 	j.winConf.DrawJoinLobbyMenuBG()
-// 	j.winConf.DrawErrorText()
-// }
-
-// func (j *JoinLobbyMenu)Run(){
-
-// 	j.DrawElements()
-
-// 	j.ProcessKeyboard()
-
-// 	j.DrawAnnouncements()
-
-// 	j.ProcessTextInput()
-
-// 	j.ProcessNetworking()
-// }

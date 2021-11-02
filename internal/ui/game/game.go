@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/physics"
@@ -10,14 +12,14 @@ import (
 )
 
 func Draw() {
+	w := objects.UseObjects().World()
 	p := objects.UseObjects().PC()
-	render.UseRender().SetToRender(func(screen *ebiten.Image){
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p.SaveLastPosition()
 		camera.UseCamera().UpdateCamera()
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		w := objects.UseObjects().World()
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Concat(camera.UseCamera().MapMatrix)
@@ -35,7 +37,31 @@ func Draw() {
 		screen.DrawImage(c, opts)
 	})
 
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		fmt.Println(w.PCs)
+		for _, v := range w.PCs {
+			if v.ID != p.ID {
+				fmt.Println(v.ID)
+				opts := &ebiten.DrawImageOptions{}
+				screen.DrawImage(ebiten.NewImageFromImage(v.Image), opts)
+			}
+		}
+	})
 
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		for _, v := range w.Weapons {
+			opts := &ebiten.DrawImageOptions{}
+			
+			screen.DrawImage(ebiten.NewImageFromImage(v.Image), opts)
+		}
+	})
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		for _, v := range w.Ammo {
+			opts := &ebiten.DrawImageOptions{}
+			screen.DrawImage(v.Image, opts)
+		}
+	})
 
 	// // g.winConf.DrawGoldChest()
 

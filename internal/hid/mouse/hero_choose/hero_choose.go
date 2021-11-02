@@ -33,7 +33,12 @@ func Exec() bool {
 			"assets/images/heroes/thumbnails/pumpkin": "assets/images/heroes/pumpkin",
 		} {
 			if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata(k)) {
-				objects.UseObjects().PC().SetSkin(v)
+				p := objects.UseObjects().PC()
+				p.SetSkin(v)
+				objects.UseObjects().World().AddPC(p)
+				u := objects.NewPC()
+				u.SetSkin(v)
+				objects.UseObjects().World().AddPC(u)
 
 				applyer.ApplyMiddlewares(
 					statemachine.UseStateMachine().UI().SetState(ui.WAIT_ROOM),

@@ -1,10 +1,8 @@
 package camera
 
 import (
-	// "fmt"
+	"fmt"
 
-	// "fmt"
-// 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -94,6 +92,8 @@ type Camera struct {
 		X, Y float64
 	}
 
+	isScaledHeroTranslationBlockedX, isScaledHeroTranslationBlockedY bool
+
 	// lastHeroScale struct {
 	// 	X, Y float64
 	// }
@@ -115,53 +115,67 @@ func (c *Camera) updateMapMatrix() {
 	p := objects.UseObjects().PC()
 	if c.isHeroTranslationBlocked() {
 		if c.isHeroMovementBlockedX {
-			if (c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width <= w.Metadata.Size.Width*c.mapScale.X) &&
-				(c.scaledHeroTranslation.X-c.scaledConnectedHeroPos.X) >= 0 {
-				c.MapMatrix.Translate(-(c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X), 0)
-			} else {
-				cx := c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X
-				if cx < 0 {
-					c.connectedMapPos.X = 0
-				} else {
-					mapWidth := w.Metadata.Size.Width * c.mapScale.X
-					if c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X >= mapWidth {
-						c.connectedMapPos.X = (cx - (mapWidth - (c.scaledHeroTranslation.X + c.scaledConnectedHeroPos.X))) - p.Metadata.Size.Width
-					} else {
-						c.connectedMapPos.X = cx
-					}
-				}
-				c.isHeroMovementBlockedX = false
-				if c.connectedHeroPos.X != 0 {
-					c.scaledHeroTranslation.X = c.connectedHeroPos.X
-				}
-				c.connectedHeroPos.X = 0
-			}
+			// if (c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width <= w.Metadata.Size.Width*c.mapScale.X) &&
+			// 	(c.scaledHeroTranslation.X-c.scaledConnectedHeroPos.X) >= 0 {
+			// fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width <= (w.Metadata.Size.Width * c.maxMapScale.X) - ((w.Metadata.Size.Width * c.mapScale.X) / c.maxMapScale.X))
+			// fmt.Println(w.GetMapScale())
+			fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width, (w.Metadata.Size.Width * c.maxMapScale.X) - ((w.Metadata.Size.Width * c.mapScale.X) / c.maxMapScale.X))
+			//(1550 * 2.83) - ((1550 * 2.06) / 2.83)
+			// fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width, w.Metadata.Size.Width, c.mapScale.X, c.maxMapScale.X)
+			c.MapMatrix.Translate(-(c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X), 0)
+			// } else {
+				// cx := c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X
+				// fmt.Println(cx)
+				// if cx < 0 {
+				// 	c.connectedMapPos.X = 0
+				// } else {
+				// 	mapWidth := w.Metadata.Size.Width * c.mapScale.X
+				// 	if c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X >= mapWidth {
+				// 		c.connectedMapPos.X = (cx - (mapWidth - (c.scaledHeroTranslation.X + c.scaledConnectedHeroPos.X))) - p.Metadata.Size.Width
+				// 	} else {
+				// 		c.connectedMapPos.X = cx
+				// 	}
+				// }
+				// c.isHeroMovementBlockedX = false
+				// c.isScaledHeroTranslationBlockedX = true
+				// if c.scaledConnectedHeroPos.X != 0 {
+				// 	c.scaledHeroTranslation.X = c.scaledConnectedHeroPos.X
+				// }
+				// c.connectedHeroPos.X = 0
+			// }
 		}
 
 		if c.isHeroMovementBlockedY {
-			if (c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y+p.Metadata.Size.Height < w.Metadata.Size.Height*c.mapScale.Y) &&
-				(c.scaledHeroTranslation.Y-c.scaledConnectedHeroPos.Y) > 0 {
+			// if (c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y+p.Metadata.Size.Height < w.Metadata.Size.Height*c.mapScale.Y) &&
+				// (c.scaledHeroTranslation.Y-c.scaledConnectedHeroPos.Y) > 0 {
+					// fmt.Println(c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y+p.Metadata.Size.Height < w.Metadata.Size.Height*c.mapScale.Y)
 				c.MapMatrix.Translate(0, -(c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y))
-			} else {
-				mapHeight := w.Metadata.Size.Height * c.mapScale.Y
-				cy := c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y
-				if cy < 0 {
-					c.connectedMapPos.Y = 0
-				} else {
-					if c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y >= mapHeight {
-						c.connectedMapPos.Y = (cy - (mapHeight - (c.scaledHeroTranslation.Y + c.scaledConnectedHeroPos.Y))) - p.Metadata.Size.Height
-					} else {
-						c.connectedMapPos.Y = cy
-					}
-				}
-				c.isHeroMovementBlockedY = false
-				if c.connectedHeroPos.Y != 0 {
-					c.scaledHeroTranslation.Y = c.connectedHeroPos.Y
-				}
-				c.connectedHeroPos.Y = 0
-			}
+			// } else {
+				// mapHeight := w.Metadata.Size.Height * c.mapScale.Y
+				// cy := c.scaledHeroTranslation.Y - c.scaledConnectedHeroPos.Y
+				// if cy < 0 {
+				// 	c.connectedMapPos.Y = 0
+				// } else {
+				// 	if c.scaledHeroTranslation.Y+c.scaledConnectedHeroPos.Y >= mapHeight {
+				// 		c.connectedMapPos.Y = (cy - (mapHeight - (c.scaledHeroTranslation.Y + c.scaledConnectedHeroPos.Y))) - p.Metadata.Size.Height
+				// 	} else {
+
+				// 		c.connectedMapPos.Y = cy
+				// 	}
+				// }
+				// c.isHeroMovementBlockedY = false
+				// c.isScaledHeroTranslationBlockedY = true
+				// if c.scaledConnectedHeroPos.Y != 0 {
+				// 	c.scaledHeroTranslation.Y = c.scaledConnectedHeroPos.Y
+				// }
+				// c.connectedHeroPos.Y = 0
+			// }
 		}
 	}
+
+	// fmt.Println(c.connectedMapPos, c.scaledHeroTranslation, c.scaledConnectedHeroPos)
+
+	// fmt.Println(c.connectedMapPos)
 
 	if !c.isHeroMovementBlockedX && !c.isHeroMovementBlockedY {
 		c.MapMatrix.Translate(-c.connectedMapPos.X, -c.connectedMapPos.Y)
@@ -192,10 +206,13 @@ func (c *Camera) updateHeroMatrix() {
 		c.isHeroMovementBlockedY = true
 	}
 
-	// fmt.Println(c.isHeroMovementBlockedX, c.isHeroMovementBlockedY)
+	
 	if !c.isHeroTranslationBlocked() {
+		// fmt.Println(c.scaledHeroTranslation, c.isHeroMovementBlockedX, c.isHeroMovementBlockedY, c.mapScale.X, "GOOD")
 		c.HeroMatrix.Translate(c.scaledHeroTranslation.X, c.scaledHeroTranslation.Y)
 	} else {
+		// fmt.Println(c.isHeroMovementBlockedX, c.isHeroMovementBlockedY, "BAD")
+		// fmt.Println(c.scaledConnectedHeroPos, c.scaledConnectedHeroPos)
 		if c.isHeroMovementBlockedX && c.isHeroMovementBlockedY {
 			c.HeroMatrix.Translate(c.scaledConnectedHeroPos.X, c.scaledConnectedHeroPos.Y)
 		}
@@ -254,6 +271,7 @@ func (c *Camera) updateMapScale() {
 //Updates scale coeffients for hero matrix
 func (c *Camera) updateHeroScale() {
 	p := objects.UseObjects().PC()
+	// fmt.Println(c.isScaledHeroTranslationBlockedX, c.isScaledHeroTranslationBlockedY)
 	c.heroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.zoom)
 	c.heroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.zoom)
 }
@@ -279,8 +297,14 @@ func (c *Camera) updateScaledConnectedPos() {
 
 func (c *Camera) updateScaledHeroTranslation() {
 	p := objects.UseObjects().PC()
-	c.scaledHeroTranslation.X = p.RawPos.X * c.mapScale.X
-	c.scaledHeroTranslation.Y = p.RawPos.Y * c.mapScale.Y
+	// if c.isScaledHeroTranslationBlockedX || c.isScaledHeroTranslationBlockedY {
+		// fmt.Println(c.scaledHeroTranslation.X, c.scaledHeroTranslation.X, p.RawPos.X, c.mapScale.X)
+	// } else {
+		
+		c.scaledHeroTranslation.X = p.RawPos.X * c.mapScale.X
+		c.scaledHeroTranslation.Y = p.RawPos.Y * c.mapScale.Y
+		// fmt.Println(c.scaledHeroTranslation.X, p.RawPos.X, c.mapScale.X)
+	// }
 }
 
 /*
@@ -424,6 +448,14 @@ func (c *Camera) UpdateCamera() {
 
 // 	// fmt.Println()
 // }
+
+/*
+Getters
+*/
+
+func (c *Camera) GetMapScale() (float64, float64) {
+	return c.mapScale.X, c.mapAxis.Y
+}
 
 //Increments zoom property
 func (c *Camera) ZoomIn() {

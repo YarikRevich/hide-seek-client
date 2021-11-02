@@ -1,8 +1,11 @@
 package waitroom
 
 import (
+
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/input"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
@@ -10,6 +13,8 @@ import (
 	inputmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/input"
 	uimiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/ui"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	"github.com/atotto/clipboard"
+	"github.com/sirupsen/logrus"
 )
 
 func Exec() bool {
@@ -30,6 +35,16 @@ func Exec() bool {
 
 			return true
 		}
+
+		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/fonts/waitroom/waitroom")) {
+			if err := clipboard.WriteAll(objects.UseObjects().World().ID.String()); err != nil{
+				logrus.Fatal(err)
+			}
+			notifications.PopUp.WriteError("World ID has been copied!")
+
+			return true
+		}
+
 		if m.IsMousePressLeftOnce(*metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")) {
 
 			applyer.ApplyMiddlewares(

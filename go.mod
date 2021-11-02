@@ -14,7 +14,10 @@ require (
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d
 )
 
-require github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
+require (
+	github.com/atotto/clipboard v0.1.4 // indirect
+	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
+)
 
 require (
 	github.com/YarikRevich/game-networking v1.1.4-0.20211015150625-86d96e1221b6 // direct

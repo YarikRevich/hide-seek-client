@@ -41,6 +41,18 @@ type World struct {
 	LootSet []*LootSet
 }
 
+func (w *World) AddPC(p *PC){
+	w.PCs = append(w.PCs, p)
+}
+
+func (w *World) AddWeapon(p *Weapon){
+	w.Weapons = append(w.Weapons, p)
+}
+
+func (w *World) AddAmmo(a *Ammo){
+	w.Ammo = append(w.Ammo, a)
+}
+
 func (w *World) GetWeaponByPC(p *PC)*Weapon{
 	for _, v := range w.Weapons{
 		if v.ParentID == p.ID{

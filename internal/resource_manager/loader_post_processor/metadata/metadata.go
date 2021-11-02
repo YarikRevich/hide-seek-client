@@ -14,23 +14,22 @@ func ConnectAdditionalStatementsToMetadata() {
 		if len(v.Info.Parent) != 0 {
 			dir, _ := filepath.Split(k)
 			imageW, imageH := imagecollection.GetImage(filepath.Join(dir, v.Info.Parent)).Size()
-			if v.Animation.FrameNum != 0{
+			if v.Animation.FrameNum != 0 {
 				imageW /= int(v.Animation.FrameNum)
 			}
 			v.Size.Width = float64(imageW)
 			v.Size.Height = float64(imageH)
 			v.RawSize.Width = float64(imageW)
 			v.RawSize.Height = float64(imageH)
-
-
-			v.RawMargins = v.Margins
-			v.RawSize = v.Size
-			v.Buffs.RawSpeed = v.Buffs.Speed
-			v.RawScale = v.Scale
 		}
+
+		v.RawMargins = v.Margins
+		v.RawSize = v.Size
+		v.Buffs.RawSpeed = v.Buffs.Speed
+		v.RawScale = v.Scale
 	}
 }
 
 //Postprocessor which connects metadata info
 //to collision collection
-func ConnectMetadataToCollisions(){}
+func ConnectMetadataToCollisions() {}
