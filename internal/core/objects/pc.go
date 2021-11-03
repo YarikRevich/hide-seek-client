@@ -24,7 +24,7 @@ type PC struct {
 
 	Username string
 	Health   uint64
-	// Team Team
+	// Team Tea
 }
 
 // func (p *PC) SetSkin(path string){

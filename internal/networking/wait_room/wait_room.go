@@ -12,22 +12,30 @@ import (
 var ticker = time.NewTicker(time.Second)
 
 func Exec() {
-	collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
-		o := objects.UseObjects()
-		connection.UseConnection().Call("reg_user", o.PC(), nil)
+	//start:
+	//add user to world
 
-		connection.UseConnection().Call("reg_world", struct {
-			World objects.World
-			PC    objects.PC
-		}{
-			*o.World(), *o.PC(),
-		}, nil)
+	//join:
+	//get world
+	//add user to world
+	collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
+		// o := objects.UseObjects()
+		// connection.UseConnection().Call("reg_user", o.PC(), nil)
+
+		// connection.UseConnection().Call("reg_world", struct {
+		// 	World objects.World
+		// 	PC    objects.PC
+		// }{
+		// 	*o.World(), *o.PC(),
+		// }, nil)
+		// struct{}{}
+		// connection.UseConnection().Call("add_user_to_world", nil, nil)
 	})
 
 	select {
 	case <-ticker.C:
 		w := objects.UseObjects().World()
-		connection.UseConnection().Call("update_world_users", w, &w.PCs)
+		connection.UseConnection().Call("update_world", w.ID, w)
 	default:
 	}
 }

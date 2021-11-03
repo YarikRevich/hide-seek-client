@@ -8,17 +8,17 @@ import (
 
 	"embed"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/ai/collisions"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
 	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
+	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader"
+	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader"
+	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
+	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/YarikRevich/HideSeek-Client/tools/printer"
 	"github.com/sirupsen/logrus"
@@ -44,31 +44,28 @@ func init() {
 
 	if cli.GetDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
+		profiling.UseProfiler().Init()
 	} else {
 		logrus.SetLevel(logrus.WarnLevel)
 	}
 
-	resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
-		{Embed: assets, Path: "assets/images"}: {
-			imageloader.Load,
-		},
-		{Embed: assets, Path: "assets/images:assets/fonts"}: {
-			metadataloader.Load,
-		},
-		{Embed: assets, Path: "assets/audio"}: {
-			audioloader.Load,
-		},
-		{Embed: assets, Path: "assets/fonts"}: {
-			fontloader.Load,
-		},
-	})
+	sources.UseSources().LoadSources()
+	// resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
+	// 	{Embed: assets, Path: "assets/images"}: {
+	// 		imageloader.Load,
+	// 	},
+	// 	{Embed: assets, Path: "assets/images:assets/fonts"}: {
+	// 		metadataloader.Load,
+	// 	},
+	// 	{Embed: assets, Path: "assets/audio"}: {
+	// 		audioloader.Load,
+	// 	},
+	// 	{Embed: assets, Path: "assets/fonts"}: {
+	// 		fontloader.Load,
+	// 	},
+	// })
 
 	printer.PrintCliMessage("HideSeek\nClient!")
-
-	if cli.GetDebug(){
-		profiling.UseProfiler().Init()
-	}
-	// collisions.ConnectCollisionsToImages()
 }
 
 func main() {
@@ -76,8 +73,6 @@ func main() {
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(screen.GetMinWidth(), screen.GetMinHeight(), -1, -1)
-
-	
 
 	log.Fatalln(ebiten.RunGame(loop.New()))
 }

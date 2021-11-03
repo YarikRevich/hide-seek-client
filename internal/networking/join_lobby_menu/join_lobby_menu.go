@@ -1,5 +1,14 @@
 package joinlobbymenu
 
+import (
+	"time"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
+)
+
+var ticker = time.NewTicker(time.Second)
+
 func Exec() {
 
 	// if j.currState.SendStates.JoinRoom {
@@ -23,4 +32,10 @@ func Exec() {
 	// 	}
 	// 	j.currState.SendStates.JoinRoom = false
 	// }
+	select {
+	case <-ticker.C:
+		w := objects.UseObjects().World()
+		connection.UseConnection().Call("update_world", w.ID, w)
+	default:
+	}
 }

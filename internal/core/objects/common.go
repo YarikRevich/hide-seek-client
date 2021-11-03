@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
+	imagecollecion "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	metadatamodels "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -29,16 +29,31 @@ type Physics struct {
 type Animation struct {
 	PositionBeforeAnimation image.Point
 	FrameCount              uint32
-	// FrameDelay              uint32
 	FrameDelayCounter       uint32
 	CurrentFrameMatrix      []float64
 }
 
 type Skin struct {
-	Name      string
-	Path      string
-	Image     *ebiten.Image `json:"-"`
-	Metadata  *models.Metadata
+	Name string
+	Path string
+
+	Size struct {
+		Width, Height float64
+	} `json:"-"`
+
+	Buffs struct {
+		Speed struct {
+			X, Y float64
+		}
+	}
+
+	Margins struct {
+		LeftMargin, TopMargin float64
+	}
+
+	Scale struct {
+		CoefficiantX, CoefficiantY float64
+	}
 }
 
 /*The object structure which describes
@@ -49,22 +64,25 @@ type Object struct {
 	Skin
 	Physics
 
-	//Names parentid the object referes to
+	// Names parentid the object referes to
 	ParentID uuid.UUID
 	ID       uuid.UUID
 
 	RawPos struct {
 		X, Y float64
 	}
-	PositionHistory   zeroshifter.IZeroShifter `json:"-"`
+
 	PositionDirection keycodes.Direction
 
 	Spawn image.Point
 
 	Role Role
+
+	//Only client fields
+	PositionHistory zeroshifter.IZeroShifter `json:"-"`
 }
 
-func (o *Object) IsByObject(ob Object)bool{
+func (o *Object) IsByObject(ob Object) bool {
 	return o.ParentID == ob.ID
 }
 
@@ -85,7 +103,6 @@ func (o *Object) SetX(x float64) {
 
 	o.RawPos.X = x
 	o.savePositionBeforeAnimation()
-
 }
 
 func (o *Object) SetY(y float64) {
@@ -151,14 +168,30 @@ func (o *Object) GetPositionBeforeAnimation() (float64, float64) {
 		float64(o.Animation.PositionBeforeAnimation.Y)
 }
 
-func (o *Object) SetSkin(path string){
+func (o *Object) initSkinMetadata() {
+	m := metadatacollection.GetMetadata(o.Path)
+	o.Size = m.Size
+	o.Margins = m.Margins
+	o.Scale = m.Scale
+	o.Buffs.Speed = m.Buffs.Speed
+}
+
+func (o *Object) SetSkin(path string) {
 	o.Path = path
 	split := strings.Split(path, "/")
 	o.Name = split[len(split)-3]
-	o.Image = imagecollection.GetImage(o.Path)
-	o.Metadata = metadatacollection.GetMetadata(o.Path)
+
+	o.initSkinMetadata()
 }
 
-func NewObject()*Object{
+func (o *Object) GetImage() *ebiten.Image {
+	return ebiten.NewImageFromImage(imagecollecion.GetImage(o.Path))
+}
+
+func (o *Object) GetMetadata() *metadatamodels.Metadata {
+	return metadatacollection.GetMetadata(o.Path)
+}
+
+func NewObject() *Object {
 	return new(Object)
 }

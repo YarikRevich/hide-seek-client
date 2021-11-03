@@ -19,14 +19,7 @@ func ConnectAdditionalStatementsToMetadata() {
 			}
 			v.Size.Width = float64(imageW)
 			v.Size.Height = float64(imageH)
-			v.RawSize.Width = float64(imageW)
-			v.RawSize.Height = float64(imageH)
 		}
-
-		v.RawMargins = v.Margins
-		v.RawSize = v.Size
-		v.Buffs.RawSpeed = v.Buffs.Speed
-		v.RawScale = v.Scale
 	}
 }
 

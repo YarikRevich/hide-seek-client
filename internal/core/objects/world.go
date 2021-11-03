@@ -38,7 +38,7 @@ type World struct {
 	Elements []*Object
 	Weapons []*Weapon
 	Ammo []*Ammo
-	LootSet []*LootSet
+	// LootSet []*LootSet
 }
 
 func (w *World) AddPC(p *PC){
@@ -52,6 +52,9 @@ func (w *World) AddWeapon(p *Weapon){
 func (w *World) AddAmmo(a *Ammo){
 	w.Ammo = append(w.Ammo, a)
 }
+
+Returns pcs 
+// func (w *World) GetPCs(){}
 
 func (w *World) GetWeaponByPC(p *PC)*Weapon{
 	for _, v := range w.Weapons{

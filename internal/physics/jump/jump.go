@@ -14,7 +14,8 @@ var JumpGap = time.NewTicker(time.Millisecond * 20)
 //and current world G metric
 func CalculateJump(p *objects.Object) {
 	if len(p.Physics.Jump) == 0 {
-		t := int(math.Round((math.Sqrt((2*p.Metadata.Size.Height)/objects.UseObjects().World().Skin.Metadata.Physics.G) / 2)))
+		m := objects.UseObjects().World().GetMetadata()
+		t := int(math.Round((math.Sqrt((2*p.Size.Height)/m.Physics.G) / 2)))
 
 		for t%2 != 0 {
 			t++
