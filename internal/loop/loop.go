@@ -3,13 +3,14 @@ package loop
 import (
 	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/keyboard"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse"
-	"github.com/YarikRevich/HideSeek-Client/internal/audio"
-	"github.com/YarikRevich/HideSeek-Client/internal/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/ui"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -25,7 +26,8 @@ func (g *Loop) Update() error {
 	mouse.Process()
 	keyboard.Process()
 	networking.Process()
-	if !cli.GetDebug() {
+
+	if !cli.IsWithoutSound() {
 		audio.Process()
 	}
 
@@ -40,11 +42,10 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 		screenhistory.SetLastScreenSize()
 		render.UseRender().PostRender()
 	}()
-	if cli.GetDebug() {
+	if cli.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.RENDER)
 		defer func() {
 			profiling.UseProfiler().EndMonitoring()
-			// profiling.UseProfiler().SumUpMonitoring()
 		}()
 	}
 	render.UseRender().Render()

@@ -101,23 +101,28 @@ func (m *Model) FastenMarginsWithCoefficients() (float64, float64) {
 	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
 }
 
+type ModelCombination struct {
+	Modified, Origin Model
+}
+
 type Metadata struct {
 	sync.Mutex
 
-	collection map[string]*Model
+	Used map[string]*ModelCombination
+	Collection map[string]Model
 }
 
 func (m *Metadata) loadFile(fs embed.FS, path string) {
-	o := new(Model)
+	var o Model
 
-	if _, err := toml.DecodeFS(fs, path, o); err != nil {
+	if _, err := toml.DecodeFS(fs, path, &o); err != nil {
 		logrus.Fatal("error happened decoding toml metatdata file from embedded FS", err)
 	}
 
 	reg := regexp.MustCompile(`\.[a-z0-9]*$`)
 	if reg.MatchString(path) {
 		m.Lock()
-		m.collection[reg.Split(path, -1)[0]] = o
+		m.Collection[reg.Split(path, -1)[0]] = o
 		m.Unlock()
 	}
 }
@@ -126,12 +131,21 @@ func (m *Metadata) Load(fs embed.FS, path string) {
 	NewParser(fs, path, m.loadFile).Parse()
 }
 
-func (m *Metadata) GetMetadata(path string) *Model {
-	file, ok := m.collection[path]
-	if !ok {
-		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
+func (m *Metadata) GetMetadata(path string) *ModelCombination {
+	if _, ok := m.Used[path]; !ok {
+		file, ok := m.Collection[path]
+		if !ok {
+			logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
+		}
+
+		c := new(ModelCombination)
+		c.Modified = file
+		c.Origin = file
+
+		m.Used[path] = c
+	return c
 	}
-	return file
+	return m.Used[path]
 }
 
 func NewMetadata() *Metadata {

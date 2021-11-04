@@ -20,10 +20,6 @@ func (p *provider) World() *World {
 	return p.world
 }
 
-func (p *provider) UsedManager() *UsedManager{
-	
-}
-
 func UseObjects() ObjectsProvider {
 	if instance == nil{
 		instance = &provider{

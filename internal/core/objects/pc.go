@@ -2,7 +2,8 @@ package objects
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	strorageprovider "github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
+	// strorageprovider "github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -35,7 +36,7 @@ type PC struct {
 
 //Initializes pc username by requesting storage
 func (p *PC) SetUsername() {
-	p.Username = strorageprovider.UseStorageProvider().GetUsername()
+	p.Username = storage.UseStorage().User().GetUsername()
 }
 
 // func (p *PC) SetSpeed(speedX float64) {

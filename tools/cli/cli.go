@@ -1,11 +1,16 @@
 package cli
 
-import (
-	"flag"
+import "flag"
+
+var (
+	debug        = flag.Bool("debug", false, "Enables debug mode")
+	withoutSound = flag.Bool("without-sound", false, "Disables sound in game")
 )
 
-var debug = flag.Bool("debug", false, "Enables debug mode")
-
-func GetDebug() bool {
+func IsDebug() bool {
 	return *debug
+}
+
+func IsWithoutSound() bool {
+	return *withoutSound
 }

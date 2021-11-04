@@ -1,29 +1,23 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"log"
 	"os"
 	"path/filepath"
 
-	"embed"
-
-	"github.com/YarikRevich/HideSeek-Client/internal/loop"
-	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/audio_loader"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader"
+	"github.com/YarikRevich/HideSeek-Client/internal/loop"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/YarikRevich/HideSeek-Client/tools/printer"
-	"github.com/sirupsen/logrus"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -42,28 +36,14 @@ func init() {
 	}
 	logrus.SetOutput(lgf)
 
-	if cli.GetDebug() {
+	if cli.IsDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
 		profiling.UseProfiler().Init()
 	} else {
 		logrus.SetLevel(logrus.WarnLevel)
 	}
 
-	sources.UseSources().LoadSources()
-	// resource_manager.LoadResources(map[resource_manager.Component][]resource_manager.Loader{
-	// 	{Embed: assets, Path: "assets/images"}: {
-	// 		imageloader.Load,
-	// 	},
-	// 	{Embed: assets, Path: "assets/images:assets/fonts"}: {
-	// 		metadataloader.Load,
-	// 	},
-	// 	{Embed: assets, Path: "assets/audio"}: {
-	// 		audioloader.Load,
-	// 	},
-	// 	{Embed: assets, Path: "assets/fonts"}: {
-	// 		fontloader.Load,
-	// 	},
-	// })
+	sources.UseSources().LoadSources(assets)
 
 	printer.PrintCliMessage("HideSeek\nClient!")
 }

@@ -2,14 +2,8 @@ package objects
 
 import (
 	"fmt"
-	// "image"
-	// "strings"
-
-	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/objects"
-	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/pc"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/google/uuid"
-	// "github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"
 )
 
@@ -53,7 +47,7 @@ func (w *World) AddAmmo(a *Ammo){
 	w.Ammo = append(w.Ammo, a)
 }
 
-Returns pcs 
+// Returns pcs 
 // func (w *World) GetPCs(){}
 
 func (w *World) GetWeaponByPC(p *PC)*Weapon{
@@ -98,17 +92,19 @@ func (w *World) GetMaxMapScale() (float64, float64) {
 	var sx, sy float64 
 	screenW := float64(screen.GetMaxWidth())
 	screenH := float64(screen.GetMaxHeight())
+
+	m := w.GetMetadata().Origin
 	
-	if screenW > w.Metadata.RawSize.Width {
-		sx = w.Metadata.RawSize.Width / screenW
+	if screenW > m.Size.Width {
+		sx = m.Size.Width / screenW
 	} else {
-		sx = screenW / w.Metadata.RawSize.Width
+		sx = screenW / m.Size.Width
 	}
 
-	if screenH > w.Metadata.RawSize.Height {
-	sy = w.Metadata.RawSize.Height / screenH
+	if screenH > m.Size.Height {
+	sy = m.Size.Height / screenH
 	} else {
-		sy = screenH / w.Metadata.RawSize.Height
+		sy = screenH / m.Size.Height
 	}
 	return sx, sy
 }
@@ -119,17 +115,19 @@ func (w *World) GetMapScale() (float64, float64) {
 	screenIW, screenIH := screen.GetScreen().Size()
 	screenW := float64(screenIW)
 	screenH := float64(screenIH)
+
+	m := w.GetMetadata().Origin
 	
-	if screenW > w.Metadata.RawSize.Width {
-		sx = w.Metadata.RawSize.Width / screenW
+	if screenW > m.Size.Width {
+		sx = m.Size.Width / screenW
 	} else {
-		sx = screenW / w.Metadata.RawSize.Width
+		sx = screenW / m.Size.Width
 	}
 
-	if screenH > w.Metadata.RawSize.Height {
-	sy = w.Metadata.RawSize.Height / screenH
+	if screenH > m.Size.Height {
+	sy = m.Size.Height / screenH
 	} else {
-		sy = screenH / w.Metadata.RawSize.Height
+		sy = screenH / m.Size.Height
 	}
 	return sx, sy
 }

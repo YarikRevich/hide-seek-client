@@ -14,7 +14,7 @@ import (
 type Font struct {
 	sync.Mutex
 
-	collection map[string]font.Face
+	Collection map[string]font.Face
 }
 
 func (f *Font) loadFile(fs embed.FS, path string) {
@@ -33,7 +33,7 @@ func (f *Font) loadFile(fs embed.FS, path string) {
 		fontPath := reg.Split(path, -1)[0]
 		f.Lock()
 
-		f.collection[fontPath] =
+		f.Collection[fontPath] =
 			truetype.NewFace(ff, &truetype.Options{
 				Size:    9,
 				Hinting: font.HintingFull,
@@ -48,7 +48,7 @@ func (f *Font) Load(fs embed.FS, path string) {
 }
 
 func (f *Font) GetFont(path string) font.Face {
-	font, ok := f.collection[path]
+	font, ok := f.Collection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("font with path '%s' not found", path))
 	}

@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
 	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"

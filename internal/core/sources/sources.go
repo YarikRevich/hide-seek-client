@@ -15,7 +15,7 @@ type provider struct {
 }
 
 type SourcesProvider interface {
-	LoadSources()
+	LoadSources(embed.FS)
 
 	Audio() *Audio
 	Font() *Font
@@ -28,8 +28,13 @@ func (p *provider) LoadSources(fs embed.FS) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go p.audio.Load(fs, "assets/audio")
+	go p.metadata.Load(fs, "assets/metadata")
+	go p.images.Load(fs, "assets/images")
+	go p.font.Load(fs, "assets/fonts")
 	wg.Wait()
-}	
+
+	ConnectImageSizeToMetadata()
+}
 
 func (p *provider) Audio() *Audio {
 	return p.audio
@@ -50,8 +55,10 @@ func (p *provider) Metadata() *Metadata {
 func UseSources() SourcesProvider {
 	if instance == nil {
 		instance = &provider{
-			font: NewFont(),
+			font:     NewFont(),
 			metadata: NewMetadata(),
+			images:   NewImages(),
+			audio:    NewAudio(),
 		}
 	}
 	return instance
