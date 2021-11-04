@@ -1,15 +1,14 @@
 package weaponchoose
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/background/background")
+		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -21,8 +20,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/buttons/back")
-		m := metadatacollection.GetMetadata("assets/images/system/buttons/back")
+		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/back")
+		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 

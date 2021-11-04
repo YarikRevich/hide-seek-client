@@ -181,6 +181,15 @@ func (o *Object) GetImage() *ebiten.Image {
 	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
 }
 
+//Returns image where animation properties applied to
+func (o *Object) GetAnimatedImage() *ebiten.Image{
+	i := o.GetImage()
+	m := o.GetMetadata().Modified
+
+	sx, sy := int((m.Animation.FrameX+float64(o.Animation.FrameCount))*m.Animation.FrameWidth), int(m.Animation.FrameY)
+	return i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
+}
+
 func (o *Object) GetMetadata() *sources.ModelCombination {
 	return sources.UseSources().Metadata().GetMetadata(o.Path)
 }

@@ -1,4 +1,4 @@
-package popupmessages
+package popup
 
 import (
 	"image/color"

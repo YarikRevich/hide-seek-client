@@ -16,7 +16,7 @@ import (
 var instance *AudioController
 
 type AudioController struct {
-	lastTrackPath string
+	LastTrackPath string
 	track         *sources.Track
 }
 
@@ -25,7 +25,7 @@ func (a *AudioController) Wrap(path string) {
 }
 
 func (a *AudioController) Start() {
-	a.lastTrackPath = a.track.TrackPath
+	a.LastTrackPath = a.track.TrackPath
 
 	go func() {
 		tick := time.NewTicker(time.Microsecond * 500)
@@ -87,7 +87,7 @@ func (a *AudioController) Stop() {
 	}()
 }
 
-func UseAudioControllerProvider() *AudioController {
+func UseAudioController() *AudioController {
 	if instance == nil {
 		instance = new(AudioController)
 	}

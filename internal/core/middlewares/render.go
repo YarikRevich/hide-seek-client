@@ -1,5 +1,7 @@
 package middlewares
 
+
+
 import (
 	"math"
 	"sync"
@@ -14,39 +16,21 @@ import (
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
-var ticker = time.NewTicker(time.Second * 3)
-var once sync.Once
-var m sync.Mutex
+type Render struct {
+	sync.Mutex
 
-func isAllowedToUseMiddlewares() bool {
-	select {
-	case <-ticker.C:
-		return true
-	default:
-		return false
-	}
+	ticker *time.Ticker
 }
 
-func checkPopUpMessagesToClean() {
+func (r *Render) cleanPopUp(){
 	notifications.PopUp.Filter(func(e *notifications.NotificatorEntity) bool {
 		return math.Signbit(float64(time.Now().Unix() - e.Timestamp))
 	})
 }
 
-func checkIfOnlineInitial() {
-	once.Do(func() {
-		if isconnect.IsOnline() && connection.UseConnection().IsConnected() {
-			applyer.ApplyMiddlewares(
-				statemachine.UseStateMachine().Networking().SetState(networking.ONLINE),
-				networkingmiddleware.UseNetworkingMiddleware,
-			)
-		}
-	})
-}
-
-func checkIfOnline() {
+func (r *Render) blockRenderIfOffline(){
 	go func() {
-		m.Lock()
+		r.Lock()
 
 		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected() {
 			notifications.PopUp.WriteError("Servers are offline!")
@@ -61,14 +45,23 @@ func checkIfOnline() {
 			)
 		}
 
-		m.Unlock()
+		r.Unlock()
 	}()
 }
 
-func UseRenderMiddlewares() {
-	checkIfOnlineInitial()
-	if isAllowedToUseMiddlewares() {
-		checkIfOnline()
+
+func (r *Render) UseAfter(c func()){
+	c()
+
+	select {
+	case <- r.ticker.C:
+		r.blockRenderIfOffline()
+	default:
 	}
-	checkPopUpMessagesToClean()
+	
+	r.cleanPopUp()
 }
+
+func NewRender()*Render{
+	return &Render{ticker: time.NewTicker(3 * time.Second)}
+} 

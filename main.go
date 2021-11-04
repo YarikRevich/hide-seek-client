@@ -7,11 +7,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/YarikRevich/HideSeek-Client/tools/printer"
@@ -44,6 +45,8 @@ func init() {
 	}
 
 	sources.UseSources().LoadSources(assets)
+
+	middlewares.UseMiddlewares().Prepare().Use()
 
 	printer.PrintCliMessage("HideSeek\nClient!")
 }

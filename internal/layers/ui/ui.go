@@ -4,14 +4,14 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
 	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/ui/debug"
-	"github.com/YarikRevich/HideSeek-Client/internal/ui/game"
-	herochoose "github.com/YarikRevich/HideSeek-Client/internal/ui/hero_choose"
-	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/ui/map_choose"
-	"github.com/YarikRevich/HideSeek-Client/internal/ui/pop_up_messages"
-	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/ui/settings_menu"
-	startmenu "github.com/YarikRevich/HideSeek-Client/internal/ui/start_menu"
-	waitroom "github.com/YarikRevich/HideSeek-Client/internal/ui/wait_room"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/debug"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/game"
+	herochoose "github.com/YarikRevich/HideSeek-Client/internal/layers/ui/hero_choose"
+	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/layers/ui/map_choose"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/popup"
+	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/layers/ui/settings_menu"
+	startmenu "github.com/YarikRevich/HideSeek-Client/internal/layers/ui/start_menu"
+	waitroom "github.com/YarikRevich/HideSeek-Client/internal/layers/ui/wait_room"
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
 
@@ -53,5 +53,5 @@ func Process() {
 	case ui.WAIT_ROOM:
 		waitroom.Draw()
 	}
-	popupmessages.Draw()
+	popup.Draw()
 }

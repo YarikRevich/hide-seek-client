@@ -19,7 +19,7 @@ func Draw() {
 	// 	l.userConfig.PersonalInfo.LobbyID,
 	// 	strings.Split(l.userConfig.Conn.RemoteAddr().String(), ":")[0],
 
-	render.UseRender().SetToPostRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		f := fontcollection.GetFont("assets/fonts/base")
 
 		text.Draw(screen, profiling.UseProfiler().String(), f, 0, 0, color.White)
