@@ -1,18 +1,13 @@
 package middlewares
 
-
-
 import (
 	"math"
 	"sync"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
-	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
-	networkingmiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
@@ -34,15 +29,9 @@ func (r *Render) blockRenderIfOffline(){
 
 		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected() {
 			notifications.PopUp.WriteError("Servers are offline!")
-			applyer.ApplyMiddlewares(
-				statemachine.UseStateMachine().Networking().SetState(networking.OFFLINE),
-				networkingmiddleware.UseNetworkingMiddleware,
-			)
+			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
 		} else {
-			applyer.ApplyMiddlewares(
-				statemachine.UseStateMachine().Networking().SetState(networking.ONLINE),
-				networkingmiddleware.UseNetworkingMiddleware,
-			)
+			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_ONLINE)
 		}
 
 		r.Unlock()

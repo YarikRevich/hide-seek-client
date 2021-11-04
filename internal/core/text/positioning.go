@@ -3,7 +3,7 @@ package text
 import (
 	"strings"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
@@ -19,12 +19,12 @@ const (
 type positionSession struct {
 	indent               int
 	examined             []string
-	actualExaminedLength int
+	// actualExaminedLength int
 	index                int
 	font                 font.Face
 	stickWidth           float64
 	stickHeight          float64
-	position             models.TextPosition
+	position             sources.TextPosition
 	posType              PositioningType
 }
 
@@ -45,11 +45,11 @@ func (p *positionSession) GetPosition() (int, int) {
 	}
 
 	switch p.position {
-	case models.Center:
+	case sources.Center:
 		return p.getCenterCoords()
-	case models.Left:
+	case sources.Left:
 		return p.getLeftCoords()
-	case models.Right:
+	case sources.Right:
 		return p.getRightCoords()
 	}
 	return 0, 0
@@ -102,7 +102,7 @@ func (p *positionSession) getLeftCoords() (int, int) {
 }
 
 func NewPositionSession(
-	posType PositioningType, font font.Face, text string, sw, sh float64, pos models.TextPosition) IPositionSession {
+	posType PositioningType, font font.Face, text string, sw, sh float64, pos sources.TextPosition) IPositionSession {
 	p := new(positionSession)
 
 	if len(text) != 0 {

@@ -3,11 +3,11 @@ package text
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 )
 
 type colorSession struct{
-	color models.FontColor
+	color sources.FontColor
 }
 
 type IColorSession interface {
@@ -20,14 +20,14 @@ type IColorSession interface {
 //it returns transparent one
 func (c *colorSession) GetColor()color.RGBA{
 	switch c.color{
-	case models.Black:
+	case sources.Black:
 		return color.RGBA{0, 0, 0, 255}
-	case models.White:
+	case sources.White:
 		return color.RGBA{255, 255, 255, 255}
 	}
 	return color.RGBA{}
 }
 
-func NewColorSession(color models.FontColor)IColorSession{
+func NewColorSession(color sources.FontColor)IColorSession{
 	return &colorSession{color: color}
 }

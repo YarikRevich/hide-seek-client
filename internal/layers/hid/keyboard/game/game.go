@@ -6,7 +6,6 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/physics"
-	"github.com/YarikRevich/HideSeek-Client/internal/physics/jump"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -17,8 +16,7 @@ func Exec() {
 	// w := objects.UseObjects().World()
 	// msw, msh := camera.UseCamera().GetMapScale()
 	p := objects.UseObjects().PC()
-
-	// fmt.Println(sw, w.Metadata.Size.Width, "KEYBOARD GAME")
+	m := p.GetMetadata().Modified
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		camera.UseCamera().ZoomIn()
@@ -33,31 +31,31 @@ func Exec() {
 	if k.IsAnyKeyPressed() {
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if p.RawPos.Y > 0 {
-				p.SetY(p.RawPos.Y - p.Metadata.Buffs.Speed.Y)
+				p.SetY(p.RawPos.Y - m.Buffs.Speed.Y)
 			}
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
 			// if p.RawPos.Y+p.Metadata.Buffs.Speed.Y < w.Metadata.Size.Height * msh {
-				p.SetY(p.RawPos.Y + p.Metadata.Buffs.Speed.Y)
+			p.SetY(p.RawPos.Y + m.Buffs.Speed.Y)
 			// } else {
-				// p.SetY(p.RawPos.Y + (w.Metadata.Size.Height - p.RawPos.Y))
+			// p.SetY(p.RawPos.Y + (w.Metadata.Size.Height - p.RawPos.Y))
 			// }
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
-			
+
 			// if p.RawPos.X+p.Metadata.Buffs.Speed.X < w.Metadata.Size.Width * msw {
-				p.SetX(p.RawPos.X + p.Metadata.Buffs.Speed.X)
+			p.SetX(p.RawPos.X + m.Buffs.Speed.X)
 			// } else {
-				// p.SetX(p.RawPos.X + (w.Metadata.Size.Width - p.RawPos.X))
+			// p.SetX(p.RawPos.X + (w.Metadata.Size.Width - p.RawPos.X))
 			// }
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
 			if p.RawPos.X > 0 {
 
-				p.SetX(p.RawPos.X - p.Metadata.Buffs.Speed.X)
+				p.SetX(p.RawPos.X - m.Buffs.Speed.X)
 			}
 		}
 

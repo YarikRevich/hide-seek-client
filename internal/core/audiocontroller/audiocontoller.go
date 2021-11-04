@@ -4,11 +4,9 @@ import (
 	"math"
 	"time"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
-	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/faiface/beep/speaker"
 	"github.com/sirupsen/logrus"
 )
@@ -58,10 +56,9 @@ func (a *AudioController) Start() {
 
 			a.track.Ctrl.Paused = true
 
-			applyer.ApplyMiddlewares(
-				statemachine.UseStateMachine().Audio().SetState(audio.DONE),
-				audiomiddleware.UseAudioMiddleware,
-			)
+			middlewares.UseMiddlewares().Audio().UseAfter(func() {
+				statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
+			})
 		}()
 	}()
 }
