@@ -8,7 +8,7 @@ type StateMachine struct{
 	ui IState
 	input IState
 	networking IState
-
+	dial IState
 }
 
 type IStateMachine interface {
@@ -16,6 +16,7 @@ type IStateMachine interface {
 	UI() IState
 	Input() IState
 	Networking() IState
+	Dial() IState
 }
 
 func (s *StateMachine) Audio() IState {
@@ -34,6 +35,10 @@ func (s *StateMachine) Networking() IState {
 	return s.networking
 }
 
+func (s *StateMachine) Dial() IState{
+	return s.dial
+}
+
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
@@ -41,6 +46,7 @@ func UseStateMachine() IStateMachine {
 			ui: NewState(UI_START_MENU),
 			input: NewState(INPUT_EMPTY),
 			networking: NewState(NETWORKING_OFFLINE),
+			dial: NewState(DIAL_WAN),
 		}
 	}
 	return instance

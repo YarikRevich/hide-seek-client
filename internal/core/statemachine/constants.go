@@ -18,6 +18,11 @@ const (
 )
 
 const (
+	DIAL_LAN = iota
+	DIAL_WAN
+)
+
+const (
 	UI_START_MENU = iota
 	UI_SETTINGS_MENU
 

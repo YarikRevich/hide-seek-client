@@ -3,8 +3,6 @@ package herochoose
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

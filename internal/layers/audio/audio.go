@@ -1,35 +1,34 @@
 package audio
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/audio/game"
-	startmenu "github.com/YarikRevich/HideSeek-Client/internal/audio/start_menu"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/audio"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/applyer"
-	audiomiddleware "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/middlewares/audio"
-	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/startmenu"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/game"
+
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
 
 func Process() {
-	if cli.GetDebug() {
+	if cli.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.AUDIO)
 		defer profiling.UseProfiler().EndMonitoring()
 	}
 
-	if statemachine.UseStateMachine().Audio().GetState() == audio.DONE {
+	if statemachine.UseStateMachine().Audio().GetState() == statemachine.AUDIO_DONE {
 		switch statemachine.UseStateMachine().UI().GetState() {
-		case ui.START_MENU:
+		case statemachine.UI_START_MENU:
 			startmenu.Exec()
-		case ui.GAME:
+		case statemachine.UI_GAME:
 			game.Exec()
 		default:
 			return
 		}
 
-		applyer.ApplyMiddlewares(
-			statemachine.UseStateMachine().Audio().SetState(audio.UNDONE),
-			audiomiddleware.UseAudioMiddleware)
+		middlewares.UseMiddlewares().Audio().UseAfter(func() {
+			statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_UNDONE)
+		})
 	}
 }

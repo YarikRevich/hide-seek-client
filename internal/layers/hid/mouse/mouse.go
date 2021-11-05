@@ -2,53 +2,52 @@ package mouse
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/join_lobby_menu"
-	"github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/unfocus"
-	waitroom "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/wait_room"
-	statemachine "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
-	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
-	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
-	herochoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/hero_choose"
-	mapchoose "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/map_choose"
-	settingsmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/settings_menu"
-	startmenu "github.com/YarikRevich/HideSeek-Client/internal/hid/mouse/start_menu"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/herochoose"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/mapchoose"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/settingsmenu"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/startmenu"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/joinlobbymenu"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/unfocus"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroom"
+
+	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
 
 func Process() {
-	if cli.GetDebug() {
+	if cli.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.MOUSE)
 		defer profiling.UseProfiler().EndMonitoring()
 	}
 
-	if statemachine.UseStateMachine().Networking().GetState() == networking.ONLINE {
+	if statemachine.UseStateMachine().Networking().GetState() == statemachine.NETWORKING_ONLINE {
 		switch statemachine.UseStateMachine().UI().GetState() {
-		case ui.GAME:
+		case statemachine.UI_GAME:
 			return
-		case ui.WAIT_ROOM:
+		case statemachine.UI_WAIT_ROOM:
 			if waitroom.Exec() {
 				return
 			}
-		case ui.JOIN_LOBBY_MENU:
+		case statemachine.UI_JOIN_LOBBY_MENU:
 			if joinlobbymenu.Exec() {
 				return
 			}
-		case ui.START_MENU:
+		case statemachine.UI_START_MENU:
 			if startmenu.Exec() {
 				return
 			}
 
-		case ui.SETTINGS_MENU:
+		case statemachine.UI_SETTINGS_MENU:
 			if settingsmenu.Exec() {
 				return
 			}
-		case ui.MAP_CHOOSE:
+		case statemachine.UI_MAP_CHOOSE:
 			if mapchoose.Exec() {
 				return
 			}
-		case ui.HERO_CHOOSE:
+		case statemachine.UI_HERO_CHOOSE:
 			if herochoose.Exec() {
 				return
 			}
