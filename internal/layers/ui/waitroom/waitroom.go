@@ -5,17 +5,19 @@ import (
 	"image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
 	"github.com/hajimehoshi/ebiten/v2"
-	ebitentext "github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func Draw() {
-	f := fontcollection.GetFont("assets/fonts/base")
+	f := sources.UseSources().Font().GetFont("assets/fonts/base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/background/background"))
+		
+		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -24,17 +26,17 @@ func Draw() {
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
 
-		m := metadatacollection.GetMetadata("assets/fonts/waitroom/waitroom")
+		m := sources.UseSources().Metadata().GetMetadata("assets/fonts/waitroom/waitroom").Modified
 		w := objects.UseObjects().World()
 
-		ebitentext.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
+		text.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
 
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/buttons/back")
-		m := metadatacollection.GetMetadata("assets/images/system/buttons/back")
+		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/back")
+		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -47,14 +49,14 @@ func Draw() {
 	
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/textareas/textarea"))
-		m := metadatacollection.GetMetadata("assets/images/system/textareas/textarea")
+		img := sources.UseSources().Images().GetImage("assets/images/system/textareas/textarea")
+		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/textareas/textarea").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		ebitentext.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		text.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})
@@ -64,30 +66,17 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := ebiten.NewImageFromImage(imagecollection.GetImage("assets/images/system/buttons/button"))
-		m := metadatacollection.GetMetadata("assets/images/system/buttons/button_confirm_game")
+		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/button")
+		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_confirm_game").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		p := text.NewPositionSession(
-			text.Button,
-			f,
-			m.Button.Text,
-			m.RawSize.Width,
-			m.RawSize.Height,
-			m.Button.TextPosition)
+		s := positioning.UsePositioning().Input()
+		s.Init(img, m, f, m.Text.Symbols)
+		s.Draw()
 
-		for p.Next() {
-			tx, ty := p.GetPosition()
-			ebitentext.Draw(
-				img,
-				p.GetText(),
-				f,
-				tx, ty,
-				color.White)
-		}
 		screen.DrawImage(img, opts)
 	})
 }

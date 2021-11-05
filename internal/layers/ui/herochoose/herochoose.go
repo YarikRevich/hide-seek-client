@@ -1,14 +1,14 @@
 package herochoose
 
-
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/background/background")
+		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -20,8 +20,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/system/buttons/back")
-		m := metadatacollection.GetMetadata("assets/images/system/buttons/back")
+		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/back")
+		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -33,8 +33,8 @@ func Draw() {
 
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := imagecollection.GetImage("assets/images/heroes/thumbnails/pumpkin")
-		m := metadatacollection.GetMetadata("assets/images/heroes/thumbnails/pumpkin")
+		img := sources.UseSources().Images().GetImage("assets/images/heroes/thumbnails/pumpkin")
+		m := sources.UseSources().Metadata().GetMetadata("assets/images/heroes/thumbnails/pumpkin").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 

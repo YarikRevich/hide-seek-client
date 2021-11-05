@@ -112,14 +112,17 @@ func (c *Camera) updateMapMatrix() {
 	c.MapMatrix.Scale(c.mapScale.X, c.mapScale.Y)
 
 	w := objects.UseObjects().World()
+	wm := w.GetMetadata().Modified
 	p := objects.UseObjects().PC()
+	pm := p.GetMetadata().Modified
+
 	if c.isHeroTranslationBlocked() {
 		if c.isHeroMovementBlockedX {
 			// if (c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width <= w.Metadata.Size.Width*c.mapScale.X) &&
 			// 	(c.scaledHeroTranslation.X-c.scaledConnectedHeroPos.X) >= 0 {
 			// fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width <= (w.Metadata.Size.Width * c.maxMapScale.X) - ((w.Metadata.Size.Width * c.mapScale.X) / c.maxMapScale.X))
 			// fmt.Println(w.GetMapScale())
-			fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width, (w.Metadata.Size.Width * c.maxMapScale.X) - ((w.Metadata.Size.Width * c.mapScale.X) / c.maxMapScale.X))
+			fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+pm.Size.Width, (wm.Size.Width * c.maxMapScale.X) - ((wm.Size.Width * c.mapScale.X) / c.maxMapScale.X))
 			//(1550 * 2.83) - ((1550 * 2.06) / 2.83)
 			// fmt.Println(c.scaledHeroTranslation.X+c.scaledConnectedHeroPos.X+p.Metadata.Size.Width, w.Metadata.Size.Width, c.mapScale.X, c.maxMapScale.X)
 			c.MapMatrix.Translate(-(c.scaledHeroTranslation.X - c.scaledConnectedHeroPos.X), 0)
@@ -233,20 +236,26 @@ Map axis declarations
 
 func (c *Camera) updateMapAxis() {
 	w := objects.UseObjects().World()
-	c.mapAxis.X = (w.Metadata.RawSize.Width * c.mapScale.X) / c.maxMapScale.X / 2
-	c.mapAxis.Y = (w.Metadata.RawSize.Height * c.mapScale.Y) / c.maxMapScale.Y / 2.3
+	m := w.GetMetadata().Origin
+
+	c.mapAxis.X = (m.Size.Width * c.mapScale.X) / c.maxMapScale.X / 2
+	c.mapAxis.Y = (m.Size.Height * c.mapScale.Y) / c.maxMapScale.Y / 2.3
 }
 
 //Checks if pc has crossed the X axis
 func (c *Camera) isCrossedAxisX() bool {
 	p := objects.UseObjects().PC()
-	return (c.scaledHeroTranslation.X-p.Metadata.Buffs.Speed.X) <= c.mapAxis.X && c.mapAxis.X <= (c.scaledHeroTranslation.X+p.Metadata.Buffs.Speed.X)
+	m := p.GetMetadata().Modified
+
+	return (c.scaledHeroTranslation.X-m.Buffs.Speed.X) <= c.mapAxis.X && c.mapAxis.X <= (c.scaledHeroTranslation.X+m.Buffs.Speed.X)
 }
 
 //Checks if pc has crossed the Y axis
 func (c *Camera) isCrossedAxisY() bool {
 	p := objects.UseObjects().PC()
-	return (c.scaledHeroTranslation.Y-p.Metadata.Buffs.Speed.Y) <= c.mapAxis.Y && c.mapAxis.Y <= (c.scaledHeroTranslation.Y+p.Metadata.Buffs.Speed.Y)
+	m := p.GetMetadata().Modified
+
+	return (c.scaledHeroTranslation.Y-m.Buffs.Speed.Y) <= c.mapAxis.Y && c.mapAxis.Y <= (c.scaledHeroTranslation.Y+m.Buffs.Speed.Y)
 }
 
 /*
@@ -255,25 +264,28 @@ Updates for scales
 
 func (c *Camera) saveMaxMapScale() {
 	w := objects.UseObjects().World()
+	m := w.GetMetadata().Origin
 	sx, sy := w.GetMaxMapScale()
-	c.maxMapScale.X = (sx + w.Metadata.RawScale.CoefficiantX) / 100 * 55 * 3
-	c.maxMapScale.Y = (sy + w.Metadata.RawScale.CoefficiantY) / 100 * 55 * 3
+	c.maxMapScale.X = (sx + m.Scale.CoefficiantX) / 100 * 55 * 3
+	c.maxMapScale.Y = (sy + m.Scale.CoefficiantY) / 100 * 55 * 3
 }
 
 //Updates scale coeffients for map matrix
 func (c *Camera) updateMapScale() {
 	w := objects.UseObjects().World()
+	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
-	c.mapScale.X = (sx + w.Metadata.Scale.CoefficiantX) / 100 * c.zoom * 3
-	c.mapScale.Y = (sy + w.Metadata.Scale.CoefficiantY) / 100 * c.zoom * 3
+	c.mapScale.X = (sx + m.Scale.CoefficiantX) / 100 * c.zoom * 3
+	c.mapScale.Y = (sy + m.Scale.CoefficiantY) / 100 * c.zoom * 3
 }
 
 //Updates scale coeffients for hero matrix
 func (c *Camera) updateHeroScale() {
 	p := objects.UseObjects().PC()
+	m := p.GetMetadata().Modified
 	// fmt.Println(c.isScaledHeroTranslationBlockedX, c.isScaledHeroTranslationBlockedY)
-	c.heroScale.X = (p.Metadata.Scale.CoefficiantX / 100 * c.zoom)
-	c.heroScale.Y = (p.Metadata.Scale.CoefficiantY / 100 * c.zoom)
+	c.heroScale.X = (m.Scale.CoefficiantX / 100 * c.zoom)
+	c.heroScale.Y = (m.Scale.CoefficiantY / 100 * c.zoom)
 }
 
 //Saves max hero scale which is used for

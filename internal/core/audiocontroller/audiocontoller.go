@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/faiface/beep/speaker"
@@ -58,9 +58,9 @@ func (a *AudioController) Start() {
 
 			a.track.Ctrl.Paused = true
 
-			middlewares.UseMiddlewares().Audio().UseAfter(func() {
+			// middlewares.UseMiddlewares().Audio().UseAfter(func() {
 				statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
-			})
+			// })
 		}()
 	}()
 }

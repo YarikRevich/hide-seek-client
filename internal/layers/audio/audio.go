@@ -1,7 +1,7 @@
 package audio
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 
@@ -27,8 +27,8 @@ func Process() {
 			return
 		}
 
-		middlewares.UseMiddlewares().Audio().UseAfter(func() {
+		// middlewares.UseMiddlewares().Audio().UseAfter(func() {
 			statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_UNDONE)
-		})
+		// })
 	}
 }

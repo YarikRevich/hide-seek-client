@@ -17,7 +17,7 @@ type MousePress struct{}
 
 func (p *MousePress) IsMousePressLeftOnce(m sources.Model) bool {
 	currX, currY := ebiten.CursorPosition()
-	mx, my := m.FastenMarginsWithCoefficients()
+	mx, my := m.ScaleMargins()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
 		(currX >= int(mx) && currX <= int((m.Size.Width)+(mx))) &&

@@ -1,21 +1,19 @@
 package networking
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/networking/game"
-	waitroom "github.com/YarikRevich/HideSeek-Client/internal/networking/wait_room"
-
-	joinlobbymenu "github.com/YarikRevich/HideSeek-Client/internal/networking/join_lobby_menu"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/game"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/joinlobbymenu"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/waitroom"
 )
 
 func Process() {
 	switch statemachine.UseStateMachine().UI().GetState() {
-	case ui.JOIN_LOBBY_MENU:
+	case statemachine.UI_JOIN_LOBBY_MENU:
 		joinlobbymenu.Exec()
-	case ui.GAME:
+	case statemachine.UI_GAME:
 		game.Exec()
-	case ui.WAIT_ROOM:
+	case statemachine.UI_WAIT_ROOM:
 		waitroom.Exec()
 	}
 }
