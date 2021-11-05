@@ -2,17 +2,15 @@ package game
 
 import (
 	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-	"github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
+	// "github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
 	// "github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+	// "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 	// "github.com/hajimehoshi/ebiten/v2"
 	// "github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	// "github.com/sirupsen/logrus"
 )
 
 func Exec() {
-	collection.OnceCollection[ui.GAME].Do(func() {
-	})
 
 	// if !g.currState.NetworkingStates.GameProcess {
 	// 	g.currState.NetworkingStates.GameProcess = true

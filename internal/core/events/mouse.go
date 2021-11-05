@@ -2,7 +2,8 @@ package events
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -14,7 +15,7 @@ type Mouse struct {
 
 type MousePress struct{}
 
-func (p *MousePress) IsMousePressLeftOnce(m models.Metadata) bool {
+func (p *MousePress) IsMousePressLeftOnce(m sources.Model) bool {
 	currX, currY := ebiten.CursorPosition()
 	mx, my := m.FastenMarginsWithCoefficients()
 

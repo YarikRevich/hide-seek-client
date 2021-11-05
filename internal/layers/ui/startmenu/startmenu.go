@@ -1,13 +1,9 @@
-package start_menu
+package startmenu
 
 import (
 	"image/color"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text"
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text"
 )
@@ -78,6 +74,7 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
+		const t = m.Button.Text
 		p := text.NewPositionSession(
 			text.Button,
 			f, 

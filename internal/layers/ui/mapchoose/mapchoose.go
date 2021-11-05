@@ -1,9 +1,7 @@
 package map_choose
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
-	imagecollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

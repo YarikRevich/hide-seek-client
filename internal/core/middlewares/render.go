@@ -7,7 +7,7 @@ import (
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
+	// "github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
@@ -27,7 +27,8 @@ func (r *Render) blockRenderIfOffline(){
 	go func() {
 		r.Lock()
 
-		if !isconnect.IsOnline() || !connection.UseConnection().IsConnected() {
+		// || !connection.UseConnection().IsConnected()
+		if !isconnect.IsOnline() {
 			notifications.PopUp.WriteError("Servers are offline!")
 			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
 		} else {

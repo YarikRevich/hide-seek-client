@@ -46,21 +46,10 @@ type Model struct {
 		ScrollableX, ScrollableY bool
 	}
 
-	// //HIDDEN: should not be defined by user by configuration
-	// Size struct {
-	// 	Width, Height float64
-	// }
-
-	//MUSTN'T be changed over the game
 	Size struct {
 		Width, Height float64
 	}
 
-	// Margins struct {
-	// 	LeftMargin, TopMargin float64
-	// }
-
-	//MUSTN'T be changed over the game
 	Margins struct {
 		LeftMargin, TopMargin float64
 	}
@@ -81,14 +70,9 @@ type Model struct {
 		CoefficiantX, CoefficiantY float64
 	}
 
-	//MUSN'T be changed over the game
-	// RawScale struct {
-	// 	CoefficiantX, CoefficiantY float64
-	// }
-
-	Button struct {
-		Text         string
-		TextPosition TextPosition
+	Text struct {
+		Symbols  string
+		Position TextPosition
 	}
 
 	Fonts struct {
@@ -96,8 +80,8 @@ type Model struct {
 	}
 }
 
-//Multiples margins by related coefficients
-func (m *Model) FastenMarginsWithCoefficients() (float64, float64) {
+//Scales margins with scale
+func (m *Model) ScaleMargins() (float64, float64) {
 	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
 }
 
@@ -108,7 +92,7 @@ type ModelCombination struct {
 type Metadata struct {
 	sync.Mutex
 
-	Used map[string]*ModelCombination
+	Used       map[string]*ModelCombination
 	Collection map[string]Model
 }
 
@@ -143,7 +127,7 @@ func (m *Metadata) GetMetadata(path string) *ModelCombination {
 		c.Origin = file
 
 		m.Used[path] = c
-	return c
+		return c
 	}
 	return m.Used[path]
 }

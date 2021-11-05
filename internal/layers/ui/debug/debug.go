@@ -3,12 +3,11 @@ package debug
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
-
-	fontcollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/font_loader/collection"
 )
 
 func Draw() {
@@ -20,7 +19,7 @@ func Draw() {
 	// 	strings.Split(l.userConfig.Conn.RemoteAddr().String(), ":")[0],
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		f := fontcollection.GetFont("assets/fonts/base")
+		f := sources.UseSources().Font().GetFont("assets/fonts/base")
 
 		text.Draw(screen, profiling.UseProfiler().String(), f, 0, 0, color.White)
 	})

@@ -14,17 +14,19 @@ import (
 var instance *AudioController
 
 type AudioController struct {
-	LastTrackPath string
+	lastTrackPath string
 	track         *sources.Track
 }
 
 func (a *AudioController) Wrap(path string) {
+	if a.lastTrackPath != ""{
+		a.Stop()
+	}
 	a.track = sources.UseSources().Audio().GetAudioController(path)
+	a.lastTrackPath = a.track.TrackPath
 }
 
 func (a *AudioController) Start() {
-	a.LastTrackPath = a.track.TrackPath
-
 	go func() {
 		tick := time.NewTicker(time.Microsecond * 500)
 		for math.Abs(math.Ceil(a.track.Volume.Volume*100)/100) != 2 {

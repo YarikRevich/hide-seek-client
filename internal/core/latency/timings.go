@@ -5,12 +5,10 @@ import (
 	"time"
 )
 
-var instance *Timings
-
 type Timings struct {
 	timings map[time.Duration]*struct {
 		ticker    *time.Ticker
-		once      sync.Once
+		once      *sync.Once
 		callbacks []func()
 	}
 }
@@ -19,11 +17,11 @@ func (t *Timings) ExecEach(c func(), d time.Duration) {
 	if _, ok := t.timings[d]; !ok {
 		t.timings[d] = &struct {
 			ticker    *time.Ticker
-			once      sync.Once
+			once      *sync.Once
 			callbacks []func()
 		}{
 			ticker:    time.NewTicker(d),
-			once:      sync.Once{},
+			once:      new(sync.Once),
 			callbacks: []func(){c},
 		}
 	} else {
@@ -46,10 +44,8 @@ func (t *Timings) start() {
 	}()
 }
 
-func UseTimings() *Timings {
-	if instance == nil {
-		instance = new(Timings)
-		instance.start()
-	}
-	return instance
+func NewTimings() *Timings {
+	t := new(Timings)
+	t.start()
+	return t
 }

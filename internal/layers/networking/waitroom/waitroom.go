@@ -3,11 +3,10 @@ package waitroom
 import (
 	"time"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/timings"
-	"github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
-	"github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
 )
 
 func Exec() {
@@ -17,7 +16,11 @@ func Exec() {
 	//join:
 	//get world
 	//add user to world
-	collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
+	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM, func(){
+
+	})
+
+	// collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
 		// o := objects.UseObjects()
 		// connection.UseConnection().Call("reg_user", o.PC(), nil)
 
@@ -29,7 +32,7 @@ func Exec() {
 		// }, nil)
 		// struct{}{}
 		// connection.UseConnection().Call("add_user_to_world", nil, nil)
-	})
+	// })
 
 	timings.UseTimings().ExecEach(func() {
 		w := objects.UseObjects().World()

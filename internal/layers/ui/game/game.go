@@ -3,9 +3,7 @@ package game
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	"github.com/YarikRevich/HideSeek-Client/internal/physics"
-	"github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/animation"
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -26,12 +24,12 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		// physics.ProcessAnimation(&p.Object)
-		c := animation.WithAnimation(&p.Object)
+		img := p.GetAnimatedImage()
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Concat(camera.UseCamera().HeroMatrix)
 
-		screen.DrawImage(c, opts)
+		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {

@@ -48,7 +48,8 @@ func (i *Images) GetImage(path string) *ebiten.Image {
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 	}
-	return image
+	
+	return ebiten.NewImageFromImage(image)
 }
 
 func NewImages() *Images {

@@ -1,10 +1,11 @@
 package loop
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio"
@@ -12,7 +13,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui"
-	"github.com/YarikRevich/HideSeek-Client/internal/render"
+
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 	"github.com/hajimehoshi/ebiten/v2"
 )
