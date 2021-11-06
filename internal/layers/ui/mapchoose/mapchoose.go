@@ -8,7 +8,7 @@ import (
 
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
+		img := sources.UseSources().Images().GetImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -20,8 +20,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/back")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -32,8 +32,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/maps/thumbnails/helloween")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/maps/thumbnails/helloween").Modified
+		img := sources.UseSources().Images().GetImage("maps/thumbnails/helloween")
+		m := sources.UseSources().Metadata().GetMetadata("maps/thumbnails/helloween").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -45,8 +45,8 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		
-		img := sources.UseSources().Images().GetImage("assets/images/maps/thumbnails/starwars")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/maps/thumbnails/starwars").Modified
+		img := sources.UseSources().Images().GetImage("maps/thumbnails/starwars")
+		m := sources.UseSources().Metadata().GetMetadata("maps/thumbnails/starwars").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 

@@ -11,7 +11,7 @@ import (
 
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
+		img := sources.UseSources().Images().GetImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 		imageW, imageH := img.Size()
@@ -22,8 +22,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/back")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -33,11 +33,11 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	f := sources.UseSources().Font().GetFont("assets/fonts/base")
+	f := sources.UseSources().Font().GetFont("base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/inputs/input")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/inputs/input").Modified
+		img := sources.UseSources().Images().GetImage("system/inputs/input")
+		m := sources.UseSources().Metadata().GetMetadata("system/inputs/input").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -54,8 +54,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/button")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 

@@ -26,14 +26,14 @@ type SourcesProvider interface {
 //Loads all sources asynchronously
 func (p *provider) LoadSources(fs embed.FS) {
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go p.audio.Load(fs, "assets/audio")
-	go p.metadata.Load(fs, "assets/metadata")
-	go p.images.Load(fs, "assets/images")
-	go p.font.Load(fs, "assets/fonts")
+	wg.Add(4)
+	go p.audio.Load(fs, "assets/audio", &wg)
+	go p.metadata.Load(fs, "assets/metadata", &wg)
+	go p.images.Load(fs, "assets/images", &wg)
+	go p.font.Load(fs, "assets/fonts", &wg)
 	wg.Wait()
 
-	ConnectImageSizeToMetadata()
+	NewPostLoader().ConnectImageSizeToMetadata()
 }
 
 func (p *provider) Audio() *Audio {

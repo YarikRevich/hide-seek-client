@@ -1,6 +1,8 @@
 package positioning
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text/color"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -30,6 +32,7 @@ func (i *Input) getRowWidth(symbolSize int) float64 {
 
 func (i *Input) getPlaceholder(rowWidth float64, symbolSize int) string {
 	t := i.examined[i.index]
+	fmt.Println(t)
 	return string(t[:len(t)-int((rowWidth-i.metadata.Size.Width)/float64(symbolSize))] + "...")
 }
 

@@ -1,6 +1,8 @@
 package startmenu
 
 import (
+	// "fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
@@ -9,7 +11,7 @@ import (
 
 func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
+		img := sources.UseSources().Images().GetImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -21,8 +23,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/settingswheel")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/settingswheel").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/settingswheel")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/settingswheel").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
@@ -31,18 +33,19 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	f := sources.UseSources().Font().GetFont("assets/fonts/base")
+	f := sources.UseSources().Font().GetFont("base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_start").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/button")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_start").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		s := positioning.UsePositioning().Input()
+		// fmt.Println(img, m, m.Text.Symbols)
+		s := positioning.UsePositioning().Button()
 		s.Init(img, m, f, m.Text.Symbols)
 		s.Draw()
 
@@ -50,16 +53,17 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_join").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/button")
+		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join").Origin
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
-
-		s := positioning.UsePositioning().Input()
-		s.Init(img, m, f, m.Text.Symbols)
+		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
+		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
+	
+		s := positioning.UsePositioning().Button()
+		s.Init(img, mo, f, mo.Text.Symbols)
 		s.Draw()
 
 		screen.DrawImage(img, opts)

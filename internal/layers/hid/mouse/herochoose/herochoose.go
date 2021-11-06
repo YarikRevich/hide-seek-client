@@ -13,7 +13,7 @@ func Exec() bool {
 	m.UpdateMouseWheelOffsets()
 
 	if m.IsAnyMouseButtonsPressed() {
-		if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified) {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_MAP_CHOOSE)
 			})
@@ -23,9 +23,9 @@ func Exec() bool {
 		}
 
 		for k, v := range map[string]string{
-			"assets/images/heroes/thumbnails/pumpkin": "assets/images/heroes/pumpkin",
+			"heroes/thumbnails/pumpkin": "heroes/pumpkin",
 		} {
-			if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata(k).Modified) {
+			if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata(k).Modified) {
 				p := objects.UseObjects().PC()
 				p.SetSkin(v)
 				objects.UseObjects().World().AddPC(p)

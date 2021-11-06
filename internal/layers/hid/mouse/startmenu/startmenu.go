@@ -12,7 +12,7 @@ func Exec() bool {
 	m := events.UseEvents().Mouse()
 
 	if m.IsAnyMouseButtonsPressed() {
-		if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/settingswheel").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/settingswheel").Modified) {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_SETTINGS_MENU)
 			})
@@ -20,7 +20,7 @@ func Exec() bool {
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(		sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_start").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_start").Modified) {
 			objects.UseObjects().PC().SetUsername()
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
@@ -30,7 +30,7 @@ func Exec() bool {
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_join").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_join").Modified) {
 			objects.UseObjects().PC().SetUsername()
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {

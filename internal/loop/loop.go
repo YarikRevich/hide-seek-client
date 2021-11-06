@@ -4,6 +4,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/runtime"
 	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
 
@@ -23,6 +24,7 @@ type Loop struct{}
 var _ ebiten.Game = (*Loop)(nil)
 
 func (g *Loop) Update() error {
+	runtime.UseRuntime().SetPrepared()
 	render.UseRender().CleanRenderPool()
 
 	animation.Process()

@@ -3,6 +3,7 @@ package sources
 import (
 	"embed"
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"sync"
 
@@ -86,14 +87,14 @@ func (m *Model) ScaleMargins() (float64, float64) {
 }
 
 type ModelCombination struct {
-	Modified, Origin Model
+	Modified, Origin *Model
 }
 
 type Metadata struct {
 	sync.Mutex
 
 	Used       map[string]*ModelCombination
-	Collection map[string]Model
+	Collection map[string]*Model
 }
 
 func (m *Metadata) loadFile(fs embed.FS, path string) {
@@ -106,16 +107,19 @@ func (m *Metadata) loadFile(fs embed.FS, path string) {
 	reg := regexp.MustCompile(`\.[a-z0-9]*$`)
 	if reg.MatchString(path) {
 		m.Lock()
-		m.Collection[reg.Split(path, -1)[0]] = o
+		m.Collection[reg.Split(path, -1)[0]] = &o
 		m.Unlock()
 	}
 }
 
-func (m *Metadata) Load(fs embed.FS, path string) {
+func (m *Metadata) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, m.loadFile).Parse()
+	wg.Done()
 }
 
 func (m *Metadata) GetMetadata(path string) *ModelCombination {
+	path = filepath.Join("assets/metadata", path)
+
 	if _, ok := m.Used[path]; !ok {
 		file, ok := m.Collection[path]
 		if !ok {
@@ -129,9 +133,11 @@ func (m *Metadata) GetMetadata(path string) *ModelCombination {
 		m.Used[path] = c
 		return c
 	}
+
 	return m.Used[path]
 }
 
 func NewMetadata() *Metadata {
-	return new(Metadata)
+	return &Metadata{Collection: make(map[string]*Model),
+		Used: make(map[string]*ModelCombination)}
 }

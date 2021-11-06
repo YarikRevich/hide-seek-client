@@ -15,7 +15,7 @@ func Exec() bool {
 	m := events.UseEvents().Mouse()
 	
 	if m.IsAnyMouseButtonsPressed() {
-		if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified) {
 			objects.UseObjects().World().ResetPCs()
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
@@ -26,7 +26,7 @@ func Exec() bool {
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata("assets/fonts/waitroom/waitroom").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Modified) {
 			if err := clipboard.WriteAll(objects.UseObjects().World().ID.String()); err != nil{
 				logrus.Fatal(err)
 			}
@@ -35,7 +35,7 @@ func Exec() bool {
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_confirm_game").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Modified) {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)
 			})

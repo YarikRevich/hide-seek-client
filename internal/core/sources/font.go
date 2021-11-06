@@ -3,6 +3,7 @@ package sources
 import (
 	"embed"
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"sync"
 
@@ -43,11 +44,14 @@ func (f *Font) loadFile(fs embed.FS, path string) {
 	}
 }
 
-func (f *Font) Load(fs embed.FS, path string) {
+func (f *Font) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, f.loadFile).Parse()
+	wg.Done()
 }
 
 func (f *Font) GetFont(path string) font.Face {
+	path = filepath.Join("assets/fonts", path)
+
 	font, ok := f.Collection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("font with path '%s' not found", path))
@@ -56,5 +60,5 @@ func (f *Font) GetFont(path string) font.Face {
 }
 
 func NewFont() *Font {
-	return new(Font)
+	return &Font{Collection: make(map[string]font.Face)}
 }

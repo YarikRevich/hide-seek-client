@@ -9,9 +9,9 @@ topmargin = 170.0
 coefficiantx = 2.5
 coefficianty = 2.5
 
-[button]
-text = "Save config"
-textposition = "center"
+[text]
+symbols =  "Save config"
+position = "center"
 
 [fonts]
 font = 9.0

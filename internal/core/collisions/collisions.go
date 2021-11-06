@@ -6,20 +6,21 @@ import "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 //if it collides though one object it will return ok as true
 func IsPCCollideWithPCs(o objects.Object) ([]*objects.PC, bool) {
 	w := objects.UseObjects().World()
+	m := w.GetMetadata().Modified
 	r := []*objects.PC{}
 	var ok bool
 
-	oMaxX := (o.Metadata.Margins.LeftMargin + o.Metadata.Size.Width)
-	oMinX := (o.Metadata.Margins.LeftMargin)
-	oMaxY := (o.Metadata.Margins.TopMargin + o.Metadata.Size.Height)
-	oMinY := (o.Metadata.Margins.TopMargin)
+	oMaxX := (m.Margins.LeftMargin + m.Size.Width)
+	oMinX := (m.Margins.LeftMargin)
+	oMaxY := (m.Margins.TopMargin + m.Size.Height)
+	oMinY := (m.Margins.TopMargin)
 	for _, v := range w.PCs {
-		vMaxX := (v.Metadata.Margins.LeftMargin + v.Metadata.Size.Width)
-		vMinX := (v.Metadata.Margins.LeftMargin)
-		vMaxY := (v.Metadata.Margins.TopMargin + v.Metadata.Size.Height)
-		vMinY := (v.Metadata.Margins.TopMargin)
+		vMaxX := (m.Margins.LeftMargin + m.Size.Width)
+		vMinX := (m.Margins.LeftMargin)
+		vMaxY := (m.Margins.TopMargin + m.Size.Height)
+		vMinY := (m.Margins.TopMargin)
 
-		if (oMinX <= vMaxX && vMinX <= oMaxX) &&
+		if (oMinX <= vMaxX && vMinX <= oMaxX) ||
 			(oMinY <= vMaxY && vMinY <= oMaxY) {
 			r = append(r, v)
 			ok = true
@@ -35,15 +36,15 @@ func IsAmmoCollideWithObject(o objects.Weapon) ([]*objects.Weapon, bool) {
 	// r := []*{}
 	// var ok bool
 
-	// oMaxX := (o.Metadata.Margins.LeftMargin + o.Metadata.Size.Width)
-	// oMinX := (o.Metadata.Margins.LeftMargin)
-	// oMaxY := (o.Metadata.Margins.TopMargin + o.Metadata.Size.Height)
-	// oMinY := (o.Metadata.Margins.TopMargin)
+	// oMaxX := (m.Margins.LeftMargin + m.Size.Width)
+	// oMinX := (m.Margins.LeftMargin)
+	// oMaxY := (m.Margins.TopMargin + m.Size.Height)
+	// oMinY := (m.Margins.TopMargin)
 	// for _, v := range w.Ammo {
-	// 	vMaxX := (v.Metadata.Margins.LeftMargin + v.Metadata.Size.Width)
-	// 	vMinX := (v.Metadata.Margins.LeftMargin)
-	// 	vMaxY := (v.Metadata.Margins.TopMargin + v.Metadata.Size.Height)
-	// 	vMinY := (v.Metadata.Margins.TopMargin)
+	// 	vMaxX := (m.Margins.LeftMargin + m.Size.Width)
+	// 	vMinX := (m.Margins.LeftMargin)
+	// 	vMaxY := (m.Margins.TopMargin + m.Size.Height)
+	// 	vMinY := (m.Margins.TopMargin)
 
 	// 	if (oMinX <= vMaxX && vMinX <= oMaxX) &&
 	// 		(oMinY <= vMaxY && vMinY <= oMaxY) {

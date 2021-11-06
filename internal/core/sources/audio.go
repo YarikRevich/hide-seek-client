@@ -13,17 +13,17 @@ import (
 )
 
 type Track struct {
-	Volume *effects.Volume
-	Ctrl *beep.Ctrl
-	Format beep.Format
-	Streamer beep.StreamSeekCloser
+	Volume    *effects.Volume
+	Ctrl      *beep.Ctrl
+	Format    beep.Format
+	Streamer  beep.StreamSeekCloser
 	TrackPath string
 }
 
 type Audio struct {
 	sync.Mutex
 
-	Collection  map[string]*Track
+	Collection map[string]*Track
 }
 
 func (a *Audio) loadFile(fs embed.FS, path string) {
@@ -55,10 +55,11 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 	}
 }
 
-func (a *Audio) Load(fs embed.FS, path string) {
+func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, a.loadFile).Parse()
+	wg.Done()
 }
-func (a *Audio)GetAudioController(path string) *Track {
+func (a *Audio) GetAudioController(path string) *Track {
 	audio, ok := a.Collection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("audio with path '%s' not found", path))
@@ -66,7 +67,6 @@ func (a *Audio)GetAudioController(path string) *Track {
 	return audio
 }
 
-
-func NewAudio() *Audio{
-	return new(Audio)
+func NewAudio() *Audio {
+	return &Audio{Collection: make(map[string]*Track)}
 }

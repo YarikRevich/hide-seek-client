@@ -13,11 +13,11 @@ import (
 )
 
 func Draw() {
-	f := sources.UseSources().Font().GetFont("assets/fonts/base")
+	f := sources.UseSources().Font().GetFont("base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		
-		img := sources.UseSources().Images().GetImage("assets/images/system/background/background")
+		img := sources.UseSources().Images().GetImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -26,7 +26,7 @@ func Draw() {
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
 
-		m := sources.UseSources().Metadata().GetMetadata("assets/fonts/waitroom/waitroom").Modified
+		m := sources.UseSources().Metadata().GetMetadata("waitroom/waitroom").Modified
 		w := objects.UseObjects().World()
 
 		text.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
@@ -35,8 +35,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/back").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/back")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -49,8 +49,8 @@ func Draw() {
 	
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/textareas/textarea")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/textareas/textarea").Modified
+		img := sources.UseSources().Images().GetImage("system/textareas/textarea")
+		m := sources.UseSources().Metadata().GetMetadata("system/textareas/textarea").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
@@ -66,8 +66,8 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("assets/images/system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("assets/images/system/buttons/button_confirm_game").Modified
+		img := sources.UseSources().Images().GetImage("system/buttons/button")
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)

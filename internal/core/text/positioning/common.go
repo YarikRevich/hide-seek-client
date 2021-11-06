@@ -1,6 +1,7 @@
 package positioning
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -18,7 +19,7 @@ type Base struct {
 
 	font     font.Face
 	img      *ebiten.Image
-	metadata sources.Model
+	metadata *sources.Model
 }
 
 func (b *Base) updateMetrics() {
@@ -56,6 +57,8 @@ func (b *Base) getText() string {
 
 func (b *Base) getCenterCoords() (int, int) {
 	symbolSize := b.getSymbolSize()
+	// fmt.Println((int(b.metadata.Size.Width) - symbolSize*len(b.examined[b.index])) / 2, int(b.metadata.Size.Height/2) + b.indent)
+	fmt.Println(b.metadata.Size.Width, b.metadata.Size.Height)
 	return (int(b.metadata.Size.Width) - symbolSize*len(b.examined[b.index])) / 2, int(b.metadata.Size.Height/2) + b.indent
 }
 
@@ -72,14 +75,16 @@ func (b *Base) next() bool {
 	return b.index < len(b.examined)-1
 }
 
-func (b *Base) Init(i *ebiten.Image, m sources.Model, f font.Face, t string) {
+func (b *Base) Init(i *ebiten.Image, m *sources.Model, f font.Face, t string) {
 	if len(t) == 0 {
 		return
 	}
 
 	b.examined = strings.Split(t, "\n")
+	b.img = i
 	b.index = -1
 	b.font = f
+	b.metadata = m
 
 	if len(b.examined) != 1 {
 		b.indent = -5

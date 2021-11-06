@@ -19,7 +19,7 @@ func Draw() {
 	// 	strings.Split(l.userConfig.Conn.RemoteAddr().String(), ":")[0],
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		f := sources.UseSources().Font().GetFont("assets/fonts/base")
+		f := sources.UseSources().Font().GetFont("base")
 
 		text.Draw(screen, profiling.UseProfiler().String(), f, 0, 0, color.White)
 	})

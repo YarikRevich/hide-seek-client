@@ -178,7 +178,7 @@ func (o *Object) SetSkin(path string) {
 }
 
 func (o *Object) GetImage() *ebiten.Image {
-	return sources.UseSources().Images().GetImage(o.Path)
+	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
 }
 
 //Returns image where animation properties applied to

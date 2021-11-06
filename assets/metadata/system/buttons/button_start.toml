@@ -9,9 +9,9 @@ topmargin = 37.0
 coefficiantx = 4.0
 coefficianty = 4.0
 
-[button]
-text = "Start game"
-textposition = "center"
+[text]
+symbols =  "Start game"
+position = "center"
 
 [fonts]
 font = 9.0
