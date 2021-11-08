@@ -589,6 +589,14 @@ func (c *Camera) ZoomOut() {
 // return cx, cy
 // }
 
+func (c *Camera) FollowObject(objects.Object){
+
+}
+
+//world
+//followed object
+//world elements
+
 //Uses or creates a new instance of camera
 func UseCamera() *Camera {
 	if instance == nil {

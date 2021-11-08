@@ -127,7 +127,9 @@ func (m *Metadata) GetMetadata(path string) *ModelCombination {
 		}
 
 		c := new(ModelCombination)
-		c.Modified = file
+		q := new(Model)
+		*q = *file
+		c.Modified = q
 		c.Origin = file
 
 		m.Used[path] = c
@@ -135,6 +137,10 @@ func (m *Metadata) GetMetadata(path string) *ModelCombination {
 	}
 
 	return m.Used[path]
+}
+
+func (m *Metadata) CleanUsedMetadata(){
+	m.Used = make(map[string]*ModelCombination)
 }
 
 func NewMetadata() *Metadata {

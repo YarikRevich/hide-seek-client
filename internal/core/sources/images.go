@@ -10,7 +10,6 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/runtime"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"
 )
@@ -55,11 +54,12 @@ func (i *Images) GetImage(path string) *ebiten.Image {
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 	}
-
-	if runtime.UseRuntime().IsPrepared() {
-		return ebiten.NewImageFromImage(image)
-	}
+	
 	return image
+}
+
+func (i *Images) GetCopyOfImage(path string) *ebiten.Image{
+	return ebiten.NewImageFromImage(i.GetImage(path))
 }
 
 func NewImages() *Images {

@@ -14,5 +14,4 @@ symbols =  "Start game"
 position = "center"
 
 [fonts]
-font = 9.0
 fontcolor = "white"

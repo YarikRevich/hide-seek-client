@@ -7,6 +7,7 @@ import (
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+
 	// "github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
 	isconnect "github.com/alimasyhur/is-connect"
 )

@@ -28,49 +28,56 @@ type World struct {
 	Regime regime
 
 	//Describes the objects are on the map
-	PCs []*PC
+	PCs      []*PC
 	Elements []*Object
-	Weapons []*Weapon
-	Ammo []*Ammo
+	Weapons  []*Weapon
+	Ammo     []*Ammo
 	// LootSet []*LootSet
 }
 
-func (w *World) AddPC(p *PC){
+func (w *World) AddPC(p *PC) {
 	w.PCs = append(w.PCs, p)
 }
 
-func (w *World) AddWeapon(p *Weapon){
+func (w *World) AddWeapon(p *Weapon) {
 	w.Weapons = append(w.Weapons, p)
 }
 
-func (w *World) AddAmmo(a *Ammo){
+func (w *World) AddAmmo(a *Ammo) {
 	w.Ammo = append(w.Ammo, a)
 }
 
-// Returns pcs 
-// func (w *World) GetPCs(){}
+func (w *World) GetPCs() []*PC {
+	avoidID := UseObjects().PC().ID
+	r := make([]*PC, 0, 3)
+	for _, v := range w.PCs {
+		if v.ID != avoidID {
+			r = append(r, v)
+		}
+	}
+	return r
+}
 
-func (w *World) GetWeaponByPC(p *PC)*Weapon{
-	for _, v := range w.Weapons{
-		if v.ParentID == p.ID{
+func (w *World) GetWeaponByPC(p *PC) *Weapon {
+	for _, v := range w.Weapons {
+		if v.ParentID == p.ID {
 			return v
 		}
 	}
 	return nil
 }
 
-func (w *World) GetAmmoByWeapon(p *Weapon)*Ammo{
-	if p == nil{
+func (w *World) GetAmmoByWeapon(p *Weapon) *Ammo {
+	if p == nil {
 		return nil
 	}
-	for _, v := range w.Ammo{
-		if v.ParentID == p.ID{
+	for _, v := range w.Ammo {
+		if v.ParentID == p.ID {
 			return v
 		}
 	}
 	return nil
 }
-
 
 //Resets the list of users on the map
 func (w *World) ResetPCs() {
@@ -89,12 +96,12 @@ func (w *World) String() string {
 //Returns map scale in relating map image
 //to current screen sizes
 func (w *World) GetMaxMapScale() (float64, float64) {
-	var sx, sy float64 
+	var sx, sy float64
 	screenW := float64(screen.GetMaxWidth())
 	screenH := float64(screen.GetMaxHeight())
 
 	m := w.GetMetadata().Origin
-	
+
 	if screenW > m.Size.Width {
 		sx = m.Size.Width / screenW
 	} else {
@@ -102,22 +109,21 @@ func (w *World) GetMaxMapScale() (float64, float64) {
 	}
 
 	if screenH > m.Size.Height {
-	sy = m.Size.Height / screenH
+		sy = m.Size.Height / screenH
 	} else {
 		sy = screenH / m.Size.Height
 	}
 	return sx, sy
 }
 
-
 func (w *World) GetMapScale() (float64, float64) {
-	var sx, sy float64 
+	var sx, sy float64
 	screenIW, screenIH := screen.GetScreen().Size()
 	screenW := float64(screenIW)
 	screenH := float64(screenIH)
 
 	m := w.GetMetadata().Origin
-	
+
 	if screenW > m.Size.Width {
 		sx = m.Size.Width / screenW
 	} else {
@@ -125,7 +131,7 @@ func (w *World) GetMapScale() (float64, float64) {
 	}
 
 	if screenH > m.Size.Height {
-	sy = m.Size.Height / screenH
+		sy = m.Size.Height / screenH
 	} else {
 		sy = screenH / m.Size.Height
 	}

@@ -1,6 +1,8 @@
 package settingsmenu
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -36,36 +38,43 @@ func Draw() {
 	f := sources.UseSources().Font().GetFont("base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("system/inputs/input")
-		m := sources.UseSources().Metadata().GetMetadata("system/inputs/input").Modified
+		img := sources.UseSources().Images().GetCopyOfImage("system/inputs/input")
+		mm := sources.UseSources().Metadata().GetMetadata("system/inputs/input").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("system/inputs/input").Origin
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
+		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
 
 		t := events.UseEvents().Input().SettingsMenuNameBuffer.Read()
+		fmt.Println(t)
 
 		s := positioning.UsePositioning().Input()
-		s.Init(img, m, f, t)
+		s.Init(img, mo, f, t)
 		s.Draw()
 
 		screen.DrawImage(img, opts)
+
+		img.Dispose()
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button").Modified
+		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
+		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config").Origin
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
+		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
 
-		s := positioning.UsePositioning().Input()
-		s.Init(img, m, f, m.Text.Symbols)
+		s := positioning.UsePositioning().Button()
+		s.Init(img, mo, f, mo.Text.Symbols)
 		s.Draw()
 
 		screen.DrawImage(img, opts)
+
+		img.Dispose()
 	})
 }

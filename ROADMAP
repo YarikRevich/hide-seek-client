@@ -1,0 +1,6 @@
+---
+[09-11-2021]
+- Fix scene representating
+- Fix render frame rate faults
+- Implement simplified way of networking
+---

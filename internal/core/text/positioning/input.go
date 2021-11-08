@@ -58,6 +58,7 @@ func (i *Input) getCenterCoords() (int, int) {
 func (i *Input) Draw() {
 	for i.next() {
 		x, y := i.getPosition()
+		fmt.Println(x, y)
 		fc := color.NewColor().GetColor(i.metadata.Fonts.FontColor)
 		text.Draw(i.img, i.getText(), i.font, x, y, fc)
 	}

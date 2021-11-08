@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
@@ -49,10 +50,11 @@ func init() {
 	middlewares.UseMiddlewares().Prepare().Use()
 
 	printer.PrintCliMessage("HideSeek\nClient!")
+
+	debug.SetGCPercent(2000)
 }
 
 func main() {
-
 	ebiten.SetWindowSize(screen.GetMaxWidth(), screen.GetMaxHeight())
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)

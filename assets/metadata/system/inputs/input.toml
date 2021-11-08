@@ -9,7 +9,8 @@ topmargin = 120.0
 coefficiantx = 2.0
 coefficianty = 1.2
 
-[button]
-textposition = "center"
-font = 9.0
+[text]
+position = "center"
+
+[fonts]
 fontcolor = "white"

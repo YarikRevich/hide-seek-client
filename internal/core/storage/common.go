@@ -16,7 +16,7 @@ func (q *Query) AddValue(value interface{}) {
 }
 
 func (q *Query) GetFieldsAsString() string {
-	return strings.Join(q.Fields, ",")[1:]
+	return strings.Join(q.Fields, ",")
 }
 
 func NewQuery()*Query{

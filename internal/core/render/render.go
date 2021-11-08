@@ -8,7 +8,7 @@ import (
 var instance IRender
 
 type render struct {
-	renderList     []func(*ebiten.Image)
+	toRender     []func(*ebiten.Image)
 }
 
 type IRender interface {
@@ -19,24 +19,24 @@ type IRender interface {
 }
 
 func (r *render) SetToRender(c func(*ebiten.Image)) {
-	r.renderList = append(r.renderList, c)
+	r.toRender = append(r.toRender, c)
 }
 
 func (r *render) Render() {
 	screen := screenhistory.GetScreen()
-	for _, v := range r.renderList {
+	for _, v := range r.toRender {
 		v(screen)
 	}
 }
 
 func (r *render) CleanRenderPool() {
-	r.renderList = r.renderList[:0]
+	r.toRender = r.toRender[:0]
 }
 
 func UseRender() IRender {
 	if instance == nil {
 		instance = &render{
-			renderList:     make([]func(*ebiten.Image), 0, 100),
+			toRender:     make([]func(*ebiten.Image), 0, 2000),
 		}
 	}
 	return instance

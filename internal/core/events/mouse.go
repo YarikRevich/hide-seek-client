@@ -3,7 +3,6 @@ package events
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	// "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -57,7 +56,8 @@ func (p *MouseWheel) UpdateMouseWheelOffsets() {
 		} else if e.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
 			p.MouseWheelX += p.moveCoefficient
 		}
-	} else if sx, sy := ebiten.Wheel(); sx != 0 || sy != 0 {
+	} else {
+		sx, sy := ebiten.Wheel() 
 		p.MouseWheelX += sx; p.MouseWheelY += sy
 	}
 
@@ -67,6 +67,6 @@ func (p *MouseWheel) UpdateMouseWheelOffsets() {
 
 func NewMouse() *Mouse {
 	m := new(Mouse)
-	m.moveCoefficient = 2
+	m.moveCoefficient = .5
 	return m
 }

@@ -1,7 +1,6 @@
 package positioning
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -57,8 +56,6 @@ func (b *Base) getText() string {
 
 func (b *Base) getCenterCoords() (int, int) {
 	symbolSize := b.getSymbolSize()
-	// fmt.Println((int(b.metadata.Size.Width) - symbolSize*len(b.examined[b.index])) / 2, int(b.metadata.Size.Height/2) + b.indent)
-	fmt.Println(b.metadata.Size.Width, b.metadata.Size.Height)
 	return (int(b.metadata.Size.Width) - symbolSize*len(b.examined[b.index])) / 2, int(b.metadata.Size.Height/2) + b.indent
 }
 

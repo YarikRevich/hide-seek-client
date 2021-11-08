@@ -1,17 +1,27 @@
 package game
 
 import (
-	// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-	// "github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
-	// "github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
-	// "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
-	// "github.com/hajimehoshi/ebiten/v2"
-	// "github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	// "github.com/sirupsen/logrus"
+	"time"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 )
 
-func Exec() {
+// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
+// "github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
+// "github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
+// "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+// "github.com/hajimehoshi/ebiten/v2"
+// "github.com/hajimehoshi/ebiten/v2/ebitenutil"
+// "github.com/sirupsen/logrus"
 
+func Exec() {
+	latency.UseLatency().Timings().ExecEach(func() {
+		w := objects.UseObjects().World()
+		p := objects.UseObjects().PC()
+		networking.UseNetworking().Dialer().Conn().Call("update_game", w, p.ID)
+	}, time.Millisecond * 300)
 	// if !g.currState.NetworkingStates.GameProcess {
 	// 	g.currState.NetworkingStates.GameProcess = true
 	// 	go func() {

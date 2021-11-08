@@ -44,7 +44,7 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		
+
 		img := sources.UseSources().Images().GetImage("maps/thumbnails/starwars")
 		m := sources.UseSources().Metadata().GetMetadata("maps/thumbnails/starwars").Modified
 

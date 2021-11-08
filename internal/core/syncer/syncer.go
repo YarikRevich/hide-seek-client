@@ -35,18 +35,19 @@ func (s *syncer) Sync() {
 
 			if v.Origin.Buffs.Speed.Y*v.Modified.Scale.CoefficiantY != v.Modified.Buffs.Speed.Y {
 				v.Modified.Buffs.Speed.Y = v.Origin.Buffs.Speed.Y * v.Modified.Scale.CoefficiantY
+
 			}
 
 			e := events.UseEvents().Mouse()
 			if v.Origin.Info.ScrollableX {
 				if v.Origin.Margins.LeftMargin+e.MouseWheelX != v.Modified.Margins.LeftMargin {
-					v.Modified.Margins.LeftMargin = v.Modified.Margins.LeftMargin + e.MouseWheelX
+					v.Modified.Margins.LeftMargin = v.Origin.Margins.LeftMargin + e.MouseWheelX
 				}
 			}
 
 			if v.Origin.Info.ScrollableY {
-				if v.Origin.Margins.TopMargin+e.MouseWheelX != v.Modified.Margins.LeftMargin {
-					v.Modified.Margins.LeftMargin = v.Modified.Margins.LeftMargin + e.MouseWheelX
+				if v.Origin.Margins.TopMargin+e.MouseWheelY != v.Modified.Margins.TopMargin {
+					v.Modified.Margins.TopMargin = v.Origin.Margins.TopMargin + e.MouseWheelY
 				}
 			}
 		}

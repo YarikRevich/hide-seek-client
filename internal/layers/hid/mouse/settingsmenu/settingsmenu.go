@@ -13,6 +13,7 @@ func Exec() bool {
 	if m.IsAnyMouseButtonsPressed() {
 		
 		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/input").Modified) {
+			
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_SETTINGS_MENU_USERNAME)
 			return true
 		}

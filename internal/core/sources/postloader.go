@@ -30,7 +30,6 @@ func (p *PostLoader) ConnectImageSizeToMetadata() {
 			if v.Animation.FrameNum != 0 {
 				imageW /= int(v.Animation.FrameNum)
 			}
-
 			v.Size.Width = float64(imageW)
 			v.Size.Height = float64(imageH)	
 		}
