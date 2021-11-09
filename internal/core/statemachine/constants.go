@@ -37,3 +37,8 @@ const (
 	UI_GAME
 )
 
+const (
+	UI_SETTINGS_MENU_CHECKBOX_ON = iota
+	UI_SETTINGS_MENU_CHECKBOX_OFF
+)
+

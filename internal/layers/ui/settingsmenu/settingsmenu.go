@@ -2,13 +2,16 @@ package settingsmenu
 
 import (
 	"fmt"
+	"image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func Draw() {
@@ -76,5 +79,34 @@ func Draw() {
 		screen.DrawImage(img, opts)
 
 		img.Dispose()
+	})
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		var (
+			img *ebiten.Image
+			m   *sources.Model
+		)
+
+		mt := sources.UseSources().Metadata().GetMetadata("fonts/settingsmenu/settingsmenu").Modified
+		switch statemachine.UseStateMachine().SettingsMenuCheckbox().GetState() {
+		case statemachine.UI_SETTINGS_MENU_CHECKBOX_OFF:
+			img = sources.UseSources().Images().GetImage("system/checkbox/greencheckboxoff")
+			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxoff").Modified
+			fmt.Println(mt.Margins)
+			text.Draw(screen, "Enable LAN server", f, int(mt.Margins.LeftMargin), int(mt.Margins.TopMargin), color.White)
+		case statemachine.UI_SETTINGS_MENU_CHECKBOX_ON:
+			img = sources.UseSources().Images().GetImage("system/checkbox/greencheckboxon")
+			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon").Modified
+			text.Draw(screen, "Disable LAN server", f, int(mt.Margins.LeftMargin), int(mt.Margins.TopMargin), color.White)
+		}
+
+		
+
+		opts := &ebiten.DrawImageOptions{}
+
+		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+
+		screen.DrawImage(img, opts)
 	})
 }

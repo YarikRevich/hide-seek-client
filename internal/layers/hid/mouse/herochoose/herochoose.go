@@ -1,6 +1,8 @@
 package herochoose
 
 import (
+	// "fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"

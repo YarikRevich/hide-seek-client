@@ -1,14 +1,14 @@
 package statemachine
 
-
 var instance IStateMachine
 
-type StateMachine struct{
-	audio IState
-	ui IState
-	input IState
-	networking IState
-	dial IState
+type StateMachine struct {
+	audio                  IState
+	ui                     IState
+	input                  IState
+	networking             IState
+	dial                   IState
+	settings_menu_checkbox IState
 }
 
 type IStateMachine interface {
@@ -17,6 +17,7 @@ type IStateMachine interface {
 	Input() IState
 	Networking() IState
 	Dial() IState
+	SettingsMenuCheckbox() IState
 }
 
 func (s *StateMachine) Audio() IState {
@@ -35,18 +36,23 @@ func (s *StateMachine) Networking() IState {
 	return s.networking
 }
 
-func (s *StateMachine) Dial() IState{
+func (s *StateMachine) Dial() IState {
 	return s.dial
+}
+
+func (s *StateMachine) SettingsMenuCheckbox() IState {
+	return s.settings_menu_checkbox
 }
 
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
-			audio: NewState(AUDIO_DONE),
-			ui: NewState(UI_START_MENU),
-			input: NewState(INPUT_EMPTY),
-			networking: NewState(NETWORKING_OFFLINE),
-			dial: NewState(DIAL_WAN),
+			audio:                  NewState(AUDIO_DONE),
+			ui:                     NewState(UI_START_MENU),
+			input:                  NewState(INPUT_EMPTY),
+			networking:             NewState(NETWORKING_OFFLINE),
+			dial:                   NewState(DIAL_WAN),
+			settings_menu_checkbox: NewState(UI_SETTINGS_MENU_CHECKBOX_OFF),
 		}
 	}
 	return instance

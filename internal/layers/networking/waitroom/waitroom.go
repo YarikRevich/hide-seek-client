@@ -1,12 +1,12 @@
 package waitroom
 
 import (
-	"time"
+	// "time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 )
 
 func Exec() {
@@ -16,9 +16,9 @@ func Exec() {
 	//join:
 	//get world
 	//add user to world
-	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM, func() {
+	// latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM, func() {
 
-	})
+	// })
 
 	// collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
 	// o := objects.UseObjects()
@@ -34,8 +34,8 @@ func Exec() {
 	// connection.UseConnection().Call("add_user_to_world", nil, nil)
 	// })
 
-	latency.UseLatency().Timings().ExecEach(func() {
-		w := objects.UseObjects().World()
-		networking.UseNetworking().Dialer().Conn().Call("update_world", w.ID, w)
-	}, time.Second)
+	// latency.UseLatency().Timings().ExecEach(func() {
+	// 	w := objects.UseObjects().World()
+	// 	networking.UseNetworking().Dialer().Conn().Call("update_world", w.ID, w)
+	// }, time.Second)
 }

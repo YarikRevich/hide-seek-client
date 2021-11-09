@@ -1,9 +1,8 @@
 package objects
 
 import (
-	// "image"
 	"image"
-	"strings"
+	"path/filepath"
 
 	// "github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	// imagecollecion "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
@@ -173,8 +172,8 @@ func (o *Object) GetPositionBeforeAnimation() (float64, float64) {
 
 func (o *Object) SetSkin(path string) {
 	o.Path = path
-	split := strings.Split(path, "/")
-	o.Name = split[len(split)-3]
+	_, file := filepath.Split(path)
+	o.Name = file
 }
 
 func (o *Object) GetImage() *ebiten.Image {

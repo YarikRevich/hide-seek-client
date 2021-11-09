@@ -1,14 +1,15 @@
 package networking
 
 import (
+	"fmt"
+	"os"
 	"os/exec"
-	"syscall"
 
 	"github.com/sirupsen/logrus"
 )
 
 type LANServer struct {
-	pid int
+	process *os.Process
 }
 
 func (l *LANServer) Start() {
@@ -16,15 +17,11 @@ func (l *LANServer) Start() {
 	if err := cmd.Start(); err != nil {
 		logrus.Fatal(err)
 	}
-	l.pid = cmd.Process.Pid
+	l.process = cmd.Process
 }
 
 func (l *LANServer) Stop() {
-	if l.pid != 0 {
-		if err := syscall.Kill(l.pid, syscall.SIGINT); err != nil {
-			logrus.Fatal(err)
-		}
-	}
+	fmt.Println(l.process.Kill())
 }
 
 func NewLANServer() *LANServer {
