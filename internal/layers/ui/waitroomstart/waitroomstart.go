@@ -1,6 +1,7 @@
-package joinlobbymenu
+package waitroomstart
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
@@ -8,11 +9,14 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
 	"github.com/hajimehoshi/ebiten/v2"
-	ebitentext "github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func Draw() {
+	f := sources.UseSources().Font().GetFont("base")
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		
 		img := sources.UseSources().Images().GetImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
@@ -20,6 +24,12 @@ func Draw() {
 		imageW, imageH := img.Size()
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
+
+
+		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Modified
+		w := objects.UseObjects().World()
+
+		text.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
 
 		screen.DrawImage(img, opts)
 	})
@@ -36,7 +46,7 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	f := sources.UseSources().Font().GetFont("base")
+	
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("system/textareas/textarea")
@@ -46,21 +56,22 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		ebitentext.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		text.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Modified
+		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
+		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Origin
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
+		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
 
-		s := positioning.UsePositioning().Input()
-		s.Init(img, m, f, m.Text.Symbols)
+		s := positioning.UsePositioning().Button()
+		s.Init(img, mo, f, mo.Text.Symbols)
 		s.Draw()
 
 		screen.DrawImage(img, opts)

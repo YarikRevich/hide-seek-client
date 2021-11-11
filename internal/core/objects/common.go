@@ -3,12 +3,14 @@ package objects
 import (
 	"image"
 	"path/filepath"
+	"unsafe"
 
 	// "github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	// imagecollecion "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
 	// metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
 	// metadatamodels "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
@@ -67,14 +69,13 @@ type Object struct {
 	Physics
 
 	// Names parentid the object referes to
-	ParentID uuid.UUID
-	ID       uuid.UUID
+	WorldID, ParentID, ID uuid.UUID
 
 	RawPos struct {
 		X, Y float64
 	}
 
-	PositionDirection keycodes.Direction
+	Direction keycodes.Direction
 
 	Spawn image.Point
 
@@ -98,9 +99,9 @@ func (o *Object) savePositionBeforeAnimation() {
 
 func (o *Object) SetX(x float64) {
 	if x < o.RawPos.X {
-		o.PositionDirection = keycodes.LEFT
+		o.Direction = keycodes.LEFT
 	} else if x > o.RawPos.X {
-		o.PositionDirection = keycodes.RIGHT
+		o.Direction = keycodes.RIGHT
 	}
 
 	o.RawPos.X = x
@@ -109,9 +110,9 @@ func (o *Object) SetX(x float64) {
 
 func (o *Object) SetY(y float64) {
 	if y < o.RawPos.Y {
-		o.PositionDirection = keycodes.UP
+		o.Direction = keycodes.UP
 	} else if y > o.RawPos.Y {
-		o.PositionDirection = keycodes.DOWN
+		o.Direction = keycodes.DOWN
 	}
 
 	o.RawPos.Y = y
@@ -191,6 +192,64 @@ func (o *Object) GetAnimatedImage() *ebiten.Image{
 
 func (o *Object) GetMetadata() *sources.ModelCombination {
 	return sources.UseSources().Metadata().GetMetadata(o.Path)
+}
+
+func (o *Object) ToAPIMessage() *api.Object{
+	return &api.Object{
+		Animation: &api.Animation{
+			PositionBeforeAnimation: &api.Position{
+				X: float64(o.Animation.PositionBeforeAnimation.X),
+				Y: float64(o.Animation.PositionBeforeAnimation.Y),
+			},
+			FrameCount: o.FrameCount,
+			FrameDelayCounter: o.FrameDelayCounter,
+			CurrentFrameMatrix: o.CurrentFrameMatrix,
+		},
+		Skin: &api.Skin{
+			Name: o.Name,
+			Path: o.Path,
+		},
+		Physics: &api.Physics{
+			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
+		},
+		WorldId: o.WorldID.String(),
+		ParentId: o.ParentID.String(),
+		Id: o.ID.String(),
+		RawPos: &api.Position{
+			X: o.RawPos.X,
+			Y: o.RawPos.Y,
+		},
+		Spawn: &api.Position{
+			X: float64(o.Spawn.X),
+			Y: float64(o.Spawn.Y),
+		},
+		Direction: int64(o.Direction),
+		Role: int64(o.Role),
+	}
+}
+
+func (o *Object) FromAPIMessage(m *api.Object){
+	o.Animation.PositionBeforeAnimation.X = int(m.Animation.PositionBeforeAnimation.X)
+	o.Animation.PositionBeforeAnimation.Y = int(m.Animation.PositionBeforeAnimation.Y)
+	o.Animation.FrameCount = m.Animation.FrameCount
+	o.Animation.FrameDelayCounter = m.Animation.FrameDelayCounter
+	o.Animation.CurrentFrameMatrix = m.Animation.CurrentFrameMatrix
+
+	o.Skin.Name = m.Skin.Name
+	o.Skin.Path = m.Skin.Path
+
+	o.Physics.Jump = *(*[]keycodes.Direction)(unsafe.Pointer(&m.Physics.Jump))
+
+	o.WorldID = uuid.MustParse(m.WorldId)
+	o.ParentID = uuid.MustParse(m.ParentId)
+	o.ID = uuid.MustParse(m.Id)
+
+	o.RawPos.X = m.RawPos.X
+	o.RawPos.Y = m.RawPos.Y
+	o.Spawn.X = int(m.Spawn.X)
+	o.Spawn.Y = int(m.Spawn.Y)
+	o.Direction = keycodes.Direction(m.Direction)
+	o.Role = Role(m.Role)
 }
 
 func NewObject() *Object {

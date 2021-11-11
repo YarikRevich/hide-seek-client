@@ -1,51 +1,57 @@
 package latency
 
 import (
-	"sync"
 	"time"
 )
 
+type timingIndex struct {
+	state int
+	time time.Duration 
+}
+
 type Timings struct {
-	timings map[time.Duration]*struct {
+	loopDelay  *time.Ticker
+	timings map[timingIndex]*struct {
 		ticker    *time.Ticker
-		once      *sync.Once
-		callbacks []func()
+		callback func()
 	}
 }
 
-func (t *Timings) ExecEach(c func(), d time.Duration) {
-	if _, ok := t.timings[d]; !ok {
-		t.timings[d] = &struct {
+func (t *Timings) ExecEach(c func(), s int, d time.Duration) {
+	i := timingIndex{s, d}
+	if _, ok := t.timings[i]; !ok {
+		t.timings[i] = &struct {
 			ticker    *time.Ticker
-			once      *sync.Once
-			callbacks []func()
+			callback func()
 		}{
 			ticker:    time.NewTicker(d),
-			once:      new(sync.Once),
-			callbacks: []func(){c},
+			callback: c,
 		}
-	} else {
-		l := t.timings[d]
-		l.callbacks = append(l.callbacks, c)
 	}
 }
 
 func (t *Timings) start() {
 	go func() {
-		for _, v := range t.timings {
-			v.once.Do(func() {
-				for range v.ticker.C {
-					for _, c := range v.callbacks {
-						c()
+		for {
+			for range t.loopDelay.C {
+				for _, v := range t.timings {
+					for range v.ticker.C {
+						v.callback()
 					}
 				}
-			})
+			}
 		}
 	}()
 }
 
 func NewTimings() *Timings {
-	t := new(Timings)
+	t := &Timings{
+		timings: make(map[timingIndex]*struct {
+			ticker    *time.Ticker
+			callback func()
+		}),
+		loopDelay: time.NewTicker(time.Millisecond * 200),
+	}
 	t.start()
 	return t
 }

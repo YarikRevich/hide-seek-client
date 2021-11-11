@@ -1,11 +1,11 @@
 package game
 
 import (
-	"time"
+	// "time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 )
 
 // "github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
@@ -17,11 +17,11 @@ import (
 // "github.com/sirupsen/logrus"
 
 func Exec() {
-	latency.UseLatency().Timings().ExecEach(func() {
-		w := objects.UseObjects().World()
-		p := objects.UseObjects().PC()
-		networking.UseNetworking().Dialer().Conn().Call("update_game", w, p.ID)
-	}, time.Millisecond * 300)
+	// latency.UseLatency().Timings().ExecEach(func() {
+	// 	w := objects.UseObjects().World()
+	// 	p := objects.UseObjects().PC()
+	// 	networking.UseNetworking().Dialer().Conn().Call("update_game", w, p.ID)
+	// }, time.Millisecond * 300)
 	// if !g.currState.NetworkingStates.GameProcess {
 	// 	g.currState.NetworkingStates.GameProcess = true
 	// 	go func() {

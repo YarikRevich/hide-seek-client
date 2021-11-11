@@ -3,14 +3,17 @@ package ui
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/debug"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/game"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/herochoose"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/joinmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/mapchoose"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/popup"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/settingsmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/startmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroom"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroomjoin"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroomstart"
 
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
@@ -44,11 +47,14 @@ func Process() {
 		mapchoose.Draw()
 	case statemachine.UI_HERO_CHOOSE:
 		herochoose.Draw()
-	case statemachine.UI_JOIN_LOBBY_MENU:
-
+	case statemachine.UI_JOIN_MENU:
+		joinmenu.Draw()
+	case statemachine.UI_WAIT_ROOM_START:
+		waitroomstart.Draw()
+	case statemachine.UI_WAIT_ROOM_JOIN:
+		waitroomjoin.Draw()
 	case statemachine.UI_CHOOSE_EQUIPMENT:
-	case statemachine.UI_WAIT_ROOM:
-		waitroom.Draw()
+
 	}
 	popup.Draw()
 

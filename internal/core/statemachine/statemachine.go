@@ -50,7 +50,7 @@ func UseStateMachine() IStateMachine {
 			audio:                  NewState(AUDIO_DONE),
 			ui:                     NewState(UI_START_MENU),
 			input:                  NewState(INPUT_EMPTY),
-			networking:             NewState(NETWORKING_OFFLINE),
+			networking:             NewState(NETWORKING_ONLINE),
 			dial:                   NewState(DIAL_WAN),
 			settings_menu_checkbox: NewState(UI_SETTINGS_MENU_CHECKBOX_OFF),
 		}

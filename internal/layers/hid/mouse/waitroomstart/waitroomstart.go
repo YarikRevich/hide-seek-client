@@ -1,4 +1,4 @@
-package waitroom
+package waitroomstart
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"

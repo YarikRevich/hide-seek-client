@@ -1,17 +1,19 @@
 package mouse
 
 import (
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/herochoose"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomjoin"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/joinmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/mapchoose"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/settingsmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/startmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/joinlobbymenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/unfocus"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroom"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomstart"
 
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
 )
@@ -26,12 +28,16 @@ func Process() {
 		switch statemachine.UseStateMachine().UI().GetState() {
 		case statemachine.UI_GAME:
 			return
-		case statemachine.UI_WAIT_ROOM:
-			if waitroom.Exec() {
+		case statemachine.UI_JOIN_MENU:
+			if joinmenu.Exec() {
 				return
 			}
-		case statemachine.UI_JOIN_LOBBY_MENU:
-			if joinlobbymenu.Exec() {
+		case statemachine.UI_WAIT_ROOM_START:
+			if waitroomstart.Exec() {
+				return
+			}
+		case statemachine.UI_WAIT_ROOM_JOIN:
+			if waitroomjoin.Exec() {
 				return
 			}
 		case statemachine.UI_START_MENU:

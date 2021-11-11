@@ -1,4 +1,4 @@
-package waitroom
+package waitroomjoin
 
 import (
 	"fmt"
@@ -7,10 +7,10 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
+
 
 func Draw() {
 	f := sources.UseSources().Font().GetFont("base")
@@ -57,22 +57,6 @@ func Draw() {
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
 		text.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
-
-		screen.DrawImage(img, opts)
-	})
-
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
-		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Modified
-		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Origin
-
-		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
-
-		s := positioning.UsePositioning().Button()
-		s.Init(img, mo, f, mo.Text.Symbols)
-		s.Draw()
 
 		screen.DrawImage(img, opts)
 	})

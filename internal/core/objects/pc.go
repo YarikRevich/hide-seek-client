@@ -2,7 +2,9 @@ package objects
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
+
 	// strorageprovider "github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
@@ -49,10 +51,24 @@ func (p *PC) SetUsername() {
 // //Returns movement rotation related to the last
 // //movement direction
 func (p *PC) GetMovementRotation() float64 {
-	if p.PositionDirection == keycodes.LEFT && p.RawPos.X != 0 {
+	if p.Direction == keycodes.LEFT && p.RawPos.X != 0 {
 		return -1
 	}
 	return 1
+}
+
+func (p *PC) ToAPIMessage() *api.PC{
+	return &api.PC{
+		Object: p.Object.ToAPIMessage(),
+		Username: p.Username,
+		Health: p.Health,
+	}
+}
+
+func (p *PC) FromAPIMessage(m *api.PC){
+	p.Object.FromAPIMessage(m.Object)
+	p.Username = m.Username
+	p.Health = m.Health
 }
 
 func NewPC() *PC {

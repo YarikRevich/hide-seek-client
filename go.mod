@@ -16,7 +16,13 @@ require (
 
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
+	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
+	golang.org/x/text v0.3.6 // indirect
+	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	google.golang.org/grpc v1.42.0 // indirect
+	google.golang.org/protobuf v1.25.0 // indirect
 )
 
 require (

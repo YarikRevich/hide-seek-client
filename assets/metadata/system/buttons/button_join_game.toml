@@ -1,0 +1,17 @@
+[info]
+parent="button"
+
+[margins]
+leftmargin = 105.0
+topmargin = 92.5
+
+[scale]
+coefficiantx = 4.0
+coefficianty = 4.0
+
+[text]
+symbols = "Join game"
+position = "center"
+
+[fonts]
+fontcolor = "white"

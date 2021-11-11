@@ -34,7 +34,7 @@ ifeq ($(NAME), Linux)
 	@sudo apt install golang
 endif
 
-dev: build install_bin
+dev: build install_bin gen_proto
 
 build:
 	$(call clear)
@@ -55,8 +55,11 @@ install_bin:
 	$(call log_print, Installs project)
 	@go install
 
-update_assets:
-
+gen_proto:
+	$(call clear)
+	@protoc -I internal/core/networking/api --go_out=. api.proto
+	@protoc -I internal/core/networking/api --go-grpc_out=. api.proto
+	$(call clear)
 
 full_install:
 	$(MAKE) go_install

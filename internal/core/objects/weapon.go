@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -21,6 +22,14 @@ func NewWeaponByObject(o Object)*Weapon{
 
 	w.ParentID = o.ID
 	return w
+}
+
+func (w *Weapon) ToAPIMessage()*api.Weapon{
+	return &api.Weapon{
+		Object: w.Object.ToAPIMessage(),
+		Name: w.Name,
+		Radius: w.Radius,
+	}
 }
 
 func NewWeapon()*Weapon{

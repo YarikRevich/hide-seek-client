@@ -2,6 +2,8 @@ package objects
 
 import (
 	"fmt"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -28,22 +30,25 @@ type World struct {
 	Regime regime
 
 	//Describes the objects are on the map
-	PCs      []*PC
-	Elements []*Object
-	Weapons  []*Weapon
-	Ammo     []*Ammo
+	PCs      []*PC `json:"-"`
+	Elements []*Object `json:"-"`
+	Weapons  []*Weapon `json:"-"`
+	Ammo     []*Ammo `json:"-"`
 	// LootSet []*LootSet
 }
 
 func (w *World) AddPC(p *PC) {
+	p.WorldID = w.ID
 	w.PCs = append(w.PCs, p)
 }
 
 func (w *World) AddWeapon(p *Weapon) {
+	p.WorldID = w.ID
 	w.Weapons = append(w.Weapons, p)
 }
 
 func (w *World) AddAmmo(a *Ammo) {
+	a.WorldID = w.ID
 	w.Ammo = append(w.Ammo, a)
 }
 
@@ -162,6 +167,17 @@ func (w *World) SwapSpawns() {
 		// }
 		fmt.Println(u)
 	}
+}
+
+func (w *World) ToAPIMessage() *api.World{
+	return &api.World{
+		Object: w.Object.ToAPIMessage(),
+		Regime: int64(w.Regime),
+	}
+}
+
+func (w *World) FromAPIMessage(m *api.World) {
+
 }
 
 func NewWorld() *World {

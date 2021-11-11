@@ -30,7 +30,7 @@ type notificator struct {
 
 func (p *notificator) write(m string) {
 	p.Lock()
-	timestamp := time.Now().Add(time.Second * 5).Unix()
+	timestamp := time.Now().Add(time.Second * 7).Unix()
 	if r, ok := p.queue.IsExist(func(i interface{}) bool {
 		return i.(*NotificatorEntity).Message == m
 	}); ok {

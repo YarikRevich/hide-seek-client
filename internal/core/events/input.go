@@ -103,7 +103,7 @@ type Input struct {
 }
 
 type InputBuffers struct {
-	SettingsMenuNameBuffer IBuffer
+	SettingsMenuNameBuffer, JoinGameBuffer IBuffer
 }
 
 func (i *InputBuffers) CleanBuffersBlinking(){
@@ -114,6 +114,7 @@ func NewInput() *Input{
 	return &Input{
 		InputBuffers: InputBuffers{
 			SettingsMenuNameBuffer: NewBuffer(),
+			JoinGameBuffer: NewBuffer(),
 		},
 	}
 }

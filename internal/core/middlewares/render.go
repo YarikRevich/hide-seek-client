@@ -5,10 +5,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/layers/networking/connection"
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
@@ -28,13 +28,26 @@ func (r *Render) blockRenderIfOffline(){
 	go func() {
 		r.Lock()
 
-		// || !connection.UseConnection().IsConnected()
-		if !isconnect.IsOnline() {
-			notifications.PopUp.WriteError("Servers are offline!")
-			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
-		} else {
-			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_ONLINE)
+		if !isconnect.IsOnline() && statemachine.UseStateMachine().Dial().GetState() == statemachine.DIAL_WAN{
+			notifications.PopUp.WriteError("You are offline, turn on LAN server to play locally!")
+			us := statemachine.UseStateMachine().UI().GetState()
+			if !(us == statemachine.UI_SETTINGS_MENU  || us == statemachine.UI_START_MENU){
+				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
+			}
+		}else{
+			if !networking.UseNetworking().Dialer().IsConnected(){
+				networking.UseNetworking().Dialer().Reconnect()
+	
+				notifications.PopUp.WriteError("Servers are offline!")
+				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
+	
+			} else {
+				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_ONLINE)
+			}
 		}
+
+		// fmt.Println(networking.UseNetworking().Dialer().IsConnected())
+		
 
 		r.Unlock()
 	}()

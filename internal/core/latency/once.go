@@ -20,5 +20,7 @@ func (o *Once) Reset() {
 }
 
 func NewOnce() *Once {
-	return new(Once)
+	return &Once{
+		collection: make(map[int]*sync.Once),
+	}
 }

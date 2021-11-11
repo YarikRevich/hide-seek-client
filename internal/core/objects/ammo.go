@@ -2,6 +2,7 @@ package objects
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -23,6 +24,13 @@ func NewAmmoByObject(o Object)*Ammo{
 	return a
 }
 
+
+func (a *Ammo) ToAPIMessage() *api.Ammo{
+	return &api.Ammo{
+		Object: a.Object.ToAPIMessage(),
+		Direction: int64(a.Direction),
+	}
+}
 
 func NewAmmo()*Ammo{
 	a := new(Ammo)

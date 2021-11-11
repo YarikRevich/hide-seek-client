@@ -1,14 +1,24 @@
 package networking
 
 import (
+	"time"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/game-networking/pkg/client"
+
+	// "github.com/YarikRevich/game-networking/pkg/client"
 	"github.com/YarikRevich/game-networking/pkg/config"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
+	_ "google.golang.org/grpc/connectivity"
 )
 
 type Dialer struct {
-	conn client.Dialer
+	conn            api.HideSeekClient
+	service         *grpc.ClientConn
+	reconnectTicker *time.Ticker
 }
 
 func (d *Dialer) Dial() {
@@ -22,20 +32,55 @@ func (d *Dialer) Dial() {
 		c.IP = "127.0.0.1"
 	}
 
-	conn, err := client.Dial(c)
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+		grpc.WithBackoffConfig(grpc.BackoffConfig{MaxDelay: time.Second}),
+	}
+
+	service, err := grpc.Dial("127.0.0.1:8090", opts...)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	d.conn = conn
+
+	// go time.AfterFunc(time.Second*1, func() {
+	// 	s := conn.GetState()
+	// 	if s == connectivity.TransientFailure ||
+	// 		s == connectivity.Idle || s == connectivity.Connecting {
+	// 			notifications.PopUp.WriteError("Servers are offline!")
+	// 			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
+	// 	}
+	// })
+
+	d.service = service
+	d.conn = api.NewHideSeekClient(service)
 }
 
-func (d *Dialer) Conn() client.Dialer {
+func (d *Dialer) Conn() api.HideSeekClient {
 	return d.conn
 }
 
-func NewDialer() *Dialer{
-	return new(Dialer)
+func (d *Dialer) IsConnected() bool {
+	if d.conn != nil {
+		s := d.service.GetState()
+		return !(s == connectivity.TransientFailure || s == connectivity.Idle)
+	}
+	return true
 }
+
+func (d *Dialer) Reconnect() {
+	select {
+	case <-d.reconnectTicker.C:
+		d.service.Connect()
+	default:
+	}
+}
+
+func NewDialer() *Dialer {
+	return &Dialer{
+		reconnectTicker: time.NewTicker(time.Millisecond * 500),
+	}
+}
+
 // // if err != nil {
 // 		// 	applyer.ApplyMiddlewares(
 // 		// 		statemachine.UseStateMachine().Networking().SetState(networking.OFFLINE),

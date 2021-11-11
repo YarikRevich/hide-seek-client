@@ -33,7 +33,7 @@ func Exec() bool {
 				objects.UseObjects().World().AddPC(p)
 
 				middlewares.UseMiddlewares().UI().UseAfter(func() {
-					statemachine.UseStateMachine().UI().SetState(statemachine.UI_WAIT_ROOM)
+					statemachine.UseStateMachine().UI().SetState(statemachine.UI_WAIT_ROOM_START)
 				})
 
 				statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)

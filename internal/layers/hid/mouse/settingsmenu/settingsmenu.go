@@ -13,7 +13,7 @@ func Exec() bool {
 	m := events.UseEvents().Mouse()
 	if m.IsAnyMouseButtonsPressed() {
 		
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/input").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput").Modified) {
 			
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_SETTINGS_MENU_USERNAME)
 			return true
@@ -43,9 +43,11 @@ func Exec() bool {
 			switch statemachine.UseStateMachine().SettingsMenuCheckbox().GetState(){
 			case statemachine.UI_SETTINGS_MENU_CHECKBOX_OFF:
 				statemachine.UseStateMachine().SettingsMenuCheckbox().SetState(statemachine.UI_SETTINGS_MENU_CHECKBOX_ON)
+				statemachine.UseStateMachine().Dial().SetState(statemachine.DIAL_LAN)
 				networking.UseNetworking().LANServer().Start()
 			case statemachine.UI_SETTINGS_MENU_CHECKBOX_ON:
 				statemachine.UseStateMachine().SettingsMenuCheckbox().SetState(statemachine.UI_SETTINGS_MENU_CHECKBOX_OFF)
+				statemachine.UseStateMachine().Dial().SetState(statemachine.DIAL_WAN)
 				networking.UseNetworking().LANServer().Stop()
 			}
 			

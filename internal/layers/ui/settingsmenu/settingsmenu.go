@@ -1,7 +1,6 @@
 package settingsmenu
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
@@ -42,8 +41,8 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/inputs/input")
-		mm := sources.UseSources().Metadata().GetMetadata("system/inputs/input").Modified
-		mo := sources.UseSources().Metadata().GetMetadata("system/inputs/input").Origin
+		mm := sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput").Origin
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -51,7 +50,6 @@ func Draw() {
 		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
 
 		t := events.UseEvents().Input().SettingsMenuNameBuffer.Read()
-		fmt.Println(t)
 
 		s := positioning.UsePositioning().Input()
 		s.Init(img, mo, f, t)
@@ -92,7 +90,6 @@ func Draw() {
 		case statemachine.UI_SETTINGS_MENU_CHECKBOX_OFF:
 			img = sources.UseSources().Images().GetImage("system/checkbox/greencheckboxoff")
 			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxoff").Modified
-			fmt.Println(mt.Margins)
 			text.Draw(screen, "Enable LAN server", f, int(mt.Margins.LeftMargin), int(mt.Margins.TopMargin), color.White)
 		case statemachine.UI_SETTINGS_MENU_CHECKBOX_ON:
 			img = sources.UseSources().Images().GetImage("system/checkbox/greencheckboxon")
