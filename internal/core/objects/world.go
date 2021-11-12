@@ -2,7 +2,6 @@ package objects
 
 import (
 	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/google/uuid"
@@ -30,10 +29,10 @@ type World struct {
 	Regime regime
 
 	//Describes the objects are on the map
-	PCs      []*PC `json:"-"`
-	Elements []*Object `json:"-"`
-	Weapons  []*Weapon `json:"-"`
-	Ammo     []*Ammo `json:"-"`
+	PCs      []*PC 
+	Elements []*Object 
+	Weapons  []*Weapon 
+	Ammo     []*Ammo 
 	// LootSet []*LootSet
 }
 
@@ -63,6 +62,27 @@ func (w *World) GetPCs() []*PC {
 	return r
 }
 
+func (w *World) deleteObjects(){
+	w.Ammo = w.Ammo[:0]
+	w.Elements = w.Elements[:0]
+	w.Weapons = w.Weapons[:0]
+	w.PCs = w.PCs[:0]
+}
+
+func (w *World) updatePCs(m []*api.PC){
+	for _, v := range m{
+		p := NewPC()
+		p.FromAPIMessage(v)
+		w.PCs = append(w.PCs, p)
+	}
+}
+
+func (w *World) UpdateObjects(m *api.WorldObjectsResponse){
+	w.deleteObjects()
+
+	w.updatePCs(m.PCs)
+}
+
 func (w *World) GetWeaponByPC(p *PC) *Weapon {
 	for _, v := range w.Weapons {
 		if v.ParentID == p.ID {
@@ -89,13 +109,17 @@ func (w *World) ResetPCs() {
 	w.PCs = w.PCs[:0]
 }
 
-//Formats users' username
-func (w *World) String() string {
+// //Formats users' username
+func (w *World) PCsToString() string {
 	var r string
 	for _, v := range w.PCs {
-		r += fmt.Sprintf("%s\n", v.Username)
+		r += fmt.Sprintf("%s\n", v.String())
 	}
 	return r
+}
+
+func (w *World) SetID(i uuid.UUID){
+	w.ID = i
 }
 
 //Returns map scale in relating map image
@@ -177,7 +201,8 @@ func (w *World) ToAPIMessage() *api.World{
 }
 
 func (w *World) FromAPIMessage(m *api.World) {
-
+	w.Object.FromAPIMessage(m.Object)
+	w.Regime = regime(m.Regime)
 }
 
 func NewWorld() *World {

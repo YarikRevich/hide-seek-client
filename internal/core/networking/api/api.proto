@@ -95,6 +95,22 @@ message RemovePCRequest{
     string pcId = 2;
 };
 
+message SetGameStartedRequest {
+    string worldId = 1;
+};
+
+message IsGameStartedRequest{
+    string worldId = 1;
+};
+
+message IsGameStartedResponse{ 
+    bool started = 1;
+};
+
+message GetWorldRequest{
+    string worldId = 1;
+};
+
 service HideSeek {
     rpc AddWorld (World) returns (Status);
     rpc AddPC (PC) returns (Status);
@@ -105,6 +121,7 @@ service HideSeek {
     
     rpc UpdatePC(PC) returns (Status);
     rpc UpdateAmmo(Ammo) returns (Status);
+    rpc GetWorld(GetWorldRequest) returns (World);
     
     rpc ChooseSpawns (ChooseSpawnsRequest) returns (Status);
 
@@ -112,5 +129,8 @@ service HideSeek {
     rpc RemovePC (RemovePCRequest) returns (Status);
   
     rpc GetWorldObjects(WorldObjectsRequest) returns (WorldObjectsResponse);
+
+    rpc SetGameStarted(SetGameStartedRequest) returns (Status);
+    rpc IsGameStarted(IsGameStartedRequest) returns (IsGameStartedResponse);
 };
 ////////////////////////////

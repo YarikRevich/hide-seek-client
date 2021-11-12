@@ -58,14 +58,15 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Modified
+		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Origin
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
+		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
 
 		s := positioning.UsePositioning().Button()
-		s.Init(img, m, f, m.Text.Symbols)
+		s.Init(img, mo, f, mo.Text.Symbols)
 		s.Draw()
 
 		screen.DrawImage(img, opts)

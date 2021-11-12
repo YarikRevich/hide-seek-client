@@ -71,6 +71,10 @@ func (p *PC) FromAPIMessage(m *api.PC){
 	p.Health = m.Health
 }
 
+func (p *PC) String()string{
+	return p.Username
+}
+
 func NewPC() *PC {
 	pc := new(PC)
 	id, err := uuid.NewUUID()

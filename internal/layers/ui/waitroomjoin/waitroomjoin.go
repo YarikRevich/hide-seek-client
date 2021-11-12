@@ -46,17 +46,15 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	
-
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetImage("system/textareas/textarea")
+		img := sources.UseSources().Images().GetCopyOfImage("system/textareas/textarea")
 		m := sources.UseSources().Metadata().GetMetadata("system/textareas/textarea").Modified
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		text.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		text.Draw(img, objects.UseObjects().World().PCsToString(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})

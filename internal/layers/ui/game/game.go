@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/hajimehoshi/ebiten/v2"

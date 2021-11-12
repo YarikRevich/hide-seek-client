@@ -32,9 +32,16 @@ func Exec() bool {
 				p.SetSkin(v)
 				objects.UseObjects().World().AddPC(p)
 
-				middlewares.UseMiddlewares().UI().UseAfter(func() {
-					statemachine.UseStateMachine().UI().SetState(statemachine.UI_WAIT_ROOM_START)
-				})
+				switch statemachine.UseStateMachine().Game().GetState() {
+				case statemachine.GAME_START:
+					middlewares.UseMiddlewares().UI().UseAfter(func() {
+						statemachine.UseStateMachine().UI().SetState(statemachine.UI_WAIT_ROOM_START)
+					})
+				case statemachine.GAME_JOIN:
+					middlewares.UseMiddlewares().UI().UseAfter(func() {
+						statemachine.UseStateMachine().UI().SetState(statemachine.UI_WAIT_ROOM_JOIN)
+					})
+				}
 
 				statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)
 				return true

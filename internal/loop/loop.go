@@ -26,10 +26,11 @@ func (g *Loop) Update() error {
 	render.UseRender().CleanRenderPool()
 
 	animation.Process()
+	networking.Process()
 	ui.Process()
 	mouse.Process()
 	keyboard.Process()
-	networking.Process()
+
 
 	if !cli.IsWithoutSound() {
 		audio.Process()

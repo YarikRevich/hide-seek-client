@@ -85,12 +85,15 @@ func (b *Base) Init(i *ebiten.Image, m *sources.Model, f font.Face, t string) {
 
 	if len(b.examined) != 1 {
 		b.indent = -5
+	}else{
+		b.indent = 0
 	}
 }
 
 func (b *Base) Draw() {
 	for b.next() {
 		x, y := b.getPosition()
+
 		fc := color.NewColor().GetColor(b.metadata.Fonts.FontColor)
 		text.Draw(b.img, b.getText(), b.font, x, y, fc)
 	}

@@ -24,6 +24,11 @@ const (
 )
 
 const (
+	GAME_START = iota
+	GAME_JOIN
+)
+
+const (
 	UI_START_MENU = iota
 	UI_SETTINGS_MENU
 

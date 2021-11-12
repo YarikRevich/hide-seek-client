@@ -9,7 +9,7 @@ import (
 )
 
 func Exec() {
-	events.UseEvents().Keyboard().HandleKeyPress(events.UseEvents().Input().SettingsMenuNameBuffer, []events.KeyBoardEntity{
+	events.UseEvents().Keyboard().HandleKeyPress(events.UseEvents().Input().JoinGameBuffer, []events.KeyBoardEntity{
 		{Combination: struct{AwaitKey, ControlKey ebiten.Key}{AwaitKey: ebiten.KeyMetaLeft, ControlKey: ebiten.KeyV}, Callback: func(b events.IBuffer, k rune) {
 			r, err := clipboard.ReadAll()
 			if err != nil {

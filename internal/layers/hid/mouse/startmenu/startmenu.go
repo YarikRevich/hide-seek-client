@@ -29,6 +29,7 @@ func Exec() bool {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_MAP_CHOOSE)
 			})
+			statemachine.UseStateMachine().Game().SetState(statemachine.GAME_START)
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)
 			return true
 		}
@@ -40,6 +41,7 @@ func Exec() bool {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_JOIN_MENU)
 			})
+			statemachine.UseStateMachine().Game().SetState(statemachine.GAME_JOIN)
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)
 			return true
 		}

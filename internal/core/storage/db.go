@@ -32,9 +32,10 @@ func (d *DB) initDefaultValues() {
 	if err := q.Scan(&count); err != nil {
 		logrus.Fatal("selecting count of rows user failed: ", err)
 	}
-
-	if _, err := d.db.Exec("INSERT INTO user (name) VALUES (?)", xid.New().String()); err != nil {
-		logrus.Fatal("inserting default username failed:", err)
+	if count == 0 {
+		if _, err := d.db.Exec("INSERT INTO user (name) VALUES (?)", xid.New().String()); err != nil {
+			logrus.Fatal("inserting default username failed:", err)
+		}
 	}
 }
 
@@ -51,6 +52,6 @@ func NewDB() *sql.DB {
 
 	session := &DB{d}
 	session.init()
-	
+
 	return d
 }

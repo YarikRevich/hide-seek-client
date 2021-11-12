@@ -45,10 +45,7 @@ func (r *Render) blockRenderIfOffline(){
 				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_ONLINE)
 			}
 		}
-
-		// fmt.Println(networking.UseNetworking().Dialer().IsConnected())
-		
-
+	
 		r.Unlock()
 	}()
 }

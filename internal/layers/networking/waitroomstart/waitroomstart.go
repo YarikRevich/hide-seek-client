@@ -58,9 +58,6 @@ func Exec() {
 			logrus.Fatal(err)
 		}
 
-		newPCs := worldObjects.GetPCs()
-		for i, v := range w.PCs{
-			v.FromAPIMessage(newPCs[i])
-		}
+		w.UpdateObjects(worldObjects)
 	}, statemachine.UI_WAIT_ROOM_START, time.Second)
 }

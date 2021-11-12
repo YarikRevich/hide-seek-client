@@ -17,7 +17,7 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		
-		img := sources.UseSources().Images().GetImage("system/background/background")
+		img := sources.UseSources().Images().GetCopyOfImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -26,10 +26,10 @@ func Draw() {
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
 
-		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Modified
+		mo := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Origin
 		w := objects.UseObjects().World()
 
-		text.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
+		text.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(mo.Margins.LeftMargin), int(mo.Margins.TopMargin), color.White)
 
 		screen.DrawImage(img, opts)
 	})
@@ -56,7 +56,7 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 
-		text.Draw(img, objects.UseObjects().World().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		text.Draw(img, objects.UseObjects().World().PCsToString(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})
@@ -67,13 +67,16 @@ func Draw() {
 		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Origin
 
 		opts := &ebiten.DrawImageOptions{}
+
 		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
 		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
-
+	
 		s := positioning.UsePositioning().Button()
 		s.Init(img, mo, f, mo.Text.Symbols)
 		s.Draw()
 
 		screen.DrawImage(img, opts)
+
+		img.Dispose()
 	})
 }

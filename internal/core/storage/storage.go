@@ -1,21 +1,26 @@
 package storage
 
+import "github.com/YarikRevich/HideSeek-Client/tools/cli"
+
 var instance *Storage
 
 
 type Storage struct {
-	user *User
+	user IUser
 }
 
-func (s *Storage) User() *User{
+func (s *Storage) User() IUser{
 	return s.user
 }
 
 func UseStorage() *Storage{
 	if instance == nil{
 		db := NewDB()
-		instance = &Storage{
-			NewUser(db),
+		instance = new(Storage)
+		if cli.IsDisableConfigAutoSave(){
+			instance.user = NewUserTemorary()
+		}else{
+			instance.user = NewUserStorage(db)
 		}
 	}
 	return instance

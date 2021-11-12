@@ -10,7 +10,7 @@ coefficiantx = 4.0
 coefficianty = 4.0
 
 [text]
-symbols = "Join game"
+symbols = "Confirm"
 position = "center"
 
 [fonts]
