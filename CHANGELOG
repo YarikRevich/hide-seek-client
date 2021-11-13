@@ -16,3 +16,15 @@ Feature:
 	Improved networking check
 
 ---
+
+---
+[13.11.2021]
+Feature:
+	Implemented stable connection to the game
+---
+
+---
+[14.11.2021]
+Plan:
+	Set camera available to work with multiple users
+---

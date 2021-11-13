@@ -71,7 +71,7 @@ type Object struct {
 	// Names parentid the object referes to
 	WorldID, ParentID, ID uuid.UUID
 
-	RawPos struct {
+	RawPos, AttachedPos struct {
 		X, Y float64
 	}
 
@@ -81,8 +81,10 @@ type Object struct {
 
 	Role Role
 
+	TranslationMovementX, TranslationMovementY bool 
+
 	//Only client fields
-	PositionHistory zeroshifter.IZeroShifter `json:"-"`
+	PositionHistory zeroshifter.IZeroShifter
 }
 
 func (o *Object) IsByObject(ob Object) bool {
@@ -97,7 +99,7 @@ func (o *Object) savePositionBeforeAnimation() {
 	o.Animation.PositionBeforeAnimation = image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)}
 }
 
-func (o *Object) SetX(x float64) {
+func (o *Object) SetRawX(x float64) {
 	if x < o.RawPos.X {
 		o.Direction = keycodes.LEFT
 	} else if x > o.RawPos.X {
@@ -108,7 +110,7 @@ func (o *Object) SetX(x float64) {
 	o.savePositionBeforeAnimation()
 }
 
-func (o *Object) SetY(y float64) {
+func (o *Object) SetRawY(y float64) {
 	if y < o.RawPos.Y {
 		o.Direction = keycodes.UP
 	} else if y > o.RawPos.Y {
@@ -117,6 +119,14 @@ func (o *Object) SetY(y float64) {
 
 	o.RawPos.Y = y
 	o.savePositionBeforeAnimation()
+}
+
+func (o *Object) SetAttachedPosX(x float64){
+	o.AttachedPos.X = x
+}
+
+func (o *Object) SetAttachedPosY(y float64){
+	o.AttachedPos.Y = y
 }
 
 //Checks if x pos has been changed
@@ -171,12 +181,14 @@ func (o *Object) GetPositionBeforeAnimation() (float64, float64) {
 		float64(o.Animation.PositionBeforeAnimation.Y)
 }
 
+//Sets skin for the object
 func (o *Object) SetSkin(path string) {
 	o.Path = path
 	_, file := filepath.Split(path)
 	o.Name = file
 }
 
+//Returns images for the skin selected(creates new from old)
 func (o *Object) GetImage() *ebiten.Image {
 	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
 }
@@ -190,9 +202,12 @@ func (o *Object) GetAnimatedImage() *ebiten.Image{
 	return i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
 }
 
+//Returns metadata for the skin selected
 func (o *Object) GetMetadata() *sources.ModelCombination {
 	return sources.UseSources().Metadata().GetMetadata(o.Path)
 }
+
+//API//
 
 func (o *Object) ToAPIMessage() *api.Object{
 	return &api.Object{
@@ -250,6 +265,34 @@ func (o *Object) FromAPIMessage(m *api.Object){
 	o.Spawn.Y = int(m.Spawn.Y)
 	o.Direction = keycodes.Direction(m.Direction)
 	o.Role = Role(m.Role)
+}
+
+func (o *Object) GetZoomForSkin()(float64, float64){
+	m := o.GetMetadata().Modified
+	return (m.Scale.CoefficiantX / 100 * m.Camera.Zoom), (m.Scale.CoefficiantY / 100 * m.Camera.Zoom)
+}
+
+func (o *Object) GetMaxZoomForSkin()(float64, float64){
+	m := o.GetMetadata().Modified
+	return (m.Scale.CoefficiantX / 100 * m.Camera.MaxZoom), (m.Scale.CoefficiantY / 100 * m.Camera.MaxZoom)
+}
+
+func (o *Object) GetZoomedPos()(float64, float64){
+	sx, sy := UseObjects().World().GetZoomedMapScale()
+	return o.RawPos.X * sx, o.RawPos.Y * sy
+}
+
+func (o *Object) GetZoomedAttachedPos() (float64, float64){
+	sx, sy := UseObjects().World().GetZoomedMapScale()
+	return o.AttachedPos.X * sx, o.AttachedPos.Y * sy
+}
+
+func (o *Object) SetTranslationXMovement(){
+	o.TranslationMovementX  =true
+}
+
+func (o *Object) SetTranslationYMovement(){
+	o.TranslationMovementY  =true
 }
 
 func NewObject() *Object {

@@ -29,10 +29,10 @@ type World struct {
 	Regime regime
 
 	//Describes the objects are on the map
-	PCs      []*PC 
-	Elements []*Object 
-	Weapons  []*Weapon 
-	Ammo     []*Ammo 
+	PCs      []*PC
+	Elements []*Object
+	Weapons  []*Weapon
+	Ammo     []*Ammo
 	// LootSet []*LootSet
 }
 
@@ -62,22 +62,22 @@ func (w *World) GetPCs() []*PC {
 	return r
 }
 
-func (w *World) deleteObjects(){
+func (w *World) deleteObjects() {
 	w.Ammo = w.Ammo[:0]
 	w.Elements = w.Elements[:0]
 	w.Weapons = w.Weapons[:0]
 	w.PCs = w.PCs[:0]
 }
 
-func (w *World) updatePCs(m []*api.PC){
-	for _, v := range m{
+func (w *World) updatePCs(m []*api.PC) {
+	for _, v := range m {
 		p := NewPC()
 		p.FromAPIMessage(v)
 		w.PCs = append(w.PCs, p)
 	}
 }
 
-func (w *World) UpdateObjects(m *api.WorldObjectsResponse){
+func (w *World) UpdateObjects(m *api.WorldObjectsResponse) {
 	w.deleteObjects()
 
 	w.updatePCs(m.PCs)
@@ -118,7 +118,7 @@ func (w *World) PCsToString() string {
 	return r
 }
 
-func (w *World) SetID(i uuid.UUID){
+func (w *World) SetID(i uuid.UUID) {
 	w.ID = i
 }
 
@@ -167,6 +167,35 @@ func (w *World) GetMapScale() (float64, float64) {
 	return sx, sy
 }
 
+func (w *World) GetZoomedMapScale()(float64, float64){
+	m := w.GetMetadata().Modified
+	sx, sy := w.GetMapScale()
+	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * m.Camera.Zoom * 3)
+}
+
+func (w *World) GetWorldAxis()(float64, float64){
+	m := w.GetMetadata().Modified
+	sx, sy := w.GetMapScale()
+	smx, smy := w.GetMaxMapScale()
+	return ((m.Size.Width * sx) / smx / 2), ((m.Size.Height * sy) / smy / 2.3)
+}
+
+func (w *World) IsAxisXCrossedBy(p *PC)bool{
+	m := p.GetMetadata().Modified
+	x, _ := p.GetZoomedPos()
+	ax, _ := w.GetWorldAxis()
+
+	return (x-m.Buffs.Speed.X) <= ax && ax <= (x+m.Buffs.Speed.X)
+}
+
+func (w *World) IsAxisYCrossedBy(p *PC)bool{
+	m := p.GetMetadata().Modified
+	_, y := p.GetZoomedPos()
+	_, ay := w.GetWorldAxis()
+
+	return (y-m.Buffs.Speed.Y) <= ay && ay <= (y+m.Buffs.Speed.Y)
+}
+
 //Swaps spawns of the teams
 func (w *World) SwapSpawns() {
 	// map[pc.Team]map[uuid.UUID]image.Point{}
@@ -193,7 +222,7 @@ func (w *World) SwapSpawns() {
 	}
 }
 
-func (w *World) ToAPIMessage() *api.World{
+func (w *World) ToAPIMessage() *api.World {
 	return &api.World{
 		Object: w.Object.ToAPIMessage(),
 		Regime: int64(w.Regime),
@@ -204,6 +233,24 @@ func (w *World) FromAPIMessage(m *api.World) {
 	w.Object.FromAPIMessage(m.Object)
 	w.Regime = regime(m.Regime)
 }
+
+func (w *World) GetScaleForSkin()(float64, float64){
+	m := w.GetMetadata().Modified
+	sx, sy := w.GetMapScale()
+	return ((sx+m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy+m.Scale.CoefficiantY / 100) * m.Camera.Zoom * 3)
+}
+
+func (w *World) GetMaxScaleForSkin()(float64, float64){
+	m := w.GetMetadata().Modified
+	sx, sy := w.GetMapScale()
+	return ((sx+m.Scale.CoefficiantX) / 100 * m.Camera.MaxZoom * 3), ((sy+m.Scale.CoefficiantY / 100) * m.Camera.MaxZoom * 3)
+}
+
+
+// func (w *World) GetScaledPos(){
+	// c.scaledMapTranslation.X = c.lastScaledMapTranslation.X * c.mapScale.X / c.lastMapScale.X
+	// c.scaledMapTranslation.Y = c.lastScaledMapTranslation.Y * c.mapScale.Y / c.lastMapScale.Y
+// }
 
 func NewWorld() *World {
 	world := new(World)

@@ -79,6 +79,10 @@ type Model struct {
 	Fonts struct {
 		FontColor FontColor
 	}
+
+	Camera struct {
+		MaxZoom, MinZoom, Zoom float64
+	}
 }
 
 //Scales margins with scale

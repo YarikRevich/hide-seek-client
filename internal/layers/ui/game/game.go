@@ -13,7 +13,7 @@ func Draw() {
 	p := objects.UseObjects().PC()
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p.SaveLastPosition()
-		camera.UseCamera().UpdateCamera()
+		camera.UseCamera().Follow(p)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
@@ -24,21 +24,15 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		// physics.ProcessAnimation(&p.Object)
-		img := p.GetAnimatedImage()
-
-		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Concat(camera.UseCamera().HeroMatrix)
-
-		screen.DrawImage(img, opts)
-	})
-
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		for _, v := range w.PCs {
-			// if v.ID != p.ID {
+			img := p.GetAnimatedImage()
+
 			opts := &ebiten.DrawImageOptions{}
+			opts.GeoM.Concat(camera.UseCamera().Hero.GetMatrixFor(v))
+
 			screen.DrawImage(v.GetImage(), opts)
-			// }
+			
+			img.Dispose()
 		}
 	})
 

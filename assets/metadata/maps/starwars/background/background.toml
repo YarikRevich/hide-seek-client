@@ -7,3 +7,8 @@ coefficianty = 1.0
 
 [physics]
 g = 10.0
+
+[camera]
+maxzoom = 55.0
+minzoom = 40.0
+zoom = 40.0
