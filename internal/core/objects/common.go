@@ -191,16 +191,20 @@ func (o *Object) SetSkin(path string) {
 
 //Returns images for the skin selected(creates new from old)
 func (o *Object) GetImage() *ebiten.Image {
+	return sources.UseSources().Images().GetImage(o.Path)
+}
+
+func (o *Object) GetCopyOfImage() *ebiten.Image{
 	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
 }
 
 //Returns image where animation properties applied to
-func (o *Object) GetAnimatedImage() (*ebiten.Image, *ebiten.Image) {
+func (o *Object) GetAnimatedImage() *ebiten.Image {
 	i := o.GetImage()
 	m := o.GetMetadata().Modified
 
 	sx, sy := int((m.Animation.FrameX+float64(o.Animation.FrameCount))*m.Animation.FrameWidth), int(m.Animation.FrameY)
-	return i, i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
+	return i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
 }
 
 //Returns metadata for the skin selected

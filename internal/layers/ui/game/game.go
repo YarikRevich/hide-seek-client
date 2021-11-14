@@ -1,7 +1,9 @@
 package game
 
 import (
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/camera"
+	// "fmt"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
@@ -11,52 +13,46 @@ import (
 func Draw() {
 	w := objects.UseObjects().World()
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	p := objects.UseObjects().PC()
-	// 	p.SaveLastPosition()
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		p := objects.UseObjects().PC()
+		p.SaveLastPosition()
 
-	// 	c := camera.UseCamera()
-	// 	c.Follow(p)
-	// 	c.UpdateMatrices()
-	// })
+		c := camera.UseCamera()
+		c.Follow(p)
+		c.UpdateMatrices()
+	})
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	img := w.GetImage()
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := w.GetImage()
 
-	// 	opts := &ebiten.DrawImageOptions{}
-	// 	// opts.GeoM.Concat(camera.UseCamera().Map.GetMatrix())
-
-	// 	screen.DrawImage(img, opts)
-		
-	// 	img.Dispose()
-	// })
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Concat(camera.UseCamera().Map.GetMatrix())
+		screen.DrawImage(img, opts)
+	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		for _, v := range w.PCs {
-			origImg, animImg := v.GetAnimatedImage()
+			img := v.GetAnimatedImage()
 
 			opts := &ebiten.DrawImageOptions{}
-			// opts.GeoM.Concat(camera.UseCamera().Hero.GetMatrixFor(v))
-			screen.DrawImage(animImg, opts)
-			
-			origImg.Dispose()
-			animImg.Dispose()
+			opts.GeoM.Concat(camera.UseCamera().Hero.GetMatrixFor(v))
+			screen.DrawImage(img, opts)
 		}
 	})
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	for _, v := range w.Weapons {
-	// 		opts := &ebiten.DrawImageOptions{}
-	// 		screen.DrawImage(v.GetImage(), opts)
-	// 	}
-	// })
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		for _, v := range w.Weapons {
+			opts := &ebiten.DrawImageOptions{}
+			screen.DrawImage(v.GetImage(), opts)
+		}
+	})
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	for _, v := range w.Ammo {
-	// 		opts := &ebiten.DrawImageOptions{}
-	// 		screen.DrawImage(v.GetImage(), opts)
-	// 	}
-	// })
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		for _, v := range w.Ammo {
+			opts := &ebiten.DrawImageOptions{}
+			screen.DrawImage(v.GetImage(), opts)
+		}
+	})
 
 	// // g.winConf.DrawGoldChest()
 
