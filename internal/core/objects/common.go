@@ -1,6 +1,7 @@
 package objects
 
 import (
+	// "fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -32,8 +33,8 @@ type Physics struct {
 
 type Animation struct {
 	PositionBeforeAnimation image.Point
-	FrameCount              uint32
-	FrameDelayCounter       uint32
+	FrameCount              uint64
+	FrameDelayCounter       uint64
 	CurrentFrameMatrix      []float64
 }
 
@@ -81,7 +82,7 @@ type Object struct {
 
 	Role Role
 
-	TranslationMovementX, TranslationMovementY bool 
+	TranslationMovementXBlocked, TranslationMovementYBlocked bool
 
 	//Only client fields
 	PositionHistory zeroshifter.IZeroShifter
@@ -121,11 +122,11 @@ func (o *Object) SetRawY(y float64) {
 	o.savePositionBeforeAnimation()
 }
 
-func (o *Object) SetAttachedPosX(x float64){
+func (o *Object) SetAttachedPosX(x float64) {
 	o.AttachedPos.X = x
 }
 
-func (o *Object) SetAttachedPosY(y float64){
+func (o *Object) SetAttachedPosY(y float64) {
 	o.AttachedPos.Y = y
 }
 
@@ -194,12 +195,12 @@ func (o *Object) GetImage() *ebiten.Image {
 }
 
 //Returns image where animation properties applied to
-func (o *Object) GetAnimatedImage() *ebiten.Image{
+func (o *Object) GetAnimatedImage() (*ebiten.Image, *ebiten.Image) {
 	i := o.GetImage()
 	m := o.GetMetadata().Modified
 
 	sx, sy := int((m.Animation.FrameX+float64(o.Animation.FrameCount))*m.Animation.FrameWidth), int(m.Animation.FrameY)
-	return i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
+	return i, i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
 }
 
 //Returns metadata for the skin selected
@@ -209,15 +210,15 @@ func (o *Object) GetMetadata() *sources.ModelCombination {
 
 //API//
 
-func (o *Object) ToAPIMessage() *api.Object{
+func (o *Object) ToAPIMessage() *api.Object {
 	return &api.Object{
 		Animation: &api.Animation{
 			PositionBeforeAnimation: &api.Position{
 				X: float64(o.Animation.PositionBeforeAnimation.X),
 				Y: float64(o.Animation.PositionBeforeAnimation.Y),
 			},
-			FrameCount: o.FrameCount,
-			FrameDelayCounter: o.FrameDelayCounter,
+			FrameCount:         uint64(o.FrameCount),
+			FrameDelayCounter:  uint64(o.FrameDelayCounter),
 			CurrentFrameMatrix: o.CurrentFrameMatrix,
 		},
 		Skin: &api.Skin{
@@ -227,9 +228,9 @@ func (o *Object) ToAPIMessage() *api.Object{
 		Physics: &api.Physics{
 			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
 		},
-		WorldId: o.WorldID.String(),
+		WorldId:  o.WorldID.String(),
 		ParentId: o.ParentID.String(),
-		Id: o.ID.String(),
+		Id:       o.ID.String(),
 		RawPos: &api.Position{
 			X: o.RawPos.X,
 			Y: o.RawPos.Y,
@@ -239,11 +240,11 @@ func (o *Object) ToAPIMessage() *api.Object{
 			Y: float64(o.Spawn.Y),
 		},
 		Direction: int64(o.Direction),
-		Role: int64(o.Role),
+		Role:      int64(o.Role),
 	}
 }
 
-func (o *Object) FromAPIMessage(m *api.Object){
+func (o *Object) FromAPIMessage(m *api.Object) {
 	o.Animation.PositionBeforeAnimation.X = int(m.Animation.PositionBeforeAnimation.X)
 	o.Animation.PositionBeforeAnimation.Y = int(m.Animation.PositionBeforeAnimation.Y)
 	o.Animation.FrameCount = m.Animation.FrameCount
@@ -267,32 +268,36 @@ func (o *Object) FromAPIMessage(m *api.Object){
 	o.Role = Role(m.Role)
 }
 
-func (o *Object) GetZoomForSkin()(float64, float64){
+func (o *Object) GetZoomForSkin() (float64, float64) {
 	m := o.GetMetadata().Modified
 	return (m.Scale.CoefficiantX / 100 * m.Camera.Zoom), (m.Scale.CoefficiantY / 100 * m.Camera.Zoom)
 }
 
-func (o *Object) GetMaxZoomForSkin()(float64, float64){
+func (o *Object) GetMaxZoomForSkin() (float64, float64) {
 	m := o.GetMetadata().Modified
 	return (m.Scale.CoefficiantX / 100 * m.Camera.MaxZoom), (m.Scale.CoefficiantY / 100 * m.Camera.MaxZoom)
 }
 
-func (o *Object) GetZoomedPos()(float64, float64){
+func (o *Object) GetZoomedPos() (float64, float64) {
 	sx, sy := UseObjects().World().GetZoomedMapScale()
 	return o.RawPos.X * sx, o.RawPos.Y * sy
 }
 
-func (o *Object) GetZoomedAttachedPos() (float64, float64){
+func (o *Object) GetZoomedAttachedPos() (float64, float64) {
 	sx, sy := UseObjects().World().GetZoomedMapScale()
 	return o.AttachedPos.X * sx, o.AttachedPos.Y * sy
 }
 
-func (o *Object) SetTranslationXMovement(){
-	o.TranslationMovementX  =true
+func (o *Object) SetTranslationXMovementBlocked(s bool) {
+	o.TranslationMovementXBlocked = s
 }
 
-func (o *Object) SetTranslationYMovement(){
-	o.TranslationMovementY  =true
+func (o *Object) SetTranslationYMovementBlocked(s bool) {
+	o.TranslationMovementYBlocked = s
+}
+
+func (o *Object) IsTranslationMovementBlocked() bool{
+	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
 }
 
 func NewObject() *Object {

@@ -30,11 +30,12 @@ const (
 
 type Animation struct {
 	FrameDelay,
-	FrameNum,
 	FrameX,
 	FrameY,
 	FrameWidth,
 	FrameHeight float64
+
+	FrameNum int
 }
 
 type Model struct {

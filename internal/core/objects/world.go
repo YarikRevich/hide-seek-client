@@ -70,10 +70,16 @@ func (w *World) deleteObjects() {
 }
 
 func (w *World) updatePCs(m []*api.PC) {
+	pc := UseObjects().PC()
 	for _, v := range m {
-		p := NewPC()
-		p.FromAPIMessage(v)
-		w.PCs = append(w.PCs, p)
+		if v.Object.Id == pc.ID.String() {
+			pc.FromAPIMessage(v)
+			w.PCs = append(w.PCs, pc)
+		} else {
+			np := NewPC()
+			np.FromAPIMessage(v)
+			w.PCs = append(w.PCs, np)
+		}
 	}
 }
 
@@ -167,20 +173,20 @@ func (w *World) GetMapScale() (float64, float64) {
 	return sx, sy
 }
 
-func (w *World) GetZoomedMapScale()(float64, float64){
+func (w *World) GetZoomedMapScale() (float64, float64) {
 	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
 	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * m.Camera.Zoom * 3)
 }
 
-func (w *World) GetWorldAxis()(float64, float64){
+func (w *World) GetWorldAxis() (float64, float64) {
 	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
 	smx, smy := w.GetMaxMapScale()
 	return ((m.Size.Width * sx) / smx / 2), ((m.Size.Height * sy) / smy / 2.3)
 }
 
-func (w *World) IsAxisXCrossedBy(p *PC)bool{
+func (w *World) IsAxisXCrossedBy(p *PC) bool {
 	m := p.GetMetadata().Modified
 	x, _ := p.GetZoomedPos()
 	ax, _ := w.GetWorldAxis()
@@ -188,7 +194,7 @@ func (w *World) IsAxisXCrossedBy(p *PC)bool{
 	return (x-m.Buffs.Speed.X) <= ax && ax <= (x+m.Buffs.Speed.X)
 }
 
-func (w *World) IsAxisYCrossedBy(p *PC)bool{
+func (w *World) IsAxisYCrossedBy(p *PC) bool {
 	m := p.GetMetadata().Modified
 	_, y := p.GetZoomedPos()
 	_, ay := w.GetWorldAxis()
@@ -234,22 +240,26 @@ func (w *World) FromAPIMessage(m *api.World) {
 	w.Regime = regime(m.Regime)
 }
 
-func (w *World) GetScaleForSkin()(float64, float64){
+func (w *World) GetScaleForSkin() (float64, float64) {
 	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
-	return ((sx+m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy+m.Scale.CoefficiantY / 100) * m.Camera.Zoom * 3)
+	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy + m.Scale.CoefficiantY/100) * m.Camera.Zoom * 3)
 }
 
-func (w *World) GetMaxScaleForSkin()(float64, float64){
+func (w *World) GetMaxScaleForSkin() (float64, float64) {
 	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
-	return ((sx+m.Scale.CoefficiantX) / 100 * m.Camera.MaxZoom * 3), ((sy+m.Scale.CoefficiantY / 100) * m.Camera.MaxZoom * 3)
+	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.MaxZoom * 3), ((sy + m.Scale.CoefficiantY/100) * m.Camera.MaxZoom * 3)
 }
 
+func (w *World) GetZoomedAttachedPos() (float64, float64) {
+	sx, sy := UseObjects().World().GetZoomedMapScale()
+	return -w.AttachedPos.X * sx, -w.AttachedPos.Y * sy
+}
 
 // func (w *World) GetScaledPos(){
-	// c.scaledMapTranslation.X = c.lastScaledMapTranslation.X * c.mapScale.X / c.lastMapScale.X
-	// c.scaledMapTranslation.Y = c.lastScaledMapTranslation.Y * c.mapScale.Y / c.lastMapScale.Y
+// c.scaledMapTranslation.X = c.lastScaledMapTranslation.X * c.mapScale.X / c.lastMapScale.X
+// c.scaledMapTranslation.Y = c.lastScaledMapTranslation.Y * c.mapScale.Y / c.lastMapScale.Y
 // }
 
 func NewWorld() *World {

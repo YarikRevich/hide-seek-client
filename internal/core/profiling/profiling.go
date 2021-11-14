@@ -2,6 +2,7 @@ package profiling
 
 import (
 	"container/list"
+	"errors"
 	"fmt"
 	"os"
 	"runtime/pprof"
@@ -20,6 +21,7 @@ const (
 	UI            handler = "ui"
 	UI_START_MENU handler = "ui_start_menu"
 	UI_GAME_MENU  handler = "ui_game_menu"
+	UI_ANIMATION  handler = "ui_animation"
 
 	MOUSE    handler = "mouse"
 	KEYBOARD handler = "keyboard"
@@ -63,32 +65,38 @@ func (p *profiler) Init() {
 		{handler: UI},
 		{handler: UI_START_MENU},
 		{handler: UI_GAME_MENU},
+		{handler: UI_ANIMATION},
 		{handler: MOUSE},
 		{handler: KEYBOARD},
 		{handler: AUDIO},
-		{handler: RENDER},
+		{handler: RENDER},	
 	}
 }
 
-func (p *profiler) getMonitoring(name handler) *monitoring {
+func (p *profiler) getMonitoring(name handler) (*monitoring, error) {
 	for _, v := range p.handlers {
 		if v != nil && v.handler == name {
-			return v
+			return v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("monitoring handler was not found")
 }
-
 
 func (p *profiler) StartMonitoring(name handler) {
 	p.monitoringQueue.PushBack(name)
-	m := p.getMonitoring(name)
+	m, err := p.getMonitoring(name)
+	if err != nil{
+		logrus.Fatal(err)
+	}
 	m.currentTime = time.Now()
 }
 
 func (p *profiler) EndMonitoring() {
 	b := p.monitoringQueue.Back()
-	m := p.getMonitoring(b.Value.(handler))
+	m, err := p.getMonitoring(b.Value.(handler))
+	if err != nil{
+		logrus.Fatal(err)
+	}
 	p.monitoringQueue.Remove(b)
 
 	select {
@@ -104,7 +112,7 @@ func (p *profiler) EndMonitoring() {
 	default:
 	}
 
-	m.time = append(m.time, float64(time.Since(m.currentTime).Seconds() / float64(time.Millisecond)))
+	m.time = append(m.time, float64(time.Since(m.currentTime).Seconds()/float64(time.Millisecond)))
 }
 
 func (p *profiler) String() string {

@@ -9,16 +9,11 @@ import (
 )
 
 func Process() {
-	if cli.IsDebug() {
-		profiling.UseProfiler().StartMonitoring(profiling.UI)
-		defer profiling.UseProfiler().EndMonitoring()
-	}
-
 	switch statemachine.UseStateMachine().UI().GetState() {
 	case statemachine.UI_GAME:
 		func(){
 			if cli.IsDebug(){
-				profiling.UseProfiler().StartMonitoring(profiling.UI_GAME_MENU)
+				profiling.UseProfiler().StartMonitoring(profiling.UI_ANIMATION)
 				defer profiling.UseProfiler().EndMonitoring()
 			}
 			game.Exec()

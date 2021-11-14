@@ -1,20 +1,14 @@
 package animation
 
-var instance *Animation
+import "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 
-type Animation struct {
-	pc *PCAnimation
-}
+func Animate(o *objects.Object) {
+	m := o.GetMetadata().Origin
 
-func (a *Animation) PC()*PCAnimation{
-	return a.pc
-}
-
-func UseAnimation() *Animation{
-	if instance == nil{
-		instance = &Animation{
-			pc: NewPCAnimation(),
-		}
+	o.Animation.FrameDelayCounter++
+	o.Animation.FrameDelayCounter %= uint64(m.Animation.FrameDelay)
+	if o.Animation.FrameDelayCounter == 0 {
+		o.Animation.FrameCount++
+		o.Animation.FrameCount %= uint64(m.Animation.FrameNum)
 	}
-	return instance
 }

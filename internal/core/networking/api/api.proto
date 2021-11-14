@@ -48,8 +48,8 @@ message Object {
 
 message Animation {
     Position positionBeforeAnimation = 1;
-    uint32 frameCount = 2;
-    uint32 frameDelayCounter = 3;
+    uint64 frameCount = 2;
+    uint64 frameDelayCounter = 3;
     repeated double currentFrameMatrix = 4;
 };
 

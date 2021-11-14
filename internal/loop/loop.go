@@ -25,9 +25,10 @@ var _ ebiten.Game = (*Loop)(nil)
 func (g *Loop) Update() error {
 	render.UseRender().CleanRenderPool()
 
-	animation.Process()
 	networking.Process()
+	animation.Process()
 	ui.Process()
+
 	mouse.Process()
 	keyboard.Process()
 

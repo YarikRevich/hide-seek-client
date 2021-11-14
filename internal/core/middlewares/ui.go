@@ -9,6 +9,10 @@ import (
 
 type UI struct{}
 
+func (u *UI) cleanTimings(){
+	latency.UseLatency().Timings().Clean(statemachine.UseStateMachine().UI().GetState())
+}
+
 func (u *UI) cleanLatencyOnce() {
 	latency.UseLatency().Once().Reset()
 }
@@ -29,11 +33,14 @@ func (u *UI) cleanUsedMetadata(){
 
 
 func (u *UI) UseAfter(c func()) {
+	u.cleanTimings()
+
 	c()
 
 	u.cleanBuffers()
 	u.setSuspendedMusicDone()
 	u.cleanUsedMetadata()
+	u.cleanLatencyOnce()
 }
 
 func NewUI() *UI {
