@@ -1,6 +1,7 @@
 package sources
 
 import (
+	// "fmt"
 	"path/filepath"
 	"strings"
 )
@@ -27,9 +28,12 @@ func (p *PostLoader) ConnectImageSizeToMetadata() {
 			
 			imageW, imageH := img.Size()
 			
+			// fmt.Println(imageW, v.Animation.FrameNum - int(v.Animation.FrameWidth), k, v.Animation.FrameWidth)
 			if v.Animation.FrameNum != 0 {
 				imageW /= int(v.Animation.FrameNum)
 			}
+	
+			// fmt.Println(k, imageW, int(v.Animation.FrameWidth))
 			v.Size.Width = float64(imageW)
 			v.Size.Height = float64(imageH)	
 		}

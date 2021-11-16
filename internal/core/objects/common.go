@@ -2,6 +2,7 @@ package objects
 
 import (
 	// "fmt"
+	// "fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -72,7 +73,7 @@ type Object struct {
 	// Names parentid the object referes to
 	WorldID, ParentID, ID uuid.UUID
 
-	RawPos, AttachedPos struct {
+	RawPos, RawPosForCamera, AttachedPos, ZoomedAttachedPos struct {
 		X, Y float64
 	}
 
@@ -88,7 +89,7 @@ type Object struct {
 	PositionHistory zeroshifter.IZeroShifter
 }
 
-func (o *Object) IsByObject(ob Object) bool {
+func (o *Object) IsBy(ob Object) bool {
 	return o.ParentID == ob.ID
 }
 
@@ -122,12 +123,39 @@ func (o *Object) SetRawY(y float64) {
 	o.savePositionBeforeAnimation()
 }
 
+func (o *Object) SetRawPosForCameraY(y float64) {
+	o.RawPosForCamera.Y = y
+}
+func (o *Object) SetRawPosForCameraX(x float64) {
+	o.RawPosForCamera.X = x
+}
+
 func (o *Object) SetAttachedPosX(x float64) {
+	o.ZoomedAttachedPos.X = 0
 	o.AttachedPos.X = x
 }
 
 func (o *Object) SetAttachedPosY(y float64) {
+	o.ZoomedAttachedPos.Y = 0
 	o.AttachedPos.Y = y
+}
+
+func (o *Object) SetZoomedAttachedPosX(x float64) {
+	// o.AttachedPos.X = 0
+	o.ZoomedAttachedPos.X = x
+}
+
+func (o *Object) SetZoomedAttachedPosY(y float64) {
+	// o.AttachedPos.Y = 0
+	o.ZoomedAttachedPos.Y = y
+}
+
+func (o *Object) GetX() float64 {
+	return o.RawPos.X
+}
+
+func (o *Object) GetY() float64 {
+	return o.RawPos.Y
 }
 
 //Checks if x pos has been changed
@@ -194,7 +222,7 @@ func (o *Object) GetImage() *ebiten.Image {
 	return sources.UseSources().Images().GetImage(o.Path)
 }
 
-func (o *Object) GetCopyOfImage() *ebiten.Image{
+func (o *Object) GetCopyOfImage() *ebiten.Image {
 	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
 }
 
@@ -272,24 +300,40 @@ func (o *Object) FromAPIMessage(m *api.Object) {
 	o.Role = Role(m.Role)
 }
 
-func (o *Object) GetZoomForSkin() (float64, float64) {
+func (o *Object) GetZoomForSkin(zoom float64) (float64, float64) {
 	m := o.GetMetadata().Modified
-	return (m.Scale.CoefficiantX / 100 * m.Camera.Zoom), (m.Scale.CoefficiantY / 100 * m.Camera.Zoom)
+	return (m.Scale.CoefficiantX / 100 * zoom), (m.Scale.CoefficiantY / 100 * zoom)
 }
 
-func (o *Object) GetMaxZoomForSkin() (float64, float64) {
+func (o *Object) GetMaxZoomForSkin(maxZoom float64) (float64, float64) {
 	m := o.GetMetadata().Modified
-	return (m.Scale.CoefficiantX / 100 * m.Camera.MaxZoom), (m.Scale.CoefficiantY / 100 * m.Camera.MaxZoom)
+	return (m.Scale.CoefficiantX / 100 * maxZoom), (m.Scale.CoefficiantY / 100 * maxZoom)
 }
 
-func (o *Object) GetZoomedPos() (float64, float64) {
-	sx, sy := UseObjects().World().GetZoomedMapScale()
-	return o.RawPos.X * sx, o.RawPos.Y * sy
+func (o *Object) GetZoomedRawPos(mapScaleX, mapScaleY float64) (float64, float64) {
+	return o.RawPos.X * mapScaleX, o.RawPos.Y * mapScaleY
 }
 
-func (o *Object) GetZoomedAttachedPos() (float64, float64) {
-	sx, sy := UseObjects().World().GetZoomedMapScale()
-	return o.AttachedPos.X * sx, o.AttachedPos.Y * sy
+func (o *Object) GetZoomedRawPosForCamera(mapScaleX, mapScaleY float64) (float64, float64) {
+	return o.RawPosForCamera.X * mapScaleX, o.RawPosForCamera.Y * mapScaleY
+}
+
+func (o *Object) GetZoomedAttachedPos(mapScaleX, mapScaleY float64) (float64, float64) {
+	// var ax, ay float64
+	// if o.ZoomedAttachedPos.X != 0 {
+	// 	ax = o.ZoomedAttachedPos.X
+	// } else {
+	// 	ax = o.AttachedPos.X * mapScaleX
+	// }
+
+	// if o.ZoomedAttachedPos.Y != 0 {
+	// 	ay = o.ZoomedAttachedPos.Y
+	// } else {
+	// 	ay = o.AttachedPos.Y * mapScaleY
+	// }
+
+	// return ax, 
+	return  o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
 }
 
 func (o *Object) SetTranslationXMovementBlocked(s bool) {
@@ -300,7 +344,7 @@ func (o *Object) SetTranslationYMovementBlocked(s bool) {
 	o.TranslationMovementYBlocked = s
 }
 
-func (o *Object) IsTranslationMovementBlocked() bool{
+func (o *Object) IsTranslationMovementBlocked() bool {
 	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
 }
 

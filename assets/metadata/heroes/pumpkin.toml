@@ -3,7 +3,7 @@ parent="pumpkin"
 
 [animation]
 frameDelay = 5.0
-framenum = 5
+frameNum = 5
 frameX = 0.0
 frameY = 0.0
 frameWidth = 16.0
