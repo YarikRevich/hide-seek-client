@@ -151,13 +151,13 @@ func (w *World) GetMapScale() (float64, float64) {
 }
 
 func (w *World) GetZoomedMapScale() (float64, float64) {
-	m := w.GetMetadata().Origin
+	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
 	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * m.Camera.Zoom * 3)
 }
 
 func (w *World) GetZoomedMaxMapScale() (float64, float64) {
-	m := w.GetMetadata().Origin
+	m := w.GetMetadata().Modified
 	sx, sy := w.GetMapScale()
 	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.MaxZoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * m.Camera.MaxZoom * 3)
 }

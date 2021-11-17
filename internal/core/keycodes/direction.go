@@ -6,7 +6,8 @@ type Direction int
 direction user goes to
 */
 const (
-	UP Direction = iota
+	NONE Direction = iota
+	UP
 	DOWN
 	RIGHT
 	LEFT

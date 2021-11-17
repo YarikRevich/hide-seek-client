@@ -6,7 +6,7 @@ import (
 	"fmt"
 	// "math"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -43,12 +43,10 @@ func (h *Hero) UpdateMatrix() {
 	// fmt.Println(h.Followed.IsTranslationMovementBlocked())
 
 	if !h.Followed.TranslationMovementXBlocked && w.IsAxisXCrossedBy(h.Followed) {
-		fmt.Println("CROSSED X")
 		h.Followed.SetTranslationXMovementBlocked(true)
 	}
 
 	if !h.Followed.TranslationMovementYBlocked && w.IsAxisYCrossedBy(h.Followed) {
-		fmt.Println("CROSSED Y")
 		h.Followed.SetTranslationYMovementBlocked(true)
 	}
 
@@ -83,10 +81,10 @@ func (m *Map) UpdateMatrix() {
 		sy := y + ay
 		sx := x + ax
 		if m.Followed.TranslationMovementXBlocked {
-			if (dx) < 0 && m.Followed.Direction == keycodes.LEFT {
+			if (dx) < 0 && m.Followed.IsDirectionLEFT() {
 				m.Followed.SetTranslationXMovementBlocked(false)
 				w.SetZoomedAttachedPosX(0)
-			} else if (sx + pm.Size.Width/2) > wm.Size.Width*wsx && m.Followed.Direction == keycodes.RIGHT {
+			} else if (sx + pm.Size.Width/2) > wm.Size.Width*wsx && m.Followed.IsDirectionRIGHT() {
 				m.Followed.SetTranslationXMovementBlocked(false)
 				w.SetZoomedAttachedPosX(-((dx - pm.Size.Width/2) - (sx - wm.Size.Width*wsx)))
 			} else {
@@ -99,11 +97,13 @@ func (m *Map) UpdateMatrix() {
 		}
 
 		if m.Followed.TranslationMovementYBlocked {
-			if (dy < 0) && m.Followed.Direction == keycodes.UP {
+			fmt.Println(m.Followed.Direction)
+			if (dy < 0) && m.Followed.IsDirectionUP() {
 				m.Followed.SetTranslationYMovementBlocked(false)
 				w.SetZoomedAttachedPosY(0)
 
-			} else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy) && m.Followed.Direction == keycodes.DOWN {
+				
+			} else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy) && m.Followed.IsDirectionDOWN() {
 				m.Followed.SetTranslationYMovementBlocked(false)
 				w.SetZoomedAttachedPosY(-((dy - pm.Size.Height/2) - (sy - wm.Size.Height*wsy)))
 

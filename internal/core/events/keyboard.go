@@ -79,6 +79,10 @@ func (k *KeyBoard) IsAnyKeyPressed() bool {
 	return len(inpututil.PressedKeys()) != 0
 }
 
+func (k *KeyBoard) AreKeysCombinedInOrder(m, s ebiten.Key) bool{
+	return ebiten.IsKeyPressed(m) == true && ebiten.IsKeyPressed(s) == true &&  inpututil.KeyPressDuration(m) > inpututil.KeyPressDuration(s)
+}
+
 func NewKeyBoard() *KeyBoard {
 	return new(KeyBoard)
 }

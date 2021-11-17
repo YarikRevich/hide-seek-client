@@ -32,6 +32,8 @@ func Exec() {
 		return
 	}
 
+	
+
 	if k.IsAnyKeyPressed() {
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if p.GetY() > 0 {
@@ -68,6 +70,8 @@ func Exec() {
 				}
 			}
 		}
+
+		p.UpdateDirection()
 
 		if ebiten.IsKeyPressed(ebiten.KeySpace) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTUPPERCLICKERButton) {
 			physics.UsePhysics().Jump().Calculate()

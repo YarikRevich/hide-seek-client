@@ -47,6 +47,15 @@ func (g *GamepadPress) AreGamepadButtonsCombined(button1, button2 ebiten.Gamepad
 	return false
 }
 
+func (g *GamepadPress) AreGamepadButtonsCombinedInOrder(m, s ebiten.GamepadButton) bool {
+	for _, v := range ebiten.GamepadIDs() {
+		if ebiten.IsGamepadButtonPressed(v, m) == true && ebiten.IsGamepadButtonPressed(v, s) == true && inpututil.GamepadButtonPressDuration(v, m) > inpututil.GamepadButtonPressDuration(v, s){
+			return true
+		}
+	}
+	return false
+}
+
 //Checks if any gamepad is connected
 func (g *GamepadPress) IsGamepadConnected()bool{
 	return len(ebiten.GamepadIDs()) != 0

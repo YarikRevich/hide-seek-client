@@ -1,16 +1,11 @@
 package objects
 
 import (
-	// "fmt"
-	// "fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	// imagecollecion "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/image_loader/collection"
-	// metadatacollection "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/collection"
-	// metadatamodels "github.com/YarikRevich/HideSeek-Client/internal/resource_manager/metadata_loader/models"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -77,7 +72,7 @@ type Object struct {
 		X, Y float64
 	}
 
-	Direction keycodes.Direction
+	Direction, SubDirection keycodes.Direction
 
 	Spawn image.Point
 
@@ -87,6 +82,101 @@ type Object struct {
 
 	//Only client fields
 	PositionHistory zeroshifter.IZeroShifter
+}
+
+func (o *Object) UpdateDirection() {
+	k := events.UseEvents().Keyboard()
+	g := events.UseEvents().Gamepad()
+	if g.IsGamepadConnected() {
+		if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadDOWNButton, keycodes.GamepadRIGHTButton) {
+			o.Direction = keycodes.DOWN
+			o.SubDirection = keycodes.RIGHT
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadRIGHTButton, keycodes.GamepadDOWNButton) {
+			o.Direction = keycodes.RIGHT
+			o.SubDirection = keycodes.DOWN
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTButton) {
+			o.Direction = keycodes.DOWN
+			o.SubDirection = keycodes.LEFT
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadLEFTButton, keycodes.GamepadDOWNButton) {
+			o.Direction = keycodes.LEFT
+			o.SubDirection = keycodes.DOWN
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadUPButton, keycodes.GamepadRIGHTButton) {
+			o.Direction = keycodes.UP
+			o.SubDirection = keycodes.RIGHT
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadRIGHTButton, keycodes.GamepadUPButton) {
+			o.Direction = keycodes.RIGHT
+			o.SubDirection = keycodes.UP
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadUPButton, keycodes.GamepadLEFTButton) {
+			o.Direction = keycodes.UP
+			o.SubDirection = keycodes.LEFT
+		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadLEFTButton, keycodes.GamepadUPButton) {
+			o.Direction = keycodes.LEFT
+			o.SubDirection = keycodes.UP
+		} else if g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
+			o.Direction = keycodes.UP
+			o.SubDirection = keycodes.NONE
+		} else if g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
+			o.Direction = keycodes.LEFT
+			o.SubDirection = keycodes.NONE
+		} else if g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
+			o.Direction = keycodes.RIGHT
+			o.SubDirection = keycodes.NONE
+		} else if g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
+			o.Direction = keycodes.DOWN
+			o.SubDirection = keycodes.NONE
+		}
+	} else {
+		if k.AreKeysCombinedInOrder(ebiten.KeyS, ebiten.KeyD) || k.AreKeysCombinedInOrder(ebiten.KeyArrowDown, ebiten.KeyArrowRight) {
+			o.Direction = keycodes.DOWN
+			o.SubDirection = keycodes.RIGHT
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyD, ebiten.KeyS) || k.AreKeysCombinedInOrder(ebiten.KeyArrowRight, ebiten.KeyArrowDown) {
+			o.Direction = keycodes.RIGHT
+			o.SubDirection = keycodes.DOWN
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyS, ebiten.KeyA) || k.AreKeysCombinedInOrder(ebiten.KeyArrowDown, ebiten.KeyArrowLeft) {
+			o.Direction = keycodes.DOWN
+			o.SubDirection = keycodes.LEFT
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyA, ebiten.KeyS) || k.AreKeysCombinedInOrder(ebiten.KeyArrowLeft, ebiten.KeyArrowDown) {
+			o.Direction = keycodes.LEFT
+			o.SubDirection = keycodes.DOWN
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyW, ebiten.KeyD) || k.AreKeysCombinedInOrder(ebiten.KeyArrowUp, ebiten.KeyArrowRight) {
+			o.Direction = keycodes.UP
+			o.SubDirection = keycodes.RIGHT
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyD, ebiten.KeyW) || k.AreKeysCombinedInOrder(ebiten.KeyArrowRight, ebiten.KeyArrowUp) {
+			o.Direction = keycodes.RIGHT
+			o.SubDirection = keycodes.UP
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyW, ebiten.KeyA) || k.AreKeysCombinedInOrder(ebiten.KeyArrowUp, ebiten.KeyArrowLeft) {
+			o.Direction = keycodes.UP
+			o.SubDirection = keycodes.LEFT
+		} else if k.AreKeysCombinedInOrder(ebiten.KeyA, ebiten.KeyW) || k.AreKeysCombinedInOrder(ebiten.KeyArrowLeft, ebiten.KeyArrowUp) {
+			o.Direction = keycodes.LEFT
+			o.SubDirection = keycodes.UP
+		} else if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
+			o.Direction = keycodes.UP
+			o.SubDirection = keycodes.NONE
+		} else if ebiten.IsKeyPressed(ebiten.KeyLeft) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
+			o.Direction = keycodes.LEFT
+			o.SubDirection = keycodes.NONE
+		} else if ebiten.IsKeyPressed(ebiten.KeyRight) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
+			o.Direction = keycodes.RIGHT
+			o.SubDirection = keycodes.NONE
+		} else if ebiten.IsKeyPressed(ebiten.KeyDown) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
+			o.Direction = keycodes.DOWN
+			o.SubDirection = keycodes.NONE
+		}
+	}
+}
+
+func (o *Object) IsDirectionUP() bool {
+	return o.Direction == keycodes.UP || o.SubDirection == keycodes.UP
+}
+func (o *Object) IsDirectionLEFT() bool {
+	return o.Direction == keycodes.LEFT || o.SubDirection == keycodes.LEFT
+}
+func (o *Object) IsDirectionRIGHT() bool {
+	return o.Direction == keycodes.RIGHT || o.SubDirection == keycodes.RIGHT
+}
+func (o *Object) IsDirectionDOWN() bool {
+	return o.Direction == keycodes.DOWN || o.SubDirection == keycodes.DOWN
 }
 
 func (o *Object) IsBy(ob Object) bool {
@@ -102,23 +192,11 @@ func (o *Object) savePositionBeforeAnimation() {
 }
 
 func (o *Object) SetRawX(x float64) {
-	if x < o.RawPos.X {
-		o.Direction = keycodes.LEFT
-	} else if x > o.RawPos.X {
-		o.Direction = keycodes.RIGHT
-	}
-
 	o.RawPos.X = x
 	o.savePositionBeforeAnimation()
 }
 
 func (o *Object) SetRawY(y float64) {
-	if y < o.RawPos.Y {
-		o.Direction = keycodes.UP
-	} else if y > o.RawPos.Y {
-		o.Direction = keycodes.DOWN
-	}
-
 	o.RawPos.Y = y
 	o.savePositionBeforeAnimation()
 }
@@ -332,8 +410,8 @@ func (o *Object) GetZoomedAttachedPos(mapScaleX, mapScaleY float64) (float64, fl
 	// 	ay = o.AttachedPos.Y * mapScaleY
 	// }
 
-	// return ax, 
-	return  o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
+	// return ax,
+	return o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
 }
 
 func (o *Object) SetTranslationXMovementBlocked(s bool) {
