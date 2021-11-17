@@ -1,8 +1,6 @@
 package game
 
 import (
-	// "fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
@@ -15,8 +13,14 @@ func Exec() {
 	g := events.UseEvents().Gamepad()
 	k := events.UseEvents().Keyboard()
 
+	w := objects.UseObjects().World()
+	wsx, wsy := w.GetZoomedMapScale()
+	wm := w.GetMetadata().Modified
+
 	p := objects.UseObjects().PC()
-	m := p.GetMetadata().Modified
+	zx, zy := p.GetZoomedRawPos(w.GetZoomedMapScale())
+	pmm := p.GetMetadata().Modified
+	pmo := p.GetMetadata().Origin
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		camera.UseCamera().ZoomIn()
@@ -31,41 +35,36 @@ func Exec() {
 	if k.IsAnyKeyPressed() {
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if p.GetY() > 0 {
-				p.SetRawY(p.RawPos.Y - m.Buffs.Speed.Y)
-				if !p.TranslationMovementYBlocked{
-					p.SetRawPosForCameraY(p.RawPosForCamera.Y - m.Buffs.Speed.Y)
+				p.SetRawY(p.RawPos.Y - pmm.Buffs.Speed.Y)
+				if !p.TranslationMovementYBlocked {
+					p.SetRawPosForCameraY(p.RawPosForCamera.Y - pmm.Buffs.Speed.Y)
 				}
 			}
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-			// if p.RawPos.Y+p.Metadata.Buffs.Speed.Y < w.Metadata.Size.Height * msh {
-			p.SetRawY(p.RawPos.Y + m.Buffs.Speed.Y)
-			if !p.TranslationMovementYBlocked{
-				p.SetRawPosForCameraY(p.RawPosForCamera.Y + m.Buffs.Speed.Y)
+			if zy+pmm.Buffs.Speed.Y+pmo.Size.Height < wm.Size.Height*wsy {
+				p.SetRawY(p.RawPos.Y + pmm.Buffs.Speed.Y)
+				if !p.TranslationMovementYBlocked {
+					p.SetRawPosForCameraY(p.RawPosForCamera.Y + pmm.Buffs.Speed.Y)
+				}
 			}
-			// } else {
-			// p.SetY(p.RawPos.Y + (w.Metadata.Size.Height - p.RawPos.Y))
-			// }
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
-
-			// if p.RawPos.X+p.Metadata.Buffs.Speed.X < w.Metadata.Size.Width * msw {
-			p.SetRawX(p.RawPos.X + m.Buffs.Speed.X)
-			if !p.TranslationMovementXBlocked{
-				p.SetRawPosForCameraX(p.RawPosForCamera.X + m.Buffs.Speed.X)
+			if zx+pmm.Buffs.Speed.X+pmo.Size.Width < wm.Size.Width*wsx {
+				p.SetRawX(p.RawPos.X + pmm.Buffs.Speed.X)
+				if !p.TranslationMovementXBlocked {
+					p.SetRawPosForCameraX(p.RawPosForCamera.X + pmm.Buffs.Speed.X)
+				}
 			}
-			// } else {
-			// p.SetX(p.RawPos.X + (w.Metadata.Size.Width - p.RawPos.X))
-			// }
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
 			if p.GetX() > 0 {
-				p.SetRawX(p.RawPos.X - m.Buffs.Speed.X)
-				if !p.TranslationMovementXBlocked{
-					p.SetRawPosForCameraX(p.RawPosForCamera.X - m.Buffs.Speed.X)
+				p.SetRawX(p.RawPos.X - pmm.Buffs.Speed.X)
+				if !p.TranslationMovementXBlocked {
+					p.SetRawPosForCameraX(p.RawPosForCamera.X - pmm.Buffs.Speed.X)
 				}
 			}
 		}

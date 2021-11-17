@@ -1,8 +1,12 @@
 package camera
 
 import (
-	"fmt"
+	// "fmt"
 
+	"fmt"
+	// "math"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -36,13 +40,15 @@ func (h *Hero) UpdateMatrix() {
 	h.followedMatrix.Scale(h.Followed.GetMovementRotation(), 1)
 	h.followedMatrix.Scale(h.Followed.GetZoomForSkin(wm.Camera.Zoom))
 
-	fmt.Println(h.Followed.IsTranslationMovementBlocked())
+	// fmt.Println(h.Followed.IsTranslationMovementBlocked())
 
 	if !h.Followed.TranslationMovementXBlocked && w.IsAxisXCrossedBy(h.Followed) {
+		fmt.Println("CROSSED X")
 		h.Followed.SetTranslationXMovementBlocked(true)
 	}
 
 	if !h.Followed.TranslationMovementYBlocked && w.IsAxisYCrossedBy(h.Followed) {
+		fmt.Println("CROSSED Y")
 		h.Followed.SetTranslationYMovementBlocked(true)
 	}
 
@@ -62,44 +68,53 @@ func (m *Map) UpdateMatrix() {
 	w := objects.UseObjects().World()
 	wm := w.GetMetadata().Modified
 
+	pm := m.Followed.GetMetadata().Origin
+
 	wsx, wsy := w.GetZoomedMapScale()
 	m.matrix.Scale(wsx, wsy)
 
+	fmt.Println(m.Followed.IsTranslationMovementBlocked())
 	if m.Followed.IsTranslationMovementBlocked() {
 		x, y := m.Followed.GetZoomedRawPos(w.GetZoomedMapScale())
 		ax, ay := m.Followed.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
 
-		fmt.Println(ax, ay)
+		dy := y - ay
+		dx := x - ax
+				sy := y + ay
+				sx := x + ax
 		if m.Followed.TranslationMovementXBlocked {
-			m.matrix.Translate(-(x - ax), 0)
+			m.matrix.Translate(-dx, 0)
 
-			if (x - ax) < 0 {
+			if (dx) < 0 {
 				m.Followed.SetTranslationXMovementBlocked(false)
 				w.SetZoomedAttachedPosX(0)
 			}
 
-			if (x + ax) > wm.Size.Width*wsx {
+			if (sx + pm.Size.Height/3) > wm.Size.Width*wsx {
 				m.Followed.SetTranslationXMovementBlocked(false)
-				w.SetZoomedAttachedPosY(-((x - ax) - (x + ax - wm.Size.Width*wsx)))
+				w.SetZoomedAttachedPosY(-((dx - pm.Size.Width) - (sx - wm.Size.Width*wsx)))
 			}
 		}
 
 		if m.Followed.TranslationMovementYBlocked {
-			m.matrix.Translate(0, -(y - ay))
-
-			// fmt.Println((y - ay < 0), (y + ay) > wm.Size.Height*wsy)
-			fmt.Println(y - ay)
-			if (y - ay) < 0 {
+			if (dy < 0) && m.Followed.Direction == keycodes.UP {
 				m.Followed.SetTranslationYMovementBlocked(false)
 				w.SetZoomedAttachedPosY(0)
-			}
 
-			if (y + ay) > wm.Size.Height*wsy {
+		
+			} else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy) && m.Followed.Direction == keycodes.DOWN {
 				m.Followed.SetTranslationYMovementBlocked(false)
-				// fmt.Println("HERE", y, ay, (y - ay), (y + ay - wm.Size.Height*wsy))
+				w.SetZoomedAttachedPosY(-((dy - pm.Size.Height / 2) - (sy - wm.Size.Height*wsy)))
 
-				w.SetZoomedAttachedPosY(-((y - ay) - (y + ay - wm.Size.Height*wsy)))
-				// m.Followed.SetZoomedRawPosY(ay)
+			} else {
+				
+				if dy < 0 {
+					m.matrix.Translate(0, 0)
+				}else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy){
+					m.matrix.Translate(0, -((dy - pm.Size.Height / 2) - (sy - wm.Size.Height*wsy)))
+				} else {
+					m.matrix.Translate(0, -dy)
+				}
 			}
 		}
 	}
@@ -134,8 +149,8 @@ func (c *Camera) UpdateMatrices() {
 	c.Map.matrix.Reset()
 	c.Hero.followedMatrix.Reset()
 
-	c.Map.UpdateMatrix()
 	c.Hero.UpdateMatrix()
+	c.Map.UpdateMatrix()
 }
 
 //Increments zoom property
