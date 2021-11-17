@@ -80,19 +80,21 @@ func (m *Map) UpdateMatrix() {
 
 		dy := y - ay
 		dx := x - ax
-				sy := y + ay
-				sx := x + ax
+		sy := y + ay
+		sx := x + ax
 		if m.Followed.TranslationMovementXBlocked {
-			m.matrix.Translate(-dx, 0)
-
-			if (dx) < 0 {
+			if (dx) < 0 && m.Followed.Direction == keycodes.LEFT {
 				m.Followed.SetTranslationXMovementBlocked(false)
 				w.SetZoomedAttachedPosX(0)
-			}
-
-			if (sx + pm.Size.Height/3) > wm.Size.Width*wsx {
+			} else if (sx + pm.Size.Width/2) > wm.Size.Width*wsx && m.Followed.Direction == keycodes.RIGHT {
 				m.Followed.SetTranslationXMovementBlocked(false)
-				w.SetZoomedAttachedPosY(-((dx - pm.Size.Width) - (sx - wm.Size.Width*wsx)))
+				w.SetZoomedAttachedPosX(-((dx - pm.Size.Width/2) - (sx - wm.Size.Width*wsx)))
+			} else {
+				if dx < 0 {
+					m.matrix.Translate(0, 0)
+				} else {
+					m.matrix.Translate(-dx, 0)
+				}
 			}
 		}
 
@@ -101,17 +103,18 @@ func (m *Map) UpdateMatrix() {
 				m.Followed.SetTranslationYMovementBlocked(false)
 				w.SetZoomedAttachedPosY(0)
 
-		
 			} else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy) && m.Followed.Direction == keycodes.DOWN {
 				m.Followed.SetTranslationYMovementBlocked(false)
-				w.SetZoomedAttachedPosY(-((dy - pm.Size.Height / 2) - (sy - wm.Size.Height*wsy)))
+				w.SetZoomedAttachedPosY(-((dy - pm.Size.Height/2) - (sy - wm.Size.Height*wsy)))
 
 			} else {
-				
+				// if dy < 0 {
+				// 	m.matrix.Translate(0, 0)
+				// }else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy){
+				// 	m.matrix.Translate(0, -((dy - pm.Size.Height / 2) - (sy - wm.Size.Height*wsy)))
+				// } else {
 				if dy < 0 {
 					m.matrix.Translate(0, 0)
-				}else if ((sy + pm.Size.Height/2) > wm.Size.Height*wsy){
-					m.matrix.Translate(0, -((dy - pm.Size.Height / 2) - (sy - wm.Size.Height*wsy)))
 				} else {
 					m.matrix.Translate(0, -dy)
 				}
