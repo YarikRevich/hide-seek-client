@@ -1,11 +1,8 @@
 package objects
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
-
-	// strorageprovider "github.com/YarikRevich/HideSeek-Client/internal/storage/provider"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -53,7 +50,7 @@ func (p *PC) SetUsername() {
 // //Returns movement rotation related to the last
 // //movement direction
 func (p *PC) GetMovementRotation() float64 {
-	if p.Direction == keycodes.LEFT && p.RawPos.X != 0 {
+	if p.IsDirectionLEFT() && p.RawPos.X != 0 {
 		return -1
 	}
 	return 1
@@ -86,11 +83,5 @@ func NewPC() *PC {
 	pc.ID = id
 	pc.PositionHistory = zeroshifter.New(2)
 	pc.Health = 10
-	// pc.Spawn = image.Point{X: 1500, Y: 0}
-	// instance.Animation.FrameDelay = 5
-	// instance.Animation.FrameDelayCounter = 1
-
-	// instance.Image = imagecollection.GetImage("assets/images/heroes/pumpkin")
-	// instance.Metadata = metadatacollection.GetMetadata("assets/images/heroes/pumpkin")
 	return pc
 }

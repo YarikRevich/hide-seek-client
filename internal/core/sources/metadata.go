@@ -2,7 +2,7 @@ package sources
 
 import (
 	"embed"
-	"fmt"
+	// "fmt"
 	"path/filepath"
 	"regexp"
 	"sync"
@@ -98,21 +98,22 @@ type ModelCombination struct {
 type Metadata struct {
 	sync.Mutex
 
-	Used       map[string]*ModelCombination
-	Collection map[string]*Model
+	Collection map[string]*ModelCombination
 }
 
 func (m *Metadata) loadFile(fs embed.FS, path string) {
-	var o Model
+	var o, q Model
 
 	if _, err := toml.DecodeFS(fs, path, &o); err != nil {
 		logrus.Fatal("error happened decoding toml metatdata file from embedded FS", err)
 	}
+	q = o
 
 	reg := regexp.MustCompile(`\.[a-z0-9]*$`)
 	if reg.MatchString(path) {
 		m.Lock()
-		m.Collection[reg.Split(path, -1)[0]] = &o
+		
+		m.Collection[reg.Split(path, -1)[0]] = &ModelCombination{Modified: &q, Origin: &o}
 		m.Unlock()
 	}
 }
@@ -124,31 +125,9 @@ func (m *Metadata) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 
 func (m *Metadata) GetMetadata(path string) *ModelCombination {
 	path = filepath.Join("assets/metadata", path)
-
-	if _, ok := m.Used[path]; !ok {
-		file, ok := m.Collection[path]
-		if !ok {
-			logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
-		}
-
-		c := new(ModelCombination)
-		q := new(Model)
-		*q = *file
-		c.Modified = q
-		c.Origin = file
-
-		m.Used[path] = c
-		return c
-	}
-
-	return m.Used[path]
-}
-
-func (m *Metadata) CleanUsedMetadata(){
-	m.Used = make(map[string]*ModelCombination)
+	return m.Collection[path]
 }
 
 func NewMetadata() *Metadata {
-	return &Metadata{Collection: make(map[string]*Model),
-		Used: make(map[string]*ModelCombination)}
+	return &Metadata{Collection: make(map[string]*ModelCombination)}
 }

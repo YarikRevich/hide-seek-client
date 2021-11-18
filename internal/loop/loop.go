@@ -1,10 +1,11 @@
 package loop
 
 import (
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
-	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/animation"
@@ -23,6 +24,7 @@ type Loop struct{}
 var _ ebiten.Game = (*Loop)(nil)
 
 func (g *Loop) Update() error {
+	screen.UseScreen().CleanScreen()
 	render.UseRender().CleanRenderPool()
 
 	networking.Process()
@@ -40,9 +42,10 @@ func (g *Loop) Update() error {
 	return nil
 }
 
-func (g *Loop) Draw(screen *ebiten.Image) {
-	screenhistory.SetScreen(screen)
+func (g *Loop) Draw(i *ebiten.Image) {
+	screen.UseScreen().SetScreen(i)
 	syncer.NewSyncer().Sync()
+	
 
 	if cli.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.RENDER)
@@ -51,7 +54,7 @@ func (g *Loop) Draw(screen *ebiten.Image) {
 	
 	middlewares.UseMiddlewares().Render().UseAfter(render.UseRender().Render)
 
-	screenhistory.SetLastScreenSize()
+	screen.UseScreen().SetLastSize()
 }
 
 func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {

@@ -21,21 +21,19 @@ func (p *PostLoader) cleanPrefix(path string) string {
 //to metadata in metadata collection
 func (p *PostLoader) ConnectImageSizeToMetadata() {
 	for k, v := range UseSources().Metadata().Collection {
-		if len(v.Info.Parent) != 0 {
+		if len(v.Origin.Info.Parent) != 0 {
 			base := p.cleanPrefix(p.getBase(k))
-			path := filepath.Join(base, v.Info.Parent)
+			path := filepath.Join(base, v.Origin.Info.Parent)
 			img := UseSources().Images().GetImage(path)
 			
 			imageW, imageH := img.Size()
-			
-			// fmt.Println(imageW, v.Animation.FrameNum - int(v.Animation.FrameWidth), k, v.Animation.FrameWidth)
-			if v.Animation.FrameNum != 0 {
-				imageW /= int(v.Animation.FrameNum)
+		
+			if v.Origin.Animation.FrameNum != 0 {
+				imageW /= int(v.Origin.Animation.FrameNum)
 			}
-	
-			// fmt.Println(k, imageW, int(v.Animation.FrameWidth))
-			v.Size.Width = float64(imageW)
-			v.Size.Height = float64(imageH)	
+
+			v.Origin.Size.Width = float64(imageW)
+			v.Origin.Size.Height = float64(imageH)	
 		}
 	}
 }

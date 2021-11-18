@@ -4,39 +4,85 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-var fullWidth, fullHeight = ebiten.ScreenSizeInFullscreen()
-var lastScreenSizeWidth, lastScreenSizeHeight float64
-var screen *ebiten.Image
+var instance *Screen
 
-func GetMinWidth() int {
-	return int((GetMaxWidth() * 60) / 100)
+type Screen struct {
+	fullWidth, fullHeight int
+	lastWidth, lastHeight int
+
+
+	screen                *ebiten.Image
 }
 
-func GetMinHeight() int {
-	return int((GetMaxHeight() * 60) / 100)
+func (s *Screen) SetLastSize() {
+	width, height := s.screen.Size()
+	s.lastWidth = width
+	s.lastHeight = height
 }
 
-func GetMaxWidth() int {
-	return int(float64(fullWidth) / 1.15)
+func (s *Screen) GetLastSize() (float64, float64) {
+	return float64(s.lastWidth), float64(s.lastHeight)
 }
 
-func GetMaxHeight() int {
-	return int(float64(fullHeight) / 1.15)
+func (s *Screen) GetMinWidth() int {
+	return int((s.GetMaxWidth() * 60) / 100)
 }
 
-func SetLastScreenSize() {
-	w, h := screen.Size()
-	lastScreenSizeWidth = float64(w)
-	lastScreenSizeHeight = float64(h)
+func (s *Screen) GetMinHeight() int {
+	return int((s.GetMaxHeight() * 60) / 100)
 }
 
-func GetLastScreenSize() (float64, float64) {
-	return lastScreenSizeWidth, lastScreenSizeHeight
+func (s *Screen) GetMaxWidth() int {
+	return int(float64(s.fullWidth) / 1.15)
 }
 
-func SetScreen(s *ebiten.Image) {
-	screen = s
+func (s *Screen) GetMaxHeight() int {
+	return int(float64(s.fullHeight) / 1.15)
 }
-func GetScreen() *ebiten.Image {
-	return screen
+
+func (s *Screen) GetAxisX() float64 {
+	x, _ := s.screen.Size()
+	return float64(x)/2
+}
+
+func (s *Screen) GetAxisY() float64 {
+	_, y := s.screen.Size()
+	return float64(y)/2
+}
+
+func (s *Screen) SetScreen(i *ebiten.Image) {
+	s.screen = i
+}
+
+func (s *Screen) CleanScreen(){
+	s.screen = nil
+}
+
+func (s *Screen) GetWidth() float64{
+	if s.screen != nil{
+		return float64(s.screen.Bounds().Max.X)
+	}
+	return float64(s.lastWidth)
+}
+
+func (s *Screen) GetHeight() float64{
+	if s.screen != nil{
+		return float64(s.screen.Bounds().Max.Y)
+	}
+	return float64(s.lastHeight)
+}
+
+func (s *Screen) GetScreen() *ebiten.Image{
+	return s.screen
+}
+
+func UseScreen() *Screen {
+	if instance == nil {
+		fullWidth, fullHeight := ebiten.ScreenSizeInFullscreen()
+		instance = &Screen{
+			fullWidth:  fullWidth,
+			fullHeight: fullHeight,
+		}
+	}
+	return instance
 }

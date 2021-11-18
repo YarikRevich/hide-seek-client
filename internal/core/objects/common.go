@@ -68,7 +68,7 @@ type Object struct {
 	// Names parentid the object referes to
 	WorldID, ParentID, ID uuid.UUID
 
-	RawPos, RawPosForCamera, AttachedPos, ZoomedAttachedPos struct {
+	RawPos, RawPosForCamera, AttachedPos struct {
 		X, Y float64
 	}
 
@@ -153,13 +153,13 @@ func (o *Object) UpdateDirection() {
 		} else if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
 			o.Direction = keycodes.UP
 			o.SubDirection = keycodes.NONE
-		} else if ebiten.IsKeyPressed(ebiten.KeyLeft) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
+		} else if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
 			o.Direction = keycodes.LEFT
 			o.SubDirection = keycodes.NONE
-		} else if ebiten.IsKeyPressed(ebiten.KeyRight) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
+		} else if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
 			o.Direction = keycodes.RIGHT
 			o.SubDirection = keycodes.NONE
-		} else if ebiten.IsKeyPressed(ebiten.KeyDown) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
+		} else if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
 			o.Direction = keycodes.DOWN
 			o.SubDirection = keycodes.NONE
 		}
@@ -209,32 +209,40 @@ func (o *Object) SetRawPosForCameraX(x float64) {
 }
 
 func (o *Object) SetAttachedPosX(x float64) {
-	o.ZoomedAttachedPos.X = 0
 	o.AttachedPos.X = x
 }
 
 func (o *Object) SetAttachedPosY(y float64) {
-	o.ZoomedAttachedPos.Y = 0
 	o.AttachedPos.Y = y
 }
 
 func (o *Object) SetZoomedAttachedPosX(x float64) {
-	// o.AttachedPos.X = 0
-	o.ZoomedAttachedPos.X = x
+	w := UseObjects().World()
+	mapScaleX, _ := w.GetZoomedMapScale()
+	o.AttachedPos.X = x / mapScaleX
 }
 
 func (o *Object) SetZoomedAttachedPosY(y float64) {
-	// o.AttachedPos.Y = 0
-	o.ZoomedAttachedPos.Y = y
+	w := UseObjects().World()
+	_, mapScaleY := w.GetZoomedMapScale()
+	o.AttachedPos.Y = y / mapScaleY
 }
 
-func (o *Object) GetX() float64 {
+func (o *Object) GetRawX() float64 {
 	return o.RawPos.X
 }
 
-func (o *Object) GetY() float64 {
+func (o *Object) GetRawY() float64 {
 	return o.RawPos.Y
 }
+
+// func (o *Object) GetZoomedRawX() float64 {
+// 	return o.RawPos.X * 
+// }
+
+// func (o *Object) GetZoomedRawY() float64 {
+// 	return o.RawPos.Y
+// }
 
 //Checks if x pos has been changed
 //in comparison to the last x poses
@@ -295,7 +303,7 @@ func (o *Object) SetSkin(path string) {
 	o.Name = file
 }
 
-//Returns images for the skin selected(creates new from old)
+//Returns images for the skin selected
 func (o *Object) GetImage() *ebiten.Image {
 	return sources.UseSources().Images().GetImage(o.Path)
 }
@@ -393,24 +401,11 @@ func (o *Object) GetZoomedRawPos(mapScaleX, mapScaleY float64) (float64, float64
 }
 
 func (o *Object) GetZoomedRawPosForCamera(mapScaleX, mapScaleY float64) (float64, float64) {
-	return o.RawPosForCamera.X * mapScaleX, o.RawPosForCamera.Y * mapScaleY
+	// return o.RawPosForCamera.X * mapScaleX, o.RawPosForCamera.Y * mapScaleY
+	return o.RawPosForCamera.X, o.RawPosForCamera.Y 
 }
 
 func (o *Object) GetZoomedAttachedPos(mapScaleX, mapScaleY float64) (float64, float64) {
-	// var ax, ay float64
-	// if o.ZoomedAttachedPos.X != 0 {
-	// 	ax = o.ZoomedAttachedPos.X
-	// } else {
-	// 	ax = o.AttachedPos.X * mapScaleX
-	// }
-
-	// if o.ZoomedAttachedPos.Y != 0 {
-	// 	ay = o.ZoomedAttachedPos.Y
-	// } else {
-	// 	ay = o.AttachedPos.Y * mapScaleY
-	// }
-
-	// return ax,
 	return o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
 }
 

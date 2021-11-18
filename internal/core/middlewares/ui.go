@@ -3,7 +3,6 @@ package middlewares
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 )
 
@@ -27,11 +26,6 @@ func (u *UI) setSuspendedMusicDone() {
 	// })
 }
 
-func (u *UI) cleanUsedMetadata(){
-	sources.UseSources().Metadata().CleanUsedMetadata()
-}
-
-
 func (u *UI) UseAfter(c func()) {
 	u.cleanTimings()
 
@@ -39,7 +33,6 @@ func (u *UI) UseAfter(c func()) {
 
 	u.cleanBuffers()
 	u.setSuspendedMusicDone()
-	u.cleanUsedMetadata()
 	u.cleanLatencyOnce()
 }
 

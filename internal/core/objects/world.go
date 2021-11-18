@@ -130,9 +130,9 @@ func (w *World) SetID(i uuid.UUID) {
 
 func (w *World) GetMapScale() (float64, float64) {
 	var sx, sy float64
-	screenIW, screenIH := screen.GetScreen().Size()
-	screenW := float64(screenIW)
-	screenH := float64(screenIH)
+	s := screen.UseScreen()
+	screenW := s.GetWidth()
+	screenH := s.GetHeight()
 
 	m := w.GetMetadata().Origin
 
@@ -156,33 +156,40 @@ func (w *World) GetZoomedMapScale() (float64, float64) {
 	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.Zoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * m.Camera.Zoom * 3)
 }
 
+// func (w *World) GetZoomedMapScaleManually(zoom float64)(float64, float64){
+// 	m := w.GetMetadata().Modified
+// 	sx, sy := w.GetMapScale()
+// 	return ((sx + m.Scale.CoefficiantX) / 100 * zoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * zoom * 3)
+// }
+
 func (w *World) GetZoomedMaxMapScale() (float64, float64) {
-	m := w.GetMetadata().Modified
-	sx, sy := w.GetMapScale()
+	m := w.GetMetadata().Origin
+	sx, sy := w.GetZoomedMapScale()
 	return ((sx + m.Scale.CoefficiantX) / 100 * m.Camera.MaxZoom * 3), ((sy + m.Scale.CoefficiantY) / 100 * m.Camera.MaxZoom * 3)
 }
 
-func (w *World) GetWorldAxis() (float64, float64) {
-	m := w.GetMetadata().Origin
-	sx, sy := w.GetZoomedMapScale()
-	smx, smy := w.GetZoomedMaxMapScale()
-	return ((m.Size.Width * sx) / smx / 2), ((m.Size.Height * sy) / smy / 2.3)
-}
+// func (w *World) GetWorldAxis() (float64, float64) {
+// 	x, y := screen.UseScreen().GetScreen().Size()
+// 	return float64(x) / 2, float64(y) / 2
+// }
 
 func (w *World) IsAxisXCrossedBy(p *PC) bool {
-	m := p.GetMetadata().Modified
+	mm := p.GetMetadata().Modified
+	mo := p.GetMetadata().Origin
 	x, _ := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
-	ax, _ := w.GetWorldAxis()
+	// ax, _ := w.GetWorldAxis()
+	ax := screen.UseScreen().GetAxisX()
 
-	return (x-m.Buffs.Speed.X) <= ax && ax <= (x+m.Buffs.Speed.X)
+	return (x-mm.Buffs.Speed.X - mo.Size.Width/2) <= ax && ax <= (x+mm.Buffs.Speed.X + mo.Size.Width/2)
 }
 
 func (w *World) IsAxisYCrossedBy(p *PC) bool {
-	m := p.GetMetadata().Modified
+	mm := p.GetMetadata().Modified
+	mo := p.GetMetadata().Origin
 	_, y := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
-	_, ay := w.GetWorldAxis()
+	ay := screen.UseScreen().GetAxisY()
 
-	return (y-m.Buffs.Speed.Y) <= ay && ay <= (y+m.Buffs.Speed.Y)
+	return (y-mm.Buffs.Speed.Y - mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y + mo.Size.Height/2)
 }
 
 //Swaps spawns of the teams
@@ -237,21 +244,7 @@ func (w *World) GetMaxScaleForSkin() (float64, float64) {
 
 func (w *World) GetZoomedAttachedPos() (float64, float64) {
 	mapScaleX, mapScaleY := UseObjects().World().GetZoomedMapScale()
-
-	var ax, ay float64
-	if w.ZoomedAttachedPos.X != 0 {
-		ax = w.ZoomedAttachedPos.X
-	}else{
-		ax = w.AttachedPos.X * mapScaleX
-	}
-
-	if w.ZoomedAttachedPos.Y != 0{
-		ay = w.ZoomedAttachedPos.Y
-	} else {
-		ay = w.AttachedPos.Y * mapScaleY
-	}
-
-	return ax, ay
+	return  w.AttachedPos.X * mapScaleX, w.AttachedPos.Y * mapScaleY
 }
 
 // func (w *World) GetScaledPos(){

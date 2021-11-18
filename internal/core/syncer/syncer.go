@@ -17,7 +17,7 @@ type SyncerProvider interface {
 //Sync data which depends on screen resize
 func (s *syncer) Sync() {
 	if s.pw != 0 && s.ph != 0 {
-		for _, v := range sources.UseSources().Metadata().Used {
+		for _, v := range sources.UseSources().Metadata().Collection {
 			v.Modified.Scale.CoefficiantX = (v.Modified.Scale.CoefficiantX * s.sw) / s.pw
 			v.Modified.Scale.CoefficiantY = (v.Modified.Scale.CoefficiantY * s.sh) / s.ph
 
@@ -56,10 +56,10 @@ func (s *syncer) Sync() {
 
 func NewSyncer() SyncerProvider {
 	s := new(syncer)
-	sw, sh := screenhistory.GetScreen().Size()
+	sw, sh := screenhistory.UseScreen().GetScreen().Size()
 	s.sw = float64(sw)
 	s.sh = float64(sh)
-	pw, ph := screenhistory.GetLastScreenSize()
+	pw, ph := screenhistory.UseScreen().GetLastSize()
 	s.pw = float64(pw)
 	s.ph = float64(ph)
 	return s

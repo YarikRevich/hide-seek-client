@@ -1,6 +1,8 @@
 package mapchoose
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -37,6 +39,7 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
+		fmt.Println(m.Margins, m.Scale)
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
 

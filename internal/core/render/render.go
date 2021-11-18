@@ -23,7 +23,7 @@ func (r *render) SetToRender(c func(*ebiten.Image)) {
 }
 
 func (r *render) Render() {
-	screen := screenhistory.GetScreen()
+	screen := screenhistory.UseScreen().GetScreen()
 	for _, v := range r.toRender {
 		v(screen)
 	}
