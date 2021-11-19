@@ -20,13 +20,19 @@ func Exec() {
 	k := events.UseEvents().Keyboard()
 
 	w := objects.UseObjects().World()
-	// mapScaleX, mapScaleY := w.GetZoomedMapScale()
-
 	p := objects.UseObjects().PC()
-	pZoomedX, pZoomedY := p.GetZoomedRawPos(w.GetZoomedMapScale())
-	pmm := p.GetMetadata().Modified
-
 	c := objects.UseObjects().Camera()
+
+	pmm := p.GetMetadata().Modified
+	pmo := p.GetMetadata().Origin
+
+	wm := w.GetMetadata().Modified
+	mapScaleX, mapScaleY := w.GetZoomedMapScale()
+
+
+	pZoomedX, pZoomedY := p.GetZoomedRawPos(w.GetZoomedMapScale())
+	pZoomedOffsetX, _ := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
+
 	cZoomedX, cZoomedY := c.GetZoomedRawPos(w.GetZoomedMapScale())
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
@@ -41,7 +47,7 @@ func Exec() {
 
 	if k.IsAnyKeyPressed() {
 
-		pZoomedSpeedX, pZoomedSpeedY :=  pmm.Buffs.Speed.X, pmm.Buffs.Speed.Y
+		pZoomedSpeedX, pZoomedSpeedY := pmm.Buffs.Speed.X*mapScaleX, pmm.Buffs.Speed.Y*mapScaleY
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 
 			if pZoomedY > 0 {
@@ -71,24 +77,24 @@ func Exec() {
 			//+pmm.Buffs.Speed.X+pmo.Size.Width
 			// fmt.Println(p.GetX(), c.GetX(), wm.Size.Width*wsx)
 			// if p.GetRawX() < wm.Size.Width*wsx {
-			
-				fmt.Println(pZoomedSpeedX)
-				p.SetRawX(p.RawPos.X + pZoomedSpeedX)
-				if !p.TranslationMovementXBlocked {
-					p.SetRawPosForCameraX(p.RawPosForCamera.X +pZoomedSpeedX)
-				}
+
+			fmt.Println(pZoomedSpeedX)
+			p.SetRawX(p.RawPos.X + pZoomedSpeedX)
+			if !p.TranslationMovementXBlocked {
+				p.SetRawPosForCameraX(p.RawPosForCamera.X + pZoomedSpeedX)
+			}
 			// }
 
 			// fmt.Println(cZoomedX, wm.Size.Width*wsx, cZoomedX < wm.Size.Width*wsx)
 			// if c.GetRawX() < wm.Size.Width*wsx {
-				if p.TranslationMovementXBlocked {
-					c.SetRawX(c.RawPos.X + pZoomedSpeedX)
-				}
+			fmt.Println(cZoomedX, pZoomedOffsetX*2, pmo.Size.Width, pmm.Buffs.Speed.X < wm.Size.Width*mapScaleX, "PUK")
+			if p.TranslationMovementXBlocked {
+				c.SetRawX(c.RawPos.X + pZoomedSpeedX)
+			}
 			// }
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
-			
 
 			if pZoomedX > 0 {
 				p.SetRawX(p.RawPos.X - pZoomedSpeedX)
@@ -105,6 +111,14 @@ func Exec() {
 		}
 
 		p.UpdateDirection()
+
+		if !p.TranslationMovementXBlocked && w.IsAxisXCrossedBy(p) {
+			p.SetTranslationXMovementBlocked(true)
+		}
+
+		if !p.TranslationMovementYBlocked && w.IsAxisYCrossedBy(p) {
+			p.SetTranslationYMovementBlocked(true)
+		}
 
 		if ebiten.IsKeyPressed(ebiten.KeySpace) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTUPPERCLICKERButton) {
 			physics.UsePhysics().Jump().Calculate()

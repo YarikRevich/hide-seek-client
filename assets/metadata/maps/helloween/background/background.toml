@@ -1,5 +1,6 @@
 [info]
 parent="background"
+gamerole = "gamemap"
 
 [[spawns]]
 x = 10
@@ -21,7 +22,7 @@ coefficianty = 1.0
 [physics]
 g = 10.0
 
-[camera]
-maxzoom = 55.0
-minzoom = 40.0
-zoom = 50.0
+# [camera]
+# maxzoom = 55.0
+# minzoom = 40.0
+# zoom = 50.0

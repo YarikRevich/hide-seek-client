@@ -15,6 +15,7 @@ import (
 
 type TextPosition string
 type FontColor string
+type GameRole string
 
 //Predefined options of allowed text positions
 const (
@@ -28,6 +29,10 @@ const (
 	Black FontColor = "black"
 )
 
+const (
+	GameMap GameRole = "gamemap"
+)
+
 type Animation struct {
 	FrameDelay,
 	FrameX,
@@ -38,14 +43,25 @@ type Animation struct {
 	FrameNum int
 }
 
+//Runtime defined metadata model 
+type RuntimeDefined struct {
+	ZoomedScale struct {
+		X, Y float64
+	}
+}
+
 type Model struct {
-	Animation Animation
+	RuntimeDefined
+
+	Animation
 
 	//Information about metadata file
 	Info struct {
 		//Parent file metadata one related to
+		GameRole
+
 		Parent                   string
-		ScrollableX, ScrollableY bool
+		ScrollableX, ScrollableY bool 
 	}
 
 	Size struct {
@@ -69,7 +85,7 @@ type Model struct {
 	}
 
 	Scale struct {
-		CoefficiantX, CoefficiantY float64
+		X, Y float64
 	}
 
 	Text struct {
@@ -78,18 +94,18 @@ type Model struct {
 	}
 
 	Fonts struct {
-		FontColor FontColor
+		FontColor
 	}
 
 	Camera struct {
-		MaxZoom, MinZoom, Zoom float64
+		MaxZoom, MinZoom, InitZoom float64
 	}
 }
 
-//Scales margins with scale
-func (m *Model) ScaleMargins() (float64, float64) {
-	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
-}
+// //Scales margins with scale
+// func (m *Model) ScaleMargins() (float64, float64) {
+// 	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
+// }
 
 type ModelCombination struct {
 	Modified, Origin *Model

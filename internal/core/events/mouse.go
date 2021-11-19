@@ -2,7 +2,7 @@ package events
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -37,7 +37,7 @@ type MouseWheel struct {
 	IsMoved bool
 
 	LastMouseWheelX, LastMouseWheelY float64
-	MouseWheelX, MouseWheelY         float64
+	OffsetX, OffsetY         float64
 	moveCoefficient                  float64
 }
 
@@ -48,21 +48,21 @@ func (p *MouseWheel) UpdateMouseWheelOffsets() {
 
 	if e.IsGamepadConnected() {
 		if e.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
-			p.MouseWheelY -= p.moveCoefficient
+			p.OffsetY -= p.moveCoefficient
 		} else if e.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-			p.MouseWheelY += p.moveCoefficient
+			p.OffsetY += p.moveCoefficient
 		} else if e.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
-			p.MouseWheelX -= p.moveCoefficient
+			p.OffsetX -= p.moveCoefficient
 		} else if e.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
-			p.MouseWheelX += p.moveCoefficient
+			p.OffsetX += p.moveCoefficient
 		}
 	} else {
 		sx, sy := ebiten.Wheel() 
-		p.MouseWheelX += sx; p.MouseWheelY += sy
+		p.OffsetX += sx; p.OffsetY += sy
 	}
 
-	p.IsMoved = p.LastMouseWheelX != p.MouseWheelX && p.LastMouseWheelY != p.MouseWheelY
-	p.LastMouseWheelX = p.MouseWheelX; p.LastMouseWheelY = p.MouseWheelY
+	p.IsMoved = p.LastMouseWheelX != p.OffsetX && p.LastMouseWheelY != p.OffsetY
+	p.LastMouseWheelX = p.OffsetX; p.LastMouseWheelY = p.OffsetY
 }
 
 func NewMouse() *Mouse {

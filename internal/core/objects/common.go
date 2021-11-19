@@ -28,7 +28,9 @@ type Physics struct {
 }
 
 type Animation struct {
-	PositionBeforeAnimation image.Point
+	AnimationStartPosition struct {
+		X, Y float64
+	}
 	FrameCount              uint64
 	FrameDelayCounter       uint64
 	CurrentFrameMatrix      []float64
@@ -37,38 +39,23 @@ type Animation struct {
 type Skin struct {
 	Name string
 	Path string
-
-	// Size struct {
-	// 	Width, Height float64
-	// } `json:"-"`
-
-	// Buffs struct {
-	// 	Speed struct {
-	// 		X, Y float64
-	// 	}
-	// }
-
-	// Margins struct {
-	// 	LeftMargin, TopMargin float64
-	// }
-
-	// Scale struct {
-	// 	CoefficiantX, CoefficiantY float64
-	// }
 }
 
 /*The object structure which describes
 each object on the map
 */
 type Object struct {
+	*sources.ModelCombination
+
 	Animation
 	Skin
 	Physics
 
+
 	// Names parentid the object referes to
 	WorldID, ParentID, ID uuid.UUID
 
-	RawPos, RawPosForCamera, AttachedPos struct {
+	RawPos, RawPosForCamera struct {
 		X, Y float64
 	}
 
@@ -187,18 +174,16 @@ func (o *Object) SaveLastPosition() {
 	o.PositionHistory.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
 }
 
-func (o *Object) savePositionBeforeAnimation() {
-	o.Animation.PositionBeforeAnimation = image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)}
+func (o *Object) SaveAnimationStartPosition() {
+	o.Animation.AnimationStartPosition = struct{X float64; Y float64}{o.RawPos.X, o.RawPos.Y}
 }
 
 func (o *Object) SetRawX(x float64) {
 	o.RawPos.X = x
-	o.savePositionBeforeAnimation()
 }
 
 func (o *Object) SetRawY(y float64) {
 	o.RawPos.Y = y
-	o.savePositionBeforeAnimation()
 }
 
 func (o *Object) SetRawPosForCameraY(y float64) {
@@ -208,25 +193,17 @@ func (o *Object) SetRawPosForCameraX(x float64) {
 	o.RawPosForCamera.X = x
 }
 
-func (o *Object) SetAttachedPosX(x float64) {
-	o.AttachedPos.X = x
-}
+// func (o *Object) SetZoomedAttachedPosX(x float64) {
+// 	w := UseObjects().World()
+// 	mapScaleX, _ := w.GetZoomedMapScale()
+// 	o.AttachedPos.X = x / mapScaleX
+// }
 
-func (o *Object) SetAttachedPosY(y float64) {
-	o.AttachedPos.Y = y
-}
-
-func (o *Object) SetZoomedAttachedPosX(x float64) {
-	w := UseObjects().World()
-	mapScaleX, _ := w.GetZoomedMapScale()
-	o.AttachedPos.X = x / mapScaleX
-}
-
-func (o *Object) SetZoomedAttachedPosY(y float64) {
-	w := UseObjects().World()
-	_, mapScaleY := w.GetZoomedMapScale()
-	o.AttachedPos.Y = y / mapScaleY
-}
+// func (o *Object) SetZoomedAttachedPosY(y float64) {
+// 	w := UseObjects().World()
+// 	_, mapScaleY := w.GetZoomedMapScale()
+// 	o.AttachedPos.Y = y / mapScaleY
+// }
 
 func (o *Object) GetRawX() float64 {
 	return o.RawPos.X
@@ -291,9 +268,8 @@ func (o *Object) IsAnimatied() bool {
 }
 
 //Returns last saved position before animation was executed
-func (o *Object) GetPositionBeforeAnimation() (float64, float64) {
-	return float64(o.Animation.PositionBeforeAnimation.X),
-		float64(o.Animation.PositionBeforeAnimation.Y)
+func (o *Object) GetAnimationStartPosition() (float64, float64) {
+	return o.Animation.AnimationStartPosition.X, o.Animation.AnimationStartPosition.Y
 }
 
 //Sets skin for the object
@@ -301,6 +277,7 @@ func (o *Object) SetSkin(path string) {
 	o.Path = path
 	_, file := filepath.Split(path)
 	o.Name = file
+	o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Path)
 }
 
 //Returns images for the skin selected
@@ -315,15 +292,8 @@ func (o *Object) GetCopyOfImage() *ebiten.Image {
 //Returns image where animation properties applied to
 func (o *Object) GetAnimatedImage() *ebiten.Image {
 	i := o.GetImage()
-	m := o.GetMetadata().Modified
-
-	sx, sy := int((m.Animation.FrameX+float64(o.Animation.FrameCount))*m.Animation.FrameWidth), int(m.Animation.FrameY)
-	return i.SubImage(image.Rect(sx, sy, sx+int(m.Animation.FrameWidth), sy+int(m.Animation.FrameHeight))).(*ebiten.Image)
-}
-
-//Returns metadata for the skin selected
-func (o *Object) GetMetadata() *sources.ModelCombination {
-	return sources.UseSources().Metadata().GetMetadata(o.Path)
+	sx, sy := int((o.ModelCombination.Modified.Animation.FrameX+float64(o.Animation.FrameCount))*o.ModelCombination.Modified.Animation.FrameWidth), int(o.ModelCombination.Modified.Animation.FrameY)
+	return i.SubImage(image.Rect(sx, sy, sx+int(o.ModelCombination.Modified.Animation.FrameWidth), sy+int(o.ModelCombination.Modified.Animation.FrameHeight))).(*ebiten.Image)
 }
 
 //API//
@@ -332,8 +302,8 @@ func (o *Object) ToAPIMessage() *api.Object {
 	return &api.Object{
 		Animation: &api.Animation{
 			PositionBeforeAnimation: &api.Position{
-				X: float64(o.Animation.PositionBeforeAnimation.X),
-				Y: float64(o.Animation.PositionBeforeAnimation.Y),
+				X: o.Animation.AnimationStartPosition.X,
+				Y: o.Animation.AnimationStartPosition.Y,
 			},
 			FrameCount:         uint64(o.FrameCount),
 			FrameDelayCounter:  uint64(o.FrameDelayCounter),
@@ -363,8 +333,8 @@ func (o *Object) ToAPIMessage() *api.Object {
 }
 
 func (o *Object) FromAPIMessage(m *api.Object) {
-	o.Animation.PositionBeforeAnimation.X = int(m.Animation.PositionBeforeAnimation.X)
-	o.Animation.PositionBeforeAnimation.Y = int(m.Animation.PositionBeforeAnimation.Y)
+	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
+	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
 	o.Animation.FrameCount = m.Animation.FrameCount
 	o.Animation.FrameDelayCounter = m.Animation.FrameDelayCounter
 	o.Animation.CurrentFrameMatrix = m.Animation.CurrentFrameMatrix
@@ -386,28 +356,30 @@ func (o *Object) FromAPIMessage(m *api.Object) {
 	o.Role = Role(m.Role)
 }
 
-func (o *Object) GetZoomForSkin(zoom float64) (float64, float64) {
-	m := o.GetMetadata().Modified
-	return (m.Scale.CoefficiantX / 100 * zoom), (m.Scale.CoefficiantY / 100 * zoom)
+// func (o *Object) GetZoomForSkin(zoom float64) (float64, float64) {
+// 	// m := o.GetMetadata().Modified
+// 	// return (o.ModelCombination.Modified.Scale.CoefficiantX / 100 * zoom), 
+// 	// (o.ModelCombination.Modified.Scale.CoefficiantY / 100 * zoom)
+// }
+
+// func (o *Object) GetMaxZoomForSkin(maxZoom float64) (float64, float64) {
+// 	return (o.ModelCombination.Modified.Scale.CoefficiantX / 100 * maxZoom), 
+// 	(o.ModelCombination.Modified.Scale.CoefficiantY / 100 * maxZoom)
+// }
+
+func (o *Object) GetScaledRawPos() (float64, float64) {
+	w := UseObjects().World()
+	return o.RawPos.X * w.Modified.ZoomedScale.X, o.RawPos.Y * w.Modified.ZoomedScale.Y
 }
 
-func (o *Object) GetMaxZoomForSkin(maxZoom float64) (float64, float64) {
-	m := o.GetMetadata().Modified
-	return (m.Scale.CoefficiantX / 100 * maxZoom), (m.Scale.CoefficiantY / 100 * maxZoom)
+func (o *Object) GetScaledRawPosForCamera() (float64, float64) {
+	w := UseObjects().World()
+	return o.RawPosForCamera.X * w.Modified.ZoomedScale.X, o.RawPosForCamera.Y * w.Modified.ZoomedScale.Y
 }
 
-func (o *Object) GetZoomedRawPos(mapScaleX, mapScaleY float64) (float64, float64) {
-	return o.RawPos.X * mapScaleX, o.RawPos.Y * mapScaleY
-}
-
-func (o *Object) GetZoomedRawPosForCamera(mapScaleX, mapScaleY float64) (float64, float64) {
-	// return o.RawPosForCamera.X * mapScaleX, o.RawPosForCamera.Y * mapScaleY
-	return o.RawPosForCamera.X, o.RawPosForCamera.Y 
-}
-
-func (o *Object) GetZoomedAttachedPos(mapScaleX, mapScaleY float64) (float64, float64) {
-	return o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
-}
+// func (o *Object) GetZoomedAttachedPos(mapScaleX, mapScaleY float64) (float64, float64) {
+// 	return o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
+// }
 
 func (o *Object) SetTranslationXMovementBlocked(s bool) {
 	o.TranslationMovementXBlocked = s

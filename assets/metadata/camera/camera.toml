@@ -1,0 +1,4 @@
+[camera]
+maxzoom = 55.0
+minzoom = 40.0
+initzoom = 50.0

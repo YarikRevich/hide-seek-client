@@ -21,30 +21,22 @@ func (h *Hero) GetMatrixFor(p *objects.PC) ebiten.GeoM {
 	}
 	g := ebiten.GeoM{}
 
-	w := objects.UseObjects().World()
-	m := w.GetMetadata().Modified
-	g.Scale(p.GetZoomForSkin(m.Camera.Zoom))
-	// g.Translate(p.GetZoomedRawPos(w.GetZoomedMapScale()))
+	// w := objects.UseObjects().World()
+	// m := w.GetMetadata().Modified
+	// g.Scale(p.GetZoomForSkin(m.Camera.Zoom))
+	// // g.Translate(p.GetZoomedRawPos(w.GetZoomedMapScale()))
 
 	return g
 }
 
 func (h *Hero) UpdateMatrix() {
-	w := objects.UseObjects().World()
-	wm := w.GetMetadata().Modified
+	// w := objects.UseObjects().World()
+	// wm := w.GetMetadata().Modified
 
-	h.followedMatrix.Scale(h.Followed.GetMovementRotation(), 1)
-	h.followedMatrix.Scale(h.Followed.GetZoomForSkin(wm.Camera.Zoom))
+	// h.followedMatrix.Scale(h.Followed.GetMovementRotation(), 1)
+	// h.followedMatrix.Scale(h.Followed.GetZoomForSkin(wm.Camera.Zoom))
 
-	if !h.Followed.TranslationMovementXBlocked && w.IsAxisXCrossedBy(h.Followed) {
-		h.Followed.SetTranslationXMovementBlocked(true)
-	}
-
-	if !h.Followed.TranslationMovementYBlocked && w.IsAxisYCrossedBy(h.Followed) {
-		h.Followed.SetTranslationYMovementBlocked(true)
-	}
-
-	h.followedMatrix.Translate(h.Followed.GetZoomedRawPosForCamera(w.GetZoomedMapScale()))
+	// h.followedMatrix.Translate(h.Followed.GetZoomedRawPosForCamera(w.GetZoomedMapScale()))
 }
 
 type Map struct {
@@ -122,6 +114,8 @@ func (m *Map) UpdateMatrix() {
 	cZoomedX, cZoomedY := co.GetZoomedRawPos(zoomedMapScaleX, zoomedMapScaleY)
 	pZoomedOffsetX, _ := m.Followed.GetZoomedRawPosForCamera(zoomedMapScaleX, zoomedMapScaleY)
 
+	m.matrix.Translate(-cZoomedX, -cZoomedY)
+		
 	if m.Followed.TranslationMovementYBlocked {
 		if cZoomedY <= 0 && m.Followed.IsDirectionUP() {
 			m.Followed.SetTranslationYMovementBlocked(false)
@@ -132,7 +126,9 @@ func (m *Map) UpdateMatrix() {
 	}
 
 	if m.Followed.TranslationMovementXBlocked {
-		if co.GetRawX()+pZoomedOffsetX >= wm.Size.Width*zoomedMapScaleX && m.Followed.IsDirectionRIGHT() {
+
+		if cZoomedX + pZoomedOffsetX*2 >= wm.Size.Width*zoomedMapScaleX && m.Followed.IsDirectionRIGHT() {
+			fmt.Println(cZoomedX + pZoomedOffsetX*2 - wm.Size.Width*zoomedMapScaleX, "HERE")
 			m.Followed.SetTranslationXMovementBlocked(false)
 		}
 		if cZoomedX <= 0 && m.Followed.IsDirectionLEFT() {
@@ -140,9 +136,9 @@ func (m *Map) UpdateMatrix() {
 		}
 	}
 
-	fmt.Println(co.GetRawX(), m.Followed.RawPosForCamera.X, wm.Size.Width*zoomedMapScaleX)
+	// fmt.Println(cZoomedX, pZoomedOffsetX*2, wm.Size.Width*zoomedMapScaleX)
 
-	m.matrix.Translate(-co.RawPos.X, -co.RawPos.Y)
+
 	// ax, ay := w.GetZoomedAttachedPos()
 	// co := objects.UseObjects().Camera()
 	// fmt.Println(wm.Size.Width, co.RawPos)
@@ -177,42 +173,6 @@ func (c *Camera) UpdateMatrices() {
 
 	c.Hero.UpdateMatrix()
 	c.Map.UpdateMatrix()
-}
-
-//Increments zoom property
-func (c *Camera) ZoomIn() {
-	w := objects.UseObjects().World()
-	m := w.GetMetadata().Modified
-
-	if m.Camera.Zoom < m.Camera.MaxZoom {
-		m.Camera.Zoom++
-	}
-
-	c.Hero.Followed.SetTranslationXMovementBlocked(false)
-	c.Hero.Followed.SetTranslationYMovementBlocked(false)
-}
-
-//Decrements zoom property
-func (c *Camera) ZoomOut() {
-	w := objects.UseObjects().World()
-	m := w.GetMetadata().Modified
-
-	// wsx, _ := w.GetZoomedMapScale()
-	// czx, _ := c.Hero.Followed.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
-	// zx, _ := c.Hero.Followed.GetZoomedRawPos(w.GetZoomedMapScale())
-	// fmt.Println(zx, czx, m.Size.Width * wsx)
-	// co := objects.UseObjects().Camera()
-	// fmt.Println(co.RawPos.X, czx)
-	co := objects.UseObjects().Camera()
-	fmt.Println(co.RawPos.X+1 < 1113)
-	// if co.RawPos.X+1 < 1113 {
-	if m.Camera.Zoom > m.Camera.MinZoom {
-		m.Camera.Zoom--
-	}
-	// }
-
-	c.Hero.Followed.SetTranslationXMovementBlocked(false)
-	c.Hero.Followed.SetTranslationYMovementBlocked(false)
 }
 
 //Uses or creates a new instance of camera

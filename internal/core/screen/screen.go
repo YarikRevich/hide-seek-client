@@ -1,6 +1,7 @@
 package screen
 
 import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -10,8 +11,7 @@ type Screen struct {
 	fullWidth, fullHeight int
 	lastWidth, lastHeight int
 
-
-	screen                *ebiten.Image
+	screen *ebiten.Image
 }
 
 func (s *Screen) SetLastSize() {
@@ -41,39 +41,79 @@ func (s *Screen) GetMaxHeight() int {
 }
 
 func (s *Screen) GetAxisX() float64 {
-	x, _ := s.screen.Size()
-	return float64(x)/2
+	if s.screen != nil {
+		x, _ := s.screen.Size()
+		return float64(x) / 2
+	}
+	return float64(s.lastWidth) / 2
 }
 
 func (s *Screen) GetAxisY() float64 {
-	_, y := s.screen.Size()
-	return float64(y)/2
+	if s.screen != nil {
+		_, y := s.screen.Size()
+		return float64(y) / 2
+	}
+	return float64(s.lastHeight) / 2
 }
 
 func (s *Screen) SetScreen(i *ebiten.Image) {
 	s.screen = i
 }
 
-func (s *Screen) CleanScreen(){
+func (s *Screen) CleanScreen() {
 	s.screen = nil
 }
 
-func (s *Screen) GetWidth() float64{
-	if s.screen != nil{
+func (s *Screen) GetWidth() float64 {
+	if s.screen != nil {
 		return float64(s.screen.Bounds().Max.X)
 	}
 	return float64(s.lastWidth)
 }
 
-func (s *Screen) GetHeight() float64{
-	if s.screen != nil{
+func (s *Screen) GetHeight() float64 {
+	if s.screen != nil {
 		return float64(s.screen.Bounds().Max.Y)
 	}
 	return float64(s.lastHeight)
 }
 
-func (s *Screen) GetScreen() *ebiten.Image{
+func (s *Screen) GetScreen() *ebiten.Image {
 	return s.screen
+}
+
+func (s *Screen) IsResized() bool {
+	return s.GetWidth() != float64(s.lastWidth) || s.GetHeight() != float64(s.lastHeight)
+}
+
+func (s *Screen) GetSize() (float64, float64) {
+	if s.screen != nil {
+		width, height := s.screen.Size()
+		return float64(width), float64(height)
+	}
+	return 0, 0
+}
+
+func (s *Screen) IsAxisXCrossedByPC() bool {
+	o := objects.UseObjects()
+	p := o.PC()
+	w := o.World()
+	x, _ := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
+	ax := s.GetAxisX()
+
+	
+	return (x-p.ModelCombination.Modified.Buffs.Speed.X-p.ModelCombination.Modified.Size.Width/2) <= ax &&
+		ax <= (x+p.ModelCombination.Modified.Buffs.Speed.X+p.ModelCombination.Modified.Size.Width/2)
+}
+
+func (s *Screen) IsAxisYCrossedByPC() bool {
+	// mm := p.GetMetadata().Modified
+	// mo := p.GetMetadata().Origin
+	_, y := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
+	// ay := screen.UseScreen().GetAxisY()
+	ay := s.GetAxisY()
+
+	return (y-mm.Buffs.Speed.Y-mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y+mo.Size.Height/2)
 }
 
 func UseScreen() *Screen {

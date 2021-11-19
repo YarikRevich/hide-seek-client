@@ -1,12 +1,11 @@
 package loop
 
 import (
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/syncer"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sourceupgrader"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio"
@@ -34,7 +33,6 @@ func (g *Loop) Update() error {
 	mouse.Process()
 	keyboard.Process()
 
-
 	if !cli.IsWithoutSound() {
 		audio.Process()
 	}
@@ -44,14 +42,14 @@ func (g *Loop) Update() error {
 
 func (g *Loop) Draw(i *ebiten.Image) {
 	screen.UseScreen().SetScreen(i)
-	syncer.NewSyncer().Sync()
-	
+
+	sourceupgrader.NewUpgrader().Upgrade()
 
 	if cli.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.RENDER)
 		defer profiling.UseProfiler().EndMonitoring()
 	}
-	
+
 	middlewares.UseMiddlewares().Render().UseAfter(render.UseRender().Render)
 
 	screen.UseScreen().SetLastSize()

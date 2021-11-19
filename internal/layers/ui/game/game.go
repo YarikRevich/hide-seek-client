@@ -12,6 +12,7 @@ import (
 
 func Draw() {
 	w := objects.UseObjects().World()
+	wm := w.GetMetadata().Modified
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := objects.UseObjects().PC()
@@ -35,7 +36,15 @@ func Draw() {
 			img := v.GetAnimatedImage()
 
 			opts := &ebiten.DrawImageOptions{}
-			opts.GeoM.Concat(camera.UseCamera().Hero.GetMatrixFor(v))
+
+			opts.GeoM.Scale(v.GetMovementRotation(), 1)
+				opts.GeoM.Scale(v.GetZoomForSkin(wm.Camera.Zoom))
+			if objects.HaveSameID(v.Object, objects.UseObjects().PC().Object) {
+				opts.GeoM.Translate(v.GetZoomedRawPosForCamera(w.GetZoomedMapScale()))
+			} else {	
+				opts.GeoM.Translate(v.GetZoomedRawPos(w.GetZoomedMapScale()))
+			}
+			
 			screen.DrawImage(img, opts)
 		}
 	})
