@@ -35,15 +35,14 @@ message Object {
     Skin skin = 2;
     Physics physics = 3;
 
-    string worldId = 4;
-    string parentId = 5;
-    string id = 6;
+    Object parent = 4;
+    string id = 5;
     
-    Position rawPos = 7;
-    Position spawn = 8;
+    Position rawPos = 6;
+    Position spawn = 7;
 
-    int64 direction = 9;
-    int64 role = 10;
+    int64 direction = 8;
+    int64 role = 9;
 };
 
 message Animation {

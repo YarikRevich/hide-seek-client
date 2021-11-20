@@ -49,12 +49,6 @@ func (m *Map) GetMatrix() ebiten.GeoM {
 }
 
 func (m *Map) UpdateMatrix() {
-	w := objects.UseObjects().World()
-	wm := w.GetMetadata().Modified
-
-	zoomedMapScaleX, zoomedMapScaleY := w.GetZoomedMapScale()
-	m.matrix.Scale(zoomedMapScaleX, zoomedMapScaleY)
-
 	// // fmt.Println(m.Followed.IsTranslationMovementBlocked())
 	// if m.Followed.IsTranslationMovementBlocked() {
 	// 	x, y := m.Followed.GetZoomedRawPos(w.GetZoomedMapScale())
@@ -110,31 +104,32 @@ func (m *Map) UpdateMatrix() {
 	// 	}
 	// }
 
-	co := objects.UseObjects().Camera()
-	cZoomedX, cZoomedY := co.GetZoomedRawPos(zoomedMapScaleX, zoomedMapScaleY)
-	pZoomedOffsetX, _ := m.Followed.GetZoomedRawPosForCamera(zoomedMapScaleX, zoomedMapScaleY)
+	// co := objects.UseObjects().Camera()
 
-	m.matrix.Translate(-cZoomedX, -cZoomedY)
+	// cZoomedX, cZoomedY := co.GetScaledPosX(), co.GetScaledPosY()
+	// pZoomedOffsetX := m.Followed.GetScaledOffsetX()
+
+	// m.matrix.Translate(-cZoomedX, -cZoomedY)
 		
-	if m.Followed.TranslationMovementYBlocked {
-		if cZoomedY <= 0 && m.Followed.IsDirectionUP() {
-			m.Followed.SetTranslationYMovementBlocked(false)
-		}
-		if cZoomedY >= wm.Size.Height*zoomedMapScaleY && m.Followed.IsDirectionDOWN() {
-			m.Followed.SetTranslationYMovementBlocked(false)
-		}
-	}
+	// if m.Followed.TranslationMovementYBlocked {
+	// 	if cZoomedY <= 0 && m.Followed.IsDirectionUP() {
+	// 		m.Followed.SetTranslationYMovementBlocked(false)
+	// 	}
+	// 	if cZoomedY >= wm.Size.Height*zoomedMapScaleY && m.Followed.IsDirectionDOWN() {
+	// 		m.Followed.SetTranslationYMovementBlocked(false)
+	// 	}
+	// }
 
-	if m.Followed.TranslationMovementXBlocked {
+	// if m.Followed.TranslationMovementXBlocked {
 
-		if cZoomedX + pZoomedOffsetX*2 >= wm.Size.Width*zoomedMapScaleX && m.Followed.IsDirectionRIGHT() {
-			fmt.Println(cZoomedX + pZoomedOffsetX*2 - wm.Size.Width*zoomedMapScaleX, "HERE")
-			m.Followed.SetTranslationXMovementBlocked(false)
-		}
-		if cZoomedX <= 0 && m.Followed.IsDirectionLEFT() {
-			m.Followed.SetTranslationXMovementBlocked(false)
-		}
-	}
+	// 	if cZoomedX + pZoomedOffsetX*2 >= wm.Size.Width*zoomedMapScaleX && m.Followed.IsDirectionRIGHT() {
+	// 		// fmt.Println(cZoomedX + pZoomedOffsetX*2 - wm.Size.Width*zoomedMapScaleX, "HERE")
+	// 		m.Followed.SetTranslationXMovementBlocked(false)
+	// 	}
+	// 	if cZoomedX <= 0 && m.Followed.IsDirectionLEFT() {
+	// 		m.Followed.SetTranslationXMovementBlocked(false)
+	// 	}
+	// }
 
 	// fmt.Println(cZoomedX, pZoomedOffsetX*2, wm.Size.Width*zoomedMapScaleX)
 

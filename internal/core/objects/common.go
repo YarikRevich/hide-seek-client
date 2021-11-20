@@ -52,10 +52,13 @@ type Object struct {
 	Physics
 
 
-	// Names parentid the object referes to
-	WorldID, ParentID, ID uuid.UUID
+	//Parent object
+	Parent *Object
 
-	RawPos, RawPosForCamera struct {
+		// Names parentid the object referes to
+	ID uuid.UUID
+
+	RawPos, RawOffset struct {
 		X, Y float64
 	}
 
@@ -69,6 +72,10 @@ type Object struct {
 
 	//Only client fields
 	PositionHistory zeroshifter.IZeroShifter
+}
+
+func (o *Object) IsEqualTo(ob Object)bool{
+	return o.ID == ob.ID
 }
 
 func (o *Object) UpdateDirection() {
@@ -166,10 +173,6 @@ func (o *Object) IsDirectionDOWN() bool {
 	return o.Direction == keycodes.DOWN || o.SubDirection == keycodes.DOWN
 }
 
-func (o *Object) IsBy(ob Object) bool {
-	return o.ParentID == ob.ID
-}
-
 func (o *Object) SaveLastPosition() {
 	o.PositionHistory.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
 }
@@ -186,40 +189,12 @@ func (o *Object) SetRawY(y float64) {
 	o.RawPos.Y = y
 }
 
-func (o *Object) SetRawPosForCameraY(y float64) {
-	o.RawPosForCamera.Y = y
+func (o *Object) SetRawOffsetY(y float64) {
+	o.RawOffset.X = y
 }
-func (o *Object) SetRawPosForCameraX(x float64) {
-	o.RawPosForCamera.X = x
+func (o *Object) SetRawOffsetX(x float64) {
+	o.RawOffset.X = x
 }
-
-// func (o *Object) SetZoomedAttachedPosX(x float64) {
-// 	w := UseObjects().World()
-// 	mapScaleX, _ := w.GetZoomedMapScale()
-// 	o.AttachedPos.X = x / mapScaleX
-// }
-
-// func (o *Object) SetZoomedAttachedPosY(y float64) {
-// 	w := UseObjects().World()
-// 	_, mapScaleY := w.GetZoomedMapScale()
-// 	o.AttachedPos.Y = y / mapScaleY
-// }
-
-func (o *Object) GetRawX() float64 {
-	return o.RawPos.X
-}
-
-func (o *Object) GetRawY() float64 {
-	return o.RawPos.Y
-}
-
-// func (o *Object) GetZoomedRawX() float64 {
-// 	return o.RawPos.X * 
-// }
-
-// func (o *Object) GetZoomedRawY() float64 {
-// 	return o.RawPos.Y
-// }
 
 //Checks if x pos has been changed
 //in comparison to the last x poses
@@ -316,8 +291,7 @@ func (o *Object) ToAPIMessage() *api.Object {
 		Physics: &api.Physics{
 			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
 		},
-		WorldId:  o.WorldID.String(),
-		ParentId: o.ParentID.String(),
+		Parent: o.Parent.ToAPIMessage(),
 		Id:       o.ID.String(),
 		RawPos: &api.Position{
 			X: o.RawPos.X,
@@ -344,8 +318,7 @@ func (o *Object) FromAPIMessage(m *api.Object) {
 
 	o.Physics.Jump = *(*[]keycodes.Direction)(unsafe.Pointer(&m.Physics.Jump))
 
-	o.WorldID = uuid.MustParse(m.WorldId)
-	o.ParentID = uuid.MustParse(m.ParentId)
+	o.Parent.FromAPIMessage(m.Parent)
 	o.ID = uuid.MustParse(m.Id)
 
 	o.RawPos.X = m.RawPos.X
@@ -356,30 +329,21 @@ func (o *Object) FromAPIMessage(m *api.Object) {
 	o.Role = Role(m.Role)
 }
 
-// func (o *Object) GetZoomForSkin(zoom float64) (float64, float64) {
-// 	// m := o.GetMetadata().Modified
-// 	// return (o.ModelCombination.Modified.Scale.CoefficiantX / 100 * zoom), 
-// 	// (o.ModelCombination.Modified.Scale.CoefficiantY / 100 * zoom)
-// }
-
-// func (o *Object) GetMaxZoomForSkin(maxZoom float64) (float64, float64) {
-// 	return (o.ModelCombination.Modified.Scale.CoefficiantX / 100 * maxZoom), 
-// 	(o.ModelCombination.Modified.Scale.CoefficiantY / 100 * maxZoom)
-// }
-
-func (o *Object) GetScaledRawPos() (float64, float64) {
-	w := UseObjects().World()
-	return o.RawPos.X * w.Modified.ZoomedScale.X, o.RawPos.Y * w.Modified.ZoomedScale.Y
+func (o *Object) GetScaledPosX()float64{
+	return o.RawPos.X * o.Parent.Modified.ZoomedScale.X
 }
 
-func (o *Object) GetScaledRawPosForCamera() (float64, float64) {
-	w := UseObjects().World()
-	return o.RawPosForCamera.X * w.Modified.ZoomedScale.X, o.RawPosForCamera.Y * w.Modified.ZoomedScale.Y
+func (o *Object) GetScaledPosY()float64{
+	return o.RawPos.Y * o.Parent.Modified.ZoomedScale.Y
 }
 
-// func (o *Object) GetZoomedAttachedPos(mapScaleX, mapScaleY float64) (float64, float64) {
-// 	return o.AttachedPos.X * mapScaleX, o.AttachedPos.Y * mapScaleY
-// }
+func (o *Object) GetScaledOffsetX()float64{
+	return o.RawOffset.X * o.Parent.Modified.ZoomedScale.X
+}
+
+func (o *Object) GetScaledOffsetY()float64{
+	return o.RawOffset.Y * o.Parent.Modified.ZoomedScale.Y
+}
 
 func (o *Object) SetTranslationXMovementBlocked(s bool) {
 	o.TranslationMovementXBlocked = s

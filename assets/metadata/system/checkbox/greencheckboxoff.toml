@@ -6,5 +6,5 @@ leftmargin = 900.0
 topmargin = 600.0
 
 [scale]
-coefficiantx = 0.5
-coefficianty = 0.5
+x = 0.5
+y = 0.5

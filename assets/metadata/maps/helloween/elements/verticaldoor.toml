@@ -2,5 +2,5 @@
 parent="verticaldoor"
 
 [scale]
-coefficiantx = 1.0
-coefficianty = 1.0
+x = 1.0
+y = 1.0

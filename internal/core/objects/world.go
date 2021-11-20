@@ -36,17 +36,17 @@ type World struct {
 }
 
 func (w *World) AddPC(p *PC) {
-	p.WorldID = w.ID
+	p.Parent = &w.Object
 	w.PCs = append(w.PCs, p)
 }
 
 func (w *World) AddWeapon(p *Weapon) {
-	p.WorldID = w.ID
+	p.Parent = &w.Object
 	w.Weapons = append(w.Weapons, p)
 }
 
 func (w *World) AddAmmo(a *Ammo) {
-	a.WorldID = w.ID
+	a.Parent = &w.Object
 	w.Ammo = append(w.Ammo, a)
 }
 
@@ -72,10 +72,12 @@ func (w *World) updatePCs(m []*api.PC) {
 	pc := UseObjects().PC()
 	for _, v := range m {
 		if v.Object.Id == pc.ID.String() {
+			pc.Parent = &w.Object
 			pc.FromAPIMessage(v)
 			w.PCs = append(w.PCs, pc)
 		} else {
 			np := NewPC()
+			np.Parent = &w.Object
 			np.FromAPIMessage(v)
 			w.PCs = append(w.PCs, np)
 		}
@@ -90,7 +92,7 @@ func (w *World) UpdateObjects(m *api.WorldObjectsResponse) {
 
 func (w *World) GetWeaponByPC(p *PC) *Weapon {
 	for _, v := range w.Weapons {
-		if v.ParentID == p.ID {
+		if v.Parent.ID == p.ID {
 			return v
 		}
 	}
@@ -102,7 +104,7 @@ func (w *World) GetAmmoByWeapon(p *Weapon) *Ammo {
 		return nil
 	}
 	for _, v := range w.Ammo {
-		if v.ParentID == p.ID {
+		if v.Parent.ID == p.ID {
 			return v
 		}
 	}

@@ -27,7 +27,7 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -42,7 +42,7 @@ func Draw() {
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
+		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
 
 		s := positioning.UsePositioning().Button()
 		s.Init(img, mo, f, mo.Text.Symbols)
@@ -61,7 +61,7 @@ func Draw() {
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.CoefficiantX, mm.Scale.CoefficiantY)
+		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
 	
 		s := positioning.UsePositioning().Button()
 		s.Init(img, mo, f, mo.Text.Symbols)

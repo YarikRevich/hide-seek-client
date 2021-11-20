@@ -3,7 +3,7 @@ package game
 import (
 	// "fmt"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/camera"
+	// "github.com/YarikRevich/HideSeek-Client/internal/core/camera"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
@@ -12,39 +12,37 @@ import (
 
 func Draw() {
 	w := objects.UseObjects().World()
-	wm := w.GetMetadata().Modified
-
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := objects.UseObjects().PC()
-		p.SaveLastPosition()
-
-		c := camera.UseCamera()
-		c.Follow(p)
-		c.UpdateMatrices()
-	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := w.GetImage()
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Concat(camera.UseCamera().Map.GetMatrix())
+		opts.GeoM.Scale(w.ModelCombination.Modified.ZoomedScale.X, w.ModelCombination.Modified.ZoomedScale.Y)
+
+		c := objects.UseObjects().Camera()
+		opts.GeoM.Translate(-c.GetScaledPosX(), -c.GetScaledPosY())
+
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		p := objects.UseObjects().PC()
 		for _, v := range w.PCs {
 			img := v.GetAnimatedImage()
 
 			opts := &ebiten.DrawImageOptions{}
 
 			opts.GeoM.Scale(v.GetMovementRotation(), 1)
-				opts.GeoM.Scale(v.GetZoomForSkin(wm.Camera.Zoom))
-			if objects.HaveSameID(v.Object, objects.UseObjects().PC().Object) {
-				opts.GeoM.Translate(v.GetZoomedRawPosForCamera(w.GetZoomedMapScale()))
-			} else {	
-				opts.GeoM.Translate(v.GetZoomedRawPos(w.GetZoomedMapScale()))
+			opts.GeoM.Scale(v.ModelCombination.Modified.ZoomedScale.X,
+				v.ModelCombination.Modified.ZoomedScale.Y)
+
+			if v.IsEqualTo(p.Object) {
+				v.GetScaledPosX()
+				opts.GeoM.Translate(v.GetScaledOffsetX(), v.GetScaledOffsetX())
+			} else {
+				opts.GeoM.Translate(v.GetScaledPosX(), v.GetScaledPosY())
 			}
-			
+
 			screen.DrawImage(img, opts)
 		}
 	})

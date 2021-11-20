@@ -41,7 +41,7 @@ func Draw() {
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -52,7 +52,7 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.CoefficiantX, m.Scale.CoefficiantY)
+		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
 		text.Draw(img, objects.UseObjects().World().PCsToString(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 

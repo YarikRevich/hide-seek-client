@@ -20,7 +20,7 @@ func NewAmmoByObject(o Object)*Ammo{
 		logrus.Fatal("failed to create uuid for world:", err)
 	}
 	a.ID = id
-	a.ParentID = o.ID
+	a.Parent = &o
 	return a
 }
 

@@ -20,7 +20,7 @@ func NewWeaponByObject(o Object)*Weapon{
 	}
 	w.ID = id
 
-	w.ParentID = o.ID
+	w.Parent = &o
 	return w
 }
 

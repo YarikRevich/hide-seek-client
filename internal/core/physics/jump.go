@@ -16,14 +16,13 @@ type Jump struct {
 //runs further planned execution
 func (j *Jump) Calculate() {
 	p := objects.UseObjects().PC()
+	p.SaveAnimationStartPosition()
 
 	if len(p.Physics.Jump) != 0 {
 		return
 	}
-
-	pm := objects.UseObjects().PC().GetMetadata()
-	wm := objects.UseObjects().World().GetMetadata()
-	t := int(math.Round((math.Sqrt((2*pm.Modified.Size.Height)/wm.Modified.Physics.G) / 2)))
+	
+	t := int(math.Round((math.Sqrt((2*	p.ModelCombination.Modified.Size.Height)/p.Parent.ModelCombination.Modified.Physics.G) / 2)))
 
 	for t%2 != 0 {
 		t++

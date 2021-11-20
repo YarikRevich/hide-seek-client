@@ -2,7 +2,7 @@ package events
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -16,8 +16,8 @@ type MousePress struct{}
 
 func (p *MousePress) IsMousePressLeftOnce(m sources.Model) bool {
 	currX, currY := ebiten.CursorPosition()
-	mx, my := m.ScaleMargins()
-
+	mx, my := m.Margins.LeftMargin * m.Scale.X, m.Margins.TopMargin * m.Scale.X
+	
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
 		(currX >= int(mx) && currX <= int((m.Size.Width)+(mx))) &&
 		(currY >= int(my) && currY <= int((m.Size.Height)+(my)))

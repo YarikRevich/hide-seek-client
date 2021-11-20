@@ -16,8 +16,8 @@ x = 6
 y = 89
 
 [scale]
-coefficiantx = 1.0
-coefficianty = 1.0
+x = 1.0
+y = 1.0
 
 [physics]
 g = 10.0

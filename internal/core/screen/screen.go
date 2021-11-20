@@ -95,25 +95,21 @@ func (s *Screen) GetSize() (float64, float64) {
 }
 
 func (s *Screen) IsAxisXCrossedByPC() bool {
-	o := objects.UseObjects()
-	p := o.PC()
-	w := o.World()
-	x, _ := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
+	p := objects.UseObjects().PC()
+	x := p.GetScaledOffsetX()
 	ax := s.GetAxisX()
 
-	
 	return (x-p.ModelCombination.Modified.Buffs.Speed.X-p.ModelCombination.Modified.Size.Width/2) <= ax &&
 		ax <= (x+p.ModelCombination.Modified.Buffs.Speed.X+p.ModelCombination.Modified.Size.Width/2)
 }
 
 func (s *Screen) IsAxisYCrossedByPC() bool {
-	// mm := p.GetMetadata().Modified
-	// mo := p.GetMetadata().Origin
-	_, y := p.GetZoomedRawPosForCamera(w.GetZoomedMapScale())
-	// ay := screen.UseScreen().GetAxisY()
+	p := objects.UseObjects().PC()
+	y := p.GetScaledOffsetY()
 	ay := s.GetAxisY()
 
-	return (y-mm.Buffs.Speed.Y-mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y+mo.Size.Height/2)
+	return (y-p.ModelCombination.Modified.Buffs.Speed.Y-p.ModelCombination.Modified.Size.Height/2) <= ay &&
+		ay <= (y+p.ModelCombination.Modified.Buffs.Speed.Y+p.ModelCombination.Modified.Size.Height/2)
 }
 
 func UseScreen() *Screen {

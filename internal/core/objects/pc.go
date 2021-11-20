@@ -29,23 +29,11 @@ type PC struct {
 	// Team Tea
 }
 
-// func (p *PC) SetSkin(path string){
-// 	p.Object.SetSkin(path)
-// 	// p.SetSpeed(p.Metadata.Buffs.Speed)
-// 	fmt.Println(p.Metadata, "METEDATA")
-// }
 
 //Initializes pc username by requesting storage
 func (p *PC) SetUsername() {
 	p.Username = storage.UseStorage().User().GetUsername()
 }
-
-// func (p *PC) SetSpeed(speedX float64) {
-// 	p.Buffs.SpeedX = speedX
-// 	p.Buffs.SpeedY = spe
-// 	// wx, wy := screen.GetMaxWidth(), screen.GetMaxHeight()
-// 	// p.Buffs.SpeedY = speedX * float64(wy) / float64(wx) * 2
-// }
 
 // //Returns movement rotation related to the last
 // //movement direction
