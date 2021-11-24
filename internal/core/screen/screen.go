@@ -21,6 +21,9 @@ func (s *Screen) SetLastSize() {
 }
 
 func (s *Screen) GetLastSize() (float64, float64) {
+	if s.lastWidth == 0 || s.lastHeight == 0{
+		return s.GetSize()
+	}
 	return float64(s.lastWidth), float64(s.lastHeight)
 }
 

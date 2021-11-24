@@ -31,9 +31,9 @@ type Animation struct {
 	AnimationStartPosition struct {
 		X, Y float64
 	}
-	FrameCount              uint64
-	FrameDelayCounter       uint64
-	CurrentFrameMatrix      []float64
+	FrameCount         uint64
+	FrameDelayCounter  uint64
+	CurrentFrameMatrix []float64
 }
 
 type Skin struct {
@@ -44,18 +44,16 @@ type Skin struct {
 /*The object structure which describes
 each object on the map
 */
-type Object struct {
+type Base struct {
 	*sources.ModelCombination
 
 	Animation
 	Skin
 	Physics
 
-
-	//Parent object
-	Parent *Object
-
-		// Names parentid the object referes to
+	Parent *Base
+	
+	// Names parentid the object referes to
 	ID uuid.UUID
 
 	RawPos, RawOffset struct {
@@ -74,11 +72,11 @@ type Object struct {
 	PositionHistory zeroshifter.IZeroShifter
 }
 
-func (o *Object) IsEqualTo(ob Object)bool{
+func (o *Base) IsEqualTo(ob Base) bool {
 	return o.ID == ob.ID
 }
 
-func (o *Object) UpdateDirection() {
+func (o *Base) UpdateDirection() {
 	k := events.UseEvents().Keyboard()
 	g := events.UseEvents().Gamepad()
 	if g.IsGamepadConnected() {
@@ -160,45 +158,48 @@ func (o *Object) UpdateDirection() {
 	}
 }
 
-func (o *Object) IsDirectionUP() bool {
+func (o *Base) IsDirectionUP() bool {
 	return o.Direction == keycodes.UP || o.SubDirection == keycodes.UP
 }
-func (o *Object) IsDirectionLEFT() bool {
+func (o *Base) IsDirectionLEFT() bool {
 	return o.Direction == keycodes.LEFT || o.SubDirection == keycodes.LEFT
 }
-func (o *Object) IsDirectionRIGHT() bool {
+func (o *Base) IsDirectionRIGHT() bool {
 	return o.Direction == keycodes.RIGHT || o.SubDirection == keycodes.RIGHT
 }
-func (o *Object) IsDirectionDOWN() bool {
+func (o *Base) IsDirectionDOWN() bool {
 	return o.Direction == keycodes.DOWN || o.SubDirection == keycodes.DOWN
 }
 
-func (o *Object) SaveLastPosition() {
+func (o *Base) SaveLastPosition() {
 	o.PositionHistory.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
 }
 
-func (o *Object) SaveAnimationStartPosition() {
-	o.Animation.AnimationStartPosition = struct{X float64; Y float64}{o.RawPos.X, o.RawPos.Y}
+func (o *Base) SaveAnimationStartPosition() {
+	o.Animation.AnimationStartPosition = struct {
+		X float64
+		Y float64
+	}{o.RawPos.X, o.RawPos.Y}
 }
 
-func (o *Object) SetRawX(x float64) {
+func (o *Base) SetRawX(x float64) {
 	o.RawPos.X = x
 }
 
-func (o *Object) SetRawY(y float64) {
+func (o *Base) SetRawY(y float64) {
 	o.RawPos.Y = y
 }
 
-func (o *Object) SetRawOffsetY(y float64) {
+func (o *Base) SetRawOffsetY(y float64) {
 	o.RawOffset.X = y
 }
-func (o *Object) SetRawOffsetX(x float64) {
+func (o *Base) SetRawOffsetX(x float64) {
 	o.RawOffset.X = x
 }
 
 //Checks if x pos has been changed
 //in comparison to the last x poses
-func (o *Object) IsXChanged() bool {
+func (o *Base) IsXChanged() bool {
 	var prevX int
 	for _, v := range o.PositionHistory.Get() {
 		pos := v.(image.Point)
@@ -215,7 +216,7 @@ func (o *Object) IsXChanged() bool {
 
 //Checks if y pos has been changed
 //in comparison to the last y poses
-func (o *Object) IsYChanged() bool {
+func (o *Base) IsYChanged() bool {
 	var prevY int
 	for _, v := range o.PositionHistory.Get() {
 		pos := v.(image.Point)
@@ -232,23 +233,23 @@ func (o *Object) IsYChanged() bool {
 }
 
 //Sets spawn point for the object
-func (o *Object) SetSpawn(spawns []image.Point) {
+func (o *Base) SetSpawn(spawns []image.Point) {
 	o.RawPos.X = 500
 	o.RawPos.Y = 500
 }
 
 //Checks if pc executes animation
-func (o *Object) IsAnimatied() bool {
+func (o *Base) IsAnimatied() bool {
 	return len(o.Physics.Jump) != 0
 }
 
 //Returns last saved position before animation was executed
-func (o *Object) GetAnimationStartPosition() (float64, float64) {
+func (o *Base) GetAnimationStartPosition() (float64, float64) {
 	return o.Animation.AnimationStartPosition.X, o.Animation.AnimationStartPosition.Y
 }
 
 //Sets skin for the object
-func (o *Object) SetSkin(path string) {
+func (o *Base) SetSkin(path string) {
 	o.Path = path
 	_, file := filepath.Split(path)
 	o.Name = file
@@ -256,16 +257,16 @@ func (o *Object) SetSkin(path string) {
 }
 
 //Returns images for the skin selected
-func (o *Object) GetImage() *ebiten.Image {
+func (o *Base) GetImage() *ebiten.Image {
 	return sources.UseSources().Images().GetImage(o.Path)
 }
 
-func (o *Object) GetCopyOfImage() *ebiten.Image {
+func (o *Base) GetCopyOfImage() *ebiten.Image {
 	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
 }
 
 //Returns image where animation properties applied to
-func (o *Object) GetAnimatedImage() *ebiten.Image {
+func (o *Base) GetAnimatedImage() *ebiten.Image {
 	i := o.GetImage()
 	sx, sy := int((o.ModelCombination.Modified.Animation.FrameX+float64(o.Animation.FrameCount))*o.ModelCombination.Modified.Animation.FrameWidth), int(o.ModelCombination.Modified.Animation.FrameY)
 	return i.SubImage(image.Rect(sx, sy, sx+int(o.ModelCombination.Modified.Animation.FrameWidth), sy+int(o.ModelCombination.Modified.Animation.FrameHeight))).(*ebiten.Image)
@@ -273,8 +274,8 @@ func (o *Object) GetAnimatedImage() *ebiten.Image {
 
 //API//
 
-func (o *Object) ToAPIMessage() *api.Object {
-	return &api.Object{
+func (o *Base) ToAPIMessage() *api.Base {
+	return &api.Base{
 		Animation: &api.Animation{
 			PositionBeforeAnimation: &api.Position{
 				X: o.Animation.AnimationStartPosition.X,
@@ -291,8 +292,8 @@ func (o *Object) ToAPIMessage() *api.Object {
 		Physics: &api.Physics{
 			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
 		},
-		Parent: o.Parent.ToAPIMessage(),
-		Id:       o.ID.String(),
+		// Parent: o.Parent.ToAPIMessage(),
+		Id: o.ID.String(),
 		RawPos: &api.Position{
 			X: o.RawPos.X,
 			Y: o.RawPos.Y,
@@ -306,7 +307,7 @@ func (o *Object) ToAPIMessage() *api.Object {
 	}
 }
 
-func (o *Object) FromAPIMessage(m *api.Object) {
+func (o *Base) FromAPIMessage(m *api.Base) {
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
 	o.Animation.FrameCount = m.Animation.FrameCount
@@ -329,34 +330,34 @@ func (o *Object) FromAPIMessage(m *api.Object) {
 	o.Role = Role(m.Role)
 }
 
-func (o *Object) GetScaledPosX()float64{
+func (o *Base) GetScaledPosX() float64 {
 	return o.RawPos.X * o.Parent.Modified.ZoomedScale.X
 }
 
-func (o *Object) GetScaledPosY()float64{
+func (o *Base) GetScaledPosY() float64 {
 	return o.RawPos.Y * o.Parent.Modified.ZoomedScale.Y
 }
 
-func (o *Object) GetScaledOffsetX()float64{
+func (o *Base) GetScaledOffsetX() float64 {
 	return o.RawOffset.X * o.Parent.Modified.ZoomedScale.X
 }
 
-func (o *Object) GetScaledOffsetY()float64{
+func (o *Base) GetScaledOffsetY() float64 {
 	return o.RawOffset.Y * o.Parent.Modified.ZoomedScale.Y
 }
 
-func (o *Object) SetTranslationXMovementBlocked(s bool) {
+func (o *Base) SetTranslationXMovementBlocked(s bool) {
 	o.TranslationMovementXBlocked = s
 }
 
-func (o *Object) SetTranslationYMovementBlocked(s bool) {
+func (o *Base) SetTranslationYMovementBlocked(s bool) {
 	o.TranslationMovementYBlocked = s
 }
 
-func (o *Object) IsTranslationMovementBlocked() bool {
+func (o *Base) IsTranslationMovementBlocked() bool {
 	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
 }
 
-func NewObject() *Object {
-	return new(Object)
+func NewBase() *Base {
+	return &Base{Parent: new(Base)}
 }

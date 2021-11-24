@@ -43,9 +43,15 @@ type Animation struct {
 	FrameNum int
 }
 
-//Runtime defined metadata model 
+//Runtime defined metadata model
 type RuntimeDefined struct {
 	ZoomedScale struct {
+		X, Y float64
+	}
+}
+
+type Transition struct {
+	Scale struct {
 		X, Y float64
 	}
 }
@@ -55,13 +61,15 @@ type Model struct {
 
 	Animation
 
+	Transition
+
 	//Information about metadata file
 	Info struct {
 		//Parent file metadata one related to
 		GameRole
 
 		Parent                   string
-		ScrollableX, ScrollableY bool 
+		ScrollableX, ScrollableY bool
 	}
 
 	Size struct {
@@ -102,11 +110,6 @@ type Model struct {
 	}
 }
 
-// //Scales margins with scale
-// func (m *Model) ScaleMargins() (float64, float64) {
-// 	return m.Margins.LeftMargin * m.Scale.CoefficiantX, m.Margins.TopMargin * m.Scale.CoefficiantY
-// }
-
 type ModelCombination struct {
 	Modified, Origin *Model
 }
@@ -128,7 +131,7 @@ func (m *Metadata) loadFile(fs embed.FS, path string) {
 	reg := regexp.MustCompile(`\.[a-z0-9]*$`)
 	if reg.MatchString(path) {
 		m.Lock()
-		
+
 		m.Collection[reg.Split(path, -1)[0]] = &ModelCombination{Modified: &q, Origin: &o}
 		m.Unlock()
 	}

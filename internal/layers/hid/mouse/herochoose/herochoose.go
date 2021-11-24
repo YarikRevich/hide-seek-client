@@ -1,13 +1,12 @@
 package herochoose
 
 import (
-	// "fmt"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 )
 
 func Exec() bool {
@@ -28,9 +27,7 @@ func Exec() bool {
 			"heroes/thumbnails/pumpkin": "heroes/pumpkin",
 		} {
 			if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata(k).Modified) {
-				p := objects.UseObjects().PC()
-				p.SetSkin(v)
-				objects.UseObjects().World().AddPC(p)
+				world.UseWorld().GetPC().SetSkin(v)
 
 				switch statemachine.UseStateMachine().Game().GetState() {
 				case statemachine.GAME_START:

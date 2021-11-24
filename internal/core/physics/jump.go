@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 )
 
 type Jump struct {
@@ -15,14 +15,14 @@ type Jump struct {
 //Calculates jump init values and
 //runs further planned execution
 func (j *Jump) Calculate() {
-	p := objects.UseObjects().PC()
+	p := world.UseWorld().GetPC()
 	p.SaveAnimationStartPosition()
 
 	if len(p.Physics.Jump) != 0 {
 		return
 	}
-	
-	t := int(math.Round((math.Sqrt((2*	p.ModelCombination.Modified.Size.Height)/p.Parent.ModelCombination.Modified.Physics.G) / 2)))
+
+	t := int(math.Round((math.Sqrt((2*p.ModelCombination.Modified.Size.Height)/p.Parent.ModelCombination.Modified.Physics.G) / 2)))
 
 	for t%2 != 0 {
 		t++
@@ -41,7 +41,7 @@ func (j *Jump) Calculate() {
 }
 
 func (j *Jump) execute() {
-	p := objects.UseObjects().PC()
+	p := world.UseWorld().GetPC()
 
 	if len(p.Physics.Jump) == 0 {
 		return

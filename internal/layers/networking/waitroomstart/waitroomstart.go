@@ -7,6 +7,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 
@@ -41,23 +42,23 @@ func Exec() {
 	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM_START, func() {
 		// m := objects.UseObjects().World()
 		// networking.UseNetworking().Dialer().Conn().AddWorld(context.Background(), m, grpc.EmptyCallOption{})
-		wm := objects.UseObjects().World().ToAPIMessage()
-		networking.UseNetworking().Dialer().Conn().AddWorld(context.Background(), wm, grpc.EmptyCallOption{})
+		// wm := objects.UseObjects().World().ToAPIMessage()
+		// networking.UseNetworking().Dialer().Conn().AddWorld(context.Background(), wm, grpc.EmptyCallOption{})
 
-		pm := objects.UseObjects().PC().ToAPIMessage()
-		networking.UseNetworking().Dialer().Conn().AddPC(context.Background(), pm, grpc.EmptyCallOption{})
+		// pm := objects.UseObjects().PC().ToAPIMessage()
+		// networking.UseNetworking().Dialer().Conn().AddPC(context.Background(), pm, grpc.EmptyCallOption{})
 
 	})
 
 	latency.UseLatency().Timings().ExecEach(func() {
-		w := objects.UseObjects().World()
-		worldId := w.ID.String()
-	
-		worldObjects, err := networking.UseNetworking().Dialer().Conn().GetWorldObjects(context.Background(), &api.WorldObjectsRequest{WorldId: worldId}, grpc.EmptyCallOption{})
-		if err != nil{
+		w := world.UseWorld()
+		conn := networking.UseNetworking().Dialer().Conn()
+		worldObjects, err := conn.GetWorldObjects(
+			context.Background(), &api.WorldObjectsRequest{WorldId: w.ID.String()}, grpc.EmptyCallOption{})
+		if err != nil {
 			logrus.Fatal(err)
 		}
 
-		w.UpdateObjects(worldObjects)
+		w.UpdateProperty(worldObjects)
 	}, statemachine.UI_WAIT_ROOM_START, time.Second)
 }

@@ -1,6 +1,7 @@
 package startmenu
 
 import (
+	"fmt"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -60,6 +61,7 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
+		fmt.Println(mm.Scale)
 		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
 		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
 	

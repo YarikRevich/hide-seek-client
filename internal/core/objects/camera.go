@@ -1,7 +1,7 @@
 package objects
 
 type Camera struct {
-	Object
+	Base
 
 	Zoom float64
 }

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
@@ -27,9 +27,9 @@ func Draw() {
 
 
 		mo := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Origin
-		w := objects.UseObjects().World()
+		worldMap := world.UseWorld().GetWorldMap()
 
-		text.Draw(img, fmt.Sprintf("World ID: %s", w.ID), f, int(mo.Margins.LeftMargin), int(mo.Margins.TopMargin), color.White)
+		text.Draw(img, fmt.Sprintf("World ID: %s", worldMap.ID), f, int(mo.Margins.LeftMargin), int(mo.Margins.TopMargin), color.White)
 
 		screen.DrawImage(img, opts)
 	})
@@ -56,7 +56,8 @@ func Draw() {
 		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
 		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
-		text.Draw(img, objects.UseObjects().World().PCsToString(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
+		
+		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
 		screen.DrawImage(img, opts)
 	})

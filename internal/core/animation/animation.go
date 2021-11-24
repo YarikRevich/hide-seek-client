@@ -2,7 +2,7 @@ package animation
 
 import "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 
-func Animate(o *objects.Object) {
+func Animate(o *objects.Base) {
 	o.Animation.FrameDelayCounter++
 	o.Animation.FrameDelayCounter %= uint64(o.ModelCombination.Modified.Animation.FrameDelay)
 	if o.Animation.FrameDelayCounter == 0 {

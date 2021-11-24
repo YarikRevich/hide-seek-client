@@ -2,9 +2,9 @@ package sourceupgrader
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 )
 
 type metadataUpgrader struct{}
@@ -32,6 +32,7 @@ func (mu *metadataUpgrader) upgradeWithScale(mc *sources.ModelCombination) {
 	s := screen.UseScreen()
 	screenWidth, screenHeight := s.GetSize()
 	screenLastWidth, screenLastHeight := s.GetLastSize()
+
 
 	mc.Modified.Scale.X = (mc.Modified.Scale.X * screenWidth) / screenLastWidth
 	mc.Modified.Scale.Y = (mc.Modified.Scale.Y * screenHeight) / screenLastHeight
@@ -75,10 +76,11 @@ func (mu *metadataUpgrader) upgradeWithScale(mc *sources.ModelCombination) {
 	}
 }
 func (mu *metadataUpgrader) upgradeWithZoom(mc *sources.ModelCombination) {
-	c := objects.UseObjects().Camera()
+	// c := objects.UseObjects().Camera()
+	c := world.UseWorld().GetCamera()
 
 	if m := mc.Modified.Scale.X / 100 * c.Zoom; m != mc.Modified.ZoomedScale.X {
-	mc.Modified.ZoomedScale.X = m
+		mc.Modified.ZoomedScale.X = m
 	}
 
 	if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.Modified.ZoomedScale.Y {

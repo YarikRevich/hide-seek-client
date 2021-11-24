@@ -3,9 +3,9 @@ package game
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/physics"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -13,7 +13,7 @@ func Exec() {
 	g := events.UseEvents().Gamepad()
 	k := events.UseEvents().Keyboard()
 	
-	c := objects.UseObjects().Camera()
+	c := world.UseWorld().GetCamera()
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		c.ZoomIn()
@@ -24,8 +24,8 @@ func Exec() {
 	}
 
 	if k.IsAnyKeyPressed() {
-		w := objects.UseObjects().World()
-		p := objects.UseObjects().PC()
+		worldMap := world.UseWorld().GetWorldMap()
+		p := world.UseWorld().GetPC()
 
 		p.SaveLastPosition()
 
@@ -111,14 +111,14 @@ func Exec() {
 				p.SetTranslationYMovementBlocked(false)
 			}
 
-			if cY >= w.ModelCombination.Modified.Size.Height*w.ModelCombination.Modified.ZoomedScale.Y &&
+			if cY >= worldMap.ModelCombination.Modified.Size.Height*worldMap.ModelCombination.Modified.ZoomedScale.Y &&
 				p.IsDirectionDOWN() {
 				p.SetTranslationYMovementBlocked(false)
 			}
 		}
 
 		if p.TranslationMovementXBlocked {
-			if cX+poX*2 >= w.ModelCombination.Modified.Size.Width*w.ModelCombination.Modified.ZoomedScale.X &&
+			if cX+poX*2 >= worldMap.ModelCombination.Modified.Size.Width*worldMap.ModelCombination.Modified.ZoomedScale.X &&
 				p.IsDirectionRIGHT() {
 				p.SetTranslationXMovementBlocked(false)
 			}

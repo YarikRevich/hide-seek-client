@@ -8,31 +8,24 @@ import (
 )
 
 type Ammo struct {
-	Object
+	Base
 
 	Direction keycodes.Direction
 }
 
-func NewAmmoByObject(o Object)*Ammo{
-	a := new(Ammo)
-	id, err := uuid.NewUUID()
-	if err != nil {
-		logrus.Fatal("failed to create uuid for world:", err)
-	}
-	a.ID = id
-	a.Parent = &o
-	return a
-}
-
-
-func (a *Ammo) ToAPIMessage() *api.Ammo{
+func (a *Ammo) ToAPIMessage() *api.Ammo {
 	return &api.Ammo{
-		Object: a.Object.ToAPIMessage(),
+		Base:    a.Base.ToAPIMessage(),
 		Direction: int64(a.Direction),
 	}
 }
 
-func NewAmmo()*Ammo{
+func (a *Ammo) FromAPIMessage(m *api.Ammo) {
+	a.Base.FromAPIMessage(m.Base)
+	a.Direction = keycodes.Direction(m.Direction)
+}
+
+func NewAmmo() *Ammo {
 	a := new(Ammo)
 	id, err := uuid.NewUUID()
 	if err != nil {

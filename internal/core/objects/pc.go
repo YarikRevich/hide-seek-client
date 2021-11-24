@@ -20,15 +20,13 @@ type Buffs struct{ SpeedX, SpeedY float64 }
 // )
 
 type PC struct {
-	Object
+	Base
 
 	Username string
 	Health   uint64
 
-	
 	// Team Tea
 }
-
 
 //Initializes pc username by requesting storage
 func (p *PC) SetUsername() {
@@ -44,21 +42,21 @@ func (p *PC) GetMovementRotation() float64 {
 	return 1
 }
 
-func (p *PC) ToAPIMessage() *api.PC{
+func (p *PC) ToAPIMessage() *api.PC {
 	return &api.PC{
-		Object: p.Object.ToAPIMessage(),
+		Base:   p.Base.ToAPIMessage(),
 		Username: p.Username,
-		Health: p.Health,
+		Health:   p.Health,
 	}
 }
 
-func (p *PC) FromAPIMessage(m *api.PC){
-	p.Object.FromAPIMessage(m.Object)
+func (p *PC) FromAPIMessage(m *api.PC) {
+	p.Base.FromAPIMessage(m.Base)
 	p.Username = m.Username
 	p.Health = m.Health
 }
 
-func (p *PC) String()string{
+func (p *PC) String() string {
 	return p.Username
 }
 

@@ -15,3 +15,7 @@ position = "center"
 
 [fonts]
 fontcolor = "white"
+
+[transition.scale]
+x = 0.1
+y = 0.1

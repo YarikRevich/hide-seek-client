@@ -1,7 +1,7 @@
 package objects
 
 type LootSet struct {
-	Object
+	Base
 
 	IsHidden bool
 	Weapon []*Weapon

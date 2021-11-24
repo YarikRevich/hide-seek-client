@@ -6,6 +6,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sourceupgrader"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/transition"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/animation"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio"
@@ -28,6 +29,9 @@ func (g *Loop) Update() error {
 
 	networking.Process()
 	animation.Process()
+
+	transition.Process()
+
 	ui.Process()
 
 	mouse.Process()

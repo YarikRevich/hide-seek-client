@@ -2,40 +2,185 @@ syntax = "proto3";
 
 option go_package="internal/core/networking/api";
 
+// ///////////////////////
+// message Element {
+//     Object object = 1;
+// };
+
+// message Weapon {
+//     Object object = 1;
+//     string name = 2;
+//     string radius = 3;
+// };
+
+// message Ammo {
+//     Object object = 1;
+//     int64 direction = 2;
+// };
+
+// message PC {
+//     Object object = 1;
+
+//     string username = 2;
+//     uint64 health = 3;
+// };
+
+// message World {  
+//     Object object = 1;
+//     int64 regime = 2;
+// };
+
+// message Object {
+//     Animation animation = 1;
+//     Skin skin = 2;
+//     Physics physics = 3;
+
+//     Object parent = 4;
+//     string id = 5;
+    
+//     Position rawPos = 6;
+//     Position spawn = 7;
+
+//     int64 direction = 8;
+//     int64 role = 9;
+// };
+
+// message Animation {
+//     Position positionBeforeAnimation = 1;
+//     uint64 frameCount = 2;
+//     uint64 frameDelayCounter = 3;
+//     repeated double currentFrameMatrix = 4;
+// };
+
+// message Skin {
+//     string name = 1;
+//     string path = 2;
+// };
+
+// message Physics {
+//     repeated int64 jump = 1;
+// };
+
+// message Position {
+//     double x = 1;
+//     double y = 2;
+// };
+
+// message Status {
+//     bool ok = 1;
+// };
+
+// message ChooseSpawnsRequest {
+//     string worldId = 1;
+// };
+
+// message RemoveWorldRequest{
+//     string worldId = 1;
+// };
+
+// message WorldObjectsRequest{
+//     string worldId = 1;  
+// };
+
+// message WorldObjectsResponse {
+//     repeated PC PCs = 1;
+//     repeated Element elements = 2;
+//     repeated Weapon weapons = 3;
+//     repeated Ammo ammos = 4;
+// };
+
+// message RemovePCRequest{
+//     string worldId = 1;
+//     string pcId = 2;
+// };
+
+// message SetGameStartedRequest {
+//     string worldId = 1;
+// };
+
+// message IsGameStartedRequest{
+//     string worldId = 1;
+// };
+
+// message IsGameStartedResponse{ 
+//     bool started = 1;
+// };
+
+// message GetWorldRequest{
+//     string worldId = 1;
+// };
+
+// service HideSeek {
+//     rpc AddWorld (World) returns (Status);
+//     rpc AddPC (PC) returns (Status);
+
+//     rpc AddElement (Element) returns (Status);
+//     rpc AddWeapon (Weapon) returns (Status);
+//     rpc AddAmmo (Ammo) returns (Status);
+    
+//     rpc UpdatePC(PC) returns (Status);
+//     rpc UpdateAmmo(Ammo) returns (Status);
+//     rpc GetWorld(GetWorldRequest) returns (World);
+    
+//     rpc ChooseSpawns (ChooseSpawnsRequest) returns (Status);
+
+//     rpc RemoveWorld(RemoveWorldRequest) returns (Status);
+//     rpc RemovePC (RemovePCRequest) returns (Status);
+  
+//     rpc GetWorldObjects(WorldObjectsRequest) returns (WorldObjectsResponse);
+
+//     rpc SetGameStarted(SetGameStartedRequest) returns (Status);
+//     rpc IsGameStarted(IsGameStartedRequest) returns (IsGameStartedResponse);
+// };
+// ////////////////////////////
+
+
 ///////////////////////
+message World {
+    string id = 1;
+    GameSettings gameSettings = 2;
+}
+
+message GameSettings {
+    Regime regime = 1;
+};
+
+message Regime {};
+
+message Map {  
+    Base base = 1;
+};
+
 message Element {
-    Object object = 1;
+    Base base = 1;
 };
 
 message Weapon {
-    Object object = 1;
+    Base base = 1;
     string name = 2;
     string radius = 3;
 };
 
 message Ammo {
-    Object object = 1;
+    Base base = 1;
     int64 direction = 2;
 };
 
 message PC {
-    Object object = 1;
+    Base base = 1;
 
     string username = 2;
     uint64 health = 3;
 };
 
-message World {  
-    Object object = 1;
-    int64 regime = 2;
-};
 
-message Object {
+message Base {
     Animation animation = 1;
     Skin skin = 2;
     Physics physics = 3;
 
-    Object parent = 4;
+    Base parent = 4;
+
     string id = 5;
     
     Position rawPos = 6;
@@ -74,7 +219,7 @@ message ChooseSpawnsRequest {
     string worldId = 1;
 };
 
-message RemoveWorldRequest{
+message DeleteWorldRequest{
     string worldId = 1;
 };
 
@@ -112,19 +257,23 @@ message GetWorldRequest{
 
 service HideSeek {
     rpc AddWorld (World) returns (Status);
+
+    rpc AddMap (Map) returns (Status);
     rpc AddPC (PC) returns (Status);
 
     rpc AddElement (Element) returns (Status);
     rpc AddWeapon (Weapon) returns (Status);
     rpc AddAmmo (Ammo) returns (Status);
+
+    rpc UpdateWorld(World) returns (Status);
+    // rpc GetWorld(google.protobuf.Empty) returns (World);
+    rpc DeleteWorld(DeleteWorldRequest) returns (Status);
     
     rpc UpdatePC(PC) returns (Status);
     rpc UpdateAmmo(Ammo) returns (Status);
-    rpc GetWorld(GetWorldRequest) returns (World);
-    
+
     rpc ChooseSpawns (ChooseSpawnsRequest) returns (Status);
 
-    rpc RemoveWorld(RemoveWorldRequest) returns (Status);
     rpc RemovePC (RemovePCRequest) returns (Status);
   
     rpc GetWorldObjects(WorldObjectsRequest) returns (WorldObjectsResponse);

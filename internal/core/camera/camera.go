@@ -1,8 +1,6 @@
 package camera
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	// "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/hajimehoshi/ebiten/v2"

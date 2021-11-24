@@ -7,26 +7,14 @@ import (
 )
 
 type Weapon struct {
-	Object
+	Base
 
 	Name, Radius string
 }
 
-func NewWeaponByObject(o Object)*Weapon{
-	w := new(Weapon)
-	id, err := uuid.NewUUID()
-	if err != nil {
-		logrus.Fatal("failed to create uuid for world:", err)
-	}
-	w.ID = id
-
-	w.Parent = &o
-	return w
-}
-
 func (w *Weapon) ToAPIMessage()*api.Weapon{
 	return &api.Weapon{
-		Object: w.Object.ToAPIMessage(),
+		Base: w.Base.ToAPIMessage(),
 		Name: w.Name,
 		Radius: w.Radius,
 	}

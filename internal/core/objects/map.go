@@ -1,7 +1,6 @@
 package objects
 
 import (
-	"fmt"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -22,112 +21,97 @@ type regime int
 // 	teamToTeam
 // )
 
-type World struct {
-	Object
+type Map struct {
+	Base
 
-	Regime regime
+	// Regime regime
 
-	//Describes the objects are on the map
-	PCs      []*PC
-	Elements []*Object
-	Weapons  []*Weapon
-	Ammo     []*Ammo
+	// //Describes the objects are on the map
+	// PCs      []*PC
+	// Elements []*Object
+	// Weapons  []*Weapon
+	// Ammo     []*Ammo
 	// LootSet []*LootSet
 }
 
-func (w *World) AddPC(p *PC) {
-	p.Parent = &w.Object
-	w.PCs = append(w.PCs, p)
-}
+// func (w *World) AddPC(p *PC) {
+// 	p.Parent = &w.Object
+// 	w.PCs = append(w.PCs, p)
+// }
 
-func (w *World) AddWeapon(p *Weapon) {
-	p.Parent = &w.Object
-	w.Weapons = append(w.Weapons, p)
-}
+// func (w *World) AddWeapon(p *Weapon) {
+// 	p.Parent = &w.Object
+// 	w.Weapons = append(w.Weapons, p)
+// }
 
-func (w *World) AddAmmo(a *Ammo) {
-	a.Parent = &w.Object
-	w.Ammo = append(w.Ammo, a)
-}
+// func (w *World) AddAmmo(a *Ammo) {
+// 	a.Parent = &w.Object
+// 	w.Ammo = append(w.Ammo, a)
+// }
 
-func (w *World) GetPCs() []*PC {
-	avoidID := UseObjects().PC().ID
-	r := make([]*PC, 0, 3)
-	for _, v := range w.PCs {
-		if v.ID != avoidID {
-			r = append(r, v)
-		}
-	}
-	return r
-}
+// func (w *World) GetPCs() []*PC {
+// 	avoidID := UseObjects().PC().ID
+// 	r := make([]*PC, 0, 3)
+// 	for _, v := range w.PCs {
+// 		if v.ID != avoidID {
+// 			r = append(r, v)
+// 		}
+// 	}
+// 	return r
+// }
 
-func (w *World) deleteObjects() {
-	w.Ammo = w.Ammo[:0]
-	w.Elements = w.Elements[:0]
-	w.Weapons = w.Weapons[:0]
-	w.PCs = w.PCs[:0]
-}
+// func (w *World) deleteObjects() {
+// 	w.Ammo = w.Ammo[:0]
+// 	w.Elements = w.Elements[:0]
+// 	w.Weapons = w.Weapons[:0]
+// 	w.PCs = w.PCs[:0]
+// }
 
-func (w *World) updatePCs(m []*api.PC) {
-	pc := UseObjects().PC()
-	for _, v := range m {
-		if v.Object.Id == pc.ID.String() {
-			pc.Parent = &w.Object
-			pc.FromAPIMessage(v)
-			w.PCs = append(w.PCs, pc)
-		} else {
-			np := NewPC()
-			np.Parent = &w.Object
-			np.FromAPIMessage(v)
-			w.PCs = append(w.PCs, np)
-		}
-	}
-}
+// func (w *World) updatePCs(m []*api.PC) {
+// 	pc := UseObjects().PC()
+// 	for _, v := range m {
+// 		if v.Object.Id == pc.ID.String() {
+// 			pc.Parent = &w.Object
+// 			pc.FromAPIMessage(v)
+// 			w.PCs = append(w.PCs, pc)
+// 		} else {
+// 			np := NewPC()
+// 			np.Parent = &w.Object
+// 			np.FromAPIMessage(v)
+// 			w.PCs = append(w.PCs, np)
+// 		}
+// 	}
+// }
 
-func (w *World) UpdateObjects(m *api.WorldObjectsResponse) {
-	w.deleteObjects()
+// func (w *World) UpdateObjects(m *api.WorldObjectsResponse) {
+// 	w.deleteObjects()
 
-	w.updatePCs(m.PCs)
-}
+// 	w.updatePCs(m.PCs)
+// }
 
-func (w *World) GetWeaponByPC(p *PC) *Weapon {
-	for _, v := range w.Weapons {
-		if v.Parent.ID == p.ID {
-			return v
-		}
-	}
-	return nil
-}
+// func (w *World) GetWeaponByPC(p *PC) *Weapon {
+// 	for _, v := range w.Weapons {
+// 		if v.Parent.ID == p.ID {
+// 			return v
+// 		}
+// 	}
+// 	return nil
+// }
 
-func (w *World) GetAmmoByWeapon(p *Weapon) *Ammo {
-	if p == nil {
-		return nil
-	}
-	for _, v := range w.Ammo {
-		if v.Parent.ID == p.ID {
-			return v
-		}
-	}
-	return nil
-}
-
-//Resets the list of users on the map
-func (w *World) ResetPCs() {
-	w.PCs = w.PCs[:0]
-}
-
-// //Formats users' username
-func (w *World) PCsToString() string {
-	var r string
-	for _, v := range w.PCs {
-		r += fmt.Sprintf("%s\n", v.String())
-	}
-	return r
-}
-
-func (w *World) SetID(i uuid.UUID) {
-	w.ID = i
-}
+// func (w *World) GetAmmoByWeapon(p *Weapon) *Ammo {
+// 	if p == nil {
+// 		return nil
+// 	}
+// 	for _, v := range w.Ammo {
+// 		if v.Parent.ID == p.ID {
+// 			return v
+// 		}
+// 	}
+// 	return nil
+// }
+// func (w *World) SetID(i uuid.UUID) {
+// 	w.ID = i
+// }
 
 // func (w *World) GetZoomedMapScale() (float64, float64) {
 // 	m := w.GetMetadata().Modified
@@ -171,42 +155,14 @@ func (w *World) SetID(i uuid.UUID) {
 // 	return (y-mm.Buffs.Speed.Y - mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y + mo.Size.Height/2)
 // }
 
-//Swaps spawns of the teams
-func (w *World) SwapSpawns() {
-	// map[pc.Team]map[uuid.UUID]image.Point{}
-	// newTeam1Swaps := map[uuid.UUID]image.Point{}
-	// newTeam2Swaps := map[uuid.UUID]image.Point{}
-	for _, u := range w.PCs {
-		// switch u.Team {
-		// case pc.Team1:
-		// 	newTeam2Swaps[u.ID] = u.Spawn
-		// case pc.Team2:
-		// 	newTeam1Swaps[u.ID] = u.Spawn
-		// }
-		fmt.Println(u)
-	}
-
-	for _, u := range w.PCs {
-		// switch u.Team {
-		// case pc.Team1:
-		// 	u.Spawn = newTeam2Swaps[u.ID]
-		// case pc.Team2:
-		// 	u.Spawn = newTeam1Swaps[u.ID]
-		// }
-		fmt.Println(u)
+func (w *Map) ToAPIMessage() *api.Map {
+	return &api.Map{
+		Base: w.Base.ToAPIMessage(),
 	}
 }
 
-func (w *World) ToAPIMessage() *api.World {
-	return &api.World{
-		Object: w.Object.ToAPIMessage(),
-		Regime: int64(w.Regime),
-	}
-}
-
-func (w *World) FromAPIMessage(m *api.World) {
-	w.Object.FromAPIMessage(m.Object)
-	w.Regime = regime(m.Regime)
+func (w *Map) FromAPIMessage(m *api.Map) {
+	w.Base.FromAPIMessage(m.Base)
 }
 
 // func (w *World) GetScaleForSkin() (float64, float64) {
@@ -230,8 +186,8 @@ func (w *World) FromAPIMessage(m *api.World) {
 // c.scaledMapTranslation.Y = c.lastScaledMapTranslation.Y * c.mapScale.Y / c.lastMapScale.Y
 // }
 
-func NewWorld() *World {
-	world := new(World)
+func NewMap() *Map {
+	world := new(Map)
 	id, err := uuid.NewUUID()
 	if err != nil {
 		logrus.Fatal("failed to create uuid for world:", err)

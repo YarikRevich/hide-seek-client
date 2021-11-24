@@ -19,15 +19,17 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HideSeekClient interface {
 	AddWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*Status, error)
+	AddMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*Status, error)
 	AddPC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*Status, error)
 	AddElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*Status, error)
 	AddWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*Status, error)
 	AddAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*Status, error)
+	UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*Status, error)
+	// rpc GetWorld(google.protobuf.Empty) returns (World);
+	DeleteWorld(ctx context.Context, in *DeleteWorldRequest, opts ...grpc.CallOption) (*Status, error)
 	UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*Status, error)
 	UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*Status, error)
-	GetWorld(ctx context.Context, in *GetWorldRequest, opts ...grpc.CallOption) (*World, error)
 	ChooseSpawns(ctx context.Context, in *ChooseSpawnsRequest, opts ...grpc.CallOption) (*Status, error)
-	RemoveWorld(ctx context.Context, in *RemoveWorldRequest, opts ...grpc.CallOption) (*Status, error)
 	RemovePC(ctx context.Context, in *RemovePCRequest, opts ...grpc.CallOption) (*Status, error)
 	GetWorldObjects(ctx context.Context, in *WorldObjectsRequest, opts ...grpc.CallOption) (*WorldObjectsResponse, error)
 	SetGameStarted(ctx context.Context, in *SetGameStartedRequest, opts ...grpc.CallOption) (*Status, error)
@@ -45,6 +47,15 @@ func NewHideSeekClient(cc grpc.ClientConnInterface) HideSeekClient {
 func (c *hideSeekClient) AddWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
 	err := c.cc.Invoke(ctx, "/HideSeek/AddWorld", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *hideSeekClient) AddMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/HideSeek/AddMap", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -87,6 +98,24 @@ func (c *hideSeekClient) AddAmmo(ctx context.Context, in *Ammo, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *hideSeekClient) UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/HideSeek/UpdateWorld", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *hideSeekClient) DeleteWorld(ctx context.Context, in *DeleteWorldRequest, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/HideSeek/DeleteWorld", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *hideSeekClient) UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
 	err := c.cc.Invoke(ctx, "/HideSeek/UpdatePC", in, out, opts...)
@@ -105,27 +134,9 @@ func (c *hideSeekClient) UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.
 	return out, nil
 }
 
-func (c *hideSeekClient) GetWorld(ctx context.Context, in *GetWorldRequest, opts ...grpc.CallOption) (*World, error) {
-	out := new(World)
-	err := c.cc.Invoke(ctx, "/HideSeek/GetWorld", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *hideSeekClient) ChooseSpawns(ctx context.Context, in *ChooseSpawnsRequest, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
 	err := c.cc.Invoke(ctx, "/HideSeek/ChooseSpawns", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *hideSeekClient) RemoveWorld(ctx context.Context, in *RemoveWorldRequest, opts ...grpc.CallOption) (*Status, error) {
-	out := new(Status)
-	err := c.cc.Invoke(ctx, "/HideSeek/RemoveWorld", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -173,15 +184,17 @@ func (c *hideSeekClient) IsGameStarted(ctx context.Context, in *IsGameStartedReq
 // for forward compatibility
 type HideSeekServer interface {
 	AddWorld(context.Context, *World) (*Status, error)
+	AddMap(context.Context, *Map) (*Status, error)
 	AddPC(context.Context, *PC) (*Status, error)
 	AddElement(context.Context, *Element) (*Status, error)
 	AddWeapon(context.Context, *Weapon) (*Status, error)
 	AddAmmo(context.Context, *Ammo) (*Status, error)
+	UpdateWorld(context.Context, *World) (*Status, error)
+	// rpc GetWorld(google.protobuf.Empty) returns (World);
+	DeleteWorld(context.Context, *DeleteWorldRequest) (*Status, error)
 	UpdatePC(context.Context, *PC) (*Status, error)
 	UpdateAmmo(context.Context, *Ammo) (*Status, error)
-	GetWorld(context.Context, *GetWorldRequest) (*World, error)
 	ChooseSpawns(context.Context, *ChooseSpawnsRequest) (*Status, error)
-	RemoveWorld(context.Context, *RemoveWorldRequest) (*Status, error)
 	RemovePC(context.Context, *RemovePCRequest) (*Status, error)
 	GetWorldObjects(context.Context, *WorldObjectsRequest) (*WorldObjectsResponse, error)
 	SetGameStarted(context.Context, *SetGameStartedRequest) (*Status, error)
@@ -196,6 +209,9 @@ type UnimplementedHideSeekServer struct {
 func (UnimplementedHideSeekServer) AddWorld(context.Context, *World) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddWorld not implemented")
 }
+func (UnimplementedHideSeekServer) AddMap(context.Context, *Map) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMap not implemented")
+}
 func (UnimplementedHideSeekServer) AddPC(context.Context, *PC) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPC not implemented")
 }
@@ -208,20 +224,20 @@ func (UnimplementedHideSeekServer) AddWeapon(context.Context, *Weapon) (*Status,
 func (UnimplementedHideSeekServer) AddAmmo(context.Context, *Ammo) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAmmo not implemented")
 }
+func (UnimplementedHideSeekServer) UpdateWorld(context.Context, *World) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateWorld not implemented")
+}
+func (UnimplementedHideSeekServer) DeleteWorld(context.Context, *DeleteWorldRequest) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteWorld not implemented")
+}
 func (UnimplementedHideSeekServer) UpdatePC(context.Context, *PC) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePC not implemented")
 }
 func (UnimplementedHideSeekServer) UpdateAmmo(context.Context, *Ammo) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAmmo not implemented")
 }
-func (UnimplementedHideSeekServer) GetWorld(context.Context, *GetWorldRequest) (*World, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWorld not implemented")
-}
 func (UnimplementedHideSeekServer) ChooseSpawns(context.Context, *ChooseSpawnsRequest) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChooseSpawns not implemented")
-}
-func (UnimplementedHideSeekServer) RemoveWorld(context.Context, *RemoveWorldRequest) (*Status, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveWorld not implemented")
 }
 func (UnimplementedHideSeekServer) RemovePC(context.Context, *RemovePCRequest) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemovePC not implemented")
@@ -262,6 +278,24 @@ func _HideSeek_AddWorld_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HideSeekServer).AddWorld(ctx, req.(*World))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HideSeek_AddMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Map)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HideSeekServer).AddMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/HideSeek/AddMap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HideSeekServer).AddMap(ctx, req.(*Map))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -338,6 +372,42 @@ func _HideSeek_AddAmmo_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HideSeek_UpdateWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(World)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HideSeekServer).UpdateWorld(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/HideSeek/UpdateWorld",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HideSeekServer).UpdateWorld(ctx, req.(*World))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HideSeek_DeleteWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteWorldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HideSeekServer).DeleteWorld(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/HideSeek/DeleteWorld",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HideSeekServer).DeleteWorld(ctx, req.(*DeleteWorldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _HideSeek_UpdatePC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PC)
 	if err := dec(in); err != nil {
@@ -374,24 +444,6 @@ func _HideSeek_UpdateAmmo_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HideSeek_GetWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetWorldRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(HideSeekServer).GetWorld(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/HideSeek/GetWorld",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HideSeekServer).GetWorld(ctx, req.(*GetWorldRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _HideSeek_ChooseSpawns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChooseSpawnsRequest)
 	if err := dec(in); err != nil {
@@ -406,24 +458,6 @@ func _HideSeek_ChooseSpawns_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HideSeekServer).ChooseSpawns(ctx, req.(*ChooseSpawnsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _HideSeek_RemoveWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveWorldRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(HideSeekServer).RemoveWorld(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/HideSeek/RemoveWorld",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HideSeekServer).RemoveWorld(ctx, req.(*RemoveWorldRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -512,6 +546,10 @@ var HideSeek_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _HideSeek_AddWorld_Handler,
 		},
 		{
+			MethodName: "AddMap",
+			Handler:    _HideSeek_AddMap_Handler,
+		},
+		{
 			MethodName: "AddPC",
 			Handler:    _HideSeek_AddPC_Handler,
 		},
@@ -528,6 +566,14 @@ var HideSeek_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _HideSeek_AddAmmo_Handler,
 		},
 		{
+			MethodName: "UpdateWorld",
+			Handler:    _HideSeek_UpdateWorld_Handler,
+		},
+		{
+			MethodName: "DeleteWorld",
+			Handler:    _HideSeek_DeleteWorld_Handler,
+		},
+		{
 			MethodName: "UpdatePC",
 			Handler:    _HideSeek_UpdatePC_Handler,
 		},
@@ -536,16 +582,8 @@ var HideSeek_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _HideSeek_UpdateAmmo_Handler,
 		},
 		{
-			MethodName: "GetWorld",
-			Handler:    _HideSeek_GetWorld_Handler,
-		},
-		{
 			MethodName: "ChooseSpawns",
 			Handler:    _HideSeek_ChooseSpawns_Handler,
-		},
-		{
-			MethodName: "RemoveWorld",
-			Handler:    _HideSeek_RemoveWorld_Handler,
 		},
 		{
 			MethodName: "RemovePC",

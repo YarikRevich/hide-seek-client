@@ -4,9 +4,9 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/google/uuid"
 )
 
@@ -34,7 +34,7 @@ func Exec() bool {
 				notifications.PopUp.WriteError("ID is malformed!")
 				return true
 			}
-			objects.UseObjects().World().SetID(id)
+			world.UseWorld().SetID(id)
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_HERO_CHOOSE)

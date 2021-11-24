@@ -3,9 +3,9 @@ package mapchoose
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 )
 
 func Exec() bool {
@@ -26,7 +26,7 @@ func Exec() bool {
 			"maps/thumbnails/starwars":  "maps/starwars/background/background",
 		} {
 			if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata(k).Modified) {
-				objects.UseObjects().World().SetSkin(v)
+				world.UseWorld().GetWorldMap().SetSkin(v)
 
 				middlewares.UseMiddlewares().UI().UseAfter(func() {
 					statemachine.UseStateMachine().UI().SetState(statemachine.UI_HERO_CHOOSE)

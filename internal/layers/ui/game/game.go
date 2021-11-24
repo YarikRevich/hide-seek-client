@@ -1,46 +1,55 @@
 package game
 
 import (
-	// "fmt"
+	"image/color"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/camera"
-
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
-	w := objects.UseObjects().World()
+	worldMap := world.UseWorld().GetWorldMap()
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := w.GetImage()
+		img := worldMap.GetImage()
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Scale(w.ModelCombination.Modified.ZoomedScale.X, w.ModelCombination.Modified.ZoomedScale.Y)
+		opts.GeoM.Scale(worldMap.ModelCombination.Modified.ZoomedScale.X, worldMap.ModelCombination.Modified.ZoomedScale.Y)
 
-		c := objects.UseObjects().Camera()
+		c := world.UseWorld().GetCamera()
 		opts.GeoM.Translate(-c.GetScaledPosX(), -c.GetScaledPosY())
 
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := objects.UseObjects().PC()
-		for _, v := range w.PCs {
-			img := v.GetAnimatedImage()
+		screenWidth, screenHeight := screen.Size()
+
+		i := ebiten.NewImage(screenWidth, screenHeight/4)
+
+		i.Fill(color.Black)
+		screen.DrawImage(i, nil)
+	})
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		p := world.UseWorld().GetPC()
+		pcs := world.UseWorld().GetPCs()
+
+		for _, pc := range pcs {
+			img := pc.GetAnimatedImage()
 
 			opts := &ebiten.DrawImageOptions{}
 
-			opts.GeoM.Scale(v.GetMovementRotation(), 1)
-			opts.GeoM.Scale(v.ModelCombination.Modified.ZoomedScale.X,
-				v.ModelCombination.Modified.ZoomedScale.Y)
+			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
+			opts.GeoM.Scale(pc.ModelCombination.Modified.ZoomedScale.X,
+				pc.ModelCombination.Modified.ZoomedScale.Y)
 
-			if v.IsEqualTo(p.Object) {
-				v.GetScaledPosX()
-				opts.GeoM.Translate(v.GetScaledOffsetX(), v.GetScaledOffsetX())
+			if pc.IsEqualTo(p.Base) {
+				pc.GetScaledPosX()
+				opts.GeoM.Translate(pc.GetScaledOffsetX(), pc.GetScaledOffsetX())
 			} else {
-				opts.GeoM.Translate(v.GetScaledPosX(), v.GetScaledPosY())
+				opts.GeoM.Translate(pc.GetScaledPosX(), pc.GetScaledPosY())
 			}
 
 			screen.DrawImage(img, opts)
@@ -48,16 +57,20 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		for _, v := range w.Weapons {
+		weapons := world.UseWorld().GetWeapons()
+
+		for _, weapon := range weapons {
 			opts := &ebiten.DrawImageOptions{}
-			screen.DrawImage(v.GetImage(), opts)
+			screen.DrawImage(weapon.GetImage(), opts)
 		}
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		for _, v := range w.Ammo {
+		ammos := world.UseWorld().GetAmmos()
+
+		for _, ammo := range ammos {
 			opts := &ebiten.DrawImageOptions{}
-			screen.DrawImage(v.GetImage(), opts)
+			screen.DrawImage(ammo.GetImage(), opts)
 		}
 	})
 
