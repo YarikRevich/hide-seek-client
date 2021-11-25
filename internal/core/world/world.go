@@ -32,6 +32,11 @@ func (w *World) AddPCs(pc *objects.PC) {
 
 func (w *World) DeletePCs() {
 	w.pcs = w.pcs[:0]
+	for i, pc := range w.pcs {
+		if pc.ID != w.pc.ID {
+			w.pcs = append(w.pcs[:i], w.pcs[i+1:]...)
+		}
+	}
 }
 
 func (w *World) UpdatePCs(m []*api.PC) {
@@ -88,7 +93,7 @@ func (w *World) UpdateAmmos(m []*api.Ammo) {
 	w.DeleteAmmos()
 }
 
-func (w *World) UpdateProperty(m *api.WorldObjectsResponse) {
+func (w *World) UpdateProperty(m *api.GetWorldPropertyResponse) {
 	w.UpdatePCs(m.PCs)
 	w.UpdateElements(m.Elements)
 	w.UpdateWeapons(m.Weapons)
@@ -148,18 +153,19 @@ func (w *World) GetAmmos() []*objects.Ammo {
 	return w.ammos
 }
 
-func (w *World) ToAPIMessage() *api.World{
+func (w *World) ToAPIMessage() *api.World {
 	return &api.World{
-		Id: w.ID.String(), 
+		Id:           w.ID.String(),
 		GameSettings: w.gamesettings.ToAPIMessage(),
 	}
 }
 
-func (w *World) FromAPIMessage(m *api.World){
+func (w *World) FromAPIMessage(m *api.World) {
 	w.gamesettings.Regime = m.GameSettings.Regime
+	w.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted
 }
 
-func (w *World) SetID(id uuid.UUID){
+func (w *World) SetID(id uuid.UUID) {
 	w.ID = id
 }
 

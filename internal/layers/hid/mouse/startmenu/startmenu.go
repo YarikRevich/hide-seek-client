@@ -4,9 +4,9 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 )
 
 func Exec() bool {
@@ -23,7 +23,7 @@ func Exec() bool {
 		}
 
 		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_start").Modified) {
-			objects.UseObjects().PC().SetUsername()
+			world.UseWorld().GetPC().LoadUsername()
 			networking.UseNetworking().Dialer().Dial()
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
@@ -35,7 +35,8 @@ func Exec() bool {
 		}
 
 		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_join").Modified) {
-			objects.UseObjects().PC().SetUsername()
+			world.UseWorld().GetPC().LoadUsername()
+
 			networking.UseNetworking().Dialer().Dial()
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {

@@ -59,7 +59,6 @@ gen_proto:
 	$(call clear)
 	@protoc -I internal/core/networking/api --go_out=. api.proto
 	@protoc -I internal/core/networking/api --go-grpc_out=. api.proto
-	$(call clear)
 
 full_install:
 	$(MAKE) go_install

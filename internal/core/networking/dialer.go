@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
 	// "github.com/YarikRevich/game-networking/pkg/client"
@@ -13,10 +13,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	_ "google.golang.org/grpc/connectivity"
+	"google.golang.org/grpc/encoding/gzip"
 )
 
 type Dialer struct {
-	conn            api.HideSeekClient
+	conn            api.ExternalServiceClient
 	service         *grpc.ClientConn
 	reconnectTicker *time.Ticker
 }
@@ -42,6 +43,7 @@ func (d *Dialer) Dial() {
 		logrus.Fatal(err)
 	}
 
+	grpc.UseCompressor(gzip.Name)
 	// go time.AfterFunc(time.Second*1, func() {
 	// 	s := conn.GetState()
 	// 	if s == connectivity.TransientFailure ||
@@ -52,10 +54,10 @@ func (d *Dialer) Dial() {
 	// })
 
 	d.service = service
-	d.conn = api.NewHideSeekClient(service)
+	d.conn = api.NewExternalServiceClient(service)
 }
 
-func (d *Dialer) Conn() api.HideSeekClient {
+func (d *Dialer) Conn() api.ExternalServiceClient {
 	return d.conn
 }
 

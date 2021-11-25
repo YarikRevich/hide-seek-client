@@ -6,13 +6,11 @@ import (
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 )
 
 func Exec() {
@@ -52,9 +50,10 @@ func Exec() {
 
 	latency.UseLatency().Timings().ExecEach(func() {
 		w := world.UseWorld()
+
 		conn := networking.UseNetworking().Dialer().Conn()
-		worldObjects, err := conn.GetWorldObjects(
-			context.Background(), &api.WorldObjectsRequest{WorldId: w.ID.String()}, grpc.EmptyCallOption{})
+		worldObjects, err := conn.GetWorldProperty(
+			context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
 		if err != nil {
 			logrus.Fatal(err)
 		}

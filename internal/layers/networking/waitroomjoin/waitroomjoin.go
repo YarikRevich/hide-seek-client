@@ -7,49 +7,50 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
 func Exec() {
 	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM_JOIN, func() {
-		pm := objects.UseObjects().PC().ToAPIMessage()
-		networking.UseNetworking().Dialer().Conn().AddPC(context.Background(), pm, grpc.EmptyCallOption{})
-		
-		w := objects.UseObjects().World()
-		r, err := networking.UseNetworking().Dialer().Conn().GetWorld(context.Background(), &api.GetWorldRequest{WorldId: w.ID.String()}, grpc.EmptyCallOption{})
-		if err != nil{
-			logrus.Fatal(err)
-		}
-		w.FromAPIMessage(r)
+		// pm := objects.UseObjects().PC().ToAPIMessage()
+		// networking.UseNetworking().Dialer().Conn().AddPC(context.Background(), pm, grpc.EmptyCallOption{})
+
+		// w := objects.UseObjects().World()
+		// r, err := networking.UseNetworking().Dialer().Conn().GetWorld(context.Background(), &api.GetWorldRequest{WorldId: w.ID.String()}, grpc.EmptyCallOption{})
+		// if err != nil{
+		// 	logrus.Fatal(err)
+		// }
+		// w.FromAPIMessage(r)
 	})
-	
+
 	latency.UseLatency().Timings().ExecEach(func() {
-		w := objects.UseObjects().World()
+		w := world.UseWorld()
 		worldId := w.ID.String()
-	
-		worldObjects, err := networking.UseNetworking().Dialer().Conn().GetWorldObjects(context.Background(), &api.WorldObjectsRequest{WorldId: worldId}, grpc.EmptyCallOption{})
-		if err != nil{
+
+		conn := networking.UseNetworking().Dialer().Conn()
+		worldObjects, err := conn.GetWorldProperty(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
+		if err != nil {
 			logrus.Fatal(err)
 		}
 
-		w.UpdateObjects(worldObjects)
+		w.UpdateProperty(worldObjects)
 
-		r, err := networking.UseNetworking().Dialer().Conn().IsGameStarted(context.Background(), &api.IsGameStartedRequest{WorldId: worldId}, grpc.EmptyCallOption{}); 
-		if err != nil{
+		r, err := conn.IsGameStarted(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
+		if err != nil {
 			logrus.Fatal(err)
 		}
-		
-		if r.Started{
+
+		if r.Started {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)
 			})
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_GAME)
 		}
-	}, statemachine.UI_WAIT_ROOM_JOIN, time.Millisecond * 300)
+	}, statemachine.UI_WAIT_ROOM_JOIN, time.Millisecond*300)
 	// if j.currState.SendStates.JoinRoom {
 
 	// 	j.userConfig.PersonalInfo.LobbyID = strings.Join(j.winConf.TextAreas.JoinLobbyInput.WrittenText, "")

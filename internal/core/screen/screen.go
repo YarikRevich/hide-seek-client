@@ -1,7 +1,7 @@
 package screen
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -98,7 +98,8 @@ func (s *Screen) GetSize() (float64, float64) {
 }
 
 func (s *Screen) IsAxisXCrossedByPC() bool {
-	p := objects.UseObjects().PC()
+	p := world.UseWorld().GetPC()
+
 	x := p.GetScaledOffsetX()
 	ax := s.GetAxisX()
 
@@ -107,7 +108,8 @@ func (s *Screen) IsAxisXCrossedByPC() bool {
 }
 
 func (s *Screen) IsAxisYCrossedByPC() bool {
-	p := objects.UseObjects().PC()
+	p := world.UseWorld().GetPC()
+
 	y := p.GetScaledOffsetY()
 	ay := s.GetAxisY()
 

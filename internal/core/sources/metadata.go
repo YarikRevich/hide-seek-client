@@ -51,7 +51,7 @@ type RuntimeDefined struct {
 }
 
 type Transition struct {
-	Scale struct {
+	StartScale, EndScale struct {
 		X, Y float64
 	}
 }

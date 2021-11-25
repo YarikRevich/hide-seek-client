@@ -6,18 +6,19 @@ import (
 )
 
 type GameSettings struct {
-	Regime regime.Regime
+	IsGameStarted bool
+	Regime        regime.Regime
 }
 
 func (gs *GameSettings) SetRegime(r regime.Regime) {
 	gs.Regime = r
 }
 
-func (gs *GameSettings) FromAPIMessage(){
+func (gs *GameSettings) FromAPIMessage() {
 
 }
 
-func (gs *GameSettings) ToAPIMessage()*api.GameSettings{
+func (gs *GameSettings) ToAPIMessage() *api.GameSettings {
 	return &api.GameSettings{}
 }
 

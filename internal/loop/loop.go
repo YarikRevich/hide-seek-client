@@ -26,11 +26,12 @@ var _ ebiten.Game = (*Loop)(nil)
 func (g *Loop) Update() error {
 	screen.UseScreen().CleanScreen()
 	render.UseRender().CleanRenderPool()
+	
 
 	networking.Process()
 	animation.Process()
 
-	transition.Process()
+	transition.UseTransitionPool().Process()
 
 	ui.Process()
 

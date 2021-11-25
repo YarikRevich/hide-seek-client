@@ -29,7 +29,7 @@ type PC struct {
 }
 
 //Initializes pc username by requesting storage
-func (p *PC) SetUsername() {
+func (p *PC) LoadUsername() {
 	p.Username = storage.UseStorage().User().GetUsername()
 }
 
