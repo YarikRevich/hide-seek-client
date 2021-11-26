@@ -25,6 +25,8 @@ type PC struct {
 	Username string
 	Health   uint64
 
+	LobbyNumber int
+
 	// Team Tea
 }
 
@@ -44,7 +46,7 @@ func (p *PC) GetMovementRotation() float64 {
 
 func (p *PC) ToAPIMessage() *api.PC {
 	return &api.PC{
-		Base:   p.Base.ToAPIMessage(),
+		Base:     p.Base.ToAPIMessage(),
 		Username: p.Username,
 		Health:   p.Health,
 	}

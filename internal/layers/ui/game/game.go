@@ -1,9 +1,12 @@
 package game
 
 import (
-	"image/color"
+	// "github.com/x/color"
+
+	// "image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -23,14 +26,14 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		screenWidth, screenHeight := screen.Size()
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	screenWidth, screenHeight := screen.Size()
 
-		i := ebiten.NewImage(screenWidth, screenHeight/4)
+	// 	i := ebiten.NewImage(screenWidth, screenHeight/10)
 
-		i.Fill(color.Black)
-		screen.DrawImage(i, nil)
-	})
+	// 	i.Fill(color.Black)
+	// 	screen.DrawImage(i, nil)
+	// })
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := world.UseWorld().GetPC()
@@ -57,53 +60,68 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		weapons := world.UseWorld().GetWeapons()
+		img := sources.UseSources().Images().GetCopyOfImage("hud/health/health")
+		mm := sources.UseSources().Metadata().GetMetadata("hud/health/health").Modified
 
-		for _, weapon := range weapons {
+		p := world.UseWorld().GetPC()
+		for i := 0; i < int(p.Health); i++ {
 			opts := &ebiten.DrawImageOptions{}
-			screen.DrawImage(weapon.GetImage(), opts)
+
+			opts.GeoM.Translate(mm.Margins.LeftMargin+(mm.Size.Width+(10/mm.Scale.X))*float64(i), mm.Margins.TopMargin)
+			opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
+
+			screen.DrawImage(img, opts)
 		}
 	})
 
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		ammos := world.UseWorld().GetAmmos()
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	weapons := world.UseWorld().GetWeapons()
 
-		for _, ammo := range ammos {
-			opts := &ebiten.DrawImageOptions{}
-			screen.DrawImage(ammo.GetImage(), opts)
-		}
-	})
+	// 	for _, weapon := range weapons {
+	// 		opts := &ebiten.DrawImageOptions{}
+	// 		screen.DrawImage(weapon.GetImage(), opts)
+	// 	}
+	// })
 
-	// // g.winConf.DrawGoldChest()
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	ammos := world.UseWorld().GetAmmos()
 
-	// g.mapComponents.GetCollisions().GetDoorsCollisions().DrawDoors(g.winConf.DrawHorDoor, g.winConf.DrawVerDoor)
+	// 	for _, ammo := range ammos {
+	// 		opts := &ebiten.DrawImageOptions{}
+	// 		screen.DrawImage(ammo.GetImage(), opts)
+	// 	}
+	// })
 
-	// Animation.NewDefaultSwordAnimator(g.winConf, g.userConfig).Move()
-	// Animation.NewIconAnimator(g.winConf, g.userConfig).Move()
+	// // // g.winConf.DrawGoldChest()
 
-	// for _, value := range g.winConf.GameProcess.OtherUsers {
-	// 	Animation.NewDefaultSwordAnimator(g.winConf, value).Move()
-	// 	Animation.NewIconAnimator(g.winConf, value).Move()
-	// }
+	// // g.mapComponents.GetCollisions().GetDoorsCollisions().DrawDoors(g.winConf.DrawHorDoor, g.winConf.DrawVerDoor)
 
-	// g.winConf.DrawDarkness(pixel.V((float64(g.userConfig.Pos.X)*2.5)-31, (float64(g.userConfig.Pos.Y)*2.5)-30))
+	// // Animation.NewDefaultSwordAnimator(g.winConf, g.userConfig).Move()
+	// // Animation.NewIconAnimator(g.winConf, g.userConfig).Move()
 
-	// g.winConf.DrawElementsPanel()
+	// // for _, value := range g.winConf.GameProcess.OtherUsers {
+	// // 	Animation.NewDefaultSwordAnimator(g.winConf, value).Move()
+	// // 	Animation.NewIconAnimator(g.winConf, value).Move()
+	// // }
 
-	// g.mapComponents.GetCam().UpdateCam()
+	// // g.winConf.DrawDarkness(pixel.V((float64(g.userConfig.Pos.X)*2.5)-31, (float64(g.userConfig.Pos.Y)*2.5)-30))
 
-	// var bias float64
-	// for i := 0; i <= g.userConfig.GameInfo.Health; i++ {
-	// 	g.winConf.DrawHPHeart(
-	// 		pixel.V(-40+bias, 1200),
-	// 	)
-	// 	bias += 100
-	// }
+	// // g.winConf.DrawElementsPanel()
 
-	// g.winConf.DrawWeaponIcon(g.userConfig.GameInfo.WeaponName)
+	// // g.mapComponents.GetCam().UpdateCam()
 
-	// if g.userConfig.GameInfo.Health < 1 {
-	// 	g.mapComponents.GetCam().SetDefaultCam()
-	// 	g.currState.MainStates.SetStartMenu()
-	// }
+	// // var bias float64
+	// // for i := 0; i <= g.userConfig.GameInfo.Health; i++ {
+	// // 	g.winConf.DrawHPHeart(
+	// // 		pixel.V(-40+bias, 1200),
+	// // 	)
+	// // 	bias += 100
+	// // }
+
+	// // g.winConf.DrawWeaponIcon(g.userConfig.GameInfo.WeaponName)
+
+	// // if g.userConfig.GameInfo.Health < 1 {
+	// // 	g.mapComponents.GetCam().SetDefaultCam()
+	// // 	g.currState.MainStates.SetStartMenu()
+	// // }
 }

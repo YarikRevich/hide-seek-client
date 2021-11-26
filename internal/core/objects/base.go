@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -52,7 +53,7 @@ type Base struct {
 	Physics
 
 	Parent *Base
-	
+
 	// Names parentid the object referes to
 	ID uuid.UUID
 
@@ -253,6 +254,7 @@ func (o *Base) SetSkin(path string) {
 	o.Path = path
 	_, file := filepath.Split(path)
 	o.Name = file
+	fmt.Println(o.Path)
 	o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Path)
 }
 
@@ -275,7 +277,7 @@ func (o *Base) GetAnimatedImage() *ebiten.Image {
 //API//
 
 func (o *Base) ToAPIMessage() *api.Base {
-	return &api.Base{
+	m := &api.Base{
 		Animation: &api.Animation{
 			PositionBeforeAnimation: &api.Position{
 				X: o.Animation.AnimationStartPosition.X,
@@ -292,7 +294,6 @@ func (o *Base) ToAPIMessage() *api.Base {
 		Physics: &api.Physics{
 			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
 		},
-		// Parent: o.Parent.ToAPIMessage(),
 		Id: o.ID.String(),
 		RawPos: &api.Position{
 			X: o.RawPos.X,
@@ -305,6 +306,10 @@ func (o *Base) ToAPIMessage() *api.Base {
 		Direction: int64(o.Direction),
 		Role:      int64(o.Role),
 	}
+	if o.Parent != nil {
+		m.Parent = o.Parent.ToAPIMessage()
+	}
+	return m
 }
 
 func (o *Base) FromAPIMessage(m *api.Base) {
@@ -319,8 +324,10 @@ func (o *Base) FromAPIMessage(m *api.Base) {
 
 	o.Physics.Jump = *(*[]keycodes.Direction)(unsafe.Pointer(&m.Physics.Jump))
 
-	o.Parent.FromAPIMessage(m.Parent)
-	o.ID = uuid.MustParse(m.Id)
+	if o.Parent != nil {
+		o.Parent.FromAPIMessage(m.Parent)
+		o.ID = uuid.MustParse(m.Id)
+	}
 
 	o.RawPos.X = m.RawPos.X
 	o.RawPos.Y = m.RawPos.Y
@@ -331,11 +338,12 @@ func (o *Base) FromAPIMessage(m *api.Base) {
 }
 
 func (o *Base) GetScaledPosX() float64 {
-	return o.RawPos.X * o.Parent.Modified.ZoomedScale.X
+
+	return (o.RawPos.X * o.Parent.Modified.ZoomedScale.X) - o.Modified.Offset.X
 }
 
 func (o *Base) GetScaledPosY() float64 {
-	return o.RawPos.Y * o.Parent.Modified.ZoomedScale.Y
+	return (o.RawPos.Y * o.Parent.Modified.ZoomedScale.Y) - o.Modified.Offset.Y
 }
 
 func (o *Base) GetScaledOffsetX() float64 {

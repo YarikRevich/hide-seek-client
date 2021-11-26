@@ -10,6 +10,10 @@ type GameSettings struct {
 	Regime        regime.Regime
 }
 
+func (gs *GameSettings) SetGameStarted(s bool) {
+	gs.IsGameStarted = s
+}
+
 func (gs *GameSettings) SetRegime(r regime.Regime) {
 	gs.Regime = r
 }

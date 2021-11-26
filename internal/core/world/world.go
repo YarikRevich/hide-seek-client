@@ -26,7 +26,8 @@ type World struct {
 }
 
 func (w *World) AddPCs(pc *objects.PC) {
-	pc.Parent = &w.worldMap.Base
+	pc.Parent.ID = w.ID
+	// fmt.Println(pc.Parent.ID, w.ID)
 	w.pcs = append(w.pcs, pc)
 }
 
@@ -129,6 +130,10 @@ func (w *World) SwapPCsSpawns() {
 	// }
 }
 
+func (w *World) GetGameSettings() *gamesettings.GameSettings {
+	return &w.gamesettings
+}
+
 func (w *World) GetWorldMap() *objects.Map {
 	return w.worldMap
 }
@@ -181,15 +186,15 @@ func (w *World) String() string {
 func UseWorld() *World {
 	if instance == nil {
 		instance = &World{
+			ID:       uuid.New(),
 			pc:       objects.NewPC(),
 			worldMap: objects.NewMap(),
 			camera:   objects.NewCamera(),
 		}
 
-		instance.pc.Parent = &objects.Base{ID: instance.ID}
 		instance.worldMap.Parent = &objects.Base{ID: instance.ID}
-		instance.camera.Parent = &objects.Base{ID: instance.ID}
-
+		instance.pc.Parent = &instance.worldMap.Base
+		instance.camera.Parent = &instance.worldMap.Base
 		instance.AddPCs(instance.pc)
 	}
 	return instance

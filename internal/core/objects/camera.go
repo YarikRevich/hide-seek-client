@@ -3,7 +3,10 @@ package objects
 type Camera struct {
 	Base
 
-	Zoom float64
+	Zoom        float64
+	AlignOffset struct {
+		X, Y float64
+	}
 }
 
 //Increments zoom property
@@ -27,7 +30,7 @@ func (c *Camera) ZoomOut() {
 	// co := objects.UseObjects().Camera()
 	// fmt.Println(co.RawPos.X+1 < 1113)
 	// if co.RawPos.X+1 < 1113 {
-	if c.Zoom > c.ModelCombination.Modified.Camera.MaxZoom {
+	if c.Zoom > c.ModelCombination.Modified.Camera.MinZoom {
 		c.Zoom--
 	}
 
@@ -36,5 +39,8 @@ func (c *Camera) ZoomOut() {
 }
 
 func NewCamera() *Camera {
-	return new(Camera)
+	c := new(Camera)
+	c.SetSkin("camera/camera")
+	c.Zoom = c.Modified.Camera.InitZoom
+	return c
 }

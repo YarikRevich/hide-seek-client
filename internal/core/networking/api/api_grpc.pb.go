@@ -28,7 +28,7 @@ type ExternalServiceClient interface {
 	UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*Status, error)
 	UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*Status, error)
 	UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*Status, error)
-	ChooseSpawns(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error)
+	ChooseSpawns(ctx context.Context, in *ChooseSpawnsRequest, opts ...grpc.CallOption) (*Status, error)
 	DeleteWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error)
 	DeletePC(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error)
 	GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error)
@@ -126,7 +126,7 @@ func (c *externalServiceClient) UpdateAmmo(ctx context.Context, in *Ammo, opts .
 	return out, nil
 }
 
-func (c *externalServiceClient) ChooseSpawns(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error) {
+func (c *externalServiceClient) ChooseSpawns(ctx context.Context, in *ChooseSpawnsRequest, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
 	err := c.cc.Invoke(ctx, "/ExternalService/ChooseSpawns", in, out, opts...)
 	if err != nil {
@@ -202,7 +202,7 @@ type ExternalServiceServer interface {
 	UpdateWorld(context.Context, *World) (*Status, error)
 	UpdatePC(context.Context, *PC) (*Status, error)
 	UpdateAmmo(context.Context, *Ammo) (*Status, error)
-	ChooseSpawns(context.Context, *wrapperspb.StringValue) (*Status, error)
+	ChooseSpawns(context.Context, *ChooseSpawnsRequest) (*Status, error)
 	DeleteWorld(context.Context, *wrapperspb.StringValue) (*Status, error)
 	DeletePC(context.Context, *wrapperspb.StringValue) (*Status, error)
 	GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error)
@@ -243,7 +243,7 @@ func (UnimplementedExternalServiceServer) UpdatePC(context.Context, *PC) (*Statu
 func (UnimplementedExternalServiceServer) UpdateAmmo(context.Context, *Ammo) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAmmo not implemented")
 }
-func (UnimplementedExternalServiceServer) ChooseSpawns(context.Context, *wrapperspb.StringValue) (*Status, error) {
+func (UnimplementedExternalServiceServer) ChooseSpawns(context.Context, *ChooseSpawnsRequest) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChooseSpawns not implemented")
 }
 func (UnimplementedExternalServiceServer) DeleteWorld(context.Context, *wrapperspb.StringValue) (*Status, error) {
@@ -440,7 +440,7 @@ func _ExternalService_UpdateAmmo_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _ExternalService_ChooseSpawns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.StringValue)
+	in := new(ChooseSpawnsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -452,7 +452,7 @@ func _ExternalService_ChooseSpawns_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/ExternalService/ChooseSpawns",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).ChooseSpawns(ctx, req.(*wrapperspb.StringValue))
+		return srv.(ExternalServiceServer).ChooseSpawns(ctx, req.(*ChooseSpawnsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -96,6 +96,10 @@ type Model struct {
 		X, Y float64
 	}
 
+	Offset struct {
+		X, Y float64
+	}
+
 	Text struct {
 		Symbols  string
 		Position TextPosition

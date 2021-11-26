@@ -12,7 +12,7 @@ import (
 func Exec() {
 	g := events.UseEvents().Gamepad()
 	k := events.UseEvents().Keyboard()
-	
+
 	c := world.UseWorld().GetCamera()
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
@@ -28,7 +28,6 @@ func Exec() {
 		p := world.UseWorld().GetPC()
 
 		p.SaveLastPosition()
-
 		pX, pY := p.GetScaledPosX(), p.GetScaledOffsetY()
 		cX, cY := c.GetScaledPosX(), c.GetScaledPosY()
 		// pZoomedSpeedX, pZoomedSpeedY := pmm.Buffs.Speed.X*mapScaleX, pmm.Buffs.Speed.Y*mapScaleY

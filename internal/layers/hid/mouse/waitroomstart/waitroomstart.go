@@ -13,7 +13,6 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
 )
 
 func Exec() bool {
@@ -48,14 +47,7 @@ func Exec() bool {
 		}
 
 		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game").Modified) {
-			// worldId := objects.UseObjects().World().ID
-			w := world.UseWorld()
-
-			conn := networking.UseNetworking().Dialer().Conn()
-			if r, err := conn.SetGameStarted(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{}); !r.Ok || err != nil {
-				notifications.PopUp.WriteError("Can't start game!")
-				return true
-			}
+			world.UseWorld().GetGameSettings().SetGameStarted(true)
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)

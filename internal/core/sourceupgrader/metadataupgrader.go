@@ -33,6 +33,7 @@ func (mu *metadataUpgrader) upgradeWithScale(mc *sources.ModelCombination) {
 	screenWidth, screenHeight := s.GetSize()
 	screenLastWidth, screenLastHeight := s.GetLastSize()
 
+	// fmt.Println(mc.Modified.Offset)
 
 	mc.Modified.Scale.X = (mc.Modified.Scale.X * screenWidth) / screenLastWidth
 	mc.Modified.Scale.Y = (mc.Modified.Scale.Y * screenHeight) / screenLastHeight
@@ -53,46 +54,54 @@ func (mu *metadataUpgrader) upgradeWithScale(mc *sources.ModelCombination) {
 		mc.Modified.Buffs.Speed.Y = mc.Origin.Buffs.Speed.Y * mc.Modified.Scale.Y
 	}
 
-	if mc.Origin.Info.GameRole == sources.GameMap {
-		if screenWidth > mc.Origin.Size.Width {
-			if m := mc.Origin.Size.Width/screenWidth + mc.Modified.Scale.X; m != mc.Modified.Scale.X {
-				mc.Modified.Scale.X = m
-			}
-		} else {
-			if m := screenWidth/mc.Origin.Size.Width + mc.Modified.Scale.X; m != mc.Modified.Scale.X {
-				mc.Modified.Scale.X = m
-			}
-		}
-
-		if screenHeight > mc.Origin.Size.Height {
-			if m := mc.Origin.Size.Height/screenHeight + mc.Modified.Scale.Y; m != mc.Modified.Scale.Y {
-				mc.Modified.Scale.Y = m
-			}
-		} else {
-			if m := screenHeight / mc.Origin.Size.Height; m != mc.Modified.Scale.Y {
-				mc.Modified.Scale.Y = m
-			}
-		}
+	if mc.Origin.Offset.X*mc.Modified.Scale.X != mc.Modified.Offset.X {
+		mc.Modified.Offset.X = mc.Origin.Offset.X * mc.Modified.Scale.X
 	}
+
+	if mc.Origin.Offset.Y*mc.Modified.Scale.Y != mc.Modified.Offset.Y {
+		mc.Modified.Offset.Y = mc.Origin.Offset.Y * mc.Modified.Scale.Y
+	}
+
+	// if mc.Origin.Info.GameRole == sources.GameMap {
+	// 	if screenWidth > mc.Origin.Size.Width {
+	// 		if m := mc.Origin.Size.Width/screenWidth + mc.Modified.Scale.X; m != mc.Modified.Scale.X {
+	// 			mc.Modified.Scale.X = m
+	// 		}
+	// 	} else {
+	// 		if m := screenWidth/mc.Origin.Size.Width + mc.Modified.Scale.X; m != mc.Modified.Scale.X {
+	// 			mc.Modified.Scale.X = m
+	// 		}
+	// 	}
+
+	// 	if screenHeight > mc.Origin.Size.Height {
+	// 		if m := mc.Origin.Size.Height/screenHeight + mc.Modified.Scale.Y; m != mc.Modified.Scale.Y {
+	// 			mc.Modified.Scale.Y = m
+	// 		}
+	// 	} else {
+	// 		if m := screenHeight / mc.Origin.Size.Height; m != mc.Modified.Scale.Y {
+	// 			mc.Modified.Scale.Y = m
+	// 		}
+	// 	}
+	// }
 }
 func (mu *metadataUpgrader) upgradeWithZoom(mc *sources.ModelCombination) {
-	// c := objects.UseObjects().Camera()
 	c := world.UseWorld().GetCamera()
 
-	if m := mc.Modified.Scale.X / 100 * c.Zoom; m != mc.Modified.ZoomedScale.X {
-		mc.Modified.ZoomedScale.X = m
-	}
-
-	if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.Modified.ZoomedScale.Y {
-		mc.Modified.ZoomedScale.Y = m
-	}
-
-	if mc.Origin.Info.GameRole == sources.GameMap {
-		if m := mc.Modified.Scale.X / 100 * c.Zoom * 3; m != mc.Modified.ZoomedScale.X {
+	switch mc.Origin.Info.GameRole {
+	case sources.GameMap:
+		if m := (mc.Modified.Scale.X) / 100 * c.Zoom * 3; m != mc.Modified.ZoomedScale.X {
 			mc.Modified.ZoomedScale.X = m
 		}
 
 		if m := mc.Modified.Scale.Y / 100 * c.Zoom * 3; m != mc.Modified.ZoomedScale.Y {
+			mc.Modified.ZoomedScale.Y = m
+		}
+	default:
+		if m := mc.Modified.Scale.X / 100 * c.Zoom; m != mc.Modified.ZoomedScale.X {
+			mc.Modified.ZoomedScale.X = m
+		}
+
+		if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.Modified.ZoomedScale.Y {
 			mc.Modified.ZoomedScale.Y = m
 		}
 	}
@@ -100,7 +109,8 @@ func (mu *metadataUpgrader) upgradeWithZoom(mc *sources.ModelCombination) {
 
 //Upgrades metadata with set upgraders
 func (mu *metadataUpgrader) Upgrade() {
-	for _, v := range sources.UseSources().Metadata().Collection {
+	collection := sources.UseSources().Metadata().Collection
+	for _, v := range collection {
 		if screen.UseScreen().IsResized() {
 			mu.upgradeWithScale(v)
 		}

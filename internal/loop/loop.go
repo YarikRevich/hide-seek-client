@@ -26,8 +26,8 @@ var _ ebiten.Game = (*Loop)(nil)
 func (g *Loop) Update() error {
 	screen.UseScreen().CleanScreen()
 	render.UseRender().CleanRenderPool()
-	
 
+	mouse.Process()
 	networking.Process()
 	animation.Process()
 
@@ -35,7 +35,6 @@ func (g *Loop) Update() error {
 
 	ui.Process()
 
-	mouse.Process()
 	keyboard.Process()
 
 	if !cli.IsWithoutSound() {

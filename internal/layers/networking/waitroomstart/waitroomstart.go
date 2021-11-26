@@ -2,6 +2,7 @@ package waitroomstart
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
@@ -14,41 +15,24 @@ import (
 )
 
 func Exec() {
-	//start:
-	//add user to world
-
-	//join:
-	//get world
-	//add user to world
-	// latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM, func() {
-	// 	networking.UseNetworking().Dialer().Conn().Call("add_user_to_world", w, )
-	// })
-
-	// collection.OnceCollection[ui.WAIT_ROOM].Do(func() {
-	// o := objects.UseObjects()
-	// connection.UseConnection().Call("reg_user", o.PC(), nil)
-
-	// connection.UseConnection().Call("reg_world", struct {
-	// 	World objects.World
-	// 	PC    objects.PC
-	// }{
-	// 	*o.World(), *o.PC(),
-	// }, nil)
-	// struct{}{}
-	// connection.UseConnection().Call("add_user_to_world", nil, nil)
-	// })
 	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM_START, func() {
-		// m := objects.UseObjects().World()
-		// networking.UseNetworking().Dialer().Conn().AddWorld(context.Background(), m, grpc.EmptyCallOption{})
-		// wm := objects.UseObjects().World().ToAPIMessage()
-		// networking.UseNetworking().Dialer().Conn().AddWorld(context.Background(), wm, grpc.EmptyCallOption{})
+		fmt.Println("HERE")
 
-		// pm := objects.UseObjects().PC().ToAPIMessage()
-		// networking.UseNetworking().Dialer().Conn().AddPC(context.Background(), pm, grpc.EmptyCallOption{})
+		conn := networking.UseNetworking().Dialer().Conn()
 
+		w := world.UseWorld()
+		worldMess := w.ToAPIMessage()
+		mapMess := w.GetWorldMap().ToAPIMessage()
+		pcMess := w.GetPC().ToAPIMessage()
+
+		conn.AddWorld(context.Background(), worldMess, grpc.EmptyCallOption{})
+		conn.AddMap(context.Background(), mapMess, grpc.EmptyCallOption{})
+		conn.AddPC(context.Background(), pcMess, grpc.EmptyCallOption{})
 	})
 
 	latency.UseLatency().Timings().ExecEach(func() {
+		fmt.Println("HERE1")
+
 		w := world.UseWorld()
 
 		conn := networking.UseNetworking().Dialer().Conn()

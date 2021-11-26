@@ -1,8 +1,6 @@
 package startmenu
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
@@ -61,10 +59,9 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		fmt.Println(mm.Scale)
 		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
 		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
-	
+
 		s := positioning.UsePositioning().Button()
 		s.Init(img, mo, f, mo.Text.Symbols)
 		s.Draw()

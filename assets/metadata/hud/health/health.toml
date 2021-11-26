@@ -1,2 +1,10 @@
 [info]
 parent="health"
+
+[margins]
+leftmargin = -15.0
+topmargin = -15.0
+
+[scale]
+x = 0.5
+y = 0.5
