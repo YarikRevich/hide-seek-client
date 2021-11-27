@@ -1,25 +1,24 @@
 package mouse
 
 import (
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/herochoose"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomjoin"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/joinmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/mapchoose"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/settingsmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/startmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/unfocus"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomjoin"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomstart"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 )
 
 func Process() {
-	if cli.IsDebug() {
+	if params.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.MOUSE)
 		defer profiling.UseProfiler().EndMonitoring()
 	}

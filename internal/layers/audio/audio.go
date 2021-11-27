@@ -2,17 +2,17 @@ package audio
 
 import (
 	// "github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/startmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/game"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/startmenu"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 )
 
 func Process() {
-	if cli.IsDebug() {
+	if params.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.AUDIO)
 		defer profiling.UseProfiler().EndMonitoring()
 	}
@@ -28,7 +28,7 @@ func Process() {
 		}
 
 		// middlewares.UseMiddlewares().Audio().UseAfter(func() {
-			statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_UNDONE)
+		statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_UNDONE)
 		// })
 	}
 }

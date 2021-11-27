@@ -4,13 +4,13 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/game"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/settingsmenu"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/joinmenu"
-	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/settingsmenu"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 )
 
 func Process() {
-	if cli.IsDebug() {
+	if params.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.KEYBOARD)
 		defer profiling.UseProfiler().EndMonitoring()
 	}

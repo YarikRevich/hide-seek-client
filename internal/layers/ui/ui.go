@@ -15,11 +15,11 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroomjoin"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroomstart"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 )
 
 func Process() {
-	if cli.IsDebug() {
+	if params.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.UI)
 		defer profiling.UseProfiler().EndMonitoring()
 	}
@@ -27,7 +27,7 @@ func Process() {
 	switch statemachine.UseStateMachine().UI().GetState() {
 	case statemachine.UI_GAME:
 		func() {
-			if cli.IsDebug() {
+			if params.IsDebug() {
 				profiling.UseProfiler().StartMonitoring(profiling.UI_GAME_MENU)
 				defer profiling.UseProfiler().EndMonitoring()
 			}
@@ -35,7 +35,7 @@ func Process() {
 		}()
 	case statemachine.UI_START_MENU:
 		func() {
-			if cli.IsDebug() {
+			if params.IsDebug() {
 				profiling.UseProfiler().StartMonitoring(profiling.UI_START_MENU)
 				defer profiling.UseProfiler().EndMonitoring()
 			}

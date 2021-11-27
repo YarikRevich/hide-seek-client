@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -32,10 +31,12 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		if p.Status == objects.DEAD {
+		if statemachine.UseStateMachine().PC().GetState() == statemachine.PC_DEAD {
 			latency.UseLatency().Timings().ExecFor(func() {
 				fmt.Println("YOU ARE DEAD")
-			}, statemachine.UI_GAME, time.Second*4)
+			}, func() {
+				statemachine.UseStateMachine().PC().SetState(statemachine.PC_ALIVE)
+			}, statemachine.UI_GAME, time.Second)
 		}
 	})
 

@@ -17,6 +17,7 @@ type Timings struct {
 	timingsFor map[timingIndex]*struct {
 		after    <-chan time.Time
 		callback func()
+		end      func()
 	}
 }
 
@@ -28,15 +29,16 @@ func (t *Timings) CleanEachTimings(s int) {
 	}
 }
 
-func (t *Timings) ExecFor(c func(), s int, d time.Duration) {
+func (t *Timings) ExecFor(c, e func(), s int, d time.Duration) {
 	i := timingIndex{s, d}
 	if _, ok := t.timingsFor[i]; !ok {
 		t.timingsFor[i] = &struct {
-			after    <-chan time.Time
-			callback func()
+			after         <-chan time.Time
+			callback, end func()
 		}{
 			after:    time.After(d),
 			callback: c,
+			end:      e,
 		}
 	}
 }
@@ -69,6 +71,7 @@ func (t *Timings) start() {
 				for k, v := range t.timingsFor {
 					select {
 					case <-v.after:
+						v.end()
 						delete(t.timingsFor, k)
 					default:
 						v.callback()
@@ -87,8 +90,8 @@ func NewTimings() *Timings {
 		}),
 
 		timingsFor: make(map[timingIndex]*struct {
-			after    <-chan time.Time
-			callback func()
+			after         <-chan time.Time
+			callback, end func()
 		}),
 		loopDelay: time.NewTicker(time.Millisecond * 200),
 	}

@@ -10,6 +10,7 @@ type StateMachine struct {
 	dial                   IState
 	settings_menu_checkbox IState
 	game                   IState
+	pc                     IState
 }
 
 type IStateMachine interface {
@@ -20,6 +21,7 @@ type IStateMachine interface {
 	Networking() IState
 	Dial() IState
 	SettingsMenuCheckbox() IState
+	PC() IState
 }
 
 func (s *StateMachine) Audio() IState {
@@ -50,6 +52,10 @@ func (s *StateMachine) Game() IState {
 	return s.game
 }
 
+func (s *StateMachine) PC() IState {
+	return s.pc
+}
+
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
@@ -60,6 +66,7 @@ func UseStateMachine() IStateMachine {
 			dial:                   NewState(DIAL_WAN),
 			settings_menu_checkbox: NewState(UI_SETTINGS_MENU_CHECKBOX_OFF),
 			game:                   NewState(GAME_START),
+			pc:                     NewState(PC_ALIVE),
 		}
 	}
 	return instance

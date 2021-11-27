@@ -1,21 +1,32 @@
 package cli
 
-import "flag"
+import (
+	"fmt"
+	"strings"
 
-var (
-	debug        = flag.Bool("debug", false, "Enables debug mode")
-	withoutSound = flag.Bool("without-sound", false, "Disables sound in game")
-	disableConfigAutoSave = flag.Bool("disable-config-autosave", false, "Disables auto save of user set configs!")
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 )
 
-func IsDebug() bool {
-	return *debug
+type CLI struct{}
+
+func (c *CLI) execDiePC() {
+	statemachine.UseStateMachine().PC().SetState(statemachine.PC_DEAD)
 }
 
-func IsWithoutSound() bool {
-	return *withoutSound
+func (c *CLI) Run() {
+	go func() {
+		for {
+			var command string
+			fmt.Scan(&command)
+
+			switch strings.ToLower(command) {
+			case "die_pc":
+				c.execDiePC()
+			}
+		}
+	}()
 }
 
-func IsDisableConfigAutoSave()bool{
-	return *disableConfigAutoSave
+func NewCLI() *CLI {
+	return new(CLI)
 }

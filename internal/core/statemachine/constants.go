@@ -50,3 +50,7 @@ const (
 	UI_SETTINGS_MENU_CHECKBOX_OFF
 )
 
+const (
+	PC_ALIVE = iota
+	PC_DEAD
+)

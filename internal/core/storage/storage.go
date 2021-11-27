@@ -1,25 +1,24 @@
 package storage
 
-import "github.com/YarikRevich/HideSeek-Client/tools/cli"
+import "github.com/YarikRevich/HideSeek-Client/tools/params"
 
 var instance *Storage
-
 
 type Storage struct {
 	user IUser
 }
 
-func (s *Storage) User() IUser{
+func (s *Storage) User() IUser {
 	return s.user
 }
 
-func UseStorage() *Storage{
-	if instance == nil{
+func UseStorage() *Storage {
+	if instance == nil {
 		db := NewDB()
 		instance = new(Storage)
-		if cli.IsDisableConfigAutoSave(){
+		if params.IsDisableConfigAutoSave() {
 			instance.user = NewUserTemorary()
-		}else{
+		} else {
 			instance.user = NewUserStorage(db)
 		}
 	}

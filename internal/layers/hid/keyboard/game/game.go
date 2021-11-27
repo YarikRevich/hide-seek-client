@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	// "fmt"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
@@ -27,7 +27,7 @@ func Exec() {
 	}
 
 	poX, poY := p.GetScaledOffsetX(), p.GetScaledOffsetY()
-	fmt.Println(poY)
+	// fmt.Println(poY)
 	if k.IsAnyKeyPressed() {
 		worldMap := world.UseWorld().GetWorldMap()
 

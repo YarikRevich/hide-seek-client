@@ -18,18 +18,9 @@ type Buffs struct{ SpeedX, SpeedY float64 }
 // 	Team2
 // )
 
-type Status int
-
-const (
-	ALIVE Status = iota
-	DEAD
-	DIEING
-)
-
 type PC struct {
 	Base
 
-	Status Status
 	Killer uuid.UUID
 
 	Username string

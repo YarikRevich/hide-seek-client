@@ -15,7 +15,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -37,7 +37,7 @@ func (g *Loop) Update() error {
 
 	keyboard.Process()
 
-	if !cli.IsWithoutSound() {
+	if !params.IsWithoutSound() {
 		audio.Process()
 	}
 
@@ -49,7 +49,7 @@ func (g *Loop) Draw(i *ebiten.Image) {
 
 	sourceupgrader.NewUpgrader().Upgrade()
 
-	if cli.IsDebug() {
+	if params.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.RENDER)
 		defer profiling.UseProfiler().EndMonitoring()
 	}

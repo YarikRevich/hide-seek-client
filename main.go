@@ -16,6 +16,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/loop"
 
 	"github.com/YarikRevich/HideSeek-Client/tools/cli"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 	"github.com/YarikRevich/HideSeek-Client/tools/printer"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -38,7 +39,7 @@ func init() {
 	}
 	logrus.SetOutput(lgf)
 
-	if cli.IsDebug() {
+	if params.IsDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
 		profiling.UseProfiler().Init()
 	} else {
@@ -50,6 +51,9 @@ func init() {
 	middlewares.UseMiddlewares().Prepare().Use()
 
 	printer.PrintCliMessage("HideSeek\nClient!")
+	if params.IsDebug() {
+		printer.PrintCliMessage("You are in\nDebug mode")
+	}
 
 	debug.SetGCPercent(2000)
 }
@@ -60,6 +64,10 @@ func main() {
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(s.GetMinWidth(), s.GetMinHeight(), -1, -1)
+
+	if params.IsDebug() {
+		cli.NewCLI().Run()
+	}
 
 	log.Fatalln(ebiten.RunGame(loop.New()))
 }
