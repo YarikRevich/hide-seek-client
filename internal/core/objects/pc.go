@@ -5,7 +5,6 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 )
 
 const DEFAULT_HEALTH = 10
@@ -64,12 +63,8 @@ func (p *PC) String() string {
 
 func NewPC() *PC {
 	pc := new(PC)
-	id, err := uuid.NewUUID()
-	if err != nil {
-		logrus.Fatal("failed to create uuid for world:", err)
-	}
-	pc.ID = id
-	pc.PositionHistory = zeroshifter.New(2)
+	pc.ID = uuid.New()
+	pc.PositionHistorySequence = zeroshifter.New(2)
 	pc.Health = 10
 	return pc
 }

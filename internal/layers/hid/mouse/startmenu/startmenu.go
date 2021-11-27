@@ -18,7 +18,7 @@ func Exec() bool {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_SETTINGS_MENU)
 			})
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)
-			
+
 			return true
 		}
 

@@ -32,7 +32,6 @@ func (w *World) AddPCs(pc *objects.PC) {
 }
 
 func (w *World) DeletePCs() {
-	w.pcs = w.pcs[:0]
 	for i, pc := range w.pcs {
 		if pc.ID != w.pc.ID {
 			w.pcs = append(w.pcs[:i], w.pcs[i+1:]...)

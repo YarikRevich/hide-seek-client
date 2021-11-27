@@ -1,7 +1,8 @@
 package screen
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"math"
+
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -21,7 +22,7 @@ func (s *Screen) SetLastSize() {
 }
 
 func (s *Screen) GetLastSize() (float64, float64) {
-	if s.lastWidth == 0 || s.lastHeight == 0{
+	if s.lastWidth == 0 || s.lastHeight == 0 {
 		return s.GetSize()
 	}
 	return float64(s.lastWidth), float64(s.lastHeight)
@@ -97,24 +98,39 @@ func (s *Screen) GetSize() (float64, float64) {
 	return 0, 0
 }
 
-func (s *Screen) IsAxisXCrossedByPC() bool {
-	p := world.UseWorld().GetPC()
-
-	x := p.GetScaledOffsetX()
-	ax := s.GetAxisX()
-
-	return (x-p.ModelCombination.Modified.Buffs.Speed.X-p.ModelCombination.Modified.Size.Width/2) <= ax &&
-		ax <= (x+p.ModelCombination.Modified.Buffs.Speed.X+p.ModelCombination.Modified.Size.Width/2)
+func (s *Screen) GetHUDOffset() float64 {
+	return s.GetHeight() / 12
 }
 
-func (s *Screen) IsAxisYCrossedByPC() bool {
-	p := world.UseWorld().GetPC()
+func (s *Screen) IsLessAxisXCrossed(x float64, objectWidth float64) bool {
+	ax := s.GetAxisX()
 
-	y := p.GetScaledOffsetY()
+	return x < ax && x > ax-objectWidth
+}
+
+func (s *Screen) IsHigherAxisXCrossed(x float64, objectWidth float64) bool {
+	ax := s.GetAxisX()
+
+	return x > ax && x < ax+objectWidth
+}
+
+func (s *Screen) IsLessAxisYCrossed(y float64, objectHeight float64) bool {
 	ay := s.GetAxisY()
 
-	return (y-p.ModelCombination.Modified.Buffs.Speed.Y-p.ModelCombination.Modified.Size.Height/2) <= ay &&
-		ay <= (y+p.ModelCombination.Modified.Buffs.Speed.Y+p.ModelCombination.Modified.Size.Height/2)
+	return y < ay && y > ay-objectHeight
+}
+
+func (s *Screen) IsHigherAxisYCrossed(y float64, objectHeight float64) bool {
+	ay := s.GetAxisY()
+
+	return y > ay && y < ay+objectHeight
+}
+
+func (s *Screen) GetOffsetX() float64 {
+	return math.Ceil(s.GetAxisX())
+}
+func (s *Screen) GetOffsetY() float64 {
+	return math.Ceil(s.GetAxisY())
 }
 
 func UseScreen() *Screen {

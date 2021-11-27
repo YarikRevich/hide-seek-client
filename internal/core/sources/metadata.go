@@ -57,11 +57,11 @@ type Transition struct {
 }
 
 type Model struct {
-	RuntimeDefined
+	RuntimeDefined RuntimeDefined
 
-	Animation
+	Animation Animation
 
-	Transition
+	Transition Transition
 
 	//Information about metadata file
 	Info struct {

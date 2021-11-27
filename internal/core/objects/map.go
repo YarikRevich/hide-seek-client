@@ -1,12 +1,13 @@
 package objects
 
 import (
+	"image"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
-
-type regime int
 
 // const (
 // 	//Players are separated on two teams
@@ -154,6 +155,16 @@ type Map struct {
 
 // 	return (y-mm.Buffs.Speed.Y - mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y + mo.Size.Height/2)
 // }
+func (w *Map) GetSpawns() []*image.Point {
+	var r []*image.Point
+
+	hudOffsetY := screen.UseScreen().GetHeight() / 12
+	for _, v := range w.ModelCombination.Modified.Spawns {
+		r = append(r, &image.Point{Y: v.Y + int(hudOffsetY), X: v.X})
+	}
+
+	return r
+}
 
 func (w *Map) ToAPIMessage() *api.Map {
 	return &api.Map{

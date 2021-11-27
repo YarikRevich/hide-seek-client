@@ -1,9 +1,7 @@
 package game
 
 import (
-	// "github.com/x/color"
-
-	// "image/color"
+	"image/color"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
@@ -18,7 +16,7 @@ func Draw() {
 		img := worldMap.GetImage()
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Scale(worldMap.ModelCombination.Modified.ZoomedScale.X, worldMap.ModelCombination.Modified.ZoomedScale.Y)
+		opts.GeoM.Scale(worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
 		c := world.UseWorld().GetCamera()
 		opts.GeoM.Translate(-c.GetScaledPosX(), -c.GetScaledPosY())
@@ -26,14 +24,16 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	screenWidth, screenHeight := screen.Size()
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		screenWidth, screenHeight := screen.Size()
+		img := ebiten.NewImage(screenWidth, screenHeight/12)
 
-	// 	i := ebiten.NewImage(screenWidth, screenHeight/10)
+		opts := &ebiten.DrawImageOptions{}
 
-	// 	i.Fill(color.Black)
-	// 	screen.DrawImage(i, nil)
-	// })
+		img.Fill(color.Black)
+
+		screen.DrawImage(img, opts)
+	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		p := world.UseWorld().GetPC()
@@ -45,12 +45,11 @@ func Draw() {
 			opts := &ebiten.DrawImageOptions{}
 
 			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
-			opts.GeoM.Scale(pc.ModelCombination.Modified.ZoomedScale.X,
-				pc.ModelCombination.Modified.ZoomedScale.Y)
+			opts.GeoM.Scale(pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X,
+				pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
 			if pc.IsEqualTo(p.Base) {
-				pc.GetScaledPosX()
-				opts.GeoM.Translate(pc.GetScaledOffsetX(), pc.GetScaledOffsetX())
+				opts.GeoM.Translate(pc.GetScaledOffsetX(), pc.GetScaledOffsetY())
 			} else {
 				opts.GeoM.Translate(pc.GetScaledPosX(), pc.GetScaledPosY())
 			}

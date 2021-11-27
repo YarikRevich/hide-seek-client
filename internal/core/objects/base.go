@@ -1,7 +1,6 @@
 package objects
 
 import (
-	"fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -57,7 +56,7 @@ type Base struct {
 	// Names parentid the object referes to
 	ID uuid.UUID
 
-	RawPos, RawOffset struct {
+	RawPos, RawOffset, LastRawPos struct {
 		X, Y float64
 	}
 
@@ -70,7 +69,8 @@ type Base struct {
 	TranslationMovementXBlocked, TranslationMovementYBlocked bool
 
 	//Only client fields
-	PositionHistory zeroshifter.IZeroShifter
+
+	PositionHistorySequence zeroshifter.IZeroShifter
 }
 
 func (o *Base) IsEqualTo(ob Base) bool {
@@ -173,7 +173,12 @@ func (o *Base) IsDirectionDOWN() bool {
 }
 
 func (o *Base) SaveLastPosition() {
-	o.PositionHistory.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
+	o.LastRawPos = struct {
+		X float64
+		Y float64
+	}{
+		X: o.RawPos.X, Y: o.RawPos.Y}
+	o.PositionHistorySequence.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
 }
 
 func (o *Base) SaveAnimationStartPosition() {
@@ -192,7 +197,7 @@ func (o *Base) SetRawY(y float64) {
 }
 
 func (o *Base) SetRawOffsetY(y float64) {
-	o.RawOffset.X = y
+	o.RawOffset.Y = y
 }
 func (o *Base) SetRawOffsetX(x float64) {
 	o.RawOffset.X = x
@@ -202,7 +207,7 @@ func (o *Base) SetRawOffsetX(x float64) {
 //in comparison to the last x poses
 func (o *Base) IsXChanged() bool {
 	var prevX int
-	for _, v := range o.PositionHistory.Get() {
+	for _, v := range o.PositionHistorySequence.Get() {
 		pos := v.(image.Point)
 		if prevX == 0 {
 			prevX = pos.X
@@ -219,7 +224,7 @@ func (o *Base) IsXChanged() bool {
 //in comparison to the last y poses
 func (o *Base) IsYChanged() bool {
 	var prevY int
-	for _, v := range o.PositionHistory.Get() {
+	for _, v := range o.PositionHistorySequence.Get() {
 		pos := v.(image.Point)
 
 		if prevY == 0 {
@@ -254,8 +259,9 @@ func (o *Base) SetSkin(path string) {
 	o.Path = path
 	_, file := filepath.Split(path)
 	o.Name = file
-	fmt.Println(o.Path)
+
 	o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Path)
+	// fmt.Println(o.ModelCombination.Modified.Animation, "KAKA")
 }
 
 //Returns images for the skin selected
@@ -338,20 +344,19 @@ func (o *Base) FromAPIMessage(m *api.Base) {
 }
 
 func (o *Base) GetScaledPosX() float64 {
-
-	return (o.RawPos.X * o.Parent.Modified.ZoomedScale.X) - o.Modified.Offset.X
+	return (o.RawPos.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
 }
 
 func (o *Base) GetScaledPosY() float64 {
-	return (o.RawPos.Y * o.Parent.Modified.ZoomedScale.Y) - o.Modified.Offset.Y
+	return (o.RawPos.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
 }
 
 func (o *Base) GetScaledOffsetX() float64 {
-	return o.RawOffset.X * o.Parent.Modified.ZoomedScale.X
+	return (o.RawOffset.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
 }
 
 func (o *Base) GetScaledOffsetY() float64 {
-	return o.RawOffset.Y * o.Parent.Modified.ZoomedScale.Y
+	return (o.RawOffset.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
 }
 
 func (o *Base) SetTranslationXMovementBlocked(s bool) {
