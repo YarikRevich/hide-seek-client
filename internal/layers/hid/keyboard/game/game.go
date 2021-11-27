@@ -1,7 +1,7 @@
 package game
 
 import (
-	"math"
+	"fmt"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
@@ -16,24 +16,26 @@ func Exec() {
 	k := events.UseEvents().Keyboard()
 
 	c := world.UseWorld().GetCamera()
+	p := world.UseWorld().GetPC()
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
-		c.ZoomIn()
+		c.ZoomIn(&p.Base)
 		return
 	} else if g.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
-		c.ZoomOut()
+		c.ZoomOut(&p.Base)
 		return
 	}
 
+	poX, poY := p.GetScaledOffsetX(), p.GetScaledOffsetY()
+	fmt.Println(poY)
 	if k.IsAnyKeyPressed() {
 		worldMap := world.UseWorld().GetWorldMap()
-		p := world.UseWorld().GetPC()
 
 		pWidth, pHeight := p.ModelCombination.Modified.Size.Width, p.ModelCombination.Modified.Size.Height
 
 		p.SaveLastPosition()
 		pX, pY := p.GetScaledPosX(), p.GetScaledOffsetY()
-		poX, poY := p.GetScaledOffsetX(), p.GetScaledOffsetY()
+
 		cX, cY := c.GetScaledPosX(), c.GetScaledPosY()
 
 		s := screen.UseScreen()
@@ -42,10 +44,12 @@ func Exec() {
 		screenOffsetX := s.GetOffsetX()
 		screenOffsetY := s.GetOffsetY()
 
+		// fmt.Println(p.TranslationMovementXBlocked, p.TranslationMovementYBlocked, p.RawOffset, p.RawPos)
+
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if pY > hudOffsetHeight {
-				p.SetRawY(p.RawPos.Y - p.Modified.Buffs.Speed.Y)
 				if !p.TranslationMovementYBlocked {
+					p.SetRawY(p.RawPos.Y - p.Modified.Buffs.Speed.Y)
 					p.SetRawOffsetY(p.RawOffset.Y - p.Modified.Buffs.Speed.Y)
 				}
 			}
@@ -57,8 +61,8 @@ func Exec() {
 
 		if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
 			if !p.TranslationMovementYBlocked {
-				p.SetRawY(p.RawPos.Y + p.Modified.Buffs.Speed.Y)
-				if pY < screenOffsetY*2-(pHeight/2) {
+				if pY < screenOffsetY*2-(pHeight/1.81) {
+					p.SetRawY(p.RawPos.Y + p.Modified.Buffs.Speed.Y)
 					p.SetRawOffsetY(p.RawOffset.Y + p.Modified.Buffs.Speed.Y)
 				}
 			}
@@ -70,8 +74,8 @@ func Exec() {
 
 		if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
 			if !p.TranslationMovementXBlocked {
-				p.SetRawX(p.RawPos.X + p.Modified.Buffs.Speed.X)
-				if pX < screenOffsetX*2-(pWidth/2) {
+				if pX < screenOffsetX*2-(pWidth/1.81) {
+					p.SetRawX(p.RawPos.X + p.Modified.Buffs.Speed.X)
 					p.SetRawOffsetX(p.RawOffset.X + p.Modified.Buffs.Speed.X)
 				}
 			}
@@ -82,10 +86,9 @@ func Exec() {
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
-
 			if pX > 0 {
-				p.SetRawX(p.RawPos.X - p.Modified.Buffs.Speed.X)
 				if !p.TranslationMovementXBlocked {
+					p.SetRawX(p.RawPos.X - p.Modified.Buffs.Speed.X)
 					p.SetRawOffsetX(p.RawOffset.X - p.Modified.Buffs.Speed.X)
 				}
 			}
@@ -95,19 +98,19 @@ func Exec() {
 			}
 		}
 
-		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(poX, pWidth) && p.IsDirectionLEFT() {
+		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(poX, p.Modified.Buffs.Speed.X) && p.IsDirectionLEFT() {
 			p.SetTranslationXMovementBlocked(true)
 		}
 
-		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(poX, pWidth) && p.IsDirectionRIGHT() {
+		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(poX, p.Modified.Buffs.Speed.X) && p.IsDirectionRIGHT() {
 			p.SetTranslationXMovementBlocked(true)
 		}
 
-		if !p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(poY, pHeight) && p.IsDirectionUP() {
+		if !p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(poY, p.Modified.Buffs.Speed.Y) && p.IsDirectionUP() {
 			p.SetTranslationYMovementBlocked(true)
 		}
 
-		if !p.TranslationMovementYBlocked && s.IsHigherAxisYCrossed(poY, pHeight) && p.IsDirectionDOWN() {
+		if !p.TranslationMovementYBlocked && s.IsHigherAxisYCrossed(poY, p.Modified.Buffs.Speed.Y) && p.IsDirectionDOWN() {
 			p.SetTranslationYMovementBlocked(true)
 		}
 
@@ -118,15 +121,14 @@ func Exec() {
 				p.SetTranslationYMovementBlocked(false)
 			}
 
-			if cY+screenOffsetY*2 >= worldMap.ModelCombination.Modified.Size.Height*worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y &&
+			if cY+screenOffsetY*2 >= worldMap.ModelCombination.Modified.Size.Height/1.81 &&
 				p.IsDirectionDOWN() {
 				p.SetTranslationYMovementBlocked(false)
 			}
 		}
 
 		if p.TranslationMovementXBlocked {
-			// fmt.Println(cX, screenOffsetX, worldMap.ModelCombination.Modified.Size.Width*worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X)
-			if math.Ceil(cX+screenOffsetX*2) >= math.Ceil(worldMap.ModelCombination.Modified.Size.Width*worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X) &&
+			if cX+screenOffsetX*2 >= worldMap.ModelCombination.Modified.Size.Width/1.81 &&
 				p.IsDirectionRIGHT() {
 				p.SetTranslationXMovementBlocked(false)
 			}

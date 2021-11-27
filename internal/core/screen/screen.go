@@ -1,6 +1,7 @@
 package screen
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -102,28 +103,29 @@ func (s *Screen) GetHUDOffset() float64 {
 	return s.GetHeight() / 12
 }
 
-func (s *Screen) IsLessAxisXCrossed(x float64, objectWidth float64) bool {
+func (s *Screen) IsLessAxisXCrossed(x float64, speedX float64) bool {
 	ax := s.GetAxisX()
 
-	return x < ax && x > ax-objectWidth
+	return x < ax && x > ax-speedX
 }
 
-func (s *Screen) IsHigherAxisXCrossed(x float64, objectWidth float64) bool {
+func (s *Screen) IsHigherAxisXCrossed(x float64, speedX float64) bool {
 	ax := s.GetAxisX()
 
-	return x > ax && x < ax+objectWidth
+	return x > ax && x < ax+speedX
 }
 
-func (s *Screen) IsLessAxisYCrossed(y float64, objectHeight float64) bool {
+func (s *Screen) IsLessAxisYCrossed(y float64, speedY float64) bool {
 	ay := s.GetAxisY()
 
-	return y < ay && y > ay-objectHeight
+	return y < ay && y > ay-speedY
 }
 
-func (s *Screen) IsHigherAxisYCrossed(y float64, objectHeight float64) bool {
+func (s *Screen) IsHigherAxisYCrossed(y float64, speedY float64) bool {
 	ay := s.GetAxisY()
 
-	return y > ay && y < ay+objectHeight
+	fmt.Println(y > ay, y < ay+speedY)
+	return y > ay && y < ay+speedY
 }
 
 func (s *Screen) GetOffsetX() float64 {

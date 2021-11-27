@@ -356,6 +356,7 @@ func (o *Base) GetScaledOffsetX() float64 {
 }
 
 func (o *Base) GetScaledOffsetY() float64 {
+	// fmt.Println(o.Parent.Modified.RuntimeDefined.ZoomedScale.Y)
 	return (o.RawOffset.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
 }
 

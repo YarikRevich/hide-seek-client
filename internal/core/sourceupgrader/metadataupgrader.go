@@ -87,24 +87,24 @@ func (mu *metadataUpgrader) upgradeWithScale(mc *sources.ModelCombination) {
 func (mu *metadataUpgrader) upgradeWithZoom(mc *sources.ModelCombination) {
 	c := world.UseWorld().GetCamera()
 
-	switch mc.Origin.Info.GameRole {
-	case sources.GameMap:
-		if m := (mc.Modified.Scale.X) / 100 * c.Zoom * 3; m != mc.Modified.RuntimeDefined.ZoomedScale.X {
-			mc.Modified.RuntimeDefined.ZoomedScale.X = m
-		}
+	// switch mc.Origin.Info.GameRole {
+	// case sources.GameMap:
+	// if m := (mc.Modified.Scale.X) / 100 * c.Zoom; m != mc.Modified.RuntimeDefined.ZoomedScale.X {
+	// 	mc.Modified.RuntimeDefined.ZoomedScale.X = m
+	// }
 
-		if m := mc.Modified.Scale.Y / 100 * c.Zoom * 3; m != mc.Modified.RuntimeDefined.ZoomedScale.Y {
-			mc.Modified.RuntimeDefined.ZoomedScale.Y = m
-		}
-	default:
-		if m := mc.Modified.Scale.X / 100 * c.Zoom; m != mc.Modified.RuntimeDefined.ZoomedScale.X {
-			mc.Modified.RuntimeDefined.ZoomedScale.X = m
-		}
-
-		if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.Modified.RuntimeDefined.ZoomedScale.Y {
-			mc.Modified.RuntimeDefined.ZoomedScale.Y = m
-		}
+	// if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.Modified.RuntimeDefined.ZoomedScale.Y {
+	// 	mc.Modified.RuntimeDefined.ZoomedScale.Y = m
+	// }
+	// default:
+	if m := mc.Modified.Scale.X / 100 * c.Zoom; m != mc.Modified.RuntimeDefined.ZoomedScale.X {
+		mc.Modified.RuntimeDefined.ZoomedScale.X = m
 	}
+
+	if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.Modified.RuntimeDefined.ZoomedScale.Y {
+		mc.Modified.RuntimeDefined.ZoomedScale.Y = m
+	}
+	// }
 }
 
 //Upgrades metadata with set upgraders

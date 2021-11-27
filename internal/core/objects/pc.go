@@ -18,16 +18,35 @@ type Buffs struct{ SpeedX, SpeedY float64 }
 // 	Team2
 // )
 
+type Status int
+
+const (
+	ALIVE Status = iota
+	DEAD
+	DIEING
+)
+
 type PC struct {
 	Base
+
+	Status Status
+	Killer uuid.UUID
 
 	Username string
 	Health   uint64
 
 	LobbyNumber int
-
 	// Team Tea
 }
+
+// func (p *PC) GetScaledOffsetX() float64 {
+// 	return (p.RawOffset.X * p.Parent.Modified.RuntimeDefined.ZoomedScale.X) - p.Modified.Offset.X
+// }
+
+// func (p *PC) GetScaledOffsetY() float64 {
+// 	// fmt.Println(o.Parent.Modified.RuntimeDefined.ZoomedScale.Y)
+// 	return ((p.RawOffset.Y - ) * p.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - p.Modified.Offset.Y
+// }
 
 //Initializes pc username by requesting storage
 func (p *PC) LoadUsername() {

@@ -1,16 +1,24 @@
 package game
 
 import (
+	"fmt"
 	"image/color"
+	"time"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
+	c := world.UseWorld().GetCamera()
+	p := world.UseWorld().GetPC()
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
@@ -18,25 +26,34 @@ func Draw() {
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Scale(worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
-		c := world.UseWorld().GetCamera()
-		opts.GeoM.Translate(-c.GetScaledPosX(), -c.GetScaledPosY())
+		opts.GeoM.Translate(-(c.GetScaledPosX() + c.AlignOffset.X), -(c.GetScaledPosY() + c.AlignOffset.Y))
 
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		screenWidth, screenHeight := screen.Size()
-		img := ebiten.NewImage(screenWidth, screenHeight/12)
+		if p.Status == objects.DEAD {
+			latency.UseLatency().Timings().ExecFor(func() {
+				fmt.Println("YOU ARE DEAD")
+			}, statemachine.UI_GAME, time.Second*4)
+		}
+	})
+
+	render.UseRender().SetToRender(func(i *ebiten.Image) {
+		s := screen.UseScreen()
+		screenWidth := s.GetWidth()
+		hudHeight := s.GetHUDOffset()
+		img := ebiten.NewImage(int(screenWidth), int(hudHeight))
 
 		opts := &ebiten.DrawImageOptions{}
 
 		img.Fill(color.Black)
 
-		screen.DrawImage(img, opts)
+		i.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		p := world.UseWorld().GetPC()
+
 		pcs := world.UseWorld().GetPCs()
 
 		for _, pc := range pcs {
@@ -49,7 +66,7 @@ func Draw() {
 				pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
 			if pc.IsEqualTo(p.Base) {
-				opts.GeoM.Translate(pc.GetScaledOffsetX(), pc.GetScaledOffsetY())
+				opts.GeoM.Translate(pc.GetScaledOffsetX()-c.AlignOffset.X, pc.GetScaledOffsetY()-c.AlignOffset.Y)
 			} else {
 				opts.GeoM.Translate(pc.GetScaledPosX(), pc.GetScaledPosY())
 			}

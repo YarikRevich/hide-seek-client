@@ -8,8 +8,8 @@ import (
 
 type UI struct{}
 
-func (u *UI) cleanTimings(){
-	latency.UseLatency().Timings().Clean(statemachine.UseStateMachine().UI().GetState())
+func (u *UI) cleanTimings() {
+	latency.UseLatency().Timings().CleanEachTimings(statemachine.UseStateMachine().UI().GetState())
 }
 
 func (u *UI) cleanLatencyOnce() {
@@ -22,7 +22,7 @@ func (u *UI) cleanBuffers() {
 
 func (u *UI) setSuspendedMusicDone() {
 	// UseMiddlewares().Audio().UseAfter(func() {
-		statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
+	statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
 	// })
 }
 
