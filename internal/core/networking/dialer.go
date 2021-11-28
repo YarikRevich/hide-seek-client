@@ -17,6 +17,7 @@ import (
 )
 
 type Dialer struct {
+	locked          bool
 	conn            api.ExternalServiceClient
 	service         *grpc.ClientConn
 	reconnectTicker *time.Ticker
@@ -59,6 +60,19 @@ func (d *Dialer) Dial() {
 
 func (d *Dialer) Conn() api.ExternalServiceClient {
 	return d.conn
+}
+
+func (d *Dialer) Lock() {
+	d.locked = true
+}
+
+func (d *Dialer) Unlock() {
+	d.locked = false
+}
+
+func (d *Dialer) WaitUntilDone() {
+	for d.locked {
+	}
 }
 
 func (d *Dialer) IsConnected() bool {

@@ -16,8 +16,8 @@ type MousePress struct{}
 
 func (p *MousePress) IsMousePressLeftOnce(m sources.Model) bool {
 	currX, currY := ebiten.CursorPosition()
-	mx, my := m.Margins.LeftMargin * m.Scale.X, m.Margins.TopMargin * m.Scale.X
-	
+	mx, my := m.Margins.LeftMargin*m.Scale.X, m.Margins.TopMargin*m.Scale.Y
+
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
 		(currX >= int(mx) && currX <= int((m.Size.Width)+(mx))) &&
 		(currY >= int(my) && currY <= int((m.Size.Height)+(my)))
@@ -37,7 +37,7 @@ type MouseWheel struct {
 	IsMoved bool
 
 	LastMouseWheelX, LastMouseWheelY float64
-	OffsetX, OffsetY         float64
+	OffsetX, OffsetY                 float64
 	moveCoefficient                  float64
 }
 
@@ -57,12 +57,14 @@ func (p *MouseWheel) UpdateMouseWheelOffsets() {
 			p.OffsetX += p.moveCoefficient
 		}
 	} else {
-		sx, sy := ebiten.Wheel() 
-		p.OffsetX += sx; p.OffsetY += sy
+		sx, sy := ebiten.Wheel()
+		p.OffsetX += sx
+		p.OffsetY += sy
 	}
 
 	p.IsMoved = p.LastMouseWheelX != p.OffsetX && p.LastMouseWheelY != p.OffsetY
-	p.LastMouseWheelX = p.OffsetX; p.LastMouseWheelY = p.OffsetY
+	p.LastMouseWheelX = p.OffsetX
+	p.LastMouseWheelY = p.OffsetY
 }
 
 func NewMouse() *Mouse {

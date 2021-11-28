@@ -3,6 +3,8 @@ package game
 import (
 	// "fmt"
 
+	"fmt"
+
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/physics"
@@ -36,7 +38,10 @@ func Exec() {
 		p.SaveLastPosition()
 		pX, pY := p.GetScaledPosX(), p.GetScaledOffsetY()
 
-		cX, cY := c.GetScaledPosX(), c.GetScaledPosY()
+		// cX, cY := c.GetScaledPosX(), c.GetScaledPosY()
+		cX := c.RawPos.X
+		cY := c.RawPos.Y
+		// cY := c.GetScaledPosY()
 
 		s := screen.UseScreen()
 
@@ -116,6 +121,10 @@ func Exec() {
 
 		p.UpdateDirection()
 
+		//1.81
+
+		// fmt.Println(cY+screenOffsetY*2, worldMap.ModelCombination.Modified.Size.Height/worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y, 1.81, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
+		fmt.Println(cY+screenOffsetY*2, worldMap.ModelCombination.Modified.Size.Height/1.81)
 		if p.TranslationMovementYBlocked {
 			if cY <= -hudOffsetHeight && p.IsDirectionUP() {
 				p.SetTranslationYMovementBlocked(false)
@@ -128,7 +137,7 @@ func Exec() {
 		}
 
 		if p.TranslationMovementXBlocked {
-			if cX+screenOffsetX*2 >= worldMap.ModelCombination.Modified.Size.Width/1.81 &&
+			if cX+screenOffsetX*2 >= worldMap.ModelCombination.Modified.Size.Width/worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X*1.81 &&
 				p.IsDirectionRIGHT() {
 				p.SetTranslationXMovementBlocked(false)
 			}

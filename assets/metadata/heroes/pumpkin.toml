@@ -10,8 +10,8 @@ frameWidth = 16.0
 frameHeight = 50.0
 
 [buffs.speed]
-    x = 0.7
-    y = 0.7
+    x = 2.0
+    y = 2.0
 
 [scale]
 x = 3.0

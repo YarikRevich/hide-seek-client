@@ -11,13 +11,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
-
 func Draw() {
 	f := sources.UseSources().Font().GetFont("base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		
-		img := sources.UseSources().Images().GetImage("system/background/background")
+
+		img := sources.UseSources().Images().GetCopyOfImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
 
@@ -25,11 +24,9 @@ func Draw() {
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-
 		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Modified
-		worldMap := world.UseWorld().GetWorldMap()
 
-		text.Draw(img, fmt.Sprintf("World ID: %s", worldMap.ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
+		text.Draw(img, fmt.Sprintf("World ID: %s", world.UseWorld().ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
 
 		screen.DrawImage(img, opts)
 	})

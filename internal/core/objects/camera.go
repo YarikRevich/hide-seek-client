@@ -16,11 +16,11 @@ type Camera struct {
 //Increments zoom property
 func (c *Camera) ZoomIn(o *Base) {
 	if c.Zoom < c.ModelCombination.Modified.Camera.MaxZoom {
-		c.AlignOffset.X += 10
-		c.AlignOffset.Y += 10
+		c.AlignOffset.X += 11
+		c.AlignOffset.Y += 9
 		c.Zoom++
-		o.SetTranslationYMovementBlocked(false)
-		o.SetTranslationXMovementBlocked(false)
+		// o.SetTranslationYMovementBlocked(false)
+		// o.SetTranslationXMovementBlocked(false)
 	}
 }
 
@@ -28,11 +28,11 @@ func (c *Camera) ZoomIn(o *Base) {
 func (c *Camera) ZoomOut(o *Base) {
 	if !math.Signbit(c.GetScaledPosX()+c.AlignOffset.X) && !math.Signbit(c.GetScaledPosY()+c.AlignOffset.Y) {
 		if c.Zoom > c.ModelCombination.Modified.Camera.MinZoom {
-			c.AlignOffset.X -= 10
-			c.AlignOffset.Y -= 10
+			c.AlignOffset.X -= 11
+			c.AlignOffset.Y -= 9
 			c.Zoom--
-			o.SetTranslationYMovementBlocked(false)
-			o.SetTranslationXMovementBlocked(false)
+			// o.SetTranslationYMovementBlocked(false)
+			// o.SetTranslationXMovementBlocked(false)
 		}
 	}
 }

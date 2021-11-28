@@ -17,6 +17,7 @@ type Notificator interface {
 	WriteError(string)
 	WriteWarning(string)
 	WriteDebug(string)
+	WriteInfo(string)
 
 	Read() []NotificatorEntity
 
@@ -44,11 +45,17 @@ func (p *notificator) write(m string) {
 func (p *notificator) WriteError(m string) {
 	p.write(fmt.Sprintf("Error: %s", m))
 }
+
 func (p *notificator) WriteWarning(m string) {
 	p.write(fmt.Sprintf("Warning: %s", m))
 }
+
 func (p *notificator) WriteDebug(m string) {
 	p.write(fmt.Sprintf("Debug: %s", m))
+}
+
+func (p *notificator) WriteInfo(m string) {
+	p.write(fmt.Sprintf("Info: %s", m))
 }
 
 func (p *notificator) Read() []NotificatorEntity {

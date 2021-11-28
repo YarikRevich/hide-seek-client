@@ -31,9 +31,9 @@ func (g *Loop) Update() error {
 	networking.Process()
 	animation.Process()
 
-	transition.UseTransitionPool().Process()
-
 	ui.Process()
+
+	transition.UseTransitionPool().Process()
 
 	keyboard.Process()
 

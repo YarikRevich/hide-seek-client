@@ -32,9 +32,6 @@ type ExternalServiceClient interface {
 	DeleteWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error)
 	DeletePC(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error)
 	GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error)
-	GetWorldProperty(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldPropertyResponse, error)
-	SetGameStarted(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error)
-	IsGameStarted(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*IsGameStartedResponse, error)
 }
 
 type externalServiceClient struct {
@@ -162,33 +159,6 @@ func (c *externalServiceClient) GetWorld(ctx context.Context, in *wrapperspb.Str
 	return out, nil
 }
 
-func (c *externalServiceClient) GetWorldProperty(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldPropertyResponse, error) {
-	out := new(GetWorldPropertyResponse)
-	err := c.cc.Invoke(ctx, "/ExternalService/GetWorldProperty", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) SetGameStarted(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*Status, error) {
-	out := new(Status)
-	err := c.cc.Invoke(ctx, "/ExternalService/SetGameStarted", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) IsGameStarted(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*IsGameStartedResponse, error) {
-	out := new(IsGameStartedResponse)
-	err := c.cc.Invoke(ctx, "/ExternalService/IsGameStarted", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ExternalServiceServer is the server API for ExternalService service.
 // All implementations must embed UnimplementedExternalServiceServer
 // for forward compatibility
@@ -206,9 +176,6 @@ type ExternalServiceServer interface {
 	DeleteWorld(context.Context, *wrapperspb.StringValue) (*Status, error)
 	DeletePC(context.Context, *wrapperspb.StringValue) (*Status, error)
 	GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error)
-	GetWorldProperty(context.Context, *wrapperspb.StringValue) (*GetWorldPropertyResponse, error)
-	SetGameStarted(context.Context, *wrapperspb.StringValue) (*Status, error)
-	IsGameStarted(context.Context, *wrapperspb.StringValue) (*IsGameStartedResponse, error)
 	mustEmbedUnimplementedExternalServiceServer()
 }
 
@@ -254,15 +221,6 @@ func (UnimplementedExternalServiceServer) DeletePC(context.Context, *wrapperspb.
 }
 func (UnimplementedExternalServiceServer) GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWorld not implemented")
-}
-func (UnimplementedExternalServiceServer) GetWorldProperty(context.Context, *wrapperspb.StringValue) (*GetWorldPropertyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWorldProperty not implemented")
-}
-func (UnimplementedExternalServiceServer) SetGameStarted(context.Context, *wrapperspb.StringValue) (*Status, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetGameStarted not implemented")
-}
-func (UnimplementedExternalServiceServer) IsGameStarted(context.Context, *wrapperspb.StringValue) (*IsGameStartedResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsGameStarted not implemented")
 }
 func (UnimplementedExternalServiceServer) mustEmbedUnimplementedExternalServiceServer() {}
 
@@ -511,60 +469,6 @@ func _ExternalService_GetWorld_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_GetWorldProperty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.StringValue)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).GetWorldProperty(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/GetWorldProperty",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).GetWorldProperty(ctx, req.(*wrapperspb.StringValue))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_SetGameStarted_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.StringValue)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).SetGameStarted(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/SetGameStarted",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).SetGameStarted(ctx, req.(*wrapperspb.StringValue))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_IsGameStarted_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.StringValue)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).IsGameStarted(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/IsGameStarted",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).IsGameStarted(ctx, req.(*wrapperspb.StringValue))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // ExternalService_ServiceDesc is the grpc.ServiceDesc for ExternalService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -623,18 +527,6 @@ var ExternalService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWorld",
 			Handler:    _ExternalService_GetWorld_Handler,
-		},
-		{
-			MethodName: "GetWorldProperty",
-			Handler:    _ExternalService_GetWorldProperty_Handler,
-		},
-		{
-			MethodName: "SetGameStarted",
-			Handler:    _ExternalService_SetGameStarted_Handler,
-		},
-		{
-			MethodName: "IsGameStarted",
-			Handler:    _ExternalService_IsGameStarted_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

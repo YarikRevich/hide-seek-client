@@ -35,7 +35,8 @@ Use
 $ HideSeek --help
 ```
 
-If you want to contribute you definetily should use ![debug cli](DEBUG.md)
-
 To see all available flags
+
+😊 If you want to contribute you definetily should use [debug cli](DEBUG.md)
+
 

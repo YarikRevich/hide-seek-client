@@ -7,6 +7,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/golang/protobuf/ptypes/wrappers"
@@ -16,15 +17,15 @@ import (
 
 func Exec() {
 	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM_JOIN, func() {
-		// pm := objects.UseObjects().PC().ToAPIMessage()
-		// networking.UseNetworking().Dialer().Conn().AddPC(context.Background(), pm, grpc.EmptyCallOption{})
+		conn := networking.UseNetworking().Dialer().Conn()
 
-		// w := objects.UseObjects().World()
-		// r, err := networking.UseNetworking().Dialer().Conn().GetWorld(context.Background(), &api.GetWorldRequest{WorldId: w.ID.String()}, grpc.EmptyCallOption{})
-		// if err != nil{
-		// 	logrus.Fatal(err)
-		// }
-		// w.FromAPIMessage(r)
+		pcMess := world.UseWorld().GetPC().ToAPIMessage()
+
+		r, err := conn.AddPC(context.Background(), pcMess, grpc.EmptyCallOption{})
+		if !r.GetOk() || err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			return
+		}
 	})
 
 	latency.UseLatency().Timings().ExecEach(func() {
@@ -32,25 +33,26 @@ func Exec() {
 		worldId := w.ID.String()
 
 		conn := networking.UseNetworking().Dialer().Conn()
-		worldObjects, err := conn.GetWorldProperty(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
+		worldObjects, err := conn.GetWorld(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
 		if err != nil {
 			logrus.Fatal(err)
 		}
 
-		w.UpdateProperty(worldObjects)
+		w.Update(worldObjects)
 
-		r, err := conn.IsGameStarted(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
-		if err != nil {
-			logrus.Fatal(err)
+		if !w.GetGameSettings().IsWorldExist {
+			middlewares.UseMiddlewares().UI().UseAfter(func() {
+				statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
+			})
+			notifications.PopUp.WriteError("The room was closed by the creator")
 		}
 
-		if r.Started {
+		if w.GetGameSettings().IsGameStarted {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)
 			})
-			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_GAME)
 		}
-	}, statemachine.UI_WAIT_ROOM_JOIN, time.Millisecond*300)
+	}, statemachine.UI_WAIT_ROOM_JOIN, time.Second)
 	// if j.currState.SendStates.JoinRoom {
 
 	// 	j.userConfig.PersonalInfo.LobbyID = strings.Join(j.winConf.TextAreas.JoinLobbyInput.WrittenText, "")

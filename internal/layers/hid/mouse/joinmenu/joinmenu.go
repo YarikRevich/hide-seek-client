@@ -13,7 +13,6 @@ import (
 func Exec() bool {
 	m := events.UseEvents().Mouse()
 	if m.IsAnyMouseButtonsPressed() {
-
 		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/joingameinput").Modified) {
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_JOIN_MENU)
 			return true

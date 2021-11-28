@@ -27,16 +27,11 @@ type World struct {
 
 func (w *World) AddPCs(pc *objects.PC) {
 	pc.Parent.ID = w.ID
-	// fmt.Println(pc.Parent.ID, w.ID)
 	w.pcs = append(w.pcs, pc)
 }
 
 func (w *World) DeletePCs() {
-	for i, pc := range w.pcs {
-		if pc.ID != w.pc.ID {
-			w.pcs = append(w.pcs[:i], w.pcs[i+1:]...)
-		}
-	}
+	w.pcs = w.pcs[:0]
 }
 
 func (w *World) UpdatePCs(m []*api.PC) {
@@ -45,11 +40,11 @@ func (w *World) UpdatePCs(m []*api.PC) {
 	for _, pc := range m {
 		if pc.Base.Id == w.pc.ID.String() {
 			w.pc.FromAPIMessage(pc)
-			w.pcs = append(w.pcs, w.pc)
+			w.AddPCs(w.pc)
 		} else {
 			npc := objects.NewPC()
 			npc.FromAPIMessage(pc)
-			w.pcs = append(w.pcs, npc)
+			w.AddPCs(npc)
 		}
 	}
 }
@@ -93,7 +88,8 @@ func (w *World) UpdateAmmos(m []*api.Ammo) {
 	w.DeleteAmmos()
 }
 
-func (w *World) UpdateProperty(m *api.GetWorldPropertyResponse) {
+func (w *World) Update(m *api.GetWorldResponse) {
+	w.FromAPIMessage(m.World)
 	w.UpdatePCs(m.PCs)
 	w.UpdateElements(m.Elements)
 	w.UpdateWeapons(m.Weapons)
@@ -165,12 +161,32 @@ func (w *World) ToAPIMessage() *api.World {
 }
 
 func (w *World) FromAPIMessage(m *api.World) {
-	w.gamesettings.Regime = m.GameSettings.Regime
+	// w.gamesettings.Regime = m.GameSettings.Regime
+	// fmt.Println(m)
 	w.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted
+	w.gamesettings.IsWorldExist = m.GameSettings.IsWorldExist
 }
 
 func (w *World) SetID(id uuid.UUID) {
 	w.ID = id
+	w.pc.Parent.ID = id
+	w.worldMap.Parent.ID = id
+	w.camera.Parent.ID = id
+	for _, pc := range w.pcs {
+		pc.Parent.ID = id
+	}
+
+	for _, el := range w.elements {
+		el.Parent.ID = id
+	}
+
+	for _, we := range w.weapons {
+		we.Parent.ID = id
+	}
+
+	for _, am := range w.ammos {
+		am.Parent.ID = id
+	}
 }
 
 // //Formats users' username
@@ -195,6 +211,8 @@ func UseWorld() *World {
 		instance.pc.Parent = &instance.worldMap.Base
 		instance.camera.Parent = &instance.worldMap.Base
 		instance.AddPCs(instance.pc)
+
+		instance.gamesettings.SetWorldExist(true)
 	}
 	return instance
 }

@@ -1,6 +1,9 @@
 package latency
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type timingIndex struct {
 	state int
@@ -12,6 +15,7 @@ type Timings struct {
 	timingsEach map[timingIndex]*struct {
 		ticker   *time.Ticker
 		callback func()
+		close    chan int
 	}
 
 	timingsFor map[timingIndex]*struct {
@@ -22,8 +26,9 @@ type Timings struct {
 }
 
 func (t *Timings) CleanEachTimings(s int) {
-	for k := range t.timingsEach {
+	for k, v := range t.timingsEach {
 		if k.state == s {
+			v.close <- 1
 			delete(t.timingsEach, k)
 		}
 	}
@@ -49,9 +54,11 @@ func (t *Timings) ExecEach(c func(), s int, d time.Duration) {
 		t.timingsEach[i] = &struct {
 			ticker   *time.Ticker
 			callback func()
+			close    chan int
 		}{
 			ticker:   time.NewTicker(d),
 			callback: c,
+			close:    make(chan int, 1),
 		}
 	}
 }
@@ -60,11 +67,18 @@ func (t *Timings) start() {
 	go func() {
 		for {
 			for range t.loopDelay.C {
-				for _, v := range t.timingsEach {
+				for i, v := range t.timingsEach {
+					fmt.Println(i.state)
 					select {
+					case <-v.close:
+						fmt.Println("BEFORE CALL BACK CLOSE")
+						v.callback()
+						fmt.Println("AFTER CALL BACK CLOSE")
+						// continue
 					case <-v.ticker.C:
 						v.callback()
 						continue
+
 					case <-t.loopDelay.C:
 					}
 				}
@@ -87,6 +101,7 @@ func NewTimings() *Timings {
 		timingsEach: make(map[timingIndex]*struct {
 			ticker   *time.Ticker
 			callback func()
+			close    chan int
 		}),
 
 		timingsFor: make(map[timingIndex]*struct {

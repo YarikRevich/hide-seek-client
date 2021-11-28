@@ -13,6 +13,7 @@ message World {
 message GameSettings {
     Regime regime = 1;
     bool isGameStarted = 2;
+    bool isWorldExist = 3;
 };
 
 message Regime {};
@@ -86,13 +87,6 @@ message Status {
     bool ok = 1;
 };
 
-message GetWorldPropertyResponse {
-    repeated PC PCs = 1;
-    repeated Element elements = 2;
-    repeated Weapon weapons = 3;
-    repeated Ammo ammos = 4;
-};
-
 message RemovePCRequest{
     string worldId = 1;
     string pcId = 2;
@@ -104,6 +98,10 @@ message IsGameStartedResponse{
 
 message GetWorldResponse{
     World world = 1;
+    repeated PC PCs = 2;
+    repeated Element elements = 3;
+    repeated Weapon weapons = 4;
+    repeated Ammo ammos = 5;
 };
 
 message DeletePCRequest{
@@ -134,9 +132,5 @@ service ExternalService {
     rpc DeletePC (google.protobuf.StringValue) returns (Status);
   
     rpc GetWorld(google.protobuf.StringValue) returns (GetWorldResponse);
-    rpc GetWorldProperty(google.protobuf.StringValue) returns (GetWorldPropertyResponse);
-
-    rpc SetGameStarted(google.protobuf.StringValue) returns (Status);
-    rpc IsGameStarted(google.protobuf.StringValue) returns (IsGameStartedResponse);
 };
 ////////////////////////////

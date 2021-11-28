@@ -1,7 +1,6 @@
 package screen
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -124,7 +123,6 @@ func (s *Screen) IsLessAxisYCrossed(y float64, speedY float64) bool {
 func (s *Screen) IsHigherAxisYCrossed(y float64, speedY float64) bool {
 	ay := s.GetAxisY()
 
-	fmt.Println(y > ay, y < ay+speedY)
 	return y > ay && y < ay+speedY
 }
 

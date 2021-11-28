@@ -333,6 +333,10 @@ func (o *Base) FromAPIMessage(m *api.Base) {
 	if o.Parent != nil {
 		o.Parent.FromAPIMessage(m.Parent)
 		o.ID = uuid.MustParse(m.Id)
+	} else if m.Parent != nil {
+		o.Parent = &Base{}
+		o.Parent.FromAPIMessage(m.Parent)
+		o.ID = uuid.MustParse(m.Id)
 	}
 
 	o.RawPos.X = m.RawPos.X
@@ -353,11 +357,13 @@ func (o *Base) GetScaledPosY() float64 {
 
 func (o *Base) GetScaledOffsetX() float64 {
 	return (o.RawOffset.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
+	// return (o.RawOffset.X) - o.Modified.Offset.X
 }
 
 func (o *Base) GetScaledOffsetY() float64 {
 	// fmt.Println(o.Parent.Modified.RuntimeDefined.ZoomedScale.Y)
 	return (o.RawOffset.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
+	// return (o.RawOffset.Y) - o.Modified.Offset.Y
 }
 
 func (o *Base) SetTranslationXMovementBlocked(s bool) {
