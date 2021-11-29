@@ -1,12 +1,9 @@
 package middlewares
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 )
 
@@ -37,7 +34,6 @@ func (u *UI) UseAfter(c func()) {
 		u.blocked = true
 		u.cleanTimings()
 
-		fmt.Println("AFTER CLEANING TIMINGS")
 		c()
 
 		u.cleanBuffers()

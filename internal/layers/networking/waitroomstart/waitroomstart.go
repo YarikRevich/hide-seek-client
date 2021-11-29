@@ -2,6 +2,7 @@ package waitroomstart
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
@@ -42,10 +43,11 @@ func Exec() {
 
 	latency.UseLatency().Timings().ExecEach(func() {
 		w := world.UseWorld()
-		dialer := networking.UseNetworking().Dialer()
-		dialer.Lock()
-		conn := dialer.Conn()
+		conn := networking.UseNetworking().Dialer().Conn()
+		// dialer.Lock()
+		// conn := dialer
 
+		fmt.Println("GAME STARTED BEFORE", w.GetGameSettings().IsGameStarted)
 		r, err := conn.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
 		if !r.GetOk() || err != nil {
 			notifications.PopUp.WriteError(err.Error())
@@ -68,6 +70,8 @@ func Exec() {
 
 		w.Update(worldObjects)
 
-		dialer.Unlock()
+		fmt.Println("GAME STARTED AFTER", w.GetGameSettings().IsGameStarted)
+
+		// dialer.Unlock()
 	}, statemachine.UI_WAIT_ROOM_START, time.Second)
 }

@@ -28,8 +28,9 @@ type Timings struct {
 func (t *Timings) CleanEachTimings(s int) {
 	for k, v := range t.timingsEach {
 		if k.state == s {
-			v.close <- 1
-			delete(t.timingsEach, k)
+			go func() {
+				v.close <- 1
+			}()
 		}
 	}
 }
@@ -58,7 +59,7 @@ func (t *Timings) ExecEach(c func(), s int, d time.Duration) {
 		}{
 			ticker:   time.NewTicker(d),
 			callback: c,
-			close:    make(chan int, 1),
+			close:    make(chan int),
 		}
 	}
 }
@@ -66,20 +67,18 @@ func (t *Timings) ExecEach(c func(), s int, d time.Duration) {
 func (t *Timings) start() {
 	go func() {
 		for {
+
 			for range t.loopDelay.C {
+				fmt.Println(len(t.timingsEach), "TIMINGS")
 				for i, v := range t.timingsEach {
 					fmt.Println(i.state)
 					select {
 					case <-v.close:
-						fmt.Println("BEFORE CALL BACK CLOSE")
+						delete(t.timingsEach, i)
 						v.callback()
-						fmt.Println("AFTER CALL BACK CLOSE")
-						// continue
 					case <-v.ticker.C:
 						v.callback()
 						continue
-
-					case <-t.loopDelay.C:
 					}
 				}
 				for k, v := range t.timingsFor {

@@ -17,7 +17,8 @@ import (
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
 	c := world.UseWorld().GetCamera()
-	p := world.UseWorld().GetPC()
+	// p := world.UseWorld().GetPC()
+	fmt.Println(world.UseWorld().GetGameSettings().IsGameStarted)
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
@@ -33,7 +34,6 @@ func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		if statemachine.UseStateMachine().PC().GetState() == statemachine.PC_DEAD {
 			latency.UseLatency().Timings().ExecFor(func() {
-				fmt.Println("YOU ARE DEAD")
 			}, func() {
 				statemachine.UseStateMachine().PC().SetState(statemachine.PC_ALIVE)
 			}, statemachine.UI_GAME, time.Second)
@@ -55,25 +55,25 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 
-		pcs := world.UseWorld().GetPCs()
+		// pcs := world.UseWorld().GetPCs()
 
-		for _, pc := range pcs {
-			img := pc.GetAnimatedImage()
+		// for _, pc := range pcs {
+		// 	img := pc.GetAnimatedImage()
 
-			opts := &ebiten.DrawImageOptions{}
+		// 	opts := &ebiten.DrawImageOptions{}
 
-			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
-			opts.GeoM.Scale(pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X,
-				pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
+		// 	opts.GeoM.Scale(pc.GetMovementRotation(), 1)
+		// 	opts.GeoM.Scale(pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X,
+		// 		pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
-			if pc.IsEqualTo(p.Base) {
-				opts.GeoM.Translate(pc.GetScaledOffsetX()-c.AlignOffset.X, pc.GetScaledOffsetY()-c.AlignOffset.Y)
-			} else {
-				opts.GeoM.Translate(pc.GetScaledPosX(), pc.GetScaledPosY())
-			}
+		// 	if pc.IsEqualTo(p.Base) {
+		// 		opts.GeoM.Translate(pc.GetScaledOffsetX()-c.AlignOffset.X, pc.GetScaledOffsetY()-c.AlignOffset.Y)
+		// 	} else {
+		// 		opts.GeoM.Translate(pc.GetScaledPosX(), pc.GetScaledPosY())
+		// 	}
 
-			screen.DrawImage(img, opts)
-		}
+		// 	screen.DrawImage(img, opts)
+		// }
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {

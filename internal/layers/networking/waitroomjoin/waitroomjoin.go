@@ -2,6 +2,7 @@ package waitroomjoin
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
@@ -38,6 +39,8 @@ func Exec() {
 			logrus.Fatal(err)
 		}
 
+		fmt.Println(worldObjects.World)
+
 		w.Update(worldObjects)
 
 		if !w.GetGameSettings().IsWorldExist {
@@ -46,7 +49,6 @@ func Exec() {
 			})
 			notifications.PopUp.WriteError("The room was closed by the creator")
 		}
-
 		if w.GetGameSettings().IsGameStarted {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)

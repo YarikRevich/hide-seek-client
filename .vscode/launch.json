@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
-            "args": ["--without-sound", "--debug"],
+            "args": ["--without-sound", "--debug", "--disable-config-autosave"],
         },
     {
         "name": "Attach to Process",
