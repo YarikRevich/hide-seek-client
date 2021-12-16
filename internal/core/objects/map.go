@@ -176,6 +176,10 @@ func (w *Map) FromAPIMessage(m *api.Map) {
 	w.Base.FromAPIMessage(m.Base)
 }
 
+func (m *Map) DebugInit() {
+	m.Base.SetSkin("maps/helloween/background/background")
+}
+
 // func (w *World) GetScaleForSkin() (float64, float64) {
 // 	m := w.GetMetadata().Modified
 // 	sx, sy := w.GetMapScale()

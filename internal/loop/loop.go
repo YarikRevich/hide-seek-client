@@ -25,6 +25,7 @@ type Loop struct{}
 var _ ebiten.Game = (*Loop)(nil)
 
 func (g *Loop) Update() error {
+
 	screen.UseScreen().CleanScreen()
 	render.UseRender().CleanRenderPool()
 
@@ -33,7 +34,10 @@ func (g *Loop) Update() error {
 	animation.Process()
 
 	ui.Process()
-	debugui.UseDebugImGUI().Update()
+
+	if params.IsDebug() {
+		debugui.UseDebugImGUI().Update()
+	}
 
 	transition.UseTransitionPool().Process()
 
@@ -60,7 +64,9 @@ func (g *Loop) Draw(i *ebiten.Image) {
 
 	screen.UseScreen().SetLastSize()
 
-	debugui.UseDebugImGUI().Render(i)
+	if params.IsDebug() {
+		debugui.UseDebugImGUI().Render(i)
+	}
 }
 
 func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {

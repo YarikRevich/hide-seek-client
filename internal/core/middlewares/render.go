@@ -5,9 +5,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/YarikRevich/HideSeek-Client/internal/core/audiocontroller"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/tools/params"
 
 	isconnect "github.com/alimasyhur/is-connect"
 )
@@ -59,6 +61,11 @@ func (r *Render) UseAfter(c func()) {
 	default:
 	}
 
+	//Handles sound disabling, because in debug
+	//mode sound can be disabled after music play start
+	if params.IsWithoutSound() {
+		audiocontroller.UseAudioController().Stop()
+	}
 	r.cleanPopUp()
 }
 

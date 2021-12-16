@@ -1,6 +1,8 @@
 package params
 
-import "flag"
+import (
+	"flag"
+)
 
 var (
 	debug                 = flag.Bool("debug", false, "Enables debug mode")
@@ -14,6 +16,10 @@ func IsDebug() bool {
 
 func IsWithoutSound() bool {
 	return *withoutSound
+}
+
+func SetWithoutSoundManually(s bool) {
+	*withoutSound = s
 }
 
 func IsDisableConfigAutoSave() bool {

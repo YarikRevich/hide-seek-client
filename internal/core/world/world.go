@@ -198,6 +198,12 @@ func (w *World) String() string {
 	return r
 }
 
+//Inits basic world for debug purpose
+func (w *World) DebugInit() {
+	w.pc.DebugInit()
+	w.worldMap.DebugInit()
+}
+
 func UseWorld() *World {
 	if instance == nil {
 		instance = &World{

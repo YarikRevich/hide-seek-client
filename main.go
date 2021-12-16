@@ -74,5 +74,6 @@ func main() {
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(s.GetMinWidth(), s.GetMinHeight(), -1, -1)
+
 	log.Fatalln(ebiten.RunGame(loop.New()))
 }

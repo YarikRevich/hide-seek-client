@@ -261,7 +261,6 @@ func (o *Base) SetSkin(path string) {
 	o.Name = file
 
 	o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Path)
-	// fmt.Println(o.ModelCombination.Modified.Animation, "KAKA")
 }
 
 //Returns images for the skin selected

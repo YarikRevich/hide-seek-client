@@ -61,7 +61,9 @@ func (s *Screen) GetAxisY() float64 {
 }
 
 func (s *Screen) SetScreen(i *ebiten.Image) {
+
 	s.screen = i
+
 }
 
 func (s *Screen) CleanScreen() {
