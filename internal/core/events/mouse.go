@@ -33,6 +33,17 @@ func (p *Mouse) IsAnyMouseButtonsPressed() bool {
 	return false
 }
 
+func (p *Mouse) IsAnyMovementButtonPressed() bool {
+	return ebiten.IsKeyPressed(ebiten.KeyW) ||
+		ebiten.IsKeyPressed(ebiten.KeyS) ||
+		ebiten.IsKeyPressed(ebiten.KeyA) ||
+		ebiten.IsKeyPressed(ebiten.KeyD) ||
+		ebiten.IsKeyPressed(ebiten.KeyArrowUp) ||
+		ebiten.IsKeyPressed(ebiten.KeyArrowDown) ||
+		ebiten.IsKeyPressed(ebiten.KeyArrowLeft) ||
+		ebiten.IsKeyPressed(ebiten.KeyArrowRight)
+}
+
 type MouseWheel struct {
 	IsMoved bool
 

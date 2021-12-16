@@ -1,0 +1,13 @@
+package shaders
+
+var Projection mat4
+var Offset vec2
+var Color vec4
+
+func Vertex(position vec4)(vec4, vec2, vec4){
+    return Projection * vec4((position.xy * 10.0) + Offset, 0.0, 1.0), position.zw, Color;
+}
+
+func Fragment(position vec4, texCoord vec2, color vec4)vec4{
+    return imageSrc0UnsafeAt(texCoord) * color;
+}

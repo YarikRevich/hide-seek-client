@@ -28,3 +28,10 @@ Feature:
 Plan:
 	Set camera available to work with multiple users
 ---
+
+---
+[30.11.2021]
+Feature:
+	Added basics of shader using in the project
+---
+

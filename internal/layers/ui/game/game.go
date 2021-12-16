@@ -31,6 +31,15 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
+	render.UseRender().SetToRender(func(i *ebiten.Image) {
+		img := sources.UseSources().Images().GetImage("maps/helloween/elements/torch")
+
+		opts := &ebiten.DrawImageOptions{}
+
+		opts.GeoM.Translate(100, 100)
+		i.DrawImage(img, opts)
+	})
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		if statemachine.UseStateMachine().PC().GetState() == statemachine.PC_DEAD {
 			latency.UseLatency().Timings().ExecFor(func() {

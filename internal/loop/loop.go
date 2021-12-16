@@ -15,6 +15,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui"
 
+	"github.com/YarikRevich/HideSeek-Client/tools/debugui"
 	"github.com/YarikRevich/HideSeek-Client/tools/params"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -32,6 +33,7 @@ func (g *Loop) Update() error {
 	animation.Process()
 
 	ui.Process()
+	debugui.UseDebugImGUI().Update()
 
 	transition.UseTransitionPool().Process()
 
@@ -57,6 +59,8 @@ func (g *Loop) Draw(i *ebiten.Image) {
 	middlewares.UseMiddlewares().Render().UseAfter(render.UseRender().Render)
 
 	screen.UseScreen().SetLastSize()
+
+	debugui.UseDebugImGUI().Render(i)
 }
 
 func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
