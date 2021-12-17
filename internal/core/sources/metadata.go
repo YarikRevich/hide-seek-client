@@ -112,6 +112,11 @@ type Model struct {
 	Camera struct {
 		MaxZoom, MinZoom, InitZoom float64
 	}
+
+	Effects struct {
+		TraceColorBegin [4]float32
+		TraceColorEnd   [4]float32
+	}
 }
 
 type ModelCombination struct {

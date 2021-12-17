@@ -7,6 +7,7 @@ type provider struct {
 	gamepad  *Gamepad
 	keyboard *KeyBoard
 	input    *Input
+	window   *Window
 }
 
 type EventsProvider interface {
@@ -14,6 +15,7 @@ type EventsProvider interface {
 	Gamepad() *Gamepad
 	Keyboard() *KeyBoard
 	Input() *Input
+	Window() *Window
 }
 
 func (p *provider) Mouse() *Mouse {
@@ -32,6 +34,10 @@ func (p *provider) Input() *Input {
 	return p.input
 }
 
+func (p *provider) Window() *Window {
+	return p.window
+}
+
 func UseEvents() EventsProvider {
 	if instance == nil {
 		instance = &provider{
@@ -39,6 +45,7 @@ func UseEvents() EventsProvider {
 			gamepad:  NewGamepad(),
 			keyboard: NewKeyBoard(),
 			input:    NewInput(),
+			window:   NewWindow(),
 		}
 	}
 	return instance

@@ -4,7 +4,6 @@ import (
 	"math"
 	"time"
 
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/faiface/beep/speaker"
@@ -19,7 +18,7 @@ type AudioController struct {
 }
 
 func (a *AudioController) Wrap(path string) {
-	if a.lastTrackPath != ""{
+	if a.lastTrackPath != "" {
 		a.Stop()
 	}
 	a.track = sources.UseSources().Audio().GetAudioController(path)
@@ -59,31 +58,34 @@ func (a *AudioController) Start() {
 			a.track.Ctrl.Paused = true
 
 			// middlewares.UseMiddlewares().Audio().UseAfter(func() {
-				statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
+			statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
 			// })
 		}()
 	}()
 }
 
+//Stops playing of current track(if track is set)
 func (a *AudioController) Stop() {
-	go func() {
-		tick := time.NewTicker(time.Microsecond * 500)
-		
-		for math.Abs(math.Ceil(a.track.Volume.Volume*100)/100) != 0 {
-			select {
-			case <-tick.C:
-				speaker.Lock()
-				a.track.Volume.Volume -= 0.001
-				speaker.Unlock()
-			default:
+	if a.track != nil {
+		go func() {
+			tick := time.NewTicker(time.Microsecond * 500)
+
+			for math.Abs(math.Ceil(a.track.Volume.Volume*100)/100) != 0 {
+				select {
+				case <-tick.C:
+					speaker.Lock()
+					a.track.Volume.Volume -= 0.001
+					speaker.Unlock()
+				default:
+				}
 			}
-		}
-		tick.Stop()
-		
-		speaker.Lock()
-		a.track.Ctrl.Paused = !a.track.Ctrl.Paused
-		speaker.Unlock()
-	}()
+			tick.Stop()
+
+			speaker.Lock()
+			a.track.Ctrl.Paused = !a.track.Ctrl.Paused
+			speaker.Unlock()
+		}()
+	}
 }
 
 func UseAudioController() *AudioController {

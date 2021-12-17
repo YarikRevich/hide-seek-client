@@ -47,7 +47,6 @@ type IProfiler interface {
 	Init()
 	StartMonitoring(handler)
 	EndMonitoring()
-	// SumUpMonitoring()
 	String() string
 }
 
@@ -69,7 +68,7 @@ func (p *profiler) Init() {
 		{handler: MOUSE},
 		{handler: KEYBOARD},
 		{handler: AUDIO},
-		{handler: RENDER},	
+		{handler: RENDER},
 	}
 }
 
@@ -85,7 +84,7 @@ func (p *profiler) getMonitoring(name handler) (*monitoring, error) {
 func (p *profiler) StartMonitoring(name handler) {
 	p.monitoringQueue.PushBack(name)
 	m, err := p.getMonitoring(name)
-	if err != nil{
+	if err != nil {
 		logrus.Fatal(err)
 	}
 	m.currentTime = time.Now()
@@ -94,7 +93,7 @@ func (p *profiler) StartMonitoring(name handler) {
 func (p *profiler) EndMonitoring() {
 	b := p.monitoringQueue.Back()
 	m, err := p.getMonitoring(b.Value.(handler))
-	if err != nil{
+	if err != nil {
 		logrus.Fatal(err)
 	}
 	p.monitoringQueue.Remove(b)

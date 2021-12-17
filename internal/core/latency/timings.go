@@ -69,7 +69,7 @@ func (t *Timings) start() {
 		for {
 
 			for range t.loopDelay.C {
-				fmt.Println(len(t.timingsEach), "TIMINGS")
+				// fmt.Println(len(t.timingsEach), "TIMINGS")
 				for i, v := range t.timingsEach {
 					fmt.Println(i.state)
 					select {

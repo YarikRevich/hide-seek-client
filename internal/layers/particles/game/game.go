@@ -1,51 +1,65 @@
 package game
 
 import (
-	"image"
+	"fmt"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/particlespool"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/primitives"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/HideSeek-Client/tools/color"
 	"github.com/engoengine/glm"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
 	render.UseRender().SetToRender(func(i *ebiten.Image) {
+		cam := world.UseWorld().GetCamera()
+		pc := world.UseWorld().GetPC()
+
 		pool := particlespool.Use()
 		if events.UseEvents().Mouse().IsAnyMovementButtonPressed() {
-
 			particle := particlespool.Props{
-				SizeBegin:         glm.Quat{V: glm.Vec3{0.5}},
-				SizeVariation:     glm.Quat{V: glm.Vec3{0.3}},
-				SizeEnd:           glm.Quat{V: glm.Vec3{0.0}},
-				LifeTime:          1.0,
-				Velocity:          [2]float64{0.0, 0.0},
-				VelocityVariation: [2]float64{3.0, 1.0},
-				Position:          [2]float64{50.0, 50.0},
-				ColorBegin:        glm.Quat{W: 0, V: glm.Vec3{255, 255, 243}},
-				ColorEnd:          glm.Quat{W: 0, V: glm.Vec3{255, 234, 243}},
+				SizeBegin:         glm.Quat{V: glm.Vec3{0.3}},
+				SizeVariation:     glm.Quat{V: glm.Vec3{0.1}},
+				SizeEnd:           glm.Quat{V: glm.Vec3{0.2}},
+				LifeTime:          2.0,
+				Velocity:          [2]float64{0.01, 0.01},
+				VelocityVariation: [2]float64{2.0, 0.5},
+				Position:          [2]float64{0.0, 30.0},
+				ColorBegin:        color.CreateColorFromArray(pc.ModelCombination.Modified.Effects.TraceColorBegin),
+				ColorEnd:          color.CreateColorFromArray(pc.ModelCombination.Modified.Effects.TraceColorEnd),
 			}
 
 			pool.Fill(particle)
 		}
 
-		pool.ForEachParticle(func(p *particlespool.Particle) {
-			particleImage := i.SubImage(image.Rect(0, 10, 10, 10)).(*ebiten.Image)
+		pool.Update(0.2)
 
+		pool.ForEachParticle(func(p *particlespool.Particle) {
+			img := primitives.CreateSquare(20)
 			opts := &ebiten.DrawImageOptions{}
-			opts.GeoM.Translate(p.Position[0], p.Position[1])
-			opts.GeoM.Rotate(p.Rotation)
 
 			life := float32(p.LifeRemaining / p.LifeTime)
-
-			color := glm.QuatLerp(&p.ColorEnd, &p.ColorBegin, life)
-			opts.ColorM.Translate(float64(color.X()), float64(color.Y()), float64(color.Z()), float64(color.W))
-
 			scale := glm.QuatLerp(&p.SizeEnd, &p.SizeBegin, life)
 			opts.GeoM.Scale(float64(scale.X()), float64(scale.X()))
 
-			i.DrawImage(particleImage, opts)
+			if pc.IsDirectionLEFT() {
+				opts.GeoM.Rotate(p.Rotation)
+				opts.GeoM.Translate((p.Position[0])+(pc.GetScaledOffsetX()-cam.AlignOffset.X), (p.Position[1])+(pc.GetScaledOffsetY()-cam.AlignOffset.Y))
+
+			} else if pc.IsDirectionRIGHT() {
+				opts.GeoM.Rotate(-p.Rotation)
+				opts.GeoM.Translate(((pc.GetScaledOffsetX() - cam.AlignOffset.X) - (p.Position[0])), (p.Position[1])+(pc.GetScaledOffsetY()-cam.AlignOffset.Y))
+
+			}
+
+			colorVariantion := glm.QuatLerp(&p.ColorEnd, &p.ColorBegin, life)
+			fmt.Println(color.CreateRGBAFromQuatColor(colorVariantion))
+			img.Fill(color.CreateRGBAFromQuatColor(colorVariantion))
+
+			i.DrawImage(img, opts)
 		})
 	})
 }

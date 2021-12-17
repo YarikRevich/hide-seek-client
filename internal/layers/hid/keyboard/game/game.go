@@ -3,8 +3,6 @@ package game
 import (
 	// "fmt"
 
-	"fmt"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/physics"
@@ -124,7 +122,7 @@ func Exec() {
 		//1.81
 
 		// fmt.Println(cY+screenOffsetY*2, worldMap.ModelCombination.Modified.Size.Height/worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y, 1.81, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
-		fmt.Println(cY+screenOffsetY*2, worldMap.ModelCombination.Modified.Size.Height/1.81)
+		// fmt.Println(cY+screenOffsetY*2, worldMap.ModelCombination.Modified.Size.Height/1.81)
 		if p.TranslationMovementYBlocked {
 			if cY <= -hudOffsetHeight && p.IsDirectionUP() {
 				p.SetTranslationYMovementBlocked(false)

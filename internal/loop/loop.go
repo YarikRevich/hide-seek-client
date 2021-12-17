@@ -13,6 +13,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking"
+	"github.com/YarikRevich/HideSeek-Client/internal/layers/particles"
 	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui"
 
 	"github.com/YarikRevich/HideSeek-Client/tools/debugui"
@@ -34,6 +35,7 @@ func (g *Loop) Update() error {
 	animation.Process()
 
 	ui.Process()
+	particles.Process()
 
 	if params.IsDebug() {
 		debugui.UseDebugImGUI().Update()
