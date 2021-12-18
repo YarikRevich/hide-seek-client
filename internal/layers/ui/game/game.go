@@ -1,58 +1,65 @@
 package game
 
 import (
+	"image/color"
+	"time"
+
+	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func Draw() {
-	// worldMap := world.UseWorld().GetWorldMap()
+	worldMap := world.UseWorld().GetWorldMap()
 	c := world.UseWorld().GetCamera()
 	p := world.UseWorld().GetPC()
 	// fmt.Println(world.UseWorld().GetGameSettings().IsGameStarted)
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	img := worldMap.GetImage()
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := worldMap.GetImage()
 
-	// 	opts := &ebiten.DrawImageOptions{}
-	// 	opts.GeoM.Scale(worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Scale(worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
-	// 	opts.GeoM.Translate(-(c.GetScaledPosX() + c.AlignOffset.X), -(c.GetScaledPosY() + c.AlignOffset.Y))
+		opts.GeoM.Translate(-(c.GetScaledPosX() + c.AlignOffset.X), -(c.GetScaledPosY() + c.AlignOffset.Y))
 
-	// 	screen.DrawImage(img, opts)
-	// })
+		screen.DrawImage(img, opts)
+	})
 
-	// render.UseRender().SetToRender(func(i *ebiten.Image) {
-	// 	img := sources.UseSources().Images().GetImage("maps/helloween/elements/torch")
+	render.UseRender().SetToRender(func(i *ebiten.Image) {
+		img := sources.UseSources().Images().GetImage("maps/helloween/elements/torch")
 
-	// 	opts := &ebiten.DrawImageOptions{}
+		opts := &ebiten.DrawImageOptions{}
 
-	// 	opts.GeoM.Translate(100, 100)
-	// 	i.DrawImage(img, opts)
-	// })
+		opts.GeoM.Translate(100, 100)
+		i.DrawImage(img, opts)
+	})
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	if statemachine.UseStateMachine().PC().GetState() == statemachine.PC_DEAD {
-	// 		latency.UseLatency().Timings().ExecFor(func() {
-	// 		}, func() {
-	// 			statemachine.UseStateMachine().PC().SetState(statemachine.PC_ALIVE)
-	// 		}, statemachine.UI_GAME, time.Second)
-	// 	}
-	// })
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		if statemachine.UseStateMachine().PC().GetState() == statemachine.PC_DEAD {
+			latency.UseLatency().Timings().ExecFor(func() {
+			}, func() {
+				statemachine.UseStateMachine().PC().SetState(statemachine.PC_ALIVE)
+			}, statemachine.UI_GAME, time.Second)
+		}
+	})
 
-	// render.UseRender().SetToRender(func(i *ebiten.Image) {
-	// 	s := screen.UseScreen()
-	// 	screenWidth := s.GetWidth()
-	// 	hudHeight := s.GetHUDOffset()
-	// 	img := ebiten.NewImage(int(screenWidth), int(hudHeight))
+	render.UseRender().SetToRender(func(i *ebiten.Image) {
+		s := screen.UseScreen()
+		screenWidth := s.GetWidth()
+		hudHeight := s.GetHUDOffset()
+		img := ebiten.NewImage(int(screenWidth), int(hudHeight))
 
-	// 	opts := &ebiten.DrawImageOptions{}
+		opts := &ebiten.DrawImageOptions{}
 
-	// 	img.Fill(color.Black)
+		img.Fill(color.Black)
 
-	// 	i.DrawImage(img, opts)
-	// })
+		i.DrawImage(img, opts)
+	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 
@@ -100,20 +107,20 @@ func Draw() {
 
 	// 	i.DrawImage(img, opts)
 	// })
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
-	// 	img := sources.UseSources().Images().GetCopyOfImage("hud/health/health")
-	// 	mm := sources.UseSources().Metadata().GetMetadata("hud/health/health").Modified
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		img := sources.UseSources().Images().GetCopyOfImage("hud/health/health")
+		mm := sources.UseSources().Metadata().GetMetadata("hud/health/health").Modified
 
-	// 	p := world.UseWorld().GetPC()
-	// 	for i := 0; i < int(p.Health); i++ {
-	// 		opts := &ebiten.DrawImageOptions{}
+		p := world.UseWorld().GetPC()
+		for i := 0; i < int(p.Health); i++ {
+			opts := &ebiten.DrawImageOptions{}
 
-	// 		opts.GeoM.Translate(mm.Margins.LeftMargin+(mm.Size.Width+(10/mm.Scale.X))*float64(i), mm.Margins.TopMargin)
-	// 		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
+			opts.GeoM.Translate(mm.Margins.LeftMargin+(mm.Size.Width+(10/mm.Scale.X))*float64(i), mm.Margins.TopMargin)
+			opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
 
-	// 		screen.DrawImage(img, opts)
-	// 	}
-	// })
+			screen.DrawImage(img, opts)
+		}
+	})
 
 	// // render.UseRender().SetToRender(func(screen *ebiten.Image) {
 	// // 	weapons := world.UseWorld().GetWeapons()

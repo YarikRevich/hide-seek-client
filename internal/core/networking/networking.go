@@ -1,25 +1,30 @@
 package networking
 
+import (
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/dialer"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/services"
+)
+
 var instance *Networking
 
 type Networking struct {
-	lanserver *LANServer
-	dialer *Dialer
+	dialer   *dialer.Dialer
+	services *services.Services
 }
 
-func (n *Networking) LANServer() *LANServer{
-	return n.lanserver
-}
-
-func (n *Networking) Dialer() *Dialer{
+func (n *Networking) Dialer() *dialer.Dialer {
 	return n.dialer
 }
 
-func UseNetworking() *Networking{
-	if instance == nil{
+func (n *Networking) Services() *services.Services {
+	return n.services
+}
+
+func UseNetworking() *Networking {
+	if instance == nil {
 		instance = &Networking{
-			lanserver: NewLANServer(),
-			dialer: NewDialer(),
+			dialer:   dialer.NewDialer(),
+			services: services.UseServices(),
 		}
 	}
 	return instance

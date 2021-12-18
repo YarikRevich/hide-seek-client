@@ -6,6 +6,7 @@ import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/gamesettings"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statistics"
 	"github.com/google/uuid"
 )
 
@@ -23,6 +24,8 @@ type World struct {
 	elements []*objects.Element
 	weapons  []*objects.Weapon
 	ammos    []*objects.Ammo
+
+	statistics *statistics.Statistics
 }
 
 func (w *World) AddPCs(pc *objects.PC) {
@@ -153,6 +156,10 @@ func (w *World) GetAmmos() []*objects.Ammo {
 	return w.ammos
 }
 
+func (w *World) GetStatistics() *statistics.Statistics {
+	return w.statistics
+}
+
 func (w *World) ToAPIMessage() *api.World {
 	return &api.World{
 		Id:           w.ID.String(),
@@ -216,6 +223,7 @@ func UseWorld() *World {
 		instance.worldMap.Parent = &objects.Base{ID: instance.ID}
 		instance.pc.Parent = &instance.worldMap.Base
 		instance.camera.Parent = &instance.worldMap.Base
+
 		instance.AddPCs(instance.pc)
 
 		instance.gamesettings.SetWorldExist(true)

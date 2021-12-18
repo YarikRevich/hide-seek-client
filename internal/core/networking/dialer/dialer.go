@@ -1,25 +1,20 @@
-package networking
+package dialer
 
 import (
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
-
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
-	// "github.com/YarikRevich/game-networking/pkg/client"
 	"github.com/YarikRevich/game-networking/pkg/config"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
-	_ "google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/encoding/gzip"
 )
 
 type Dialer struct {
-	locked          bool
-	conn            api.ExternalServiceClient
-	service         *grpc.ClientConn
+	// locked          bool
+	conn            *grpc.ClientConn
 	reconnectTicker *time.Ticker
 }
 
@@ -39,45 +34,36 @@ func (d *Dialer) Dial() {
 		grpc.WithBackoffConfig(grpc.BackoffConfig{MaxDelay: time.Second}),
 	}
 
-	service, err := grpc.Dial("127.0.0.1:8090", opts...)
+	conn, err := grpc.Dial("127.0.0.1:8090", opts...)
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
 	grpc.UseCompressor(gzip.Name)
-	// go time.AfterFunc(time.Second*1, func() {
-	// 	s := conn.GetState()
-	// 	if s == connectivity.TransientFailure ||
-	// 		s == connectivity.Idle || s == connectivity.Connecting {
-	// 			notifications.PopUp.WriteError("Servers are offline!")
-	// 			statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
-	// 	}
-	// })
 
-	d.service = service
-	d.conn = api.NewExternalServiceClient(service)
+	d.conn = conn
 }
 
-func (d *Dialer) Conn() api.ExternalServiceClient {
+func (d *Dialer) Conn() *grpc.ClientConn {
 	return d.conn
 }
 
-func (d *Dialer) Lock() {
-	d.locked = true
-}
+// func (d *Dialer) Lock() {
+// 	d.locked = true
+// }
 
-func (d *Dialer) Unlock() {
-	d.locked = false
-}
+// func (d *Dialer) Unlock() {
+// 	d.locked = false
+// }
 
-func (d *Dialer) WaitUntilDone() {
-	for d.locked {
-	}
-}
+// func (d *Dialer) WaitUntilDone() {
+// 	for d.locked {
+// 	}
+// }
 
 func (d *Dialer) IsConnected() bool {
 	if d.conn != nil {
-		s := d.service.GetState()
+		s := d.conn.GetState()
 		return !(s == connectivity.TransientFailure || s == connectivity.Idle)
 	}
 	return true
@@ -86,7 +72,7 @@ func (d *Dialer) IsConnected() bool {
 func (d *Dialer) Reconnect() {
 	select {
 	case <-d.reconnectTicker.C:
-		d.service.Connect()
+		d.conn.Connect()
 	default:
 	}
 }

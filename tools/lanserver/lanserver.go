@@ -1,4 +1,4 @@
-package networking
+package lanserver
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 )
+
+var instance *LANServer
 
 type LANServer struct {
 	process *os.Process
@@ -24,6 +26,9 @@ func (l *LANServer) Stop() {
 	fmt.Println(l.process.Kill())
 }
 
-func NewLANServer() *LANServer {
-	return new(LANServer)
+func UseLANServer() *LANServer {
+	if instance == nil {
+		instance = new(LANServer)
+	}
+	return instance
 }

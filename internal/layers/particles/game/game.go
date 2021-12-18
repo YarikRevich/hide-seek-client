@@ -49,10 +49,9 @@ func Draw() {
 				opts.GeoM.Rotate(p.Rotation)
 				opts.GeoM.Translate((p.Position[0])+(pc.GetScaledOffsetX()-cam.AlignOffset.X), (p.Position[1])+(pc.GetScaledOffsetY()-cam.AlignOffset.Y))
 
-			} else if pc.IsDirectionRIGHT() {
+			} else {
 				opts.GeoM.Rotate(-p.Rotation)
 				opts.GeoM.Translate(((pc.GetScaledOffsetX() - cam.AlignOffset.X) - (p.Position[0])), (p.Position[1])+(pc.GetScaledOffsetY()-cam.AlignOffset.Y))
-
 			}
 
 			colorVariantion := glm.QuatLerp(&p.ColorEnd, &p.ColorBegin, life)
