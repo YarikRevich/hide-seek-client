@@ -3,7 +3,7 @@ package objects
 import (
 	"image"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -166,13 +166,13 @@ func (w *Map) GetSpawns() []*image.Point {
 	return r
 }
 
-func (w *Map) ToAPIMessage() *api.Map {
-	return &api.Map{
+func (w *Map) ToAPIMessage() *server_external.Map {
+	return &server_external.Map{
 		Base: w.Base.ToAPIMessage(),
 	}
 }
 
-func (w *Map) FromAPIMessage(m *api.Map) {
+func (w *Map) FromAPIMessage(m *server_external.Map) {
 	w.Base.FromAPIMessage(m.Base)
 }
 

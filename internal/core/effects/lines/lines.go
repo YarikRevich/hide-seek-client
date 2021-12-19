@@ -72,10 +72,3 @@ func (lp *LinesPool) ForEach(c func(Line)) {
 func NewLinesPool(linesNum int) *LinesPool {
 	return &LinesPool{pool: make([]Line, linesNum)}
 }
-
-// s := screen.UseScreen()
-// fromx = tox
-// fromy = toy
-// tox = rand.Float64() * scale * s.GetWidth()
-// toy = rand.Float64() * scale * s.GetHeight()
-// brightness = rand.Float64() * 0xff

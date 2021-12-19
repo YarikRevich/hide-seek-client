@@ -7,7 +7,7 @@ import (
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
@@ -281,10 +281,10 @@ func (o *Base) GetAnimatedImage() *ebiten.Image {
 
 //API//
 
-func (o *Base) ToAPIMessage() *api.Base {
-	m := &api.Base{
-		Animation: &api.Animation{
-			PositionBeforeAnimation: &api.Position{
+func (o *Base) ToAPIMessage() *server_external.Base {
+	m := &server_external.Base{
+		Animation: &server_external.Animation{
+			PositionBeforeAnimation: &server_external.Position{
 				X: o.Animation.AnimationStartPosition.X,
 				Y: o.Animation.AnimationStartPosition.Y,
 			},
@@ -292,19 +292,19 @@ func (o *Base) ToAPIMessage() *api.Base {
 			FrameDelayCounter:  uint64(o.FrameDelayCounter),
 			CurrentFrameMatrix: o.CurrentFrameMatrix,
 		},
-		Skin: &api.Skin{
+		Skin: &server_external.Skin{
 			Name: o.Name,
 			Path: o.Path,
 		},
-		Physics: &api.Physics{
+		Physics: &server_external.Physics{
 			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
 		},
 		Id: o.ID.String(),
-		RawPos: &api.Position{
+		RawPos: &server_external.Position{
 			X: o.RawPos.X,
 			Y: o.RawPos.Y,
 		},
-		Spawn: &api.Position{
+		Spawn: &server_external.Position{
 			X: float64(o.Spawn.X),
 			Y: float64(o.Spawn.Y),
 		},
@@ -317,7 +317,7 @@ func (o *Base) ToAPIMessage() *api.Base {
 	return m
 }
 
-func (o *Base) FromAPIMessage(m *api.Base) {
+func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
 	o.Animation.FrameCount = m.Animation.FrameCount

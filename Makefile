@@ -69,5 +69,7 @@ install:
 
 gen_proto:
 	$(call clear)
-	@protoc -I internal/core/networking/api --go_out=. api.proto
-	@protoc -I internal/core/networking/api --go-grpc_out=. api.proto
+	@protoc -I api --go_out=. server_external.proto
+	@protoc -I api --go-grpc_out=. server_external.proto
+		@protoc -I api --go_out=. services_external.proto
+	@protoc -I api --go-grpc_out=. services_external.proto

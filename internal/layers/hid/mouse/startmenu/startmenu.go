@@ -38,6 +38,8 @@ func Exec() bool {
 			world.UseWorld().GetPC().LoadUsername()
 
 			networking.UseNetworking().Dialer().Dial()
+			networking.UseNetworking().Clients().Base().Connect(networking.UseNetworking().Dialer().Conn())
+			networking.UseNetworking().Clients().Services().Connect(networking.UseNetworking().Dialer().Conn())
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_JOIN_MENU)

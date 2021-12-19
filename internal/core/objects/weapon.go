@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -12,15 +12,15 @@ type Weapon struct {
 	Name, Radius string
 }
 
-func (w *Weapon) ToAPIMessage()*api.Weapon{
-	return &api.Weapon{
-		Base: w.Base.ToAPIMessage(),
-		Name: w.Name,
+func (w *Weapon) ToAPIMessage() *server_external.Weapon {
+	return &server_external.Weapon{
+		Base:   w.Base.ToAPIMessage(),
+		Name:   w.Name,
 		Radius: w.Radius,
 	}
 }
 
-func NewWeapon()*Weapon{
+func NewWeapon() *Weapon {
 	w := new(Weapon)
 	id, err := uuid.NewUUID()
 	if err != nil {

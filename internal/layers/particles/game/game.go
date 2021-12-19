@@ -1,10 +1,8 @@
 package game
 
 import (
-	"fmt"
-
+	"github.com/YarikRevich/HideSeek-Client/internal/core/effects/particles"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/particlespool"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/primitives"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
@@ -13,14 +11,15 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+var particlesPool = particles.UseParticlesPool(4)
+
 func Draw() {
 	render.UseRender().SetToRender(func(i *ebiten.Image) {
 		cam := world.UseWorld().GetCamera()
 		pc := world.UseWorld().GetPC()
 
-		pool := particlespool.Use()
 		if events.UseEvents().Mouse().IsAnyMovementButtonPressed() {
-			particle := particlespool.Props{
+			particle := particles.Props{
 				SizeBegin:         glm.Quat{V: glm.Vec3{0.3}},
 				SizeVariation:     glm.Quat{V: glm.Vec3{0.1}},
 				SizeEnd:           glm.Quat{V: glm.Vec3{0.2}},
@@ -32,12 +31,12 @@ func Draw() {
 				ColorEnd:          color.CreateColorFromArray(pc.ModelCombination.Modified.Effects.TraceColorEnd),
 			}
 
-			pool.Fill(particle)
+			particlesPool.Fill(particle)
 		}
 
-		pool.Update(0.2)
+		particlesPool.Update(0.2)
 
-		pool.ForEachParticle(func(p *particlespool.Particle) {
+		particlesPool.ForEachParticle(func(p *particles.Particle) {
 			img := primitives.CreateSquare(20)
 			opts := &ebiten.DrawImageOptions{}
 
@@ -55,7 +54,6 @@ func Draw() {
 			}
 
 			colorVariantion := glm.QuatLerp(&p.ColorEnd, &p.ColorBegin, life)
-			fmt.Println(color.CreateRGBAFromQuatColor(colorVariantion))
 			img.Fill(color.CreateRGBAFromQuatColor(colorVariantion))
 
 			i.DrawImage(img, opts)

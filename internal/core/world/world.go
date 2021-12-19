@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/gamesettings"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statistics"
 	"github.com/google/uuid"
@@ -37,7 +37,7 @@ func (w *World) DeletePCs() {
 	w.pcs = w.pcs[:0]
 }
 
-func (w *World) UpdatePCs(m []*api.PC) {
+func (w *World) UpdatePCs(m []*server_external.PC) {
 	w.DeletePCs()
 
 	for _, pc := range m {
@@ -61,7 +61,7 @@ func (w *World) DeleteElements() {
 	w.elements = w.elements[:0]
 }
 
-func (w *World) UpdateElements(m []*api.Element) {
+func (w *World) UpdateElements(m []*server_external.Element) {
 	w.DeleteElements()
 }
 
@@ -74,7 +74,7 @@ func (w *World) DeleteWeapons() {
 	w.weapons = w.weapons[:0]
 }
 
-func (w *World) UpdateWeapons(m []*api.Weapon) {
+func (w *World) UpdateWeapons(m []*server_external.Weapon) {
 	w.DeleteWeapons()
 }
 
@@ -87,11 +87,11 @@ func (w *World) DeleteAmmos() {
 	w.ammos = w.ammos[:0]
 }
 
-func (w *World) UpdateAmmos(m []*api.Ammo) {
+func (w *World) UpdateAmmos(m []*server_external.Ammo) {
 	w.DeleteAmmos()
 }
 
-func (w *World) Update(m *api.GetWorldResponse) {
+func (w *World) Update(m *server_external.GetWorldResponse) {
 	w.FromAPIMessage(m.World)
 	w.UpdatePCs(m.PCs)
 	w.UpdateElements(m.Elements)
@@ -160,14 +160,14 @@ func (w *World) GetStatistics() *statistics.Statistics {
 	return w.statistics
 }
 
-func (w *World) ToAPIMessage() *api.World {
-	return &api.World{
+func (w *World) ToAPIMessage() *server_external.World {
+	return &server_external.World{
 		Id:           w.ID.String(),
 		GameSettings: w.gamesettings.ToAPIMessage(),
 	}
 }
 
-func (w *World) FromAPIMessage(m *api.World) {
+func (w *World) FromAPIMessage(m *server_external.World) {
 	// w.gamesettings.Regime = m.GameSettings.Regime
 	// fmt.Println(m)
 	w.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted

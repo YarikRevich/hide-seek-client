@@ -1,4 +1,4 @@
-package particlespool
+package particles
 
 import (
 	"fmt"
@@ -9,8 +9,6 @@ import (
 )
 
 var instance *ParticlePool
-
-const POOL_CAPACITY = 4
 
 type Props struct {
 	Position, Velocity, VelocityVariation [2]float64
@@ -33,9 +31,7 @@ type Particle struct {
 }
 
 type ParticlePool struct {
-	pool  []*Particle
-	index int
-
+	pool           []*Particle
 	particleAmount int
 }
 
@@ -100,15 +96,11 @@ func (pm *ParticlePool) Update(coef float64) {
 	}
 }
 
-func (pm *ParticlePool) Clean() {
-	pm.pool = make([]*Particle, pm.particleAmount)
-}
-func Use() *ParticlePool {
+func UseParticlesPool(particlesNum int) *ParticlePool {
 	if instance == nil {
 		instance = &ParticlePool{
-			pool:           make([]*Particle, POOL_CAPACITY),
-			index:          POOL_CAPACITY - 1,
-			particleAmount: POOL_CAPACITY,
+			pool:           make([]*Particle, particlesNum),
+			particleAmount: particlesNum,
 		}
 	}
 	return instance

@@ -44,8 +44,6 @@ func Exec() {
 	latency.UseLatency().Timings().ExecEach(func() {
 		w := world.UseWorld()
 		conn := networking.UseNetworking().Dialer().Conn()
-		// dialer.Lock()
-		// conn := dialer
 
 		fmt.Println("GAME STARTED BEFORE", w.GetGameSettings().IsGameStarted)
 		r, err := conn.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
@@ -72,6 +70,5 @@ func Exec() {
 
 		fmt.Println("GAME STARTED AFTER", w.GetGameSettings().IsGameStarted)
 
-		// dialer.Unlock()
 	}, statemachine.UI_WAIT_ROOM_START, time.Second)
 }

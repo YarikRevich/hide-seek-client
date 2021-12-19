@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/google/uuid"
@@ -57,15 +57,15 @@ func (p *PC) GetMovementRotation() float64 {
 	return 1
 }
 
-func (p *PC) ToAPIMessage() *api.PC {
-	return &api.PC{
+func (p *PC) ToAPIMessage() *server_external.PC {
+	return &server_external.PC{
 		Base:     p.Base.ToAPIMessage(),
 		Username: p.Username,
 		Health:   p.Health,
 	}
 }
 
-func (p *PC) FromAPIMessage(m *api.PC) {
+func (p *PC) FromAPIMessage(m *server_external.PC) {
 	p.Base.FromAPIMessage(m.Base)
 	p.Username = m.Username
 	p.Health = m.Health

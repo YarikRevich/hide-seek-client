@@ -2,7 +2,7 @@ package gamesettings
 
 import (
 	"github.com/YarikRevich/HideSeek-Client/internal/core/gamesettings/regime"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 )
 
 type GameSettings struct {
@@ -26,8 +26,8 @@ func (gs *GameSettings) FromAPIMessage() {
 
 }
 
-func (gs *GameSettings) ToAPIMessage() *api.GameSettings {
-	return &api.GameSettings{
+func (gs *GameSettings) ToAPIMessage() *server_external.GameSettings {
+	return &server_external.GameSettings{
 		IsGameStarted: gs.IsGameStarted,
 		IsWorldExist:  gs.IsWorldExist,
 	}

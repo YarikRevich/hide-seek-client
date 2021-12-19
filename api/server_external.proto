@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/wrappers.proto";
 
-option go_package="internal/core/networking/api";
+option go_package="internal/core/networking/api/server_external";
 
 message World {
     string id = 1;
