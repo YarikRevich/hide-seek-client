@@ -119,7 +119,7 @@ service ExternalService {
     rpc UpdatePC(PC) returns (google.protobuf.BoolValue);
     rpc UpdateAmmo(Ammo) returns (google.protobuf.BoolValue);
 
-    rpc ChooseSpawns (ChooseSpawnsRequest) returns (google.protobuf.BoolValue);
+    rpc ChooseSpawns (ChooseSpawnsRequest) returns (google.protobuf.BoolValue) {};
 
     rpc DeleteWorld(google.protobuf.StringValue) returns (google.protobuf.BoolValue);
     rpc DeletePC (google.protobuf.StringValue) returns (google.protobuf.BoolValue);

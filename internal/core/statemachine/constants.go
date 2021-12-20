@@ -52,5 +52,7 @@ const (
 
 const (
 	PC_ALIVE = iota
-	PC_DEAD
+	PC_DEAD_LONG
+	PC_DEAD_NOW
+	PC_IN_FIGHT
 )

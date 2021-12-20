@@ -1,12 +1,24 @@
 package game
 
 import (
-	// "time"
+	"context"
+	"time"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/golang/protobuf/ptypes/wrappers"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
+
+// "time"
+
+// "github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
+// "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
 
 // "github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
 // "github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
@@ -17,10 +29,43 @@ import (
 // "github.com/sirupsen/logrus"
 
 func Exec() {
-	// latency.UseLatency().Timings().ExecEach(func() {
+	latency.UseLatency().Timings().ExecEach(func() {
+		// w := world.UseWorld()
+		// for _, pc := range w.GetPCs() {
+		// 	if statemachine.UseStateMachine().PCs().GetState(pc.ID) == statemachine.PC_DEAD_NOW {
+		// 		// base := networking.UseNetworking().Clients().Base().GetClient()
+		// 	}
+		// }
+
+		w := world.UseWorld()
+		client := networking.UseNetworking().Clients().Base().GetClient()
+
+		r, err := client.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
+		if !r.Value || err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			return
+		}
+
+		if !w.GetGameSettings().IsWorldExist {
+			r, err = client.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
+			if !r.Value || err != nil {
+				notifications.PopUp.WriteError(err.Error())
+				return
+			}
+		}
+
+		worldObjects, err := client.GetWorld(
+			context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
+		if err != nil {
+			logrus.Fatal(err)
+		}
+
+		w.Update(worldObjects)
+
+	}, statemachine.UI_GAME, time.Second)
 	// 	w := objects.UseObjects().World()
 	// 	p := objects.UseObjects().PC()
-	// 	networking.UseNetworking().Dialer().Conn().Call("update_game", w, p.ID)
+	// 	networking.UseNetworking().Dialer().client().Call("update_game", w, p.ID)
 	// }, time.Millisecond * 300)
 	// if !g.currState.NetworkingStates.GameProcess {
 	// 	g.currState.NetworkingStates.GameProcess = true

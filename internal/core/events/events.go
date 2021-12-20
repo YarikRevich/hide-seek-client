@@ -3,11 +3,12 @@ package events
 var instance EventsProvider
 
 type provider struct {
-	mouse    *Mouse
-	gamepad  *Gamepad
-	keyboard *KeyBoard
-	input    *Input
-	window   *Window
+	mouse      *Mouse
+	gamepad    *Gamepad
+	keyboard   *KeyBoard
+	input      *Input
+	window     *Window
+	collisions *Collisions
 }
 
 type EventsProvider interface {
@@ -16,6 +17,7 @@ type EventsProvider interface {
 	Keyboard() *KeyBoard
 	Input() *Input
 	Window() *Window
+	Collisions() *Collisions
 }
 
 func (p *provider) Mouse() *Mouse {
@@ -38,14 +40,19 @@ func (p *provider) Window() *Window {
 	return p.window
 }
 
+func (p *provider) Collisions() *Collisions {
+	return p.collisions
+}
+
 func UseEvents() EventsProvider {
 	if instance == nil {
 		instance = &provider{
-			mouse:    NewMouse(),
-			gamepad:  NewGamepad(),
-			keyboard: NewKeyBoard(),
-			input:    NewInput(),
-			window:   NewWindow(),
+			mouse:      NewMouse(),
+			gamepad:    NewGamepad(),
+			keyboard:   NewKeyBoard(),
+			input:      NewInput(),
+			window:     NewWindow(),
+			collisions: NewCollisions(),
 		}
 	}
 	return instance

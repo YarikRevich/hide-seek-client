@@ -211,6 +211,34 @@ func (w *World) DebugInit() {
 	w.worldMap.DebugInit()
 }
 
+//Checks if x and y pos collide with objects in the world
+func (w *World) IsCollision(x, y float64) (bool, int) {
+	for _, v := range w.pcs {
+		if v.RawPos.X == x && v.RawPos.Y == y {
+			return true, objects.PLAYER
+		}
+	}
+
+	for _, v := range w.weapons {
+		if v.RawPos.X == x && v.RawPos.Y == y {
+			return true, objects.WEAPON
+		}
+	}
+
+	for _, v := range w.ammos {
+		if v.RawPos.X == x && v.RawPos.Y == y {
+			return true, objects.AMMO
+		}
+	}
+
+	for _, v := range w.elements {
+		if v.RawPos.X == x && v.RawPos.Y == y {
+			return true, objects.ELEMENT
+		}
+	}
+	return false, 0
+}
+
 func UseWorld() *World {
 	if instance == nil {
 		instance = &World{

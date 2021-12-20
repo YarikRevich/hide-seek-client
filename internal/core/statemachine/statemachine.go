@@ -3,70 +3,70 @@ package statemachine
 var instance IStateMachine
 
 type StateMachine struct {
-	audio                  IState
-	ui                     IState
-	input                  IState
-	networking             IState
-	dial                   IState
-	settings_menu_checkbox IState
-	game                   IState
-	pc                     IState
+	audio                  ISingleState
+	ui                     ISingleState
+	input                  ISingleState
+	networking             ISingleState
+	dial                   ISingleState
+	settings_menu_checkbox ISingleState
+	game                   ISingleState
+	pcs                    IMultipleState
 }
 
 type IStateMachine interface {
-	Audio() IState
-	Game() IState
-	UI() IState
-	Input() IState
-	Networking() IState
-	Dial() IState
-	SettingsMenuCheckbox() IState
-	PC() IState
+	Audio() ISingleState
+	Game() ISingleState
+	UI() ISingleState
+	Input() ISingleState
+	Networking() ISingleState
+	Dial() ISingleState
+	SettingsMenuCheckbox() ISingleState
+	PCs() IMultipleState
 }
 
-func (s *StateMachine) Audio() IState {
+func (s *StateMachine) Audio() ISingleState {
 	return s.audio
 }
 
-func (s *StateMachine) UI() IState {
+func (s *StateMachine) UI() ISingleState {
 	return s.ui
 }
 
-func (s *StateMachine) Input() IState {
+func (s *StateMachine) Input() ISingleState {
 	return s.input
 }
 
-func (s *StateMachine) Networking() IState {
+func (s *StateMachine) Networking() ISingleState {
 	return s.networking
 }
 
-func (s *StateMachine) Dial() IState {
+func (s *StateMachine) Dial() ISingleState {
 	return s.dial
 }
 
-func (s *StateMachine) SettingsMenuCheckbox() IState {
+func (s *StateMachine) SettingsMenuCheckbox() ISingleState {
 	return s.settings_menu_checkbox
 }
 
-func (s *StateMachine) Game() IState {
+func (s *StateMachine) Game() ISingleState {
 	return s.game
 }
 
-func (s *StateMachine) PC() IState {
-	return s.pc
+func (s *StateMachine) PCs() IMultipleState {
+	return s.pcs
 }
 
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
-			audio:                  NewState(AUDIO_DONE),
-			ui:                     NewState(UI_START_MENU),
-			input:                  NewState(INPUT_EMPTY),
-			networking:             NewState(NETWORKING_ONLINE),
-			dial:                   NewState(DIAL_WAN),
-			settings_menu_checkbox: NewState(UI_SETTINGS_MENU_CHECKBOX_OFF),
-			game:                   NewState(GAME_START),
-			pc:                     NewState(PC_ALIVE),
+			audio:                  NewSingleState(AUDIO_DONE),
+			ui:                     NewSingleState(UI_START_MENU),
+			input:                  NewSingleState(INPUT_EMPTY),
+			networking:             NewSingleState(NETWORKING_ONLINE),
+			dial:                   NewSingleState(DIAL_WAN),
+			settings_menu_checkbox: NewSingleState(UI_SETTINGS_MENU_CHECKBOX_OFF),
+			game:                   NewSingleState(GAME_START),
+			pcs:                    NewMultipleState(PC_ALIVE),
 		}
 	}
 	return instance

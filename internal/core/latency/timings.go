@@ -1,7 +1,6 @@
 package latency
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -67,11 +66,8 @@ func (t *Timings) ExecEach(c func(), s int, d time.Duration) {
 func (t *Timings) start() {
 	go func() {
 		for {
-
 			for range t.loopDelay.C {
-				// fmt.Println(len(t.timingsEach), "TIMINGS")
 				for i, v := range t.timingsEach {
-					fmt.Println(i.state)
 					select {
 					case <-v.close:
 						delete(t.timingsEach, i)

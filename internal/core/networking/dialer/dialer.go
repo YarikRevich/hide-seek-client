@@ -1,11 +1,11 @@
 package dialer
 
 import (
+	"strings"
 	"time"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
 
-	"github.com/YarikRevich/game-networking/pkg/config"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -13,66 +13,96 @@ import (
 )
 
 type Dialer struct {
-	// locked          bool
-	conn            *grpc.ClientConn
-	reconnectTicker *time.Ticker
+	server_conn, services_conn *grpc.ClientConn
+	reconnectTicker            *time.Ticker
 }
 
-func (d *Dialer) Dial() {
-	c := config.Config{
-		Port: "8090",
-	}
+func (d *Dialer) dialServer() {
+	var endpoint strings.Builder
+
 	switch statemachine.UseStateMachine().Dial().GetState() {
 	case statemachine.DIAL_LAN:
-		c.IP = "127.0.0.1"
+		endpoint.WriteString("127.0.0.1:")
 	case statemachine.DIAL_WAN:
-		c.IP = "127.0.0.1"
+		endpoint.WriteString("127.0.0.1:")
 	}
+	endpoint.WriteString("8090")
 
-	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
-		grpc.WithBackoffConfig(grpc.BackoffConfig{MaxDelay: time.Second}),
-	}
+	opts := []grpc.DialOption{grpc.WithInsecure()}
 
-	conn, err := grpc.Dial("127.0.0.1:8090", opts...)
+	server_conn, err := grpc.Dial(endpoint.String(), opts...)
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
 	grpc.UseCompressor(gzip.Name)
 
-	d.conn = conn
+	d.server_conn = server_conn
+}
+func (d *Dialer) dialServices() {
+	var endpoint strings.Builder
+
+	switch statemachine.UseStateMachine().Dial().GetState() {
+	case statemachine.DIAL_LAN:
+		endpoint.WriteString("127.0.0.1:")
+	case statemachine.DIAL_WAN:
+		endpoint.WriteString("127.0.0.1:")
+	}
+	endpoint.WriteString("8099")
+
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+
+	services_conn, err := grpc.Dial(endpoint.String(), opts...)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	grpc.UseCompressor(gzip.Name)
+
+	d.services_conn = services_conn
 }
 
-func (d *Dialer) Conn() *grpc.ClientConn {
-	return d.conn
+//Dials all the clients
+func (d *Dialer) Dial() {
+	d.dialServer()
+	d.dialServices()
 }
 
-// func (d *Dialer) Lock() {
-// 	d.locked = true
-// }
+func (d *Dialer) GetServerConn() *grpc.ClientConn {
+	return d.server_conn
+}
+func (d *Dialer) GetServicesConn() *grpc.ClientConn {
+	return d.services_conn
+}
 
-// func (d *Dialer) Unlock() {
-// 	d.locked = false
-// }
-
-// func (d *Dialer) WaitUntilDone() {
-// 	for d.locked {
-// 	}
-// }
-
-func (d *Dialer) IsConnected() bool {
-	if d.conn != nil {
-		s := d.conn.GetState()
+func (d *Dialer) IsServerClientConnected() bool {
+	if d.server_conn != nil {
+		s := d.server_conn.GetState()
 		return !(s == connectivity.TransientFailure || s == connectivity.Idle)
 	}
 	return true
 }
 
-func (d *Dialer) Reconnect() {
+func (d *Dialer) IsServicesClientConnected() bool {
+	if d.services_conn != nil {
+		s := d.services_conn.GetState()
+		return !(s == connectivity.TransientFailure || s == connectivity.Idle)
+	}
+	return true
+}
+
+func (d *Dialer) ReconnectServerClient() {
 	select {
 	case <-d.reconnectTicker.C:
-		d.conn.Connect()
+		d.server_conn.Connect()
+	default:
+	}
+}
+
+func (d *Dialer) ReconnectServicesClient() {
+	select {
+	case <-d.reconnectTicker.C:
+		d.services_conn.Connect()
 	default:
 	}
 }
@@ -82,22 +112,3 @@ func NewDialer() *Dialer {
 		reconnectTicker: time.NewTicker(time.Millisecond * 500),
 	}
 }
-
-// // if err != nil {
-// 		// 	applyer.ApplyMiddlewares(
-// 		// 		statemachine.UseStateMachine().Networking().SetState(networking.OFFLINE),
-// 		// 		networkingmiddleware.UseNetworkingMiddleware,
-// 		// 	)
-// 		// }
-
-// 		// instance = d
-
-// 		// go func() {
-// 		// 	sc := make(chan os.Signal, 1)
-// 		// 	signal.Notify(sc, os.Interrupt)
-// 		// 	for range sc {
-// 		// 		if err := instance.Close(); err != nil {
-// 		// 			logrus.Fatal(err)
-// 		// 		}
-// 		// 	}
-// 		// }()

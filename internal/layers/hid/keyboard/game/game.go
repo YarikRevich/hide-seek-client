@@ -147,5 +147,7 @@ func Exec() {
 		if ebiten.IsKeyPressed(ebiten.KeySpace) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTUPPERCLICKERButton) {
 			physics.UsePhysics().Jump().Calculate()
 		}
+
+		//
 	}
 }
