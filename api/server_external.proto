@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
 
 option go_package="internal/core/networking/api/server_external";
 
@@ -15,10 +16,14 @@ message GameSettings {
     bool isWorldExist = 3;
 };
 
-message Regime {};
+enum Regime {
+    SQUAD = 0;
+    DEATHMATCH = 1;
+};
 
 message Map {  
     Base base = 1;
+    repeated Position spawns = 2;
 };
 
 message Element {
@@ -102,27 +107,44 @@ message DeletePCRequest{
     string id = 1;
 };
 
-message ChooseSpawnsRequest {
+message AssignRandomSpawnsToPCsRequest {
     string worldId = 1;
     repeated Position spawns = 2;
 };
 
+enum Archievement {
+    TenKills = 0;
+};
+
+message UnlockArchievementRequest {
+    string pcId = 1;
+    Archievement archievement = 2;
+}
+
+message GetStatisticsResponse {
+    int64 killsNum = 1;
+    reserved 2 to 4;
+}
+
 service ExternalService {
-    rpc AddWorld (World) returns (google.protobuf.BoolValue);
-    rpc AddMap (Map) returns (google.protobuf.BoolValue);
-    rpc AddPC (PC) returns (google.protobuf.BoolValue);
-    rpc AddElement (Element) returns (google.protobuf.BoolValue);
-    rpc AddWeapon (Weapon) returns (google.protobuf.BoolValue);
-    rpc AddAmmo (Ammo) returns (google.protobuf.BoolValue);
-
-    rpc UpdateWorld(World) returns (google.protobuf.BoolValue);
-    rpc UpdatePC(PC) returns (google.protobuf.BoolValue);
-    rpc UpdateAmmo(Ammo) returns (google.protobuf.BoolValue);
-
-    rpc ChooseSpawns (ChooseSpawnsRequest) returns (google.protobuf.BoolValue) {};
-
+    //Game process
+    rpc UpdateWorld (World) returns (google.protobuf.BoolValue);
+    rpc UpdateMap (Map) returns (google.protobuf.BoolValue);
+    rpc UpdatePC (PC) returns (google.protobuf.BoolValue);
+    rpc UpdateElement (Element) returns (google.protobuf.BoolValue);
+    rpc UpdateWeapon (Weapon) returns (google.protobuf.BoolValue);
+    rpc UpdateAmmo (Ammo) returns (google.protobuf.BoolValue);
     rpc DeleteWorld(google.protobuf.StringValue) returns (google.protobuf.BoolValue);
-    rpc DeletePC (google.protobuf.StringValue) returns (google.protobuf.BoolValue);
-  
+    // rpc DeletePC (google.protobuf.StringValue) returns (google.protobuf.BoolValue);
     rpc GetWorld(google.protobuf.StringValue) returns (GetWorldResponse);
+
+    //Statistics
+    rpc GetStatistics(google.protobuf.StringValue) returns (GetStatisticsResponse);
+
+    //Archievements
+    rpc IsArchievementUnlocked(google.protobuf.StringValue) returns  (google.protobuf.BoolValue);
+    rpc UnlockArchievement(UnlockArchievementRequest) returns (google.protobuf.Empty);
+
+    //Utils
+    rpc AssignRandomSpawnsToPCs (AssignRandomSpawnsToPCsRequest) returns (google.protobuf.BoolValue) {};
 };

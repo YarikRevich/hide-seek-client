@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
@@ -19,19 +20,23 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ExternalServiceClient interface {
-	AddWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	AddMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	AddPC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	AddElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	AddWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	AddAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
+	//Game process
 	UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
+	UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 	UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
+	UpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
+	UpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 	UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	ChooseSpawns(ctx context.Context, in *ChooseSpawnsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 	DeleteWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
-	DeletePC(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
+	// rpc DeletePC (google.protobuf.StringValue) returns (google.protobuf.BoolValue);
 	GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error)
+	//Statistics
+	GetStatistics(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetStatisticsResponse, error)
+	//Archievements
+	IsArchievementUnlocked(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
+	UnlockArchievement(ctx context.Context, in *UnlockArchievementRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	//Utils
+	AssignRandomSpawnsToPCs(ctx context.Context, in *AssignRandomSpawnsToPCsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 }
 
 type externalServiceClient struct {
@@ -42,63 +47,18 @@ func NewExternalServiceClient(cc grpc.ClientConnInterface) ExternalServiceClient
 	return &externalServiceClient{cc}
 }
 
-func (c *externalServiceClient) AddWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AddWorld", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) AddMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AddMap", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) AddPC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AddPC", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) AddElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AddElement", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) AddWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AddWeapon", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *externalServiceClient) AddAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AddAmmo", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *externalServiceClient) UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
 	err := c.cc.Invoke(ctx, "/ExternalService/UpdateWorld", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServiceClient) UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+	out := new(wrapperspb.BoolValue)
+	err := c.cc.Invoke(ctx, "/ExternalService/UpdateMap", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -114,18 +74,27 @@ func (c *externalServiceClient) UpdatePC(ctx context.Context, in *PC, opts ...gr
 	return out, nil
 }
 
-func (c *externalServiceClient) UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServiceClient) UpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdateAmmo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalService/UpdateElement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) ChooseSpawns(ctx context.Context, in *ChooseSpawnsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServiceClient) UpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/ChooseSpawns", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalService/UpdateWeapon", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServiceClient) UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+	out := new(wrapperspb.BoolValue)
+	err := c.cc.Invoke(ctx, "/ExternalService/UpdateAmmo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,18 +110,45 @@ func (c *externalServiceClient) DeleteWorld(ctx context.Context, in *wrapperspb.
 	return out, nil
 }
 
-func (c *externalServiceClient) DeletePC(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
-	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/DeletePC", in, out, opts...)
+func (c *externalServiceClient) GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error) {
+	out := new(GetWorldResponse)
+	err := c.cc.Invoke(ctx, "/ExternalService/GetWorld", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error) {
-	out := new(GetWorldResponse)
-	err := c.cc.Invoke(ctx, "/ExternalService/GetWorld", in, out, opts...)
+func (c *externalServiceClient) GetStatistics(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetStatisticsResponse, error) {
+	out := new(GetStatisticsResponse)
+	err := c.cc.Invoke(ctx, "/ExternalService/GetStatistics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServiceClient) IsArchievementUnlocked(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+	out := new(wrapperspb.BoolValue)
+	err := c.cc.Invoke(ctx, "/ExternalService/IsArchievementUnlocked", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServiceClient) UnlockArchievement(ctx context.Context, in *UnlockArchievementRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ExternalService/UnlockArchievement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServiceClient) AssignRandomSpawnsToPCs(ctx context.Context, in *AssignRandomSpawnsToPCsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+	out := new(wrapperspb.BoolValue)
+	err := c.cc.Invoke(ctx, "/ExternalService/AssignRandomSpawnsToPCs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -163,19 +159,23 @@ func (c *externalServiceClient) GetWorld(ctx context.Context, in *wrapperspb.Str
 // All implementations must embed UnimplementedExternalServiceServer
 // for forward compatibility
 type ExternalServiceServer interface {
-	AddWorld(context.Context, *World) (*wrapperspb.BoolValue, error)
-	AddMap(context.Context, *Map) (*wrapperspb.BoolValue, error)
-	AddPC(context.Context, *PC) (*wrapperspb.BoolValue, error)
-	AddElement(context.Context, *Element) (*wrapperspb.BoolValue, error)
-	AddWeapon(context.Context, *Weapon) (*wrapperspb.BoolValue, error)
-	AddAmmo(context.Context, *Ammo) (*wrapperspb.BoolValue, error)
+	//Game process
 	UpdateWorld(context.Context, *World) (*wrapperspb.BoolValue, error)
+	UpdateMap(context.Context, *Map) (*wrapperspb.BoolValue, error)
 	UpdatePC(context.Context, *PC) (*wrapperspb.BoolValue, error)
+	UpdateElement(context.Context, *Element) (*wrapperspb.BoolValue, error)
+	UpdateWeapon(context.Context, *Weapon) (*wrapperspb.BoolValue, error)
 	UpdateAmmo(context.Context, *Ammo) (*wrapperspb.BoolValue, error)
-	ChooseSpawns(context.Context, *ChooseSpawnsRequest) (*wrapperspb.BoolValue, error)
 	DeleteWorld(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error)
-	DeletePC(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error)
+	// rpc DeletePC (google.protobuf.StringValue) returns (google.protobuf.BoolValue);
 	GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error)
+	//Statistics
+	GetStatistics(context.Context, *wrapperspb.StringValue) (*GetStatisticsResponse, error)
+	//Archievements
+	IsArchievementUnlocked(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error)
+	UnlockArchievement(context.Context, *UnlockArchievementRequest) (*emptypb.Empty, error)
+	//Utils
+	AssignRandomSpawnsToPCs(context.Context, *AssignRandomSpawnsToPCsRequest) (*wrapperspb.BoolValue, error)
 	mustEmbedUnimplementedExternalServiceServer()
 }
 
@@ -183,44 +183,41 @@ type ExternalServiceServer interface {
 type UnimplementedExternalServiceServer struct {
 }
 
-func (UnimplementedExternalServiceServer) AddWorld(context.Context, *World) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddWorld not implemented")
-}
-func (UnimplementedExternalServiceServer) AddMap(context.Context, *Map) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddMap not implemented")
-}
-func (UnimplementedExternalServiceServer) AddPC(context.Context, *PC) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddPC not implemented")
-}
-func (UnimplementedExternalServiceServer) AddElement(context.Context, *Element) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddElement not implemented")
-}
-func (UnimplementedExternalServiceServer) AddWeapon(context.Context, *Weapon) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddWeapon not implemented")
-}
-func (UnimplementedExternalServiceServer) AddAmmo(context.Context, *Ammo) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddAmmo not implemented")
-}
 func (UnimplementedExternalServiceServer) UpdateWorld(context.Context, *World) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateWorld not implemented")
+}
+func (UnimplementedExternalServiceServer) UpdateMap(context.Context, *Map) (*wrapperspb.BoolValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMap not implemented")
 }
 func (UnimplementedExternalServiceServer) UpdatePC(context.Context, *PC) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePC not implemented")
 }
+func (UnimplementedExternalServiceServer) UpdateElement(context.Context, *Element) (*wrapperspb.BoolValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateElement not implemented")
+}
+func (UnimplementedExternalServiceServer) UpdateWeapon(context.Context, *Weapon) (*wrapperspb.BoolValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateWeapon not implemented")
+}
 func (UnimplementedExternalServiceServer) UpdateAmmo(context.Context, *Ammo) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAmmo not implemented")
-}
-func (UnimplementedExternalServiceServer) ChooseSpawns(context.Context, *ChooseSpawnsRequest) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChooseSpawns not implemented")
 }
 func (UnimplementedExternalServiceServer) DeleteWorld(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteWorld not implemented")
 }
-func (UnimplementedExternalServiceServer) DeletePC(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeletePC not implemented")
-}
 func (UnimplementedExternalServiceServer) GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWorld not implemented")
+}
+func (UnimplementedExternalServiceServer) GetStatistics(context.Context, *wrapperspb.StringValue) (*GetStatisticsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStatistics not implemented")
+}
+func (UnimplementedExternalServiceServer) IsArchievementUnlocked(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsArchievementUnlocked not implemented")
+}
+func (UnimplementedExternalServiceServer) UnlockArchievement(context.Context, *UnlockArchievementRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnlockArchievement not implemented")
+}
+func (UnimplementedExternalServiceServer) AssignRandomSpawnsToPCs(context.Context, *AssignRandomSpawnsToPCsRequest) (*wrapperspb.BoolValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AssignRandomSpawnsToPCs not implemented")
 }
 func (UnimplementedExternalServiceServer) mustEmbedUnimplementedExternalServiceServer() {}
 
@@ -233,114 +230,6 @@ type UnsafeExternalServiceServer interface {
 
 func RegisterExternalServiceServer(s grpc.ServiceRegistrar, srv ExternalServiceServer) {
 	s.RegisterService(&ExternalService_ServiceDesc, srv)
-}
-
-func _ExternalService_AddWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(World)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).AddWorld(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/AddWorld",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AddWorld(ctx, req.(*World))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_AddMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Map)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).AddMap(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/AddMap",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AddMap(ctx, req.(*Map))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_AddPC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PC)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).AddPC(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/AddPC",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AddPC(ctx, req.(*PC))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_AddElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Element)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).AddElement(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/AddElement",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AddElement(ctx, req.(*Element))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_AddWeapon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Weapon)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).AddWeapon(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/AddWeapon",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AddWeapon(ctx, req.(*Weapon))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_AddAmmo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Ammo)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).AddAmmo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/AddAmmo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AddAmmo(ctx, req.(*Ammo))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _ExternalService_UpdateWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -357,6 +246,24 @@ func _ExternalService_UpdateWorld_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ExternalServiceServer).UpdateWorld(ctx, req.(*World))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalService_UpdateMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Map)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).UpdateMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/UpdateMap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).UpdateMap(ctx, req.(*Map))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -379,6 +286,42 @@ func _ExternalService_UpdatePC_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExternalService_UpdateElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Element)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).UpdateElement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/UpdateElement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).UpdateElement(ctx, req.(*Element))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalService_UpdateWeapon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Weapon)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).UpdateWeapon(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/UpdateWeapon",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).UpdateWeapon(ctx, req.(*Weapon))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ExternalService_UpdateAmmo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ammo)
 	if err := dec(in); err != nil {
@@ -393,24 +336,6 @@ func _ExternalService_UpdateAmmo_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ExternalServiceServer).UpdateAmmo(ctx, req.(*Ammo))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ExternalService_ChooseSpawns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChooseSpawnsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).ChooseSpawns(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/ChooseSpawns",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).ChooseSpawns(ctx, req.(*ChooseSpawnsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -433,24 +358,6 @@ func _ExternalService_DeleteWorld_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_DeletePC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(wrapperspb.StringValue)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ExternalServiceServer).DeletePC(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ExternalService/DeletePC",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).DeletePC(ctx, req.(*wrapperspb.StringValue))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ExternalService_GetWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
@@ -469,6 +376,78 @@ func _ExternalService_GetWorld_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExternalService_GetStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(wrapperspb.StringValue)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).GetStatistics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/GetStatistics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).GetStatistics(ctx, req.(*wrapperspb.StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalService_IsArchievementUnlocked_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(wrapperspb.StringValue)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).IsArchievementUnlocked(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/IsArchievementUnlocked",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).IsArchievementUnlocked(ctx, req.(*wrapperspb.StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalService_UnlockArchievement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlockArchievementRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).UnlockArchievement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/UnlockArchievement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).UnlockArchievement(ctx, req.(*UnlockArchievementRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalService_AssignRandomSpawnsToPCs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignRandomSpawnsToPCsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServiceServer).AssignRandomSpawnsToPCs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalService/AssignRandomSpawnsToPCs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServiceServer).AssignRandomSpawnsToPCs(ctx, req.(*AssignRandomSpawnsToPCsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ExternalService_ServiceDesc is the grpc.ServiceDesc for ExternalService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -477,56 +456,52 @@ var ExternalService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ExternalServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddWorld",
-			Handler:    _ExternalService_AddWorld_Handler,
-		},
-		{
-			MethodName: "AddMap",
-			Handler:    _ExternalService_AddMap_Handler,
-		},
-		{
-			MethodName: "AddPC",
-			Handler:    _ExternalService_AddPC_Handler,
-		},
-		{
-			MethodName: "AddElement",
-			Handler:    _ExternalService_AddElement_Handler,
-		},
-		{
-			MethodName: "AddWeapon",
-			Handler:    _ExternalService_AddWeapon_Handler,
-		},
-		{
-			MethodName: "AddAmmo",
-			Handler:    _ExternalService_AddAmmo_Handler,
-		},
-		{
 			MethodName: "UpdateWorld",
 			Handler:    _ExternalService_UpdateWorld_Handler,
+		},
+		{
+			MethodName: "UpdateMap",
+			Handler:    _ExternalService_UpdateMap_Handler,
 		},
 		{
 			MethodName: "UpdatePC",
 			Handler:    _ExternalService_UpdatePC_Handler,
 		},
 		{
-			MethodName: "UpdateAmmo",
-			Handler:    _ExternalService_UpdateAmmo_Handler,
+			MethodName: "UpdateElement",
+			Handler:    _ExternalService_UpdateElement_Handler,
 		},
 		{
-			MethodName: "ChooseSpawns",
-			Handler:    _ExternalService_ChooseSpawns_Handler,
+			MethodName: "UpdateWeapon",
+			Handler:    _ExternalService_UpdateWeapon_Handler,
+		},
+		{
+			MethodName: "UpdateAmmo",
+			Handler:    _ExternalService_UpdateAmmo_Handler,
 		},
 		{
 			MethodName: "DeleteWorld",
 			Handler:    _ExternalService_DeleteWorld_Handler,
 		},
 		{
-			MethodName: "DeletePC",
-			Handler:    _ExternalService_DeletePC_Handler,
-		},
-		{
 			MethodName: "GetWorld",
 			Handler:    _ExternalService_GetWorld_Handler,
+		},
+		{
+			MethodName: "GetStatistics",
+			Handler:    _ExternalService_GetStatistics_Handler,
+		},
+		{
+			MethodName: "IsArchievementUnlocked",
+			Handler:    _ExternalService_IsArchievementUnlocked_Handler,
+		},
+		{
+			MethodName: "UnlockArchievement",
+			Handler:    _ExternalService_UnlockArchievement_Handler,
+		},
+		{
+			MethodName: "AssignRandomSpawnsToPCs",
+			Handler:    _ExternalService_AssignRandomSpawnsToPCs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

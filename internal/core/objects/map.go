@@ -2,6 +2,7 @@ package objects
 
 import (
 	"image"
+	"unsafe"
 
 	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
@@ -167,8 +168,10 @@ func (w *Map) GetSpawns() []*image.Point {
 }
 
 func (w *Map) ToAPIMessage() *server_external.Map {
+
 	return &server_external.Map{
-		Base: w.Base.ToAPIMessage(),
+		Base:   w.Base.ToAPIMessage(),
+		Spawns: *(*server_external.Position)(unsafe.Pointer(&w.Base.ModelCombination.Origin.Spawns)),
 	}
 }
 
