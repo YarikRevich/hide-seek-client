@@ -1,14 +1,14 @@
 package render
 
 import (
-	screenhistory "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	screenhistory "github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 var instance IRender
 
 type render struct {
-	toRender     []func(*ebiten.Image)
+	toRender []func(*ebiten.Image)
 }
 
 type IRender interface {
@@ -36,7 +36,7 @@ func (r *render) CleanRenderPool() {
 func UseRender() IRender {
 	if instance == nil {
 		instance = &render{
-			toRender:     make([]func(*ebiten.Image), 0, 2000),
+			toRender: make([]func(*ebiten.Image), 0, 2000),
 		}
 	}
 	return instance

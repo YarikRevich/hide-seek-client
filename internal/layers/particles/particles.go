@@ -1,8 +1,8 @@
 package particles
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/particles/game"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/particles/game"
 )
 
 func Process() {

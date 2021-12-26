@@ -1,8 +1,8 @@
 package resume
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/effects/lines"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/effects/lines"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )

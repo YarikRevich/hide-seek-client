@@ -1,8 +1,8 @@
 package networking
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/clients"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/dialer"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/clients"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/dialer"
 )
 
 var instance *Networking

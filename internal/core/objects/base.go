@@ -5,11 +5,11 @@ import (
 	"path/filepath"
 	"unsafe"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/google/uuid"
 	"github.com/hajimehoshi/ebiten/v2"
 )

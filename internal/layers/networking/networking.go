@@ -1,10 +1,10 @@
 package networking
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/game"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/waitroomjoin"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking/waitroomstart"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/networking/game"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/networking/waitroomjoin"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/networking/waitroomstart"
 )
 
 func Process() {

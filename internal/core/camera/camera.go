@@ -1,8 +1,8 @@
 package camera
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
+	// "github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -108,7 +108,7 @@ func (m *Map) UpdateMatrix() {
 	// pZoomedOffsetX := m.Followed.GetScaledOffsetX()
 
 	// m.matrix.Translate(-cZoomedX, -cZoomedY)
-		
+
 	// if m.Followed.TranslationMovementYBlocked {
 	// 	if cZoomedY <= 0 && m.Followed.IsDirectionUP() {
 	// 		m.Followed.SetTranslationYMovementBlocked(false)
@@ -130,7 +130,6 @@ func (m *Map) UpdateMatrix() {
 	// }
 
 	// fmt.Println(cZoomedX, pZoomedOffsetX*2, wm.Size.Width*zoomedMapScaleX)
-
 
 	// ax, ay := w.GetZoomedAttachedPos()
 	// co := objects.UseObjects().Camera()

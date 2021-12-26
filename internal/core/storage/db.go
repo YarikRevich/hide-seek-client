@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"path/filepath"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
+	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"

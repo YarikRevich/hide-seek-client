@@ -3,14 +3,14 @@ package waitroomstart
 import (
 	// "context"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	// "github.com/YarikRevich/hide-seek-client/internal/core/networking"
+	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/atotto/clipboard"
 
 	// "github.com/golang/protobuf/ptypes/wrappers"

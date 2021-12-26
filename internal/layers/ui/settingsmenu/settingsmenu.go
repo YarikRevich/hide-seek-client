@@ -3,11 +3,11 @@ package settingsmenu
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/text/positioning"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -96,8 +96,6 @@ func Draw() {
 			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon").Modified
 			text.Draw(screen, "Disable LAN server", f, int(mt.Margins.LeftMargin), int(mt.Margins.TopMargin), color.White)
 		}
-
-		
 
 		opts := &ebiten.DrawImageOptions{}
 

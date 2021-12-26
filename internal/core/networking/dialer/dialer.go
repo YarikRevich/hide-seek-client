@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"

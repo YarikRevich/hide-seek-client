@@ -1,9 +1,9 @@
 package game
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
 type DebugGameScene struct{}

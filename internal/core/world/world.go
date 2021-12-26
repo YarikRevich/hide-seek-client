@@ -3,10 +3,10 @@ package world
 import (
 	"fmt"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/gamesettings"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statistics"
+	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statistics"
 	"github.com/google/uuid"
 )
 

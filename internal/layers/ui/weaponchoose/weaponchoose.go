@@ -1,8 +1,8 @@
 package weaponchoose
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

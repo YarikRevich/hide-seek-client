@@ -1,14 +1,14 @@
 package audio
 
 import (
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	// "github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/game"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio/startmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/game"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/startmenu"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 )
 
 func Process() {

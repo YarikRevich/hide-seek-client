@@ -1,12 +1,12 @@
 package game
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/effects/particles"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/primitives"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
-	"github.com/YarikRevich/HideSeek-Client/tools/color"
+	"github.com/YarikRevich/hide-seek-client/internal/core/effects/particles"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/primitives"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/tools/color"
 	"github.com/engoengine/glm"
 	"github.com/hajimehoshi/ebiten/v2"
 )

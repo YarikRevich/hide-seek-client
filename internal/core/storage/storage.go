@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/YarikRevich/HideSeek-Client/tools/params"
+import "github.com/YarikRevich/hide-seek-client/tools/params"
 
 var instance *Storage
 

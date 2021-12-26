@@ -1,8 +1,8 @@
 package gamesettings
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/gamesettings/regime"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings/regime"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 )
 
 type GameSettings struct {

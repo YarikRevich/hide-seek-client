@@ -1,4 +1,4 @@
-.PHONY: build install gen_proto default help 
+.PHONY: build install gen_proto help 
 .ONESHELL:
 .SILENT: all
 
@@ -35,8 +35,6 @@ endef
 # 	$(call log_print, Installs golang via apt)
 # 	@sudo apt install golang
 # endif
-default: help
-
 help:
 	@echo "ALL AVAILABLE INSTRUCTIONS!"
 	@echo "\n"

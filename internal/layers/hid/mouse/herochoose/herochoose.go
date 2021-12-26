@@ -1,11 +1,11 @@
 package herochoose
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
 func Exec() bool {

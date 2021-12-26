@@ -1,21 +1,21 @@
 package ui
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/debug"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/game"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/herochoose"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/joinmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/mapchoose"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/popup"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/settingsmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/startmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroomjoin"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui/waitroomstart"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/debug"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/game"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/herochoose"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/joinmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/mapchoose"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/popup"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/settingsmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/startmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/waitroomjoin"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/waitroomstart"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 )
 
 func Process() {

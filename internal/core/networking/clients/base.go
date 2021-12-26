@@ -1,7 +1,7 @@
 package clients
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"google.golang.org/grpc"
 )
 

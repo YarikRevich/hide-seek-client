@@ -3,8 +3,8 @@ package positioning
 import (
 	"fmt"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/text/color"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/text/color"
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 

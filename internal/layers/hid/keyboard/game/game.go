@@ -3,11 +3,11 @@ package game
 import (
 	// "fmt"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/physics"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/physics"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

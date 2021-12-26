@@ -1,8 +1,8 @@
 package herochoose
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -30,7 +30,6 @@ func Draw() {
 
 		screen.DrawImage(img, opts)
 	})
-
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("heroes/thumbnails/pumpkin")

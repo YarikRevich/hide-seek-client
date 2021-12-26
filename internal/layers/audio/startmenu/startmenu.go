@@ -1,6 +1,6 @@
 package startmenu
 
-import "github.com/YarikRevich/HideSeek-Client/internal/core/audiocontroller"
+import "github.com/YarikRevich/hide-seek-client/internal/core/audiocontroller"
 
 func Exec() {
 	c := audiocontroller.UseAudioController()

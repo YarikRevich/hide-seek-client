@@ -1,7 +1,7 @@
 package animation
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
 )
 
 func Animate(o *objects.Base) {

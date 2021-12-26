@@ -1,12 +1,12 @@
 package settingsmenu
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
-	"github.com/YarikRevich/HideSeek-Client/tools/lanserver"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/storage"
+	"github.com/YarikRevich/hide-seek-client/tools/lanserver"
 )
 
 func Exec() bool {

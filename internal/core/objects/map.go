@@ -4,8 +4,8 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )

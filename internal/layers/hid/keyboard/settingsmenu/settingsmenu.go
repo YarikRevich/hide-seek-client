@@ -1,8 +1,8 @@
 package settingsmenu
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/atotto/clipboard"
 	"github.com/sirupsen/logrus"
 
@@ -11,7 +11,7 @@ import (
 
 func Exec() {
 	events.UseEvents().Keyboard().HandleKeyPress(events.UseEvents().Input().SettingsMenuNameBuffer, []events.KeyBoardEntity{
-		{Combination: struct{AwaitKey, ControlKey ebiten.Key}{AwaitKey: ebiten.KeyMetaLeft, ControlKey: ebiten.KeyV}, Callback: func(b events.IBuffer, k rune) {
+		{Combination: struct{ AwaitKey, ControlKey ebiten.Key }{AwaitKey: ebiten.KeyMetaLeft, ControlKey: ebiten.KeyV}, Callback: func(b events.IBuffer, k rune) {
 			r, err := clipboard.ReadAll()
 			if err != nil {
 				logrus.Fatal(err)

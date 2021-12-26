@@ -5,11 +5,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/audiocontroller"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/internal/core/audiocontroller"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
+	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 
 	isconnect "github.com/alimasyhur/is-connect"
 )

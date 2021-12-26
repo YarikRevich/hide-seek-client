@@ -1,10 +1,10 @@
 package middlewares
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 )
 
 type UI struct {

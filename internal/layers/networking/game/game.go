@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/notifications"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
+	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -16,14 +16,14 @@ import (
 
 // "time"
 
-// "github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-// "github.com/YarikRevich/HideSeek-Client/internal/core/networking"
-// "github.com/YarikRevich/HideSeek-Client/internal/core/objects"
+// "github.com/YarikRevich/hide-seek-client/internal/core/latency"
+// "github.com/YarikRevich/hide-seek-client/internal/core/networking"
+// "github.com/YarikRevich/hide-seek-client/internal/core/objects"
 
-// "github.com/YarikRevich/HideSeek-Client/internal/gameplay/world"
-// "github.com/YarikRevich/HideSeek-Client/internal/networking/collection"
-// "github.com/YarikRevich/HideSeek-Client/internal/networking/connection"
-// "github.com/YarikRevich/HideSeek-Client/internal/player_mechanics/state_machine/constants/ui"
+// "github.com/YarikRevich/hide-seek-client/internal/gameplay/world"
+// "github.com/YarikRevich/hide-seek-client/internal/networking/collection"
+// "github.com/YarikRevich/hide-seek-client/internal/networking/connection"
+// "github.com/YarikRevich/hide-seek-client/internal/player_mechanics/state_machine/constants/ui"
 // "github.com/hajimehoshi/ebiten/v2"
 // "github.com/hajimehoshi/ebiten/v2/ebitenutil"
 // "github.com/sirupsen/logrus"
@@ -40,19 +40,20 @@ func Exec() {
 		w := world.UseWorld()
 		client := networking.UseNetworking().Clients().Base().GetClient()
 
-		r, err := client.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
-		if !r.Value || err != nil {
-			notifications.PopUp.WriteError(err.Error())
-			return
-		}
-
 		if !w.GetGameSettings().IsWorldExist {
-			r, err = client.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
+			r, err := client.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
 			if !r.Value || err != nil {
 				notifications.PopUp.WriteError(err.Error())
 				return
 			}
 		}
+
+		r, err := client.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
+		if !r.Value || err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			return
+		}
+		client.UpdatePC(context.Background(), w.GetPC().ToAPIMessage())
 
 		worldObjects, err := client.GetWorld(
 			context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})

@@ -1,9 +1,9 @@
 package objects
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/storage"
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/storage"
 	"github.com/google/uuid"
 )
 

@@ -1,14 +1,14 @@
 package game
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/audiocontroller"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/audiocontroller"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
 func Exec() {
 	c := audiocontroller.UseAudioController()
 	worldMap := world.UseWorld().GetWorldMap()
-	switch worldMap.Name{
+	switch worldMap.Name {
 	case "helloween":
 		c.Wrap("assets/audio/game")
 		c.Start()

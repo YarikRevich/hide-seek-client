@@ -1,8 +1,8 @@
 package events
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )

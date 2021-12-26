@@ -8,7 +8,7 @@ import (
 	"runtime/pprof"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
+	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
 	"github.com/sirupsen/logrus"
 )
 

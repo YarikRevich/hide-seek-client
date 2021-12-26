@@ -1,8 +1,8 @@
 package collisions
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/objects"
-	// "github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
+	// "github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
 //Returns the objects the object collides with

@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )

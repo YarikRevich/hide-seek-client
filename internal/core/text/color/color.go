@@ -3,7 +3,7 @@ package color
 import (
 	"image/color"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 )
 
 type Color struct{}

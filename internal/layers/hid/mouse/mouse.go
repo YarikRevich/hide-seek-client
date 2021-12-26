@@ -1,20 +1,20 @@
 package mouse
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/herochoose"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/joinmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/mapchoose"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/settingsmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/startmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/unfocus"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomjoin"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse/waitroomstart"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/herochoose"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/joinmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/mapchoose"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/settingsmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/startmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/unfocus"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/waitroomjoin"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/waitroomstart"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 )
 
 func Process() {

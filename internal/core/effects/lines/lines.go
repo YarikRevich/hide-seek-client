@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"math/rand"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"golang.org/x/image/colornames"
 )
 

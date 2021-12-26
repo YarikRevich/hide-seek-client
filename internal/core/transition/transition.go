@@ -1,23 +1,23 @@
 package transition
 
-// import "github.com/YarikRevich/HideSeek-Client/internal/core/sources"
+// import "github.com/YarikRevich/hide-seek-client/internal/core/sources"
 
 var instance *TransitionPool
 
 type TransitionPool struct {
-// 
+	//
 }
 
-func (tp *TransitionPool) Push(){
+func (tp *TransitionPool) Push() {
 
 }
 
-func (tp *TransitionPool) Process(){
-	
+func (tp *TransitionPool) Process() {
+
 }
 
-func UseTransitionPool()*TransitionPool{
-	if instance == nil{
+func UseTransitionPool() *TransitionPool {
+	if instance == nil {
 		instance = new(TransitionPool)
 	}
 	return instance

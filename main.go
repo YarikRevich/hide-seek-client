@@ -10,15 +10,15 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/paths"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/loop"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/loop"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
-	"github.com/YarikRevich/HideSeek-Client/tools/printer"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/tools/printer"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"

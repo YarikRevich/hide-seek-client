@@ -1,9 +1,10 @@
 package debugui
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/tools/debugui/scenes/game"
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/tools/debugui/scenes/game"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 	"github.com/gabstv/ebiten-imgui/renderer"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/inkyblackness/imgui-go/v2"
@@ -22,11 +23,12 @@ func (d *DebugImGUI) Update() {
 
 func (d *DebugImGUI) Render(screen *ebiten.Image) {
 	d.renderer.BeginFrame()
+	pc := world.UseWorld().GetPC()
 	{
 		imgui.Begin("It works")
 
 		if imgui.Button("KILL PC") {
-			statemachine.UseStateMachine().PC().SetState(statemachine.PC_DEAD)
+			statemachine.UseStateMachine().PCs().SetState(pc.ID, statemachine.PC_DEAD_NOW)
 		}
 
 		if imgui.BeginMenu("Scenes") {
@@ -52,6 +54,7 @@ func (d *DebugImGUI) Render(screen *ebiten.Image) {
 func UseDebugImGUI() *DebugImGUI {
 	if instance == nil {
 		instance = &DebugImGUI{renderer.New(nil)}
+		imgui.CurrentIO().SetIniFilename("~/imgui.ini")
 	}
 	return instance
 }

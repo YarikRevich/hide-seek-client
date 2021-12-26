@@ -1,9 +1,9 @@
 package startmenu
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/text/positioning"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/text/positioning"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

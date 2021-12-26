@@ -1,8 +1,8 @@
 package joinmenu
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/events"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/atotto/clipboard"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/sirupsen/logrus"

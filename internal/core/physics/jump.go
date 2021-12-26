@@ -4,8 +4,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/keycodes"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
 type Jump struct {

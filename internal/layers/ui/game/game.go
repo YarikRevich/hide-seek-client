@@ -4,12 +4,12 @@ import (
 	"image/color"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/latency"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

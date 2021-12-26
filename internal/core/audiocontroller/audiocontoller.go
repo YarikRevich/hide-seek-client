@@ -4,8 +4,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/faiface/beep/speaker"
 	"github.com/sirupsen/logrus"
 )

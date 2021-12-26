@@ -1,4 +1,4 @@
-module github.com/YarikRevich/HideSeek-Client
+module github.com/YarikRevich/hide-seek-client
 
 go 1.17
 

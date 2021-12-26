@@ -3,8 +3,8 @@ package positioning
 import (
 	"strings"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sources"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/text/color"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/text/color"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/sirupsen/logrus"
@@ -85,7 +85,7 @@ func (b *Base) Init(i *ebiten.Image, m *sources.Model, f font.Face, t string) {
 
 	if len(b.examined) != 1 {
 		b.indent = -5
-	}else{
+	} else {
 		b.indent = 0
 	}
 }

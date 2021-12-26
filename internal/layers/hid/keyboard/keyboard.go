@@ -1,12 +1,12 @@
 package keyboard
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/statemachine"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/game"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/joinmenu"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard/settingsmenu"
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard/game"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard/joinmenu"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard/settingsmenu"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 )
 
 func Process() {

@@ -1,23 +1,23 @@
 package loop
 
 import (
-	"github.com/YarikRevich/HideSeek-Client/internal/core/middlewares"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/profiling"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/render"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/screen"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/sourceupgrader"
-	"github.com/YarikRevich/HideSeek-Client/internal/core/transition"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sourceupgrader"
+	"github.com/YarikRevich/hide-seek-client/internal/core/transition"
 
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/animation"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/audio"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/keyboard"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/hid/mouse"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/networking"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/particles"
-	"github.com/YarikRevich/HideSeek-Client/internal/layers/ui"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/animation"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/audio"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/networking"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/particles"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/ui"
 
-	"github.com/YarikRevich/HideSeek-Client/tools/debugui"
-	"github.com/YarikRevich/HideSeek-Client/tools/params"
+	"github.com/YarikRevich/hide-seek-client/tools/debugui"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
