@@ -58,7 +58,7 @@ build:
 	$(call clear)
 
 	$(call log_print, Builds project)
-	@go build
+	@go build -o HideSeek cmd/main.go
 
 install: 
 	$(call clear)
@@ -69,5 +69,5 @@ gen_proto:
 	$(call clear)
 	@protoc -I api --go_out=. server_external.proto
 	@protoc -I api --go-grpc_out=. server_external.proto
-		@protoc -I api --go_out=. services_external.proto
+	@protoc -I api --go_out=. services_external.proto
 	@protoc -I api --go-grpc_out=. services_external.proto

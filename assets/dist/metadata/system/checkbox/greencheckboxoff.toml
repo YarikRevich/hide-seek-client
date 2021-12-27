@@ -1,0 +1,10 @@
+[info]
+parent="greencheckboxoff"
+
+[margins]
+leftmargin = 900.0
+topmargin = 600.0
+
+[scale]
+x = 0.5
+y = 0.5

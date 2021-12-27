@@ -1,0 +1,27 @@
+[info]
+parent="background"
+gamerole = "gamemap"
+
+[[spawns]]
+x = 10
+y = 15
+[[spawns]]
+x = 5
+y = 25
+[[spawns]]
+x = 50
+y = 32
+[[spawns]]
+x = 6
+y = 89
+
+[scale]
+x = 2.0
+y = 2.0
+
+[physics]
+g = 10.0
+
+[[elements]]
+path = "torch"
+position = {x = 10.0, y = 20.0}

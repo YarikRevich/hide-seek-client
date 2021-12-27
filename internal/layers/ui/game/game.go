@@ -40,10 +40,10 @@ func Draw() {
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		if statemachine.UseStateMachine().PC().GetState() == statemachine.PC_DEAD {
+		if statemachine.UseStateMachine().PCs().GetState(p.ID) == statemachine.PC_DEAD_NOW {
 			latency.UseLatency().Timings().ExecFor(func() {
 			}, func() {
-				statemachine.UseStateMachine().PC().SetState(statemachine.PC_ALIVE)
+				statemachine.UseStateMachine().PCs().SetState(p.ID, statemachine.PC_ALIVE)
 			}, statemachine.UI_GAME, time.Second)
 		}
 	})

@@ -10,10 +10,10 @@ func Exec() {
 	worldMap := world.UseWorld().GetWorldMap()
 	switch worldMap.Name {
 	case "helloween":
-		c.Wrap("assets/audio/game")
+		c.Wrap("game")
 		c.Start()
 	case "starwars":
-		c.Wrap("assets/audio/starwarsmaptheme")
+		c.Wrap("starwarsmaptheme")
 		c.Start()
 	}
 }

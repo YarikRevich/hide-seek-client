@@ -1,0 +1,18 @@
+[info]
+parent="button"
+
+[margins]
+leftmargin = 190.0
+topmargin = 170.0
+
+[scale]
+x = 2.5
+y = 2.5
+
+[text]
+symbols =  "Save config"
+position = "center"
+
+[fonts]
+font = 9.0
+fontcolor = "white"

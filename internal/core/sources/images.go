@@ -48,17 +48,17 @@ func (i *Images) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 }
 
 func (i *Images) GetImage(path string) *ebiten.Image {
-	path = filepath.Join("assets/images", path)
+	path = filepath.Join("dist/images", path)
 
 	image, ok := i.Collection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 	}
-	
+
 	return image
 }
 
-func (i *Images) GetCopyOfImage(path string) *ebiten.Image{
+func (i *Images) GetCopyOfImage(path string) *ebiten.Image {
 	return ebiten.NewImageFromImage(i.GetImage(path))
 }
 

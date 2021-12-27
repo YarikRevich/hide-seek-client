@@ -37,8 +37,8 @@ func (r *Render) blockRenderIfOffline() {
 				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
 			}
 		} else {
-			if !networking.UseNetworking().Dialer().IsConnected() {
-				networking.UseNetworking().Dialer().Reconnect()
+			if !networking.UseNetworking().Dialer().IsServerClientConnected() {
+				networking.UseNetworking().Dialer().ReconnectServerClient()
 
 				notifications.PopUp.WriteError("Servers are offline!")
 				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)

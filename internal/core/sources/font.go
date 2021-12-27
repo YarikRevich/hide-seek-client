@@ -50,7 +50,7 @@ func (f *Font) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 }
 
 func (f *Font) GetFont(path string) font.Face {
-	path = filepath.Join("assets/fonts", path)
+	path = filepath.Join("dist/fonts", path)
 
 	font, ok := f.Collection[path]
 	if !ok {

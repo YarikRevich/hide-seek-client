@@ -16,10 +16,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ExternalServiceClient is the client API for ExternalService service.
+// ExternalServerServiceClient is the client API for ExternalServerService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ExternalServiceClient interface {
+type ExternalServerServiceClient interface {
 	//Game process
 	UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 	UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
@@ -39,126 +39,126 @@ type ExternalServiceClient interface {
 	AssignRandomSpawnsToPCs(ctx context.Context, in *AssignRandomSpawnsToPCsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 }
 
-type externalServiceClient struct {
+type externalServerServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewExternalServiceClient(cc grpc.ClientConnInterface) ExternalServiceClient {
-	return &externalServiceClient{cc}
+func NewExternalServerServiceClient(cc grpc.ClientConnInterface) ExternalServerServiceClient {
+	return &externalServerServiceClient{cc}
 }
 
-func (c *externalServiceClient) UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdateWorld", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateWorld", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdateMap", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateMap", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdatePC", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdatePC", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) UpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) UpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdateElement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateElement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) UpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) UpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdateWeapon", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateWeapon", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/UpdateAmmo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateAmmo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) DeleteWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) DeleteWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/DeleteWorld", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/DeleteWorld", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error) {
+func (c *externalServerServiceClient) GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error) {
 	out := new(GetWorldResponse)
-	err := c.cc.Invoke(ctx, "/ExternalService/GetWorld", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/GetWorld", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) GetStatistics(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetStatisticsResponse, error) {
+func (c *externalServerServiceClient) GetStatistics(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetStatisticsResponse, error) {
 	out := new(GetStatisticsResponse)
-	err := c.cc.Invoke(ctx, "/ExternalService/GetStatistics", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/GetStatistics", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) IsArchievementUnlocked(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) IsArchievementUnlocked(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/IsArchievementUnlocked", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/IsArchievementUnlocked", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) UnlockArchievement(ctx context.Context, in *UnlockArchievementRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) UnlockArchievement(ctx context.Context, in *UnlockArchievementRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalService/UnlockArchievement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/UnlockArchievement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServiceClient) AssignRandomSpawnsToPCs(ctx context.Context, in *AssignRandomSpawnsToPCsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServerServiceClient) AssignRandomSpawnsToPCs(ctx context.Context, in *AssignRandomSpawnsToPCsRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/AssignRandomSpawnsToPCs", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/AssignRandomSpawnsToPCs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ExternalServiceServer is the server API for ExternalService service.
-// All implementations must embed UnimplementedExternalServiceServer
+// ExternalServerServiceServer is the server API for ExternalServerService service.
+// All implementations must embed UnimplementedExternalServerServiceServer
 // for forward compatibility
-type ExternalServiceServer interface {
+type ExternalServerServiceServer interface {
 	//Game process
 	UpdateWorld(context.Context, *World) (*wrapperspb.BoolValue, error)
 	UpdateMap(context.Context, *Map) (*wrapperspb.BoolValue, error)
@@ -176,332 +176,332 @@ type ExternalServiceServer interface {
 	UnlockArchievement(context.Context, *UnlockArchievementRequest) (*emptypb.Empty, error)
 	//Utils
 	AssignRandomSpawnsToPCs(context.Context, *AssignRandomSpawnsToPCsRequest) (*wrapperspb.BoolValue, error)
-	mustEmbedUnimplementedExternalServiceServer()
+	mustEmbedUnimplementedExternalServerServiceServer()
 }
 
-// UnimplementedExternalServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedExternalServiceServer struct {
+// UnimplementedExternalServerServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedExternalServerServiceServer struct {
 }
 
-func (UnimplementedExternalServiceServer) UpdateWorld(context.Context, *World) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) UpdateWorld(context.Context, *World) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateWorld not implemented")
 }
-func (UnimplementedExternalServiceServer) UpdateMap(context.Context, *Map) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) UpdateMap(context.Context, *Map) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMap not implemented")
 }
-func (UnimplementedExternalServiceServer) UpdatePC(context.Context, *PC) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) UpdatePC(context.Context, *PC) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePC not implemented")
 }
-func (UnimplementedExternalServiceServer) UpdateElement(context.Context, *Element) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) UpdateElement(context.Context, *Element) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateElement not implemented")
 }
-func (UnimplementedExternalServiceServer) UpdateWeapon(context.Context, *Weapon) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) UpdateWeapon(context.Context, *Weapon) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateWeapon not implemented")
 }
-func (UnimplementedExternalServiceServer) UpdateAmmo(context.Context, *Ammo) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) UpdateAmmo(context.Context, *Ammo) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAmmo not implemented")
 }
-func (UnimplementedExternalServiceServer) DeleteWorld(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) DeleteWorld(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteWorld not implemented")
 }
-func (UnimplementedExternalServiceServer) GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error) {
+func (UnimplementedExternalServerServiceServer) GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWorld not implemented")
 }
-func (UnimplementedExternalServiceServer) GetStatistics(context.Context, *wrapperspb.StringValue) (*GetStatisticsResponse, error) {
+func (UnimplementedExternalServerServiceServer) GetStatistics(context.Context, *wrapperspb.StringValue) (*GetStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStatistics not implemented")
 }
-func (UnimplementedExternalServiceServer) IsArchievementUnlocked(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) IsArchievementUnlocked(context.Context, *wrapperspb.StringValue) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsArchievementUnlocked not implemented")
 }
-func (UnimplementedExternalServiceServer) UnlockArchievement(context.Context, *UnlockArchievementRequest) (*emptypb.Empty, error) {
+func (UnimplementedExternalServerServiceServer) UnlockArchievement(context.Context, *UnlockArchievementRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnlockArchievement not implemented")
 }
-func (UnimplementedExternalServiceServer) AssignRandomSpawnsToPCs(context.Context, *AssignRandomSpawnsToPCsRequest) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServerServiceServer) AssignRandomSpawnsToPCs(context.Context, *AssignRandomSpawnsToPCsRequest) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AssignRandomSpawnsToPCs not implemented")
 }
-func (UnimplementedExternalServiceServer) mustEmbedUnimplementedExternalServiceServer() {}
+func (UnimplementedExternalServerServiceServer) mustEmbedUnimplementedExternalServerServiceServer() {}
 
-// UnsafeExternalServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ExternalServiceServer will
+// UnsafeExternalServerServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ExternalServerServiceServer will
 // result in compilation errors.
-type UnsafeExternalServiceServer interface {
-	mustEmbedUnimplementedExternalServiceServer()
+type UnsafeExternalServerServiceServer interface {
+	mustEmbedUnimplementedExternalServerServiceServer()
 }
 
-func RegisterExternalServiceServer(s grpc.ServiceRegistrar, srv ExternalServiceServer) {
-	s.RegisterService(&ExternalService_ServiceDesc, srv)
+func RegisterExternalServerServiceServer(s grpc.ServiceRegistrar, srv ExternalServerServiceServer) {
+	s.RegisterService(&ExternalServerService_ServiceDesc, srv)
 }
 
-func _ExternalService_UpdateWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UpdateWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(World)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UpdateWorld(ctx, in)
+		return srv.(ExternalServerServiceServer).UpdateWorld(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UpdateWorld",
+		FullMethod: "/ExternalServerService/UpdateWorld",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UpdateWorld(ctx, req.(*World))
+		return srv.(ExternalServerServiceServer).UpdateWorld(ctx, req.(*World))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_UpdateMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UpdateMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Map)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UpdateMap(ctx, in)
+		return srv.(ExternalServerServiceServer).UpdateMap(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UpdateMap",
+		FullMethod: "/ExternalServerService/UpdateMap",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UpdateMap(ctx, req.(*Map))
+		return srv.(ExternalServerServiceServer).UpdateMap(ctx, req.(*Map))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_UpdatePC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UpdatePC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PC)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UpdatePC(ctx, in)
+		return srv.(ExternalServerServiceServer).UpdatePC(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UpdatePC",
+		FullMethod: "/ExternalServerService/UpdatePC",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UpdatePC(ctx, req.(*PC))
+		return srv.(ExternalServerServiceServer).UpdatePC(ctx, req.(*PC))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_UpdateElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UpdateElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Element)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UpdateElement(ctx, in)
+		return srv.(ExternalServerServiceServer).UpdateElement(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UpdateElement",
+		FullMethod: "/ExternalServerService/UpdateElement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UpdateElement(ctx, req.(*Element))
+		return srv.(ExternalServerServiceServer).UpdateElement(ctx, req.(*Element))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_UpdateWeapon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UpdateWeapon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Weapon)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UpdateWeapon(ctx, in)
+		return srv.(ExternalServerServiceServer).UpdateWeapon(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UpdateWeapon",
+		FullMethod: "/ExternalServerService/UpdateWeapon",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UpdateWeapon(ctx, req.(*Weapon))
+		return srv.(ExternalServerServiceServer).UpdateWeapon(ctx, req.(*Weapon))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_UpdateAmmo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UpdateAmmo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ammo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UpdateAmmo(ctx, in)
+		return srv.(ExternalServerServiceServer).UpdateAmmo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UpdateAmmo",
+		FullMethod: "/ExternalServerService/UpdateAmmo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UpdateAmmo(ctx, req.(*Ammo))
+		return srv.(ExternalServerServiceServer).UpdateAmmo(ctx, req.(*Ammo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_DeleteWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_DeleteWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).DeleteWorld(ctx, in)
+		return srv.(ExternalServerServiceServer).DeleteWorld(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/DeleteWorld",
+		FullMethod: "/ExternalServerService/DeleteWorld",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).DeleteWorld(ctx, req.(*wrapperspb.StringValue))
+		return srv.(ExternalServerServiceServer).DeleteWorld(ctx, req.(*wrapperspb.StringValue))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_GetWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_GetWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).GetWorld(ctx, in)
+		return srv.(ExternalServerServiceServer).GetWorld(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/GetWorld",
+		FullMethod: "/ExternalServerService/GetWorld",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).GetWorld(ctx, req.(*wrapperspb.StringValue))
+		return srv.(ExternalServerServiceServer).GetWorld(ctx, req.(*wrapperspb.StringValue))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_GetStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_GetStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).GetStatistics(ctx, in)
+		return srv.(ExternalServerServiceServer).GetStatistics(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/GetStatistics",
+		FullMethod: "/ExternalServerService/GetStatistics",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).GetStatistics(ctx, req.(*wrapperspb.StringValue))
+		return srv.(ExternalServerServiceServer).GetStatistics(ctx, req.(*wrapperspb.StringValue))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_IsArchievementUnlocked_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_IsArchievementUnlocked_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).IsArchievementUnlocked(ctx, in)
+		return srv.(ExternalServerServiceServer).IsArchievementUnlocked(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/IsArchievementUnlocked",
+		FullMethod: "/ExternalServerService/IsArchievementUnlocked",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).IsArchievementUnlocked(ctx, req.(*wrapperspb.StringValue))
+		return srv.(ExternalServerServiceServer).IsArchievementUnlocked(ctx, req.(*wrapperspb.StringValue))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_UnlockArchievement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_UnlockArchievement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UnlockArchievementRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).UnlockArchievement(ctx, in)
+		return srv.(ExternalServerServiceServer).UnlockArchievement(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/UnlockArchievement",
+		FullMethod: "/ExternalServerService/UnlockArchievement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).UnlockArchievement(ctx, req.(*UnlockArchievementRequest))
+		return srv.(ExternalServerServiceServer).UnlockArchievement(ctx, req.(*UnlockArchievementRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalService_AssignRandomSpawnsToPCs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_AssignRandomSpawnsToPCs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AssignRandomSpawnsToPCsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).AssignRandomSpawnsToPCs(ctx, in)
+		return srv.(ExternalServerServiceServer).AssignRandomSpawnsToPCs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/AssignRandomSpawnsToPCs",
+		FullMethod: "/ExternalServerService/AssignRandomSpawnsToPCs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).AssignRandomSpawnsToPCs(ctx, req.(*AssignRandomSpawnsToPCsRequest))
+		return srv.(ExternalServerServiceServer).AssignRandomSpawnsToPCs(ctx, req.(*AssignRandomSpawnsToPCsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ExternalService_ServiceDesc is the grpc.ServiceDesc for ExternalService service.
+// ExternalServerService_ServiceDesc is the grpc.ServiceDesc for ExternalServerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ExternalService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ExternalService",
-	HandlerType: (*ExternalServiceServer)(nil),
+var ExternalServerService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ExternalServerService",
+	HandlerType: (*ExternalServerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "UpdateWorld",
-			Handler:    _ExternalService_UpdateWorld_Handler,
+			Handler:    _ExternalServerService_UpdateWorld_Handler,
 		},
 		{
 			MethodName: "UpdateMap",
-			Handler:    _ExternalService_UpdateMap_Handler,
+			Handler:    _ExternalServerService_UpdateMap_Handler,
 		},
 		{
 			MethodName: "UpdatePC",
-			Handler:    _ExternalService_UpdatePC_Handler,
+			Handler:    _ExternalServerService_UpdatePC_Handler,
 		},
 		{
 			MethodName: "UpdateElement",
-			Handler:    _ExternalService_UpdateElement_Handler,
+			Handler:    _ExternalServerService_UpdateElement_Handler,
 		},
 		{
 			MethodName: "UpdateWeapon",
-			Handler:    _ExternalService_UpdateWeapon_Handler,
+			Handler:    _ExternalServerService_UpdateWeapon_Handler,
 		},
 		{
 			MethodName: "UpdateAmmo",
-			Handler:    _ExternalService_UpdateAmmo_Handler,
+			Handler:    _ExternalServerService_UpdateAmmo_Handler,
 		},
 		{
 			MethodName: "DeleteWorld",
-			Handler:    _ExternalService_DeleteWorld_Handler,
+			Handler:    _ExternalServerService_DeleteWorld_Handler,
 		},
 		{
 			MethodName: "GetWorld",
-			Handler:    _ExternalService_GetWorld_Handler,
+			Handler:    _ExternalServerService_GetWorld_Handler,
 		},
 		{
 			MethodName: "GetStatistics",
-			Handler:    _ExternalService_GetStatistics_Handler,
+			Handler:    _ExternalServerService_GetStatistics_Handler,
 		},
 		{
 			MethodName: "IsArchievementUnlocked",
-			Handler:    _ExternalService_IsArchievementUnlocked_Handler,
+			Handler:    _ExternalServerService_IsArchievementUnlocked_Handler,
 		},
 		{
 			MethodName: "UnlockArchievement",
-			Handler:    _ExternalService_UnlockArchievement_Handler,
+			Handler:    _ExternalServerService_UnlockArchievement_Handler,
 		},
 		{
 			MethodName: "AssignRandomSpawnsToPCs",
-			Handler:    _ExternalService_AssignRandomSpawnsToPCs_Handler,
+			Handler:    _ExternalServerService_AssignRandomSpawnsToPCs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -41,7 +41,7 @@ func (i *Shaders) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 }
 
 func (i *Shaders) GetShader(path string) *ebiten.Shader {
-	path = filepath.Join("assets/shaders", path)
+	path = filepath.Join("dist/shaders", path)
 
 	shader, ok := i.Collection[path]
 	if !ok {

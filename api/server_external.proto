@@ -126,7 +126,7 @@ message GetStatisticsResponse {
     reserved 2 to 4;
 }
 
-service ExternalService {
+service ExternalServerService {
     //Game process
     rpc UpdateWorld (World) returns (google.protobuf.BoolValue);
     rpc UpdateMap (Map) returns (google.protobuf.BoolValue);

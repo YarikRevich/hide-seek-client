@@ -6,14 +6,14 @@ import (
 )
 
 type Services struct {
-	client services_external.ExternalServiceClient
+	client services_external.ExternalServicesServiceClient
 }
 
 func (a *Services) Connect(c *grpc.ClientConn) {
-	a.client = services_external.NewExternalServiceClient(c)
+	a.client = services_external.NewExternalServicesServiceClient(c)
 }
 
-func (a *Services) GetClient() services_external.ExternalServiceClient {
+func (a *Services) GetClient() services_external.ExternalServicesServiceClient {
 	return a.client
 }
 

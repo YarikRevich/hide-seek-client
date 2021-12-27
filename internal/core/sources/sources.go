@@ -30,11 +30,11 @@ func (p *provider) LoadSources(fs embed.FS) {
 	var wg sync.WaitGroup
 	wg.Add(5)
 
-	go p.audio.Load(fs, "assets/audio", &wg)
-	go p.metadata.Load(fs, "assets/metadata", &wg)
-	go p.images.Load(fs, "assets/images", &wg)
-	go p.font.Load(fs, "assets/fonts", &wg)
-	go p.shaders.Load(fs, "assets/shaders", &wg)
+	go p.audio.Load(fs, "dist/audio", &wg)
+	go p.metadata.Load(fs, "dist/metadata", &wg)
+	go p.images.Load(fs, "dist/images", &wg)
+	go p.font.Load(fs, "dist/fonts", &wg)
+	go p.shaders.Load(fs, "dist/shaders", &wg)
 
 	wg.Wait()
 

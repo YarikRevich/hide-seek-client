@@ -16,86 +16,87 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ExternalServiceClient is the client API for ExternalService service.
+// ExternalServicesServiceClient is the client API for ExternalServicesService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ExternalServiceClient interface {
+type ExternalServicesServiceClient interface {
 	IsAnyServerAvailable(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 }
 
-type externalServiceClient struct {
+type externalServicesServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewExternalServiceClient(cc grpc.ClientConnInterface) ExternalServiceClient {
-	return &externalServiceClient{cc}
+func NewExternalServicesServiceClient(cc grpc.ClientConnInterface) ExternalServicesServiceClient {
+	return &externalServicesServiceClient{cc}
 }
 
-func (c *externalServiceClient) IsAnyServerAvailable(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+func (c *externalServicesServiceClient) IsAnyServerAvailable(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
 	out := new(wrapperspb.BoolValue)
-	err := c.cc.Invoke(ctx, "/ExternalService/IsAnyServerAvailable", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServicesService/IsAnyServerAvailable", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ExternalServiceServer is the server API for ExternalService service.
-// All implementations must embed UnimplementedExternalServiceServer
+// ExternalServicesServiceServer is the server API for ExternalServicesService service.
+// All implementations must embed UnimplementedExternalServicesServiceServer
 // for forward compatibility
-type ExternalServiceServer interface {
+type ExternalServicesServiceServer interface {
 	IsAnyServerAvailable(context.Context, *emptypb.Empty) (*wrapperspb.BoolValue, error)
-	mustEmbedUnimplementedExternalServiceServer()
+	mustEmbedUnimplementedExternalServicesServiceServer()
 }
 
-// UnimplementedExternalServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedExternalServiceServer struct {
+// UnimplementedExternalServicesServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedExternalServicesServiceServer struct {
 }
 
-func (UnimplementedExternalServiceServer) IsAnyServerAvailable(context.Context, *emptypb.Empty) (*wrapperspb.BoolValue, error) {
+func (UnimplementedExternalServicesServiceServer) IsAnyServerAvailable(context.Context, *emptypb.Empty) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsAnyServerAvailable not implemented")
 }
-func (UnimplementedExternalServiceServer) mustEmbedUnimplementedExternalServiceServer() {}
+func (UnimplementedExternalServicesServiceServer) mustEmbedUnimplementedExternalServicesServiceServer() {
+}
 
-// UnsafeExternalServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ExternalServiceServer will
+// UnsafeExternalServicesServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ExternalServicesServiceServer will
 // result in compilation errors.
-type UnsafeExternalServiceServer interface {
-	mustEmbedUnimplementedExternalServiceServer()
+type UnsafeExternalServicesServiceServer interface {
+	mustEmbedUnimplementedExternalServicesServiceServer()
 }
 
-func RegisterExternalServiceServer(s grpc.ServiceRegistrar, srv ExternalServiceServer) {
-	s.RegisterService(&ExternalService_ServiceDesc, srv)
+func RegisterExternalServicesServiceServer(s grpc.ServiceRegistrar, srv ExternalServicesServiceServer) {
+	s.RegisterService(&ExternalServicesService_ServiceDesc, srv)
 }
 
-func _ExternalService_IsAnyServerAvailable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServicesService_IsAnyServerAvailable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServiceServer).IsAnyServerAvailable(ctx, in)
+		return srv.(ExternalServicesServiceServer).IsAnyServerAvailable(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalService/IsAnyServerAvailable",
+		FullMethod: "/ExternalServicesService/IsAnyServerAvailable",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServiceServer).IsAnyServerAvailable(ctx, req.(*emptypb.Empty))
+		return srv.(ExternalServicesServiceServer).IsAnyServerAvailable(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ExternalService_ServiceDesc is the grpc.ServiceDesc for ExternalService service.
+// ExternalServicesService_ServiceDesc is the grpc.ServiceDesc for ExternalServicesService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ExternalService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ExternalService",
-	HandlerType: (*ExternalServiceServer)(nil),
+var ExternalServicesService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ExternalServicesService",
+	HandlerType: (*ExternalServicesServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "IsAnyServerAvailable",
-			Handler:    _ExternalService_IsAnyServerAvailable_Handler,
+			Handler:    _ExternalServicesService_IsAnyServerAvailable_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

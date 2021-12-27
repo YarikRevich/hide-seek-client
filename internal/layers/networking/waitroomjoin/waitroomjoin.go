@@ -18,12 +18,12 @@ import (
 
 func Exec() {
 	latency.UseLatency().Once().ExecOnce(statemachine.UI_WAIT_ROOM_JOIN, func() {
-		conn := networking.UseNetworking().Dialer().Conn()
+		server := networking.UseNetworking().Clients().Base().GetClient()
 
 		pcMess := world.UseWorld().GetPC().ToAPIMessage()
 
-		r, err := conn.AddPC(context.Background(), pcMess, grpc.EmptyCallOption{})
-		if !r.GetOk() || err != nil {
+		r, err := server.UpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{})
+		if !r.GetValue() || err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			return
 		}
@@ -33,8 +33,9 @@ func Exec() {
 		w := world.UseWorld()
 		worldId := w.ID.String()
 
-		conn := networking.UseNetworking().Dialer().Conn()
-		worldObjects, err := conn.GetWorld(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
+		server := networking.UseNetworking().Clients().Base().GetClient()
+
+		worldObjects, err := server.GetWorld(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
 		if err != nil {
 			logrus.Fatal(err)
 		}

@@ -21,7 +21,6 @@ func (p *Parser) parseFiles(base string, files []fs.DirEntry) {
 	for _, v := range files {
 		path := filepath.Join(base, v.Name())
 		if v.IsDir() {
-			// p.base = filepath.Join(p.base, v.Name())
 			p.parseDirs(path)
 		} else {
 			p.Add(1)

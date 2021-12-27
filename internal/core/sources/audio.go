@@ -3,6 +3,7 @@ package sources
 import (
 	"embed"
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"sync"
 
@@ -59,7 +60,10 @@ func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, a.loadFile).Parse()
 	wg.Done()
 }
+
 func (a *Audio) GetAudioController(path string) *Track {
+	path = filepath.Join("dist/audio", path)
+
 	audio, ok := a.Collection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("audio with path '%s' not found", path))

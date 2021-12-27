@@ -168,10 +168,9 @@ func (w *Map) GetSpawns() []*image.Point {
 }
 
 func (w *Map) ToAPIMessage() *server_external.Map {
-
 	return &server_external.Map{
 		Base:   w.Base.ToAPIMessage(),
-		Spawns: *(*server_external.Position)(unsafe.Pointer(&w.Base.ModelCombination.Origin.Spawns)),
+		Spawns: *(*[]*server_external.Position)(unsafe.Pointer(&w.Base.ModelCombination.Origin.Spawns)),
 	}
 }
 

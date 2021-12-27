@@ -2,7 +2,6 @@ package sources
 
 import (
 	"embed"
-	// "fmt"
 	"path/filepath"
 	"regexp"
 	"sync"
@@ -152,7 +151,7 @@ func (m *Metadata) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 }
 
 func (m *Metadata) GetMetadata(path string) *ModelCombination {
-	path = filepath.Join("assets/metadata", path)
+	path = filepath.Join("dist/metadata", path)
 	return m.Collection[path]
 }
 

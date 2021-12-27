@@ -1,0 +1,21 @@
+/*
+Shader which implements basic torch lightning
+*/
+
+package shaders
+
+var ScreenSize vec2
+
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	coord := (texCoord.xy / ScreenSize) 
+	
+	tl := vec2(0.4)
+	br := vec2(0.6)
+
+	m := max(tl-coord, coord-br)
+	dist := length(max(vec2(0.0, 0.0), m)) + min(0.0, max(m.x, m.y))
+
+	f := mix( vec3(.9,.4,0.0), vec3(0.0, 0.0, 0.0), smoothstep(0.4, 0.20, dist*1.5) );
+   	s := mix(vec3(0.0, 0.0, 0.0), f, smoothstep(0.45, 0.20, dist)); 
+    return vec4(s , 0.0);
+}

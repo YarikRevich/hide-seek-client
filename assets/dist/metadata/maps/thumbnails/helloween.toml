@@ -1,0 +1,12 @@
+[info]
+parent="helloween"
+scrollabley=true
+
+[margins]
+leftmargin = 750.0
+topmargin = 370.0
+
+[scale]
+x = 0.5
+y = 0.5
+
