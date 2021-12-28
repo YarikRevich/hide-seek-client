@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "gamesettings",
+    srcs = ["gamesettings.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/gamesettings",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/gamesettings/regime",
+        "//internal/core/networking/api/server_external",
+    ],
+)

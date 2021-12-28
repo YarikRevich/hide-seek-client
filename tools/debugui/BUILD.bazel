@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "debugui",
+    srcs = ["debugiu.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/tools/debugui",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/core/statemachine",
+        "//internal/core/world",
+        "//tools/debugui/scenes/game",
+        "//tools/params",
+        "@com_github_gabstv_ebiten_imgui//renderer",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_inkyblackness_imgui_go_v2//:imgui-go",
+    ],
+)

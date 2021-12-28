@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "positioning",
+    srcs = [
+        "button.go",
+        "common.go",
+        "input.go",
+        "positioning.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/text/positioning",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/sources",
+        "//internal/core/text/color",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//text",
+        "@com_github_sirupsen_logrus//:logrus",
+        "@org_golang_x_image//font",
+    ],
+)

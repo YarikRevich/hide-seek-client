@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "game",
+    srcs = ["game.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard/game",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/events",
+        "//internal/core/keycodes",
+        "//internal/core/physics",
+        "//internal/core/screen",
+        "//internal/core/world",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+    ],
+)

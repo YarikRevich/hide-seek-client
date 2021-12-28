@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "objects",
+    srcs = [
+        "ammo.go",
+        "base.go",
+        "camera.go",
+        "constants.go",
+        "element.go",
+        "loot.go",
+        "map.go",
+        "pc.go",
+        "spawn.go",
+        "weapon.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/objects",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/events",
+        "//internal/core/keycodes",
+        "//internal/core/networking/api/server_external",
+        "//internal/core/screen",
+        "//internal/core/sources",
+        "//internal/core/storage",
+        "@com_github_google_uuid//:uuid",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_sirupsen_logrus//:logrus",
+        "@com_github_yarikrevich_caching//pkg/zeroshifter",
+    ],
+)

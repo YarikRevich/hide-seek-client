@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "audio",
+    srcs = ["audio.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/audio",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/profiling",
+        "//internal/core/statemachine",
+        "//internal/layers/audio/game",
+        "//internal/layers/audio/startmenu",
+        "//tools/params",
+    ],
+)

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "regime",
+    srcs = [
+        "common.go",
+        "deathmatch.go",
+        "squadxsquad.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/gamesettings/regime",
+    visibility = ["//:__subpackages__"],
+)

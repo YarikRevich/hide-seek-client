@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "herochoose",
+    srcs = ["herochoose.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/herochoose",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/events",
+        "//internal/core/middlewares",
+        "//internal/core/sources",
+        "//internal/core/statemachine",
+        "//internal/core/world",
+    ],
+)

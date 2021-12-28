@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "clients",
+    srcs = [
+        "base.go",
+        "clients.go",
+        "services.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/networking/clients",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/networking/api/server_external",
+        "//internal/core/networking/api/services_external",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

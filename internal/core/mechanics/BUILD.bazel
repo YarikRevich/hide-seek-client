@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mechanics",
+    srcs = [
+        "mechanics.go",
+        "reborn.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/mechanics",
+    visibility = ["//:__subpackages__"],
+)

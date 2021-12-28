@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "joinmenu",
+    srcs = ["joinmenu.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/joinmenu",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/events",
+        "//internal/core/middlewares",
+        "//internal/core/notifications",
+        "//internal/core/sources",
+        "//internal/core/statemachine",
+        "//internal/core/world",
+        "@com_github_google_uuid//:uuid",
+    ],
+)

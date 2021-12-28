@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "ui",
+    srcs = ["ui.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/ui",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/profiling",
+        "//internal/core/statemachine",
+        "//internal/layers/ui/debug",
+        "//internal/layers/ui/game",
+        "//internal/layers/ui/herochoose",
+        "//internal/layers/ui/joinmenu",
+        "//internal/layers/ui/mapchoose",
+        "//internal/layers/ui/popup",
+        "//internal/layers/ui/settingsmenu",
+        "//internal/layers/ui/startmenu",
+        "//internal/layers/ui/waitroomjoin",
+        "//internal/layers/ui/waitroomstart",
+        "//tools/params",
+    ],
+)

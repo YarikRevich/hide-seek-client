@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "color",
+    srcs = ["color.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/text/color",
+    visibility = ["//:__subpackages__"],
+    deps = ["//internal/core/sources"],
+)

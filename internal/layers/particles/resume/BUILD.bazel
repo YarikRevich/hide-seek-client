@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "resume",
+    srcs = ["resume.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/particles/resume",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/effects/lines",
+        "//internal/core/render",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//ebitenutil",
+    ],
+)

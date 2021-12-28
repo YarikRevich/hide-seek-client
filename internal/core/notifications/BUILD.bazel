@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "notifications",
+    srcs = ["notifications.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/notifications",
+    visibility = ["//:__subpackages__"],
+    deps = ["@com_github_yarikrevich_caching//pkg/zeroshifter"],
+)

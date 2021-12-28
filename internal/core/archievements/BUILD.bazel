@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "archievements",
+    srcs = [
+        "10kills.go",
+        "archievements.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/archievements",
+    visibility = ["//:__subpackages__"],
+)

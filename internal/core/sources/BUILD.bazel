@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "sources",
+    srcs = [
+        "audio.go",
+        "collisions.go",
+        "extensions.go",
+        "font.go",
+        "images.go",
+        "metadata.go",
+        "parser.go",
+        "postloader.go",
+        "shaders.go",
+        "sources.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/sources",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@com_github_burntsushi_toml//:toml",
+        "@com_github_faiface_beep//:beep",
+        "@com_github_faiface_beep//effects",
+        "@com_github_faiface_beep//mp3",
+        "@com_github_golang_freetype//truetype",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_sirupsen_logrus//:logrus",
+        "@org_golang_x_image//font",
+    ],
+)

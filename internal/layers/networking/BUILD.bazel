@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "networking",
+    srcs = ["networking.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/networking",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/statemachine",
+        "//internal/layers/networking/game",
+        "//internal/layers/networking/waitroomjoin",
+        "//internal/layers/networking/waitroomstart",
+    ],
+)

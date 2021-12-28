@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "debug",
+    srcs = ["debug.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/ui/debug",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/profiling",
+        "//internal/core/render",
+        "//internal/core/sources",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//text",
+    ],
+)

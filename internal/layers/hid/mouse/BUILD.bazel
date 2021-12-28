@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mouse",
+    srcs = ["mouse.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/events",
+        "//internal/core/profiling",
+        "//internal/core/statemachine",
+        "//internal/layers/hid/mouse/herochoose",
+        "//internal/layers/hid/mouse/joinmenu",
+        "//internal/layers/hid/mouse/mapchoose",
+        "//internal/layers/hid/mouse/settingsmenu",
+        "//internal/layers/hid/mouse/startmenu",
+        "//internal/layers/hid/mouse/unfocus",
+        "//internal/layers/hid/mouse/waitroomjoin",
+        "//internal/layers/hid/mouse/waitroomstart",
+        "//tools/params",
+    ],
+)

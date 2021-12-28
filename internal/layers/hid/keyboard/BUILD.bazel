@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "keyboard",
+    srcs = ["keyboard.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/profiling",
+        "//internal/core/statemachine",
+        "//internal/layers/hid/keyboard/game",
+        "//internal/layers/hid/keyboard/joinmenu",
+        "//internal/layers/hid/keyboard/settingsmenu",
+        "//tools/params",
+    ],
+)

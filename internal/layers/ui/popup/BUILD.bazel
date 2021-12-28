@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "popup",
+    srcs = ["popup.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/ui/popup",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/notifications",
+        "//internal/core/render",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//text",
+        "@org_golang_x_image//font/basicfont",
+    ],
+)

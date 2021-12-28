@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "lines",
+    srcs = ["lines.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/effects/lines",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/screen",
+        "@org_golang_x_image//colornames",
+    ],
+)

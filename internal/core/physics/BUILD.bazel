@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "physics",
+    srcs = [
+        "jump.go",
+        "physics.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/physics",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/keycodes",
+        "//internal/core/world",
+    ],
+)

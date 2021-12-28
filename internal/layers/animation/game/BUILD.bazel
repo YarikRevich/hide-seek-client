@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "game",
+    srcs = ["game.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/animation/game",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/animation",
+        "//internal/core/world",
+    ],
+)

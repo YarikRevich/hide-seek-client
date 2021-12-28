@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "paths",
+    srcs = [
+        "paths_unix.go",
+        "paths_windows.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/paths",
+    visibility = ["//:__subpackages__"],
+)

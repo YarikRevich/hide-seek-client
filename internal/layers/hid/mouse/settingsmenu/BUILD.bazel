@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "settingsmenu",
+    srcs = ["settingsmenu.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/settingsmenu",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/events",
+        "//internal/core/middlewares",
+        "//internal/core/sources",
+        "//internal/core/statemachine",
+        "//internal/core/storage",
+        "//tools/lanserver",
+    ],
+)

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "profiling",
+    srcs = ["profiling.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/profiling",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/paths",
+        "@com_github_sirupsen_logrus//:logrus",
+    ],
+)

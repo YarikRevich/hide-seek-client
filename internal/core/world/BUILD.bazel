@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "world",
+    srcs = ["world.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/world",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/gamesettings",
+        "//internal/core/networking/api/server_external",
+        "//internal/core/objects",
+        "//internal/core/statistics",
+        "@com_github_google_uuid//:uuid",
+    ],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "middlewares",
+    srcs = [
+        "middlewares.go",
+        "prepare.go",
+        "render.go",
+        "ui.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/middlewares",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/audiocontroller",
+        "//internal/core/events",
+        "//internal/core/latency",
+        "//internal/core/networking",
+        "//internal/core/notifications",
+        "//internal/core/statemachine",
+        "//tools/params",
+        "@com_github_alimasyhur_is_connect//:is-connect",
+    ],
+)

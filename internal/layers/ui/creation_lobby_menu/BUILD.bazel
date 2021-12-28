@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "creation_lobby_menu",
+    srcs = ["creation_lobby_menu.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/ui/creation_lobby_menu",
+    visibility = ["//:__subpackages__"],
+)

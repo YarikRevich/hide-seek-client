@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "keycodes",
+    srcs = [
+        "direction.go",
+        "gamepad.go",
+        "keyboard.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/keycodes",
+    visibility = ["//:__subpackages__"],
+    deps = ["@com_github_hajimehoshi_ebiten_v2//:ebiten"],
+)

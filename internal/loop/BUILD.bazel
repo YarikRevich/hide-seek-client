@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "loop",
+    srcs = ["loop.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/loop",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/middlewares",
+        "//internal/core/profiling",
+        "//internal/core/render",
+        "//internal/core/screen",
+        "//internal/core/sourceupgrader",
+        "//internal/core/transition",
+        "//internal/layers/animation",
+        "//internal/layers/audio",
+        "//internal/layers/hid/keyboard",
+        "//internal/layers/hid/mouse",
+        "//internal/layers/networking",
+        "//internal/layers/particles",
+        "//internal/layers/ui",
+        "//tools/debugui",
+        "//tools/params",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+    ],
+)

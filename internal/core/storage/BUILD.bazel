@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "storage",
+    srcs = [
+        "db.go",
+        "query.go",
+        "storage.go",
+        "user.go",
+        "userstorage.go",
+        "usertemporary.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/storage",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/paths",
+        "//tools/params",
+        "@com_github_mattn_go_sqlite3//:go-sqlite3",
+        "@com_github_rs_xid//:xid",
+        "@com_github_sirupsen_logrus//:logrus",
+    ],
+)

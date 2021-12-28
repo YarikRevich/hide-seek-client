@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "waitroomstart",
+    srcs = ["waitroomstart.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/ui/waitroomstart",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/render",
+        "//internal/core/sources",
+        "//internal/core/text/positioning",
+        "//internal/core/world",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//text",
+    ],
+)

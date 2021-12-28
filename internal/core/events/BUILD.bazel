@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "events",
+    srcs = [
+        "events.go",
+        "gamepad.go",
+        "input.go",
+        "keyboard.go",
+        "mouse.go",
+        "window.go",
+    ],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/events",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/keycodes",
+        "//internal/core/sources",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//inpututil",
+    ],
+)
