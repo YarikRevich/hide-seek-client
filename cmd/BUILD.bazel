@@ -18,7 +18,6 @@ go_library(
         "//tools/printer",
         "@com_github_hajimehoshi_ebiten_v2//:ebiten",
         "@com_github_sirupsen_logrus//:logrus",
-        "@glfw//"
     ],
 )
 

@@ -128,6 +128,7 @@ go_repository(
 go_repository(
     name = "com_github_engoengine_glm",
     importpath = "github.com/engoengine/glm",
+    patches = ["//third-party/glm:glm.patch"],
     sum = "h1:rVKp3XvwVYVidU1oOcahpRdoG32EJ1+CLxiwZOADpNc=",
     version = "v0.0.0-20170725114841-9c08f4d1f668",
 )
@@ -205,6 +206,7 @@ go_repository(
 go_repository(
     name = "com_github_go_gl_glfw",
     importpath = "github.com/go-gl/glfw",
+    patches = ["//third-party/glfw:glfw.patch"],
     sum = "h1:um18JldLG6QwC9tj6mSfQnb+kor5aezfPPtq1GmHek0=",
     version = "v0.0.0-20211213063430-748e38ca8aec",
 )
@@ -212,6 +214,7 @@ go_repository(
 go_repository(
     name = "com_github_go_gl_glfw_v3_3_glfw",
     importpath = "github.com/go-gl/glfw/v3.3/glfw",
+    patches = ["//third-party/glfw:glfw.patch"],
     sum = "h1:3FLiRYO6PlQFDpUU7OEFlWgjGD1jnBIVSJ5SYRWk+9c=",
     version = "v0.0.0-20211213063430-748e38ca8aec",
 )
@@ -725,6 +728,20 @@ new_git_repository(
     remote = "https://github.com/glfw/glfw.git",
     commit = "8d7e5cdb49a1a5247df612157ecffdd8e68923d2",
     build_file = "@//:third-party/glfw/glfw.BUILD",
+)
+
+new_git_repository(
+    name = "glm",
+    remote = "https://github.com/g-truc/glm.git",
+    commit = "658d8960d081e0c9c312d49758c7ef919371b428",
+    build_file = "@//:third-party/glm/glm.BUILD",
+)
+
+new_git_repository(
+    name = "imgui",
+    remote = "https://github.com/inkyblackness/imgui-go.git",
+    commit = "dea92bb7231cf3441e30b373be87e2655b38a113",
+    build_file = "@//:third-party/imgui/imgui.BUILD",
 )
 
 go_rules_dependencies()

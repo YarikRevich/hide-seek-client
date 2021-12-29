@@ -5,6 +5,10 @@ go_library(
     srcs = ["debugiu.go"],
     importpath = "github.com/YarikRevich/hide-seek-client/tools/debugui",
     visibility = ["//visibility:public"],
+    cgo = True, # keep
+    cdeps = [
+        "@glfw//:glfw", # keep
+    ],
     deps = [
         "//internal/core/statemachine",
         "//internal/core/world",
