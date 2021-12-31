@@ -10,8 +10,8 @@ go_library(
     importpath = "github.com/YarikRevich/hide-seek-client/internal/core/networking/clients",
     visibility = ["//:__subpackages__"],
     deps = [
-        "//internal/core/networking/api/server_external:server_external_proto",
-        "//internal/core/networking/api/services_external:services_external_proto",
+        "//internal/core/networking/api/server_external",
+        "//internal/core/networking/api/services_external",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )

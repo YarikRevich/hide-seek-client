@@ -1,0 +1,3 @@
+BUILD_EMBED_LABEL 
+BUILD_HOST MacBook-Pro-Yarik.local
+BUILD_USER yariksvitlitskiy

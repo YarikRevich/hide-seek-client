@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "syncmap",
+    srcs = [
+        "go19.go",
+        "map.go",
+        "pre_go19.go",
+    ],
+    importpath = "golang.org/x/sync/syncmap",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":syncmap",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "syncmap_test",
+    srcs = [
+        "map_bench_test.go",
+        "map_reference_test.go",
+        "map_test.go",
+    ],
+    deps = [":syncmap"],
+)

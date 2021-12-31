@@ -1,0 +1,8 @@
+genrule(
+    name = "inject_glfw_src",
+    outs = ["inject_glfw_src"]
+)
+
+genrule(
+    name = "inject_glfw_include",
+)

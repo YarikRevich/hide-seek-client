@@ -1,0 +1,45 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "regtest",
+    srcs = [
+        "doc.go",
+        "env.go",
+        "expectation.go",
+        "regtest.go",
+        "runner.go",
+        "wrappers.go",
+    ],
+    importpath = "golang.org/x/tools/internal/lsp/regtest",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/jsonrpc2",
+        "//internal/jsonrpc2/servertest",
+        "//internal/lsp",
+        "//internal/lsp/cache",
+        "//internal/lsp/cmd",
+        "//internal/lsp/command",
+        "//internal/lsp/debug",
+        "//internal/lsp/fake",
+        "//internal/lsp/lsprpc",
+        "//internal/lsp/protocol",
+        "//internal/lsp/source",
+        "//internal/testenv",
+        "//internal/tool",
+        "@org_golang_x_sys//execabs:go_default_library",
+        "@org_golang_x_xerrors//:go_default_library",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":regtest",
+    visibility = ["//:__subpackages__"],
+)
+
+go_test(
+    name = "regtest_test",
+    srcs = ["env_test.go"],
+    embed = [":regtest"],
+    deps = ["//internal/lsp/protocol"],
+)

@@ -1,0 +1,2 @@
+/bazel-*
+/tests/core/cgo/libimported.*

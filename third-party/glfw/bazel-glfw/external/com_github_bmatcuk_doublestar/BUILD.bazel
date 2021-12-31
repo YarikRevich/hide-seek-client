@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "doublestar",
+    srcs = ["doublestar.go"],
+    importpath = "github.com/bmatcuk/doublestar",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":doublestar",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "doublestar_test",
+    srcs = ["doublestar_test.go"],
+    embed = [":doublestar"],
+)

@@ -5,7 +5,6 @@ go_library(
     srcs = ["main.go"],
     importpath = "github.com/YarikRevich/hide-seek-client/cmd",
     visibility = ["//visibility:private"],
-    cgo = True,
     deps = [
         "//assets",
         "//internal/core/middlewares",

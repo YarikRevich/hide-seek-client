@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "progress",
+    srcs = ["progress.go"],
+    importpath = "golang.org/x/tools/internal/lsp/progress",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/event",
+        "//internal/lsp/debug/tag",
+        "//internal/lsp/protocol",
+        "//internal/xcontext",
+        "@org_golang_x_xerrors//:go_default_library",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":progress",
+    visibility = ["//:__subpackages__"],
+)
+
+go_test(
+    name = "progress_test",
+    srcs = ["progress_test.go"],
+    embed = [":progress"],
+    deps = ["//internal/lsp/protocol"],
+)

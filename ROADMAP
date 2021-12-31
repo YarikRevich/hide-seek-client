@@ -4,3 +4,158 @@
 - Fix render frame rate faults
 - Implement simplified way of networking
 ---
+
+
+go_library(
+    name = "glfw_include_GLFW",
+    srcs = glob(["glfw/include/GLFW/*.c", "glfw/include/GLFW/*.go", "glfw/include/GLFW/*.h"]),
+    cgo = True,
+    importpath = "github.com/go-gl/glfw/v3.3/glfw/glfw/include",
+    clinkopts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-lGL",
+            "-lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-framework Cocoa -framework IOKit -framework CoreVideo",
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-framework Cocoa -framework IOKit -framework CoreVideo",
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-lGL",
+            "-lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "-lgdi32",
+            "-lopengl32",
+        ],
+        "//conditions:default": [],
+    }),
+    copts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-D_GLFW_X11 -D_GNU_SOURCE",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-D_GLFW_COCOA -Wno-deprecated-declarations",
+            "-x objective-c",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-D_GLFW_COCOA -Wno-deprecated-declarations",
+            "-x objective-c",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-D_GLFW_X11 -D_GNU_SOURCE",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "-D_GLFW_WIN32 -Iglfw/deps/mingw",
+        ],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+
+go_library(
+    name = "glfw_include",
+    srcs = glob(["glfw/include/*.c", "glfw/include/*.go", "glfw/include/*.h"]),
+    cgo = True,
+    importpath = "github.com/go-gl/glfw/v3.3/glfw/glfw/include",
+    clinkopts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-lGL",
+            "-lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-framework Cocoa -framework IOKit -framework CoreVideo",
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-framework Cocoa -framework IOKit -framework CoreVideo",
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-lGL",
+            "-lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "-lgdi32",
+            "-lopengl32",
+        ],
+        "//conditions:default": [],
+    }),
+    copts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-D_GLFW_X11 -D_GNU_SOURCE",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-D_GLFW_COCOA -Wno-deprecated-declarations",
+            "-x objective-c",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-D_GLFW_COCOA -Wno-deprecated-declarations",
+            "-x objective-c",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-D_GLFW_X11 -D_GNU_SOURCE",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "-D_GLFW_WIN32 -Iglfw/deps/mingw",
+        ],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "glfw_src",
+    srcs = glob(["glfw/src/*.c", "glfw/src/*.go", "glfw/src/*.h"]),
+    cgo = True,
+    importpath = "github.com/go-gl/glfw/v3.3/glfw/glfw/src",
+    clinkopts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-lGL",
+            "-lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-framework Cocoa -framework IOKit -framework CoreVideo",
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-framework Cocoa -framework IOKit -framework CoreVideo",
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-lGL",
+            "-lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "-lgdi32",
+            "-lopengl32",
+        ],
+        "//conditions:default": [],
+    }),
+    copts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-D_GLFW_X11 -D_GNU_SOURCE",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-D_GLFW_COCOA -Wno-deprecated-declarations",
+            "-x objective-c",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-D_GLFW_COCOA -Wno-deprecated-declarations",
+            "-x objective-c",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-D_GLFW_X11 -D_GNU_SOURCE",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "-D_GLFW_WIN32 -Iglfw/deps/mingw",
+        ],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
