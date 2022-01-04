@@ -1,6 +1,0 @@
-__main__/external/bazel_gazelle/cmd/gazelle/gazelle_/gazelle /private/var/tmp/_bazel_yariksvitlitskiy/38b1c38c43c00a7a223318a334503ccb/execroot/__main__/bazel-out/host/bin/external/bazel_gazelle/cmd/gazelle/gazelle_/gazelle
-__main__/external/go_sdk/bin/go /private/var/tmp/_bazel_yariksvitlitskiy/38b1c38c43c00a7a223318a334503ccb/external/go_sdk/bin/go
-__main__/gazelle /private/var/tmp/_bazel_yariksvitlitskiy/38b1c38c43c00a7a223318a334503ccb/execroot/__main__/bazel-out/darwin-fastbuild/bin/gazelle
-__main__/gazelle-runner.bash /private/var/tmp/_bazel_yariksvitlitskiy/38b1c38c43c00a7a223318a334503ccb/execroot/__main__/bazel-out/darwin-fastbuild/bin/gazelle-runner.bash
-bazel_gazelle/cmd/gazelle/gazelle_/gazelle /private/var/tmp/_bazel_yariksvitlitskiy/38b1c38c43c00a7a223318a334503ccb/execroot/__main__/bazel-out/host/bin/external/bazel_gazelle/cmd/gazelle/gazelle_/gazelle
-go_sdk/bin/go /private/var/tmp/_bazel_yariksvitlitskiy/38b1c38c43c00a7a223318a334503ccb/external/go_sdk/bin/go

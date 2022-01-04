@@ -1,1 +1,0 @@
-# _m_hidden.txt should be embedded because it directly matches the embed pattern.

@@ -1,1 +1,0 @@
-m_static.txt should be embedded because it matches the embed pattern.

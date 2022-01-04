@@ -1,6 +1,0 @@
-# gazelle:proto package
-
-genrule(
-    name = "genproto",
-    outs ["gen.proto"],
-)

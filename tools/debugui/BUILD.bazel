@@ -11,7 +11,6 @@ go_library(
         "//tools/debugui/scenes/game",
         "//tools/params",
         # "@com_github_gabstv_ebiten_imgui//renderer",
-        # ,
-        # "@com_github_inkyblackness_imgui_go_v2//:imgui-go",
+        "@imgui-go//:imgui-go",
     ],
 )

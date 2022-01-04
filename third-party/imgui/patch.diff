@@ -1,0 +1,22 @@
+--- wrapper/WrapperConverter.h
++++ wrapper/WrapperConverter.h
+@@ -1,5 +1,9 @@
+ #pragma once
+ 
++#ifdef __cplusplus
++extern "C++" {
++#endif
++
+ extern void importValue(bool &out, IggBool const &in);
+ extern void exportValue(IggBool &out, bool const &in);
+ 
+@@ -56,4 +60,8 @@
+ 
+ typedef TypeWrapper<bool, IggBool> BoolWrapper;
+ typedef TypeWrapper<ImVec2, IggVec2> Vec2Wrapper;
+-typedef TypeWrapper<ImVec4, IggVec4> Vec4Wrapper;
++typedef TypeWrapper<ImVec4, IggVec4> Vec4Wrapper;
++
++#ifdef __cplusplus
++}
++#endif

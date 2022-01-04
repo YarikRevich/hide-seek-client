@@ -264,13 +264,6 @@ def go_repositories():
         version = "v2.1.3",
     )
 
-    # go_repository(
-    #     name = "com_github_hajimehoshi_ebiten_v2",
-    #     importpath = "github.com/hajimehoshi/ebiten/v2",
-    #     sum = "h1:yx8g5YQy7xnVbT4lCZCAQHx454j50emlRs6Aa78vdPc=",
-    #     version = "v2.1.5",
-    # )
-
     go_repository(
         name = "com_github_hajimehoshi_file2byteslice",
         importpath = "github.com/hajimehoshi/file2byteslice",
@@ -290,27 +283,6 @@ def go_repositories():
         importpath = "github.com/hajimehoshi/oto",
         sum = "h1:I7maFPz5MBCwiutOrz++DLdbr4rTzBsbBuV2VpgU9kk=",
         version = "v0.7.1",
-    )
-
-    go_repository(
-        name = "com_github_inkyblackness_imgui_go",
-        importpath = "github.com/inkyblackness/imgui-go",
-        sum = "h1:uaxSM5SbbqCTGEx5ig7B2J78hM3g3az4f5NC6b4J7lY=",
-        version = "v1.12.0",
-    )
-
-    go_repository(
-        name = "com_github_inkyblackness_imgui_go_v2",
-        importpath = "github.com/inkyblackness/imgui-go/v2",
-        sum = "h1:yD6m1xqTNl/HF0M4ceN1HNhUKRrk+SU7nbGs2KNOXUA=",
-        version = "v2.4.1",
-    )
-
-    go_repository(
-        name = "com_github_inkyblackness_imgui_go_v4",
-        importpath = "github.com/inkyblackness/imgui-go/v4",
-        sum = "h1:jY32Xl18aRwTBXaDfyefCmPDxJOtGM8kGfu/kMNJpbE=",
-        version = "v4.4.0",
     )
 
     go_repository(

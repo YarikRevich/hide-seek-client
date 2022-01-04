@@ -37,6 +37,39 @@ http_archive(
     ],
 )
 
+http_archive(
+    name = "net_zlib_zlib",
+    sha256 = "6d4d6640ca3121620995ee255945161821218752b551a1a180f4215f7d124d45",
+    build_file = "@//:third-party/zlib/zlib.BUILD",
+    strip_prefix = "zlib-cacf7f1d4e3d44d871b605da3b647f07d718623f",
+    urls = [
+        "https://mirror.bazel.build/github.com/madler/zlib/archive/cacf7f1d4e3d44d871b605da3b647f07d718623f.tar.gz",
+        "https://github.com/madler/zlib/archive/cacf7f1d4e3d44d871b605da3b647f07d718623f.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "org_libpng_libpng",
+    build_file = "@//:third-party/libpng/libpng.BUILD",
+    sha256 = "7f415186d38ca71c23058386d7cf5135c8beda821ee1beecdc2a7a26c0356615",
+    strip_prefix = "libpng-1.2.57",
+    urls = [
+        "https://mirror.bazel.build/github.com/glennrp/libpng/archive/v1.2.57.tar.gz",
+        "https://github.com/glennrp/libpng/archive/v1.2.57.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "org_freetype_freetype2",
+    build_file = "@//:third-party/freetype2/freetype2.BUILD",
+    sha256 = "33a28fabac471891d0523033e99c0005b95e5618dc8ffa7fa47f9dadcacb1c9b",
+    strip_prefix = "freetype-2.8",
+    urls = [
+        "https://mirror.bazel.build/download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz",
+        "http://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz",
+    ],
+)
+
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -55,11 +88,19 @@ new_git_repository(
     remote = "https://github.com/g-truc/glm.git",
 )
 
+# new_git_repository(
+#     name = "imgui",
+#     build_file = "@//:third-party/imgui/imgui.BUILD",
+#     commit = "dea92bb7231cf3441e30b373be87e2655b38a113",
+#     remote = "https://github.com/inkyblackness/imgui-go.git",
+# )
+
 new_git_repository(
-    name = "imgui",
-    build_file = "@//:third-party/imgui/imgui.BUILD",
-    commit = "dea92bb7231cf3441e30b373be87e2655b38a113",
+    name = "imgui-go",
     remote = "https://github.com/inkyblackness/imgui-go.git",
+    commit = "622bfc4ce89aef7136d3e04cd9d220105a474a4a",
+    build_file = "@//:third-party/imgui/imgui.BUILD", 
+    # patches = ["//third-party/imgui:patch.diff"], # keep
 )
 
 load("//:deps.bzl", "go_repositories")
@@ -67,12 +108,17 @@ load("//:deps.bzl", "go_repositories")
 # gazelle:repository_macro deps.bzl%go_repositories
 go_repositories()
 
-go_rules_dependencies()
 
+# Proto workspace
+
+rules_proto_dependencies()
+rules_proto_toolchains()
+
+
+# Golang workspace
+
+go_rules_dependencies()
 go_register_toolchains(version = "1.17.2")
 
 gazelle_dependencies()
 
-rules_proto_dependencies()
-
-rules_proto_toolchains()
