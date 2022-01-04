@@ -137,6 +137,13 @@ def go_repositories():
     )
 
     go_repository(
+        name = "com_github_hajimehoshi_ebiten_v2",
+        importpath = "github.com/hajimehoshi/ebiten/v2",
+        sum = "h1:jZUP3XWP6mXaw9SCrjWT5Pl6EPuz6FY737dZQgN1KJ4=",
+        version = "v2.2.3",
+    )
+
+    go_repository(
         name = "com_github_gdamore_encoding",
         importpath = "github.com/gdamore/encoding",
         sum = "h1:+7OoQ1Bc6eTm5niUzBa0Ctsh6JbMW6Ra+YNuAtDBdko=",
@@ -163,16 +170,7 @@ def go_repositories():
         sum = "h1:zDw5v7qm4yH7N8C8uWd+8Ii9rROdgWxQuGoJ9WDXxfk=",
         version = "v0.0.0-20211210172815-726fda9656d6",
     )
-
-    go_repository(
-        name = "com_github_go_gl_glfw_v3_3_glfw",
-        importpath = "github.com/go-gl/glfw/v3.3/glfw",
-        patches = ["//third-party/glfw:glfw.patch"],  #keep
-        patch_args = ["-p0"],
-        sum = "h1:3FLiRYO6PlQFDpUU7OEFlWgjGD1jnBIVSJ5SYRWk+9c=",
-        version = "v0.0.0-20211213063430-748e38ca8aec",
-    )
-
+    
     go_repository(
         name = "com_github_go_gl_glow",
         importpath = "github.com/go-gl/glow",

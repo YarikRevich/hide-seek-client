@@ -74,3 +74,9 @@ go_library(
     cdeps = ["@org_freetype_freetype2//:freetype2"],
     visibility = ["//visibility:public"],
 )
+
+alias(
+    name = "go_default_library",
+    actual = ":imgui-go",
+    visibility = ["//visibility:public"],
+)

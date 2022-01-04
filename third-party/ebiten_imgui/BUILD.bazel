@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "ebiten-imgui",
+    srcs = ["doc.go"],
+    importpath = "github.com/gabstv/ebiten-imgui",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":ebiten-imgui",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "renderer",
+    srcs = [
+        "keymap.go",
+        "render.go",
+        "renderer.go",
+        "txcache.go",
+    ],
+    importpath = "github.com/gabstv/ebiten-imgui/renderer",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/native",
+        "@com_github_hajimehoshi_ebiten_v2//:ebiten",
+        "@com_github_hajimehoshi_ebiten_v2//inpututil",
+        "@imgui-go//:imgui-go",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":renderer",
+    visibility = ["//visibility:public"],
+)

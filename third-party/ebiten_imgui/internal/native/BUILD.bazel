@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "native",
+    srcs = [
+        "float.go",
+        "float.h",
+    ],
+    cgo = True,
+    importpath = "github.com/gabstv/ebiten-imgui/internal/native",
+    visibility = ["//:__subpackages__"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":native",
+    visibility = ["//:__subpackages__"],
+)
