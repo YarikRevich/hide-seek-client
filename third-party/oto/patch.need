@@ -1,0 +1,58 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "oto",
+    srcs = [
+        "context.go",
+        "driver_android.go",
+        "driver_darwin.go",
+        "driver_ios.go",
+        "driver_ios.m",
+        "driver_js.go",
+        "driver_linux.go",
+        "driver_macos.go",
+        "driver_macos.m",
+        "driver_openal.go",
+        "driver_windows.go",
+        "dummy.go",
+        "go2cpp_js.go",
+        "pipe_notgopherjs.go",
+        "player.go",
+        "slice_js.go",
+        "winmm_windows.go",
+    ],
+    cgo = True,
+    clinkopts = select({
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-framework AppKit",
+            "-framework AudioToolbox",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-framework AudioToolbox",
+            "-framework Foundation -framework AVFoundation -framework UIKit",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-lasound",
+        ],
+        "//conditions:default": [],
+    }),
+    importpath = "github.com/hajimehoshi/oto",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/mux",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "@org_golang_x_mobile//app",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "@org_golang_x_sys//windows",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":oto",
+    visibility = ["//visibility:public"],
+)

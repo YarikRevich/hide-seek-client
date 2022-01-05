@@ -28,3 +28,23 @@ genrule(
     outs = ["deps.stub"],
     cmd = DEPS,
 )
+
+SERVICE_ENV = """
+    if ! [[ -d "/usr/local/share/games/HideSeek/log" ]]; then\
+        mkdir -p /usr/local/share/games/HideSeek/log;\
+    fi;\
+    if ! [[ -d "/usr/local/share/games/HideSeek/db" ]]; then\
+        mkdir -p /usr/local/share/games/HideSeek/db;\
+    fi;\
+    if ! [[ -f "/usr/local/share/games/HideSeek/log/log.log" ]]; then\
+        touch /usr/local/share/games/HideSeek/log/log.log;\
+    fi;\
+    chmod 666 /usr/local/share/games/HideSeek/log/log.log;\
+    echo EOF > $@;
+"""
+
+genrule(
+    name = "service_env",
+    cmd = SERVICE_ENV,
+    outs = ["service_env.stub"],
+)

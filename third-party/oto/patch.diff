@@ -1,0 +1,12 @@
+--- BUILD.bazel	2022-01-05 11:45:11.872317982 +0200
++++ BUILD.bazel	2022-01-05 11:42:12.503677810 +0200
+@@ -31,6 +31,9 @@
+             "-framework AudioToolbox",
+             "-framework Foundation -framework AVFoundation -framework UIKit",
+         ],
++        "@io_bazel_rules_go//go/platform:linux": [
++            "-lasound",
++        ],
+         "//conditions:default": [],
+     }),
+     importpath = "github.com/hajimehoshi/oto",

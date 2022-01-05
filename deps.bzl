@@ -288,6 +288,7 @@ def go_repositories():
         name = "com_github_hajimehoshi_oto",
         importpath = "github.com/hajimehoshi/oto",
         sum = "h1:I7maFPz5MBCwiutOrz++DLdbr4rTzBsbBuV2VpgU9kk=",
+        patches = ["@//third-party/oto:patch.diff"],
         version = "v0.7.1",
     )
 
