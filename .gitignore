@@ -1,8 +1,11 @@
-#service files
+#VSCode
+
+.vscode/
+
+#MacOS
 
 .DS_Store
-.vscode
 
+#bazel metadata
 
-main
-storage.db
+bazel-*
