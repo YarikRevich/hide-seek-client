@@ -23,22 +23,25 @@ func Exec() {
 		worldMess := w.ToAPIMessage()
 		mapMess := w.GetWorldMap().ToAPIMessage()
 		pcMess := w.GetPC().ToAPIMessage()
+		fmt.Println("HERE1")
+		if _, err := server.UpdateWorld(context.Background(), worldMess, grpc.EmptyCallOption{}); err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			logrus.Error(err)
+			return
+		}
+		fmt.Println("HERE2", mapMess)
+		if _, err := server.UpdateMap(context.Background(), mapMess, grpc.EmptyCallOption{}); err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			logrus.Error(err)
+			return
+		}
+		fmt.Println("HERE3", pcMess)
+		if _, err := server.UpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{}); err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			logrus.Error(err)
+			return
+		}
 
-		r, err := server.UpdateWorld(context.Background(), worldMess, grpc.EmptyCallOption{})
-		if !r.GetValue() || err != nil {
-			notifications.PopUp.WriteError(err.Error())
-			return
-		}
-		r, err = server.UpdateMap(context.Background(), mapMess, grpc.EmptyCallOption{})
-		if !r.GetValue() || err != nil {
-			notifications.PopUp.WriteError(err.Error())
-			return
-		}
-		r, err = server.UpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{})
-		if !r.GetValue() || err != nil {
-			notifications.PopUp.WriteError(err.Error())
-			return
-		}
 	})
 
 	latency.UseLatency().Timings().ExecEach(func() {
@@ -46,16 +49,16 @@ func Exec() {
 		server := networking.UseNetworking().Clients().Base().GetClient()
 
 		fmt.Println("GAME STARTED BEFORE", w.GetGameSettings().IsGameStarted)
-		r, err := server.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
-		if !r.GetValue() || err != nil {
+		if _, err := server.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
+			logrus.Error(err)
 			return
 		}
 
 		if !w.GetGameSettings().IsWorldExist {
-			r, err = server.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
-			if !r.GetValue() || err != nil {
+			if _, err := server.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{}); err != nil {
 				notifications.PopUp.WriteError(err.Error())
+				logrus.Error(err)
 				return
 			}
 		}
@@ -63,6 +66,7 @@ func Exec() {
 		worldObjects, err := server.GetWorld(
 			context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
 		if err != nil {
+			notifications.PopUp.WriteError(err.Error())
 			logrus.Fatal(err)
 		}
 

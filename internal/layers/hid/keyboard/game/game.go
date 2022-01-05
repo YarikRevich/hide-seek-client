@@ -20,15 +20,17 @@ func Exec() {
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		c.ZoomIn(&p.Base)
+		p.UpdateLastActivity()
 		return
 	} else if g.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
 		c.ZoomOut(&p.Base)
+		p.UpdateLastActivity()
 		return
 	}
 
 	poX, poY := p.GetScaledOffsetX(), p.GetScaledOffsetY()
-	// fmt.Println(poY)
 	if k.IsAnyKeyPressed() {
+		p.UpdateLastActivity()
 		worldMap := world.UseWorld().GetWorldMap()
 
 		pWidth, pHeight := p.ModelCombination.Modified.Size.Width, p.ModelCombination.Modified.Size.Height

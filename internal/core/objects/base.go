@@ -304,7 +304,7 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 			X: o.RawPos.X,
 			Y: o.RawPos.Y,
 		},
-		Spawn: &server_external.Position{
+		Spawn: &server_external.PositionInt{
 			X: float64(o.Spawn.X),
 			Y: float64(o.Spawn.Y),
 		},

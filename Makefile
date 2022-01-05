@@ -1,3 +1,5 @@
+#DO NOT EDIT! USED FOR DEVELOPMENT
+
 .PHONY: gen_proto
 
 gen_proto:

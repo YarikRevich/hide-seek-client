@@ -9,6 +9,7 @@ go_library(
         "//internal/core/latency",
         "//internal/core/networking",
         "//internal/core/notifications",
+        "//internal/core/middlewares",
         "//internal/core/statemachine",
         "//internal/core/world",
         "@com_github_sirupsen_logrus//:logrus",

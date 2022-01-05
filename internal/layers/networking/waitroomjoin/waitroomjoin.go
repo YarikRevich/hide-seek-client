@@ -22,8 +22,7 @@ func Exec() {
 
 		pcMess := world.UseWorld().GetPC().ToAPIMessage()
 
-		r, err := server.UpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{})
-		if !r.GetValue() || err != nil {
+		if _, err := server.UpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			return
 		}

@@ -26,7 +26,7 @@ func (d *Dialer) dialServer() {
 	case statemachine.DIAL_WAN:
 		endpoint.WriteString("127.0.0.1:")
 	}
-	endpoint.WriteString("8090")
+	endpoint.WriteString("8080")
 
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 

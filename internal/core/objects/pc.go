@@ -1,6 +1,8 @@
 package objects
 
 import (
+	"time"
+
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/storage"
@@ -27,7 +29,9 @@ type PC struct {
 	Health   uint64
 
 	LobbyNumber int
-	// Team Tea
+
+	IsKicked     bool
+	LastActivity int64
 }
 
 // func (p *PC) GetScaledOffsetX() float64 {
@@ -55,6 +59,14 @@ func (p *PC) GetMovementRotation() float64 {
 		return -1
 	}
 	return 1
+}
+
+func (p *PC) UpdateLastActivity() {
+	p.LastActivity = time.Now().Unix()
+}
+
+func (p *PC) SetKicked(s bool) {
+	p.IsKicked = s
 }
 
 func (p *PC) ToAPIMessage() *server_external.PC {

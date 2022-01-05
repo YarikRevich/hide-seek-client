@@ -10,7 +10,7 @@ type Base struct {
 }
 
 func (b *Base) Connect(c *grpc.ClientConn) {
-	server_external.NewExternalServerServiceClient(c)
+	b.client = server_external.NewExternalServerServiceClient(c)
 }
 
 func (b *Base) GetClient() server_external.ExternalServerServiceClient {

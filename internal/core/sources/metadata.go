@@ -79,7 +79,7 @@ type Model struct {
 		LeftMargin, TopMargin float64
 	}
 
-	Spawns []image.Point
+	Spawns []*image.Point
 
 	Physics struct {
 		G float64

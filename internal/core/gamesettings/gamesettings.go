@@ -8,6 +8,7 @@ import (
 type GameSettings struct {
 	IsWorldExist, IsGameStarted bool
 	Regime                      regime.Regime
+	AFKTimeout                  int
 }
 
 func (gs *GameSettings) SetWorldExist(s bool) {
@@ -20,6 +21,10 @@ func (gs *GameSettings) SetGameStarted(s bool) {
 
 func (gs *GameSettings) SetRegime(r regime.Regime) {
 	gs.Regime = r
+}
+
+func (gs *GameSettings) SetAFKTimeout(timeout int) {
+	gs.AFKTimeout = timeout
 }
 
 func (gs *GameSettings) FromAPIMessage() {

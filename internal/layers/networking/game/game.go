@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
@@ -36,24 +37,26 @@ func Exec() {
 		// 		// base := networking.UseNetworking().Clients().Base().GetClient()
 		// 	}
 		// }
-
 		w := world.UseWorld()
+		p := w.GetPC()
 		client := networking.UseNetworking().Clients().Base().GetClient()
 
 		if !w.GetGameSettings().IsWorldExist {
-			r, err := client.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
-			if !r.Value || err != nil {
+			if _, err := client.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{}); err != nil {
 				notifications.PopUp.WriteError(err.Error())
 				return
 			}
 		}
 
-		r, err := client.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{})
-		if !r.Value || err != nil {
+		if _, err := client.UpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			return
 		}
-		client.UpdatePC(context.Background(), w.GetPC().ToAPIMessage())
+
+		if _, err := client.UpdatePC(context.Background(), p.ToAPIMessage()); err != nil {
+			notifications.PopUp.WriteError(err.Error())
+			return
+		}
 
 		worldObjects, err := client.GetWorld(
 			context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
@@ -63,6 +66,16 @@ func Exec() {
 
 		w.Update(worldObjects)
 
+		if p.IsKicked {
+			if _, err := client.DeletePC(context.Background(), &wrappers.StringValue{Value: p.Base.ID.String()}); err != nil {
+				logrus.Fatal(err)
+			}
+			middlewares.UseMiddlewares().UI().UseAfter(func() {
+				statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
+			})
+			notifications.PopUp.WriteError("You were kicked from the session")
+			p.SetKicked(false)
+		}
 	}, statemachine.UI_GAME, time.Second)
 	// 	w := objects.UseObjects().World()
 	// 	p := objects.UseObjects().PC()

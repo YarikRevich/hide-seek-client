@@ -62,6 +62,7 @@ func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 }
 
 func (a *Audio) GetAudioController(path string) *Track {
+	fmt.Println(path)
 	path = filepath.Join("dist/audio", path)
 
 	audio, ok := a.Collection[path]

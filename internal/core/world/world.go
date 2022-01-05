@@ -40,15 +40,20 @@ func (w *World) DeletePCs() {
 func (w *World) UpdatePCs(m []*server_external.PC) {
 	w.DeletePCs()
 
+	var foundPC bool
 	for _, pc := range m {
 		if pc.Base.Id == w.pc.ID.String() {
 			w.pc.FromAPIMessage(pc)
+			foundPC = true
 			w.AddPCs(w.pc)
 		} else {
 			npc := objects.NewPC()
 			npc.FromAPIMessage(pc)
 			w.AddPCs(npc)
 		}
+	}
+	if !foundPC {
+		w.pc.SetKicked(true)
 	}
 }
 

@@ -25,6 +25,8 @@ func Exec() bool {
 		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_start").Modified) {
 			world.UseWorld().GetPC().LoadUsername()
 			networking.UseNetworking().Dialer().Dial()
+			networking.UseNetworking().Clients().Base().Connect(networking.UseNetworking().Dialer().GetServerConn())
+			networking.UseNetworking().Clients().Services().Connect(networking.UseNetworking().Dialer().GetServicesConn())
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_MAP_CHOOSE)
