@@ -31,6 +31,12 @@ def go_repositories():
     )
 
     go_repository(
+        name = "com_github_jezek_xgb",
+        importpath = "github.com/jezek/xgb",
+        version = "v0.1",
+    )
+
+    go_repository(
         name = "com_github_burntsushi_toml",
         importpath = "github.com/BurntSushi/toml",
         sum = "h1:GaI7EiDXDRfa8VshkTj7Fym7ha+y8/XxIgD2okUIjLw=",

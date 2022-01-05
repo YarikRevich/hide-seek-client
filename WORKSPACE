@@ -74,26 +74,12 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
-# new_git_repository(
-#     name = "glfw",
-#     build_file = "@//:third-party/glfw/glfw.BUILD",
-#     commit = "8d7e5cdb49a1a5247df612157ecffdd8e68923d2",
-#     remote = "https://github.com/glfw/glfw.git",
-# )
-
 new_git_repository(
     name = "glm",
     build_file = "@//:third-party/glm/glm.BUILD",
     commit = "658d8960d081e0c9c312d49758c7ef919371b428",
     remote = "https://github.com/g-truc/glm.git",
 )
-
-# new_git_repository(
-#     name = "imgui",
-#     build_file = "@//:third-party/imgui/imgui.BUILD",
-#     commit = "dea92bb7231cf3441e30b373be87e2655b38a113",
-#     remote = "https://github.com/inkyblackness/imgui-go.git",
-# )
 
 new_git_repository(
     name = "com_github_inkyblackness_imgui_go_v2",
@@ -108,17 +94,6 @@ new_git_repository(
     remote = "https://github.com/go-gl/glfw.git",
     commit = "748e38ca8aecd6b0646cba97eed16259a4af568f",
 )
-
-    # go_repository(
-        
-    #     # importpath = "github.com/go-gl/glfw/v3.3/glfw",
-        
-    #     # patches = ["//third-party/glfw:glfw.patch"],  #keep
-    #     # patch_args = ["-p0"],
-    #     sum = "h1:3FLiRYO6PlQFDpUU7OEFlWgjGD1jnBIVSJ5SYRWk+9c=",
-    #     version = "v0.0.0-20211213063430-748e38ca8aec",
-    # )
-
 
 local_repository(
     name = "ebiten_imgui",

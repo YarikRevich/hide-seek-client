@@ -12,3 +12,18 @@ gazelle(
     ],
     command = "update-repos",
 )
+
+DEPS = """
+    if [[ $$OSTYPE == "linux"* ]]; then\
+        apt-get install libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev -y;\
+        apt-get install libgl1-mesa-dev -y;\
+        apt-get install libwayland-dev -y;\
+    fi;\
+    echo EOF > $@;
+"""
+
+genrule(
+    name = "deps",
+    cmd = DEPS,
+    outs = ["deps.stub"],
+)
