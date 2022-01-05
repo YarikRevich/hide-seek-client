@@ -7,8 +7,9 @@ go_library(
     visibility = ["//visibility:public"],
 )
 
-alias(
-    name = "go_default_library",
-    actual = ":ebiten-imgui",
+go_library(
+    name = "ebiten_imgui",
+    srcs = ["doc.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/third-party/ebiten_imgui",
     visibility = ["//visibility:public"],
 )

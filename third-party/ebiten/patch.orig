@@ -1,0 +1,59 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "gl",
+    srcs = [
+        "conversions.go",
+        "conversions_notwindows.go",
+        "conversions_windows.go",
+        "package.go",
+        "package_notwindows.go",
+        "package_windows.go",
+        "package_x.go",
+        "procaddr_notwindows.go",
+        "procaddr_windows.go",
+    ],
+    cgo = True,
+    clinkopts = select({
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-framework OpenGL",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-framework OpenGL",
+        ],
+        "//conditions:default": [],
+    }),
+    copts = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "-DTAG_POSIX",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "-DTAG_DARWIN",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "-DTAG_POSIX",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "-DTAG_DARWIN",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "-DTAG_POSIX",
+        ],
+        "//conditions:default": [],
+    }),
+    importpath = "github.com/hajimehoshi/ebiten/v2/internal/graphicsdriver/opengl/gl",
+    importpath_aliases = ["github.com/hajimehoshi/ebiten/internal/graphicsdriver/opengl/gl"],
+    visibility = ["//:__subpackages__"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "@org_golang_x_sys//windows",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":gl",
+    visibility = ["//:__subpackages__"],
+)

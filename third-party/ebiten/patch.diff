@@ -1,0 +1,12 @@
+--- internal/graphicsdriver/opengl/gl/BUILD.bazel	2022-01-05 11:26:38.089305210 +0200
++++ internal/graphicsdriver/opengl/gl/BUILD.bazel	2022-01-05 11:26:39.405280091 +0200
+@@ -21,6 +21,9 @@
+         "@io_bazel_rules_go//go/platform:ios": [
+             "-framework OpenGL",
+         ],
++        "@io_bazel_rules_go//go/platform:linux": [
++            "-lGL", "-lX11"
++        ], 
+         "//conditions:default": [],
+     }),
+     copts = select({

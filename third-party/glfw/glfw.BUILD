@@ -78,6 +78,7 @@ LINUX_DEFINES = [
 # ]
 
 LINUX_SRCS = [
+
     "v3.3/glfw/glfw/src/glx_context.c",
     "v3.3/glfw/glfw/src/linux_joystick.c",
     "v3.3/glfw/glfw/src/posix_thread.c",
@@ -220,6 +221,7 @@ go_library(
         "v3.3/glfw/util.go",
         "v3.3/glfw/vulkan.go",
         "v3.3/glfw/window.go",
+        "v3.3/glfw/context.go",
         "v3.3/glfw/input.c",
         "v3.3/glfw/monitor.c",
         "v3.3/glfw/error.c",

@@ -33,7 +33,8 @@ def go_repositories():
     go_repository(
         name = "com_github_jezek_xgb",
         importpath = "github.com/jezek/xgb",
-        version = "v0.1",
+        sum = "h1:dy+DS31tGEGCsZzB45HmJJNHjur8GDgtRNX9U7HnSX4=",
+        version = "v0.0.0-20210312150743-0e0f116e1240",
     )
 
     go_repository(
@@ -145,6 +146,7 @@ def go_repositories():
     go_repository(
         name = "com_github_hajimehoshi_ebiten_v2",
         importpath = "github.com/hajimehoshi/ebiten/v2",
+        patches = ["@//third-party/ebiten:patch.diff"],
         sum = "h1:jZUP3XWP6mXaw9SCrjWT5Pl6EPuz6FY737dZQgN1KJ4=",
         version = "v2.2.3",
     )

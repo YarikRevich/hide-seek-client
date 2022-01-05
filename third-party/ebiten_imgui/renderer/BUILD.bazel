@@ -8,18 +8,12 @@ go_library(
         "renderer.go",
         "txcache.go",
     ],
-    importpath = "github.com/gabstv/ebiten-imgui/renderer",
+    importpath = "github.com/YarikRevich/hide-seek-client/third-party/ebiten_imgui/renderer",
     visibility = ["//visibility:public"],
     deps = [
-        "//internal/native",
+        "@com_github_gabstv_ebiten_imgui//internal/native",
         "@com_github_hajimehoshi_ebiten_v2//:ebiten",
         "@com_github_hajimehoshi_ebiten_v2//inpututil",
-        "@imgui-go//:imgui-go",
+        "@com_github_inkyblackness_imgui_go_v2//:go_default_library",
     ],
-)
-
-alias(
-    name = "go_default_library",
-    actual = ":renderer",
-    visibility = ["//visibility:public"],
 )

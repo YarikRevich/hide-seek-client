@@ -7,12 +7,6 @@ go_library(
         "float.h",
     ],
     cgo = True,
-    importpath = "github.com/gabstv/ebiten-imgui/internal/native",
-    visibility = ["//:__subpackages__"],
-)
-
-alias(
-    name = "go_default_library",
-    actual = ":native",
+    importpath = "github.com/YarikRevich/hide-seek-client/third-party/ebiten_imgui/internal/native",
     visibility = ["//:__subpackages__"],
 )
