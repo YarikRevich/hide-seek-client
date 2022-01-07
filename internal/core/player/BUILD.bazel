@@ -1,13 +1,14 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "audiocontroller",
-    srcs = ["audiocontoller.go"],
-    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/audiocontroller",
+    name = "player",
+    srcs = ["player.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/player",
     visibility = ["//:__subpackages__"],
     deps = [
         "//internal/core/sources",
         "//internal/core/statemachine",
+        "//internal/core/player/trackmanager",
         "@com_github_faiface_beep//speaker",
         "@com_github_sirupsen_logrus//:logrus",
     ],

@@ -6,9 +6,8 @@ import (
 	"regexp"
 	"sync"
 
-	"image"
-
 	"github.com/BurntSushi/toml"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/sirupsen/logrus"
 )
 
@@ -79,7 +78,7 @@ type Model struct {
 		LeftMargin, TopMargin float64
 	}
 
-	Spawns []*image.Point
+	Spawns []*server_external.PositionInt
 
 	Physics struct {
 		G float64

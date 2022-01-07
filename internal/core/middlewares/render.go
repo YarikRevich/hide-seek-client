@@ -5,9 +5,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/YarikRevich/hide-seek-client/internal/core/audiocontroller"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
+	"github.com/YarikRevich/hide-seek-client/internal/core/player"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/tools/params"
 
@@ -26,7 +26,7 @@ func (r *Render) cleanPopUp() {
 	})
 }
 
-func (r *Render) blockRenderIfOffline() {
+func (r *Render) checkServersConnectivity() {
 	go func() {
 		r.Lock()
 
@@ -57,14 +57,14 @@ func (r *Render) UseAfter(c func()) {
 
 	select {
 	case <-r.ticker.C:
-		r.blockRenderIfOffline()
+		r.checkServersConnectivity()
 	default:
 	}
 
 	//Handles sound disabling, because in debug
 	//mode sound can be disabled after music play start
 	if params.IsWithoutSound() {
-		audiocontroller.UseAudioController().Stop()
+		player.UsePlayer().StopAll()
 	}
 	r.cleanPopUp()
 }

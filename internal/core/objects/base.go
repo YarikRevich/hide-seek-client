@@ -62,7 +62,7 @@ type Base struct {
 
 	Direction, SubDirection keycodes.Direction
 
-	Spawn image.Point
+	Spawn server_external.PositionInt
 
 	Role Role
 
@@ -305,8 +305,8 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 			Y: o.RawPos.Y,
 		},
 		Spawn: &server_external.PositionInt{
-			X: float64(o.Spawn.X),
-			Y: float64(o.Spawn.Y),
+			X: int64(o.Spawn.X),
+			Y: int64(o.Spawn.Y),
 		},
 		Direction: int64(o.Direction),
 		Role:      int64(o.Role),
@@ -340,8 +340,8 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 
 	o.RawPos.X = m.RawPos.X
 	o.RawPos.Y = m.RawPos.Y
-	o.Spawn.X = int(m.Spawn.X)
-	o.Spawn.Y = int(m.Spawn.Y)
+	o.Spawn.X = m.Spawn.X
+	o.Spawn.Y = m.Spawn.Y
 	o.Direction = keycodes.Direction(m.Direction)
 	o.Role = Role(m.Role)
 }

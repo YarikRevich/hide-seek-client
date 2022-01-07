@@ -11,6 +11,7 @@ type StateMachine struct {
 	settings_menu_checkbox ISingleState
 	game                   ISingleState
 	pcs                    IMultipleState
+	mouse                  ISingleState
 }
 
 type IStateMachine interface {
@@ -22,6 +23,7 @@ type IStateMachine interface {
 	Dial() ISingleState
 	SettingsMenuCheckbox() ISingleState
 	PCs() IMultipleState
+	Mouse() ISingleState
 }
 
 func (s *StateMachine) Audio() ISingleState {
@@ -56,6 +58,10 @@ func (s *StateMachine) PCs() IMultipleState {
 	return s.pcs
 }
 
+func (s *StateMachine) Mouse() ISingleState {
+	return s.mouse
+}
+
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
@@ -67,6 +73,7 @@ func UseStateMachine() IStateMachine {
 			settings_menu_checkbox: NewSingleState(UI_SETTINGS_MENU_CHECKBOX_OFF),
 			game:                   NewSingleState(GAME_START),
 			pcs:                    NewMultipleState(PC_ALIVE),
+			mouse:                  NewSingleState(MOUSE_NONE),
 		}
 	}
 	return instance

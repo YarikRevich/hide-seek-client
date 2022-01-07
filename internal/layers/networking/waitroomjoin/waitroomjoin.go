@@ -22,7 +22,7 @@ func Exec() {
 
 		pcMess := world.UseWorld().GetPC().ToAPIMessage()
 
-		if _, err := server.UpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{}); err != nil {
+		if _, err := server.InsertOrUpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			return
 		}
@@ -34,7 +34,7 @@ func Exec() {
 
 		server := networking.UseNetworking().Clients().Base().GetClient()
 
-		worldObjects, err := server.GetWorld(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
+		worldObjects, err := server.FindWorldObjects(context.Background(), &wrappers.StringValue{Value: worldId}, grpc.EmptyCallOption{})
 		if err != nil {
 			logrus.Fatal(err)
 		}

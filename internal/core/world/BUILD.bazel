@@ -10,6 +10,9 @@ go_library(
         "//internal/core/networking/api/server_external",
         "//internal/core/objects",
         "//internal/core/statistics",
+        "//internal/core/statemachine",
+        "//internal/core/middlewares",
+        "//internal/core/notifications",
         "@com_github_google_uuid//:uuid",
     ],
 )

@@ -5,5 +5,5 @@ go_library(
     srcs = ["startmenu.go"],
     importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/audio/startmenu",
     visibility = ["//:__subpackages__"],
-    deps = ["//internal/core/audiocontroller"],
+    deps = ["//internal/core/player"],
 )

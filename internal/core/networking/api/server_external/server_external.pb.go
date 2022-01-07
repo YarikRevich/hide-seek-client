@@ -889,8 +889,8 @@ type PositionInt struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	X float64 `protobuf:"fixed64,1,opt,name=x,proto3" json:"x,omitempty"`
-	Y float64 `protobuf:"fixed64,2,opt,name=y,proto3" json:"y,omitempty"`
+	X int64 `protobuf:"varint,1,opt,name=x,proto3" json:"x,omitempty"`
+	Y int64 `protobuf:"varint,2,opt,name=y,proto3" json:"y,omitempty"`
 }
 
 func (x *PositionInt) Reset() {
@@ -925,14 +925,14 @@ func (*PositionInt) Descriptor() ([]byte, []int) {
 	return file_api_server_external_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *PositionInt) GetX() float64 {
+func (x *PositionInt) GetX() int64 {
 	if x != nil {
 		return x.X
 	}
 	return 0
 }
 
-func (x *PositionInt) GetY() float64 {
+func (x *PositionInt) GetY() int64 {
 	if x != nil {
 		return x.Y
 	}
@@ -1324,6 +1324,171 @@ func (x *GetStatisticsResponse) GetKillsNum() int64 {
 	return 0
 }
 
+type InsertOrUpdateCooldownRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	WorldId string `protobuf:"bytes,1,opt,name=worldId,proto3" json:"worldId,omitempty"`
+	PcId    string `protobuf:"bytes,2,opt,name=pcId,proto3" json:"pcId,omitempty"`
+}
+
+func (x *InsertOrUpdateCooldownRequest) Reset() {
+	*x = InsertOrUpdateCooldownRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_server_external_proto_msgTypes[20]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *InsertOrUpdateCooldownRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InsertOrUpdateCooldownRequest) ProtoMessage() {}
+
+func (x *InsertOrUpdateCooldownRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_server_external_proto_msgTypes[20]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InsertOrUpdateCooldownRequest.ProtoReflect.Descriptor instead.
+func (*InsertOrUpdateCooldownRequest) Descriptor() ([]byte, []int) {
+	return file_api_server_external_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *InsertOrUpdateCooldownRequest) GetWorldId() string {
+	if x != nil {
+		return x.WorldId
+	}
+	return ""
+}
+
+func (x *InsertOrUpdateCooldownRequest) GetPcId() string {
+	if x != nil {
+		return x.PcId
+	}
+	return ""
+}
+
+type FindCooldownRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	WorldId string `protobuf:"bytes,1,opt,name=worldId,proto3" json:"worldId,omitempty"`
+	PcId    string `protobuf:"bytes,2,opt,name=pcId,proto3" json:"pcId,omitempty"`
+}
+
+func (x *FindCooldownRequest) Reset() {
+	*x = FindCooldownRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_server_external_proto_msgTypes[21]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FindCooldownRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindCooldownRequest) ProtoMessage() {}
+
+func (x *FindCooldownRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_server_external_proto_msgTypes[21]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindCooldownRequest.ProtoReflect.Descriptor instead.
+func (*FindCooldownRequest) Descriptor() ([]byte, []int) {
+	return file_api_server_external_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *FindCooldownRequest) GetWorldId() string {
+	if x != nil {
+		return x.WorldId
+	}
+	return ""
+}
+
+func (x *FindCooldownRequest) GetPcId() string {
+	if x != nil {
+		return x.PcId
+	}
+	return ""
+}
+
+type DeleteCooldownRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	WorldId string `protobuf:"bytes,1,opt,name=worldId,proto3" json:"worldId,omitempty"`
+	PcId    string `protobuf:"bytes,2,opt,name=pcId,proto3" json:"pcId,omitempty"`
+}
+
+func (x *DeleteCooldownRequest) Reset() {
+	*x = DeleteCooldownRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_server_external_proto_msgTypes[22]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteCooldownRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteCooldownRequest) ProtoMessage() {}
+
+func (x *DeleteCooldownRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_server_external_proto_msgTypes[22]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteCooldownRequest.ProtoReflect.Descriptor instead.
+func (*DeleteCooldownRequest) Descriptor() ([]byte, []int) {
+	return file_api_server_external_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *DeleteCooldownRequest) GetWorldId() string {
+	if x != nil {
+		return x.WorldId
+	}
+	return ""
+}
+
+func (x *DeleteCooldownRequest) GetPcId() string {
+	if x != nil {
+		return x.PcId
+	}
+	return ""
+}
+
 var File_api_server_external_proto protoreflect.FileDescriptor
 
 var file_api_server_external_proto_rawDesc = []byte{
@@ -1412,8 +1577,8 @@ var file_api_server_external_proto_rawDesc = []byte{
 	0x6f, 0x6e, 0x12, 0x0c, 0x0a, 0x01, 0x78, 0x18, 0x01, 0x20, 0x01, 0x28, 0x01, 0x52, 0x01, 0x78,
 	0x12, 0x0c, 0x0a, 0x01, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x01, 0x79, 0x22, 0x29,
 	0x0a, 0x0b, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x6e, 0x74, 0x12, 0x0c, 0x0a,
-	0x01, 0x78, 0x18, 0x01, 0x20, 0x01, 0x28, 0x01, 0x52, 0x01, 0x78, 0x12, 0x0c, 0x0a, 0x01, 0x79,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x01, 0x79, 0x22, 0x3f, 0x0a, 0x0f, 0x52, 0x65, 0x6d,
+	0x01, 0x78, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x01, 0x78, 0x12, 0x0c, 0x0a, 0x01, 0x79,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x01, 0x79, 0x22, 0x3f, 0x0a, 0x0f, 0x52, 0x65, 0x6d,
 	0x6f, 0x76, 0x65, 0x50, 0x43, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07,
 	0x77, 0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x77,
 	0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x63, 0x49, 0x64, 0x18, 0x02,
@@ -1449,66 +1614,96 @@ var file_api_server_external_proto_rawDesc = []byte{
 	0x65, 0x6e, 0x74, 0x22, 0x39, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73,
 	0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08,
 	0x6b, 0x69, 0x6c, 0x6c, 0x73, 0x4e, 0x75, 0x6d, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08,
-	0x6b, 0x69, 0x6c, 0x6c, 0x73, 0x4e, 0x75, 0x6d, 0x4a, 0x04, 0x08, 0x02, 0x10, 0x05, 0x2a, 0x23,
-	0x0a, 0x06, 0x52, 0x65, 0x67, 0x69, 0x6d, 0x65, 0x12, 0x09, 0x0a, 0x05, 0x53, 0x51, 0x55, 0x41,
-	0x44, 0x10, 0x00, 0x12, 0x0e, 0x0a, 0x0a, 0x44, 0x45, 0x41, 0x54, 0x48, 0x4d, 0x41, 0x54, 0x43,
-	0x48, 0x10, 0x01, 0x2a, 0x1c, 0x0a, 0x0c, 0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d,
-	0x65, 0x6e, 0x74, 0x12, 0x0c, 0x0a, 0x08, 0x54, 0x65, 0x6e, 0x4b, 0x69, 0x6c, 0x6c, 0x73, 0x10,
-	0x00, 0x32, 0xa6, 0x06, 0x0a, 0x15, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x53, 0x65,
-	0x72, 0x76, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2d, 0x0a, 0x0b, 0x55,
-	0x70, 0x64, 0x61, 0x74, 0x65, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x12, 0x06, 0x2e, 0x57, 0x6f, 0x72,
-	0x6c, 0x64, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x29, 0x0a, 0x09, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x4d, 0x61, 0x70, 0x12, 0x04, 0x2e, 0x4d, 0x61, 0x70, 0x1a, 0x16, 0x2e,
-	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
-	0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x27, 0x0a, 0x08, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50,
-	0x43, 0x12, 0x03, 0x2e, 0x50, 0x43, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x31,
-	0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x12,
-	0x08, 0x2e, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
+	0x6b, 0x69, 0x6c, 0x6c, 0x73, 0x4e, 0x75, 0x6d, 0x4a, 0x04, 0x08, 0x02, 0x10, 0x05, 0x22, 0x4d,
+	0x0a, 0x1d, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x43, 0x6f, 0x6f, 0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x18, 0x0a, 0x07, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x63, 0x49,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x70, 0x63, 0x49, 0x64, 0x22, 0x43, 0x0a,
+	0x13, 0x46, 0x69, 0x6e, 0x64, 0x43, 0x6f, 0x6f, 0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x12, 0x12,
+	0x0a, 0x04, 0x70, 0x63, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x70, 0x63,
+	0x49, 0x64, 0x22, 0x45, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f, 0x6f, 0x6c,
+	0x64, 0x6f, 0x77, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x77,
+	0x6f, 0x72, 0x6c, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x77, 0x6f,
+	0x72, 0x6c, 0x64, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x63, 0x49, 0x64, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x70, 0x63, 0x49, 0x64, 0x2a, 0x23, 0x0a, 0x06, 0x52, 0x65, 0x67,
+	0x69, 0x6d, 0x65, 0x12, 0x09, 0x0a, 0x05, 0x53, 0x51, 0x55, 0x41, 0x44, 0x10, 0x00, 0x12, 0x0e,
+	0x0a, 0x0a, 0x44, 0x45, 0x41, 0x54, 0x48, 0x4d, 0x41, 0x54, 0x43, 0x48, 0x10, 0x01, 0x2a, 0x1c,
+	0x0a, 0x0c, 0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x0c,
+	0x0a, 0x08, 0x54, 0x65, 0x6e, 0x4b, 0x69, 0x6c, 0x6c, 0x73, 0x10, 0x00, 0x32, 0xb4, 0x08, 0x0a,
+	0x15, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x35, 0x0a, 0x13, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74,
+	0x4f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x12, 0x06, 0x2e,
+	0x57, 0x6f, 0x72, 0x6c, 0x64, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x31, 0x0a,
+	0x11, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4d,
+	0x61, 0x70, 0x12, 0x04, 0x2e, 0x4d, 0x61, 0x70, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
+	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x12, 0x2f, 0x0a, 0x10, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x50, 0x43, 0x12, 0x03, 0x2e, 0x50, 0x43, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
 	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74,
-	0x79, 0x12, 0x2f, 0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x57, 0x65, 0x61, 0x70, 0x6f,
-	0x6e, 0x12, 0x07, 0x2e, 0x57, 0x65, 0x61, 0x70, 0x6f, 0x6e, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f,
-	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70,
-	0x74, 0x79, 0x12, 0x2b, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x6d, 0x6d, 0x6f,
-	0x12, 0x05, 0x2e, 0x41, 0x6d, 0x6d, 0x6f, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
-	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12,
-	0x43, 0x0a, 0x0b, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x12, 0x1c,
-	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
-	0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x16, 0x2e, 0x67,
-	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45,
-	0x6d, 0x70, 0x74, 0x79, 0x12, 0x40, 0x0a, 0x08, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x43,
-	0x12, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x16,
-	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
-	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x3b, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x57, 0x6f, 0x72,
-	0x6c, 0x64, 0x12, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65,
-	0x1a, 0x11, 0x2e, 0x47, 0x65, 0x74, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x45, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73,
-	0x74, 0x69, 0x63, 0x73, 0x12, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c,
-	0x75, 0x65, 0x1a, 0x16, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69,
-	0x63, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4e, 0x0a, 0x16, 0x49, 0x73,
-	0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x55, 0x6e, 0x6c, 0x6f,
-	0x63, 0x6b, 0x65, 0x64, 0x12, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c,
-	0x75, 0x65, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x48, 0x0a, 0x12, 0x55, 0x6e,
-	0x6c, 0x6f, 0x63, 0x6b, 0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74,
-	0x12, 0x1a, 0x2e, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76,
-	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67,
-	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45,
-	0x6d, 0x70, 0x74, 0x79, 0x12, 0x54, 0x0a, 0x17, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x61,
-	0x6e, 0x64, 0x6f, 0x6d, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x73, 0x54, 0x6f, 0x50, 0x43, 0x73, 0x12,
-	0x1f, 0x2e, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x61, 0x6e, 0x64, 0x6f, 0x6d, 0x53, 0x70,
-	0x61, 0x77, 0x6e, 0x73, 0x54, 0x6f, 0x50, 0x43, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x42, 0x2e, 0x5a, 0x2c, 0x69, 0x6e,
-	0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x63, 0x6f, 0x72, 0x65, 0x2f, 0x6e, 0x65, 0x74, 0x77,
-	0x6f, 0x72, 0x6b, 0x69, 0x6e, 0x67, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65,
-	0x72, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x79, 0x12, 0x39, 0x0a, 0x15, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x08, 0x2e, 0x45, 0x6c, 0x65,
+	0x6d, 0x65, 0x6e, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x37, 0x0a, 0x14,
+	0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x57, 0x65,
+	0x61, 0x70, 0x6f, 0x6e, 0x12, 0x07, 0x2e, 0x57, 0x65, 0x61, 0x70, 0x6f, 0x6e, 0x1a, 0x16, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x33, 0x0a, 0x12, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f,
+	0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x6d, 0x6d, 0x6f, 0x12, 0x05, 0x2e, 0x41, 0x6d,
+	0x6d, 0x6f, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x50, 0x0a, 0x16, 0x49, 0x6e,
+	0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6f, 0x6c,
+	0x64, 0x6f, 0x77, 0x6e, 0x12, 0x1e, 0x2e, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x4f, 0x72, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6f, 0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x43, 0x0a, 0x0b,
+	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x12, 0x1c, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74,
+	0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
+	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74,
+	0x79, 0x12, 0x40, 0x0a, 0x08, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x43, 0x12, 0x1c, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x16, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d,
+	0x70, 0x74, 0x79, 0x12, 0x40, 0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f, 0x6f,
+	0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x12, 0x16, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f,
+	0x6f, 0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x43, 0x0a, 0x10, 0x46, 0x69, 0x6e, 0x64, 0x57, 0x6f, 0x72,
+	0x6c, 0x64, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x12, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
+	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69,
+	0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x11, 0x2e, 0x47, 0x65, 0x74, 0x57, 0x6f, 0x72,
+	0x6c, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x40, 0x0a, 0x0c, 0x46, 0x69,
+	0x6e, 0x64, 0x43, 0x6f, 0x6f, 0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x12, 0x14, 0x2e, 0x46, 0x69, 0x6e,
+	0x64, 0x43, 0x6f, 0x6f, 0x6c, 0x64, 0x6f, 0x77, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x42, 0x6f, 0x6f, 0x6c, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x45, 0x0a, 0x0d,
+	0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x12, 0x1c, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x16, 0x2e, 0x47, 0x65,
+	0x74, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x4e, 0x0a, 0x16, 0x49, 0x73, 0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76,
+	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x65, 0x64, 0x12, 0x1c, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x16, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d,
+	0x70, 0x74, 0x79, 0x12, 0x48, 0x0a, 0x12, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x41, 0x72, 0x63,
+	0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x1a, 0x2e, 0x55, 0x6e, 0x6c, 0x6f,
+	0x63, 0x6b, 0x41, 0x72, 0x63, 0x68, 0x69, 0x65, 0x76, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x54, 0x0a,
+	0x17, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x61, 0x6e, 0x64, 0x6f, 0x6d, 0x53, 0x70, 0x61,
+	0x77, 0x6e, 0x73, 0x54, 0x6f, 0x50, 0x43, 0x73, 0x12, 0x1f, 0x2e, 0x41, 0x73, 0x73, 0x69, 0x67,
+	0x6e, 0x52, 0x61, 0x6e, 0x64, 0x6f, 0x6d, 0x53, 0x70, 0x61, 0x77, 0x6e, 0x73, 0x54, 0x6f, 0x50,
+	0x43, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
+	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74,
+	0x79, 0x22, 0x00, 0x42, 0x2e, 0x5a, 0x2c, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f,
+	0x63, 0x6f, 0x72, 0x65, 0x2f, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x69, 0x6e, 0x67, 0x2f,
+	0x61, 0x70, 0x69, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x72,
+	0x6e, 0x61, 0x6c, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1524,7 +1719,7 @@ func file_api_server_external_proto_rawDescGZIP() []byte {
 }
 
 var file_api_server_external_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_api_server_external_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_api_server_external_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_api_server_external_proto_goTypes = []interface{}{
 	(Regime)(0),                            // 0: Regime
 	(Archievement)(0),                      // 1: Archievement
@@ -1548,8 +1743,12 @@ var file_api_server_external_proto_goTypes = []interface{}{
 	(*AssignRandomSpawnsToPCsRequest)(nil), // 19: AssignRandomSpawnsToPCsRequest
 	(*UnlockArchievementRequest)(nil),      // 20: UnlockArchievementRequest
 	(*GetStatisticsResponse)(nil),          // 21: GetStatisticsResponse
-	(*wrapperspb.StringValue)(nil),         // 22: google.protobuf.StringValue
-	(*emptypb.Empty)(nil),                  // 23: google.protobuf.Empty
+	(*InsertOrUpdateCooldownRequest)(nil),  // 22: InsertOrUpdateCooldownRequest
+	(*FindCooldownRequest)(nil),            // 23: FindCooldownRequest
+	(*DeleteCooldownRequest)(nil),          // 24: DeleteCooldownRequest
+	(*wrapperspb.StringValue)(nil),         // 25: google.protobuf.StringValue
+	(*emptypb.Empty)(nil),                  // 26: google.protobuf.Empty
+	(*wrapperspb.BoolValue)(nil),           // 27: google.protobuf.BoolValue
 }
 var file_api_server_external_proto_depIdxs = []int32{
 	3,  // 0: World.gameSettings:type_name -> GameSettings
@@ -1574,34 +1773,40 @@ var file_api_server_external_proto_depIdxs = []int32{
 	7,  // 19: GetWorldResponse.ammos:type_name -> Ammo
 	13, // 20: AssignRandomSpawnsToPCsRequest.spawns:type_name -> Position
 	1,  // 21: UnlockArchievementRequest.archievement:type_name -> Archievement
-	2,  // 22: ExternalServerService.UpdateWorld:input_type -> World
-	4,  // 23: ExternalServerService.UpdateMap:input_type -> Map
-	8,  // 24: ExternalServerService.UpdatePC:input_type -> PC
-	5,  // 25: ExternalServerService.UpdateElement:input_type -> Element
-	6,  // 26: ExternalServerService.UpdateWeapon:input_type -> Weapon
-	7,  // 27: ExternalServerService.UpdateAmmo:input_type -> Ammo
-	22, // 28: ExternalServerService.DeleteWorld:input_type -> google.protobuf.StringValue
-	22, // 29: ExternalServerService.DeletePC:input_type -> google.protobuf.StringValue
-	22, // 30: ExternalServerService.GetWorld:input_type -> google.protobuf.StringValue
-	22, // 31: ExternalServerService.GetStatistics:input_type -> google.protobuf.StringValue
-	22, // 32: ExternalServerService.IsArchievementUnlocked:input_type -> google.protobuf.StringValue
-	20, // 33: ExternalServerService.UnlockArchievement:input_type -> UnlockArchievementRequest
-	19, // 34: ExternalServerService.AssignRandomSpawnsToPCs:input_type -> AssignRandomSpawnsToPCsRequest
-	23, // 35: ExternalServerService.UpdateWorld:output_type -> google.protobuf.Empty
-	23, // 36: ExternalServerService.UpdateMap:output_type -> google.protobuf.Empty
-	23, // 37: ExternalServerService.UpdatePC:output_type -> google.protobuf.Empty
-	23, // 38: ExternalServerService.UpdateElement:output_type -> google.protobuf.Empty
-	23, // 39: ExternalServerService.UpdateWeapon:output_type -> google.protobuf.Empty
-	23, // 40: ExternalServerService.UpdateAmmo:output_type -> google.protobuf.Empty
-	23, // 41: ExternalServerService.DeleteWorld:output_type -> google.protobuf.Empty
-	23, // 42: ExternalServerService.DeletePC:output_type -> google.protobuf.Empty
-	17, // 43: ExternalServerService.GetWorld:output_type -> GetWorldResponse
-	21, // 44: ExternalServerService.GetStatistics:output_type -> GetStatisticsResponse
-	23, // 45: ExternalServerService.IsArchievementUnlocked:output_type -> google.protobuf.Empty
-	23, // 46: ExternalServerService.UnlockArchievement:output_type -> google.protobuf.Empty
-	23, // 47: ExternalServerService.AssignRandomSpawnsToPCs:output_type -> google.protobuf.Empty
-	35, // [35:48] is the sub-list for method output_type
-	22, // [22:35] is the sub-list for method input_type
+	2,  // 22: ExternalServerService.InsertOrUpdateWorld:input_type -> World
+	4,  // 23: ExternalServerService.InsertOrUpdateMap:input_type -> Map
+	8,  // 24: ExternalServerService.InsertOrUpdatePC:input_type -> PC
+	5,  // 25: ExternalServerService.InsertOrUpdateElement:input_type -> Element
+	6,  // 26: ExternalServerService.InsertOrUpdateWeapon:input_type -> Weapon
+	7,  // 27: ExternalServerService.InsertOrUpdateAmmo:input_type -> Ammo
+	22, // 28: ExternalServerService.InsertOrUpdateCooldown:input_type -> InsertOrUpdateCooldownRequest
+	25, // 29: ExternalServerService.DeleteWorld:input_type -> google.protobuf.StringValue
+	25, // 30: ExternalServerService.DeletePC:input_type -> google.protobuf.StringValue
+	24, // 31: ExternalServerService.DeleteCooldown:input_type -> DeleteCooldownRequest
+	25, // 32: ExternalServerService.FindWorldObjects:input_type -> google.protobuf.StringValue
+	23, // 33: ExternalServerService.FindCooldown:input_type -> FindCooldownRequest
+	25, // 34: ExternalServerService.GetStatistics:input_type -> google.protobuf.StringValue
+	25, // 35: ExternalServerService.IsArchievementUnlocked:input_type -> google.protobuf.StringValue
+	20, // 36: ExternalServerService.UnlockArchievement:input_type -> UnlockArchievementRequest
+	19, // 37: ExternalServerService.AssignRandomSpawnsToPCs:input_type -> AssignRandomSpawnsToPCsRequest
+	26, // 38: ExternalServerService.InsertOrUpdateWorld:output_type -> google.protobuf.Empty
+	26, // 39: ExternalServerService.InsertOrUpdateMap:output_type -> google.protobuf.Empty
+	26, // 40: ExternalServerService.InsertOrUpdatePC:output_type -> google.protobuf.Empty
+	26, // 41: ExternalServerService.InsertOrUpdateElement:output_type -> google.protobuf.Empty
+	26, // 42: ExternalServerService.InsertOrUpdateWeapon:output_type -> google.protobuf.Empty
+	26, // 43: ExternalServerService.InsertOrUpdateAmmo:output_type -> google.protobuf.Empty
+	26, // 44: ExternalServerService.InsertOrUpdateCooldown:output_type -> google.protobuf.Empty
+	26, // 45: ExternalServerService.DeleteWorld:output_type -> google.protobuf.Empty
+	26, // 46: ExternalServerService.DeletePC:output_type -> google.protobuf.Empty
+	26, // 47: ExternalServerService.DeleteCooldown:output_type -> google.protobuf.Empty
+	17, // 48: ExternalServerService.FindWorldObjects:output_type -> GetWorldResponse
+	27, // 49: ExternalServerService.FindCooldown:output_type -> google.protobuf.BoolValue
+	21, // 50: ExternalServerService.GetStatistics:output_type -> GetStatisticsResponse
+	26, // 51: ExternalServerService.IsArchievementUnlocked:output_type -> google.protobuf.Empty
+	26, // 52: ExternalServerService.UnlockArchievement:output_type -> google.protobuf.Empty
+	26, // 53: ExternalServerService.AssignRandomSpawnsToPCs:output_type -> google.protobuf.Empty
+	38, // [38:54] is the sub-list for method output_type
+	22, // [22:38] is the sub-list for method input_type
 	22, // [22:22] is the sub-list for extension type_name
 	22, // [22:22] is the sub-list for extension extendee
 	0,  // [0:22] is the sub-list for field type_name
@@ -1853,6 +2058,42 @@ func file_api_server_external_proto_init() {
 				return nil
 			}
 		}
+		file_api_server_external_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*InsertOrUpdateCooldownRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_server_external_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindCooldownRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_server_external_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteCooldownRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1860,7 +2101,7 @@ func file_api_server_external_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_server_external_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   20,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -1887,15 +2128,18 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ExternalServerServiceClient interface {
-	UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InsertOrUpdateCooldown(ctx context.Context, in *InsertOrUpdateCooldownRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeletePC(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error)
+	DeleteCooldown(ctx context.Context, in *DeleteCooldownRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FindWorldObjects(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error)
+	FindCooldown(ctx context.Context, in *FindCooldownRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 	GetStatistics(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetStatisticsResponse, error)
 	IsArchievementUnlocked(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnlockArchievement(ctx context.Context, in *UnlockArchievementRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -1910,54 +2154,63 @@ func NewExternalServerServiceClient(cc grpc.ClientConnInterface) ExternalServerS
 	return &externalServerServiceClient{cc}
 }
 
-func (c *externalServerServiceClient) UpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) InsertOrUpdateWorld(ctx context.Context, in *World, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateWorld", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdateWorld", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServerServiceClient) UpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) InsertOrUpdateMap(ctx context.Context, in *Map, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateMap", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdateMap", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServerServiceClient) UpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) InsertOrUpdatePC(ctx context.Context, in *PC, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdatePC", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdatePC", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServerServiceClient) UpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) InsertOrUpdateElement(ctx context.Context, in *Element, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateElement", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdateElement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServerServiceClient) UpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) InsertOrUpdateWeapon(ctx context.Context, in *Weapon, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateWeapon", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdateWeapon", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *externalServerServiceClient) UpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *externalServerServiceClient) InsertOrUpdateAmmo(ctx context.Context, in *Ammo, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/UpdateAmmo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdateAmmo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServerServiceClient) InsertOrUpdateCooldown(ctx context.Context, in *InsertOrUpdateCooldownRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/InsertOrUpdateCooldown", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1982,9 +2235,27 @@ func (c *externalServerServiceClient) DeletePC(ctx context.Context, in *wrappers
 	return out, nil
 }
 
-func (c *externalServerServiceClient) GetWorld(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error) {
+func (c *externalServerServiceClient) DeleteCooldown(ctx context.Context, in *DeleteCooldownRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/DeleteCooldown", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServerServiceClient) FindWorldObjects(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (*GetWorldResponse, error) {
 	out := new(GetWorldResponse)
-	err := c.cc.Invoke(ctx, "/ExternalServerService/GetWorld", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/FindWorldObjects", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *externalServerServiceClient) FindCooldown(ctx context.Context, in *FindCooldownRequest, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+	out := new(wrapperspb.BoolValue)
+	err := c.cc.Invoke(ctx, "/ExternalServerService/FindCooldown", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2029,15 +2300,18 @@ func (c *externalServerServiceClient) AssignRandomSpawnsToPCs(ctx context.Contex
 
 // ExternalServerServiceServer is the server API for ExternalServerService service.
 type ExternalServerServiceServer interface {
-	UpdateWorld(context.Context, *World) (*emptypb.Empty, error)
-	UpdateMap(context.Context, *Map) (*emptypb.Empty, error)
-	UpdatePC(context.Context, *PC) (*emptypb.Empty, error)
-	UpdateElement(context.Context, *Element) (*emptypb.Empty, error)
-	UpdateWeapon(context.Context, *Weapon) (*emptypb.Empty, error)
-	UpdateAmmo(context.Context, *Ammo) (*emptypb.Empty, error)
+	InsertOrUpdateWorld(context.Context, *World) (*emptypb.Empty, error)
+	InsertOrUpdateMap(context.Context, *Map) (*emptypb.Empty, error)
+	InsertOrUpdatePC(context.Context, *PC) (*emptypb.Empty, error)
+	InsertOrUpdateElement(context.Context, *Element) (*emptypb.Empty, error)
+	InsertOrUpdateWeapon(context.Context, *Weapon) (*emptypb.Empty, error)
+	InsertOrUpdateAmmo(context.Context, *Ammo) (*emptypb.Empty, error)
+	InsertOrUpdateCooldown(context.Context, *InsertOrUpdateCooldownRequest) (*emptypb.Empty, error)
 	DeleteWorld(context.Context, *wrapperspb.StringValue) (*emptypb.Empty, error)
 	DeletePC(context.Context, *wrapperspb.StringValue) (*emptypb.Empty, error)
-	GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error)
+	DeleteCooldown(context.Context, *DeleteCooldownRequest) (*emptypb.Empty, error)
+	FindWorldObjects(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error)
+	FindCooldown(context.Context, *FindCooldownRequest) (*wrapperspb.BoolValue, error)
 	GetStatistics(context.Context, *wrapperspb.StringValue) (*GetStatisticsResponse, error)
 	IsArchievementUnlocked(context.Context, *wrapperspb.StringValue) (*emptypb.Empty, error)
 	UnlockArchievement(context.Context, *UnlockArchievementRequest) (*emptypb.Empty, error)
@@ -2048,23 +2322,26 @@ type ExternalServerServiceServer interface {
 type UnimplementedExternalServerServiceServer struct {
 }
 
-func (*UnimplementedExternalServerServiceServer) UpdateWorld(context.Context, *World) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateWorld not implemented")
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdateWorld(context.Context, *World) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdateWorld not implemented")
 }
-func (*UnimplementedExternalServerServiceServer) UpdateMap(context.Context, *Map) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateMap not implemented")
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdateMap(context.Context, *Map) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdateMap not implemented")
 }
-func (*UnimplementedExternalServerServiceServer) UpdatePC(context.Context, *PC) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePC not implemented")
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdatePC(context.Context, *PC) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdatePC not implemented")
 }
-func (*UnimplementedExternalServerServiceServer) UpdateElement(context.Context, *Element) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateElement not implemented")
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdateElement(context.Context, *Element) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdateElement not implemented")
 }
-func (*UnimplementedExternalServerServiceServer) UpdateWeapon(context.Context, *Weapon) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateWeapon not implemented")
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdateWeapon(context.Context, *Weapon) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdateWeapon not implemented")
 }
-func (*UnimplementedExternalServerServiceServer) UpdateAmmo(context.Context, *Ammo) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAmmo not implemented")
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdateAmmo(context.Context, *Ammo) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdateAmmo not implemented")
+}
+func (*UnimplementedExternalServerServiceServer) InsertOrUpdateCooldown(context.Context, *InsertOrUpdateCooldownRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InsertOrUpdateCooldown not implemented")
 }
 func (*UnimplementedExternalServerServiceServer) DeleteWorld(context.Context, *wrapperspb.StringValue) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteWorld not implemented")
@@ -2072,8 +2349,14 @@ func (*UnimplementedExternalServerServiceServer) DeleteWorld(context.Context, *w
 func (*UnimplementedExternalServerServiceServer) DeletePC(context.Context, *wrapperspb.StringValue) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePC not implemented")
 }
-func (*UnimplementedExternalServerServiceServer) GetWorld(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWorld not implemented")
+func (*UnimplementedExternalServerServiceServer) DeleteCooldown(context.Context, *DeleteCooldownRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCooldown not implemented")
+}
+func (*UnimplementedExternalServerServiceServer) FindWorldObjects(context.Context, *wrapperspb.StringValue) (*GetWorldResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindWorldObjects not implemented")
+}
+func (*UnimplementedExternalServerServiceServer) FindCooldown(context.Context, *FindCooldownRequest) (*wrapperspb.BoolValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindCooldown not implemented")
 }
 func (*UnimplementedExternalServerServiceServer) GetStatistics(context.Context, *wrapperspb.StringValue) (*GetStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStatistics not implemented")
@@ -2092,110 +2375,128 @@ func RegisterExternalServerServiceServer(s *grpc.Server, srv ExternalServerServi
 	s.RegisterService(&_ExternalServerService_serviceDesc, srv)
 }
 
-func _ExternalServerService_UpdateWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_InsertOrUpdateWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(World)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).UpdateWorld(ctx, in)
+		return srv.(ExternalServerServiceServer).InsertOrUpdateWorld(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/UpdateWorld",
+		FullMethod: "/ExternalServerService/InsertOrUpdateWorld",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).UpdateWorld(ctx, req.(*World))
+		return srv.(ExternalServerServiceServer).InsertOrUpdateWorld(ctx, req.(*World))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalServerService_UpdateMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_InsertOrUpdateMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Map)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).UpdateMap(ctx, in)
+		return srv.(ExternalServerServiceServer).InsertOrUpdateMap(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/UpdateMap",
+		FullMethod: "/ExternalServerService/InsertOrUpdateMap",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).UpdateMap(ctx, req.(*Map))
+		return srv.(ExternalServerServiceServer).InsertOrUpdateMap(ctx, req.(*Map))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalServerService_UpdatePC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_InsertOrUpdatePC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PC)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).UpdatePC(ctx, in)
+		return srv.(ExternalServerServiceServer).InsertOrUpdatePC(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/UpdatePC",
+		FullMethod: "/ExternalServerService/InsertOrUpdatePC",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).UpdatePC(ctx, req.(*PC))
+		return srv.(ExternalServerServiceServer).InsertOrUpdatePC(ctx, req.(*PC))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalServerService_UpdateElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_InsertOrUpdateElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Element)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).UpdateElement(ctx, in)
+		return srv.(ExternalServerServiceServer).InsertOrUpdateElement(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/UpdateElement",
+		FullMethod: "/ExternalServerService/InsertOrUpdateElement",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).UpdateElement(ctx, req.(*Element))
+		return srv.(ExternalServerServiceServer).InsertOrUpdateElement(ctx, req.(*Element))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalServerService_UpdateWeapon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_InsertOrUpdateWeapon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Weapon)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).UpdateWeapon(ctx, in)
+		return srv.(ExternalServerServiceServer).InsertOrUpdateWeapon(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/UpdateWeapon",
+		FullMethod: "/ExternalServerService/InsertOrUpdateWeapon",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).UpdateWeapon(ctx, req.(*Weapon))
+		return srv.(ExternalServerServiceServer).InsertOrUpdateWeapon(ctx, req.(*Weapon))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalServerService_UpdateAmmo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_InsertOrUpdateAmmo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Ammo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).UpdateAmmo(ctx, in)
+		return srv.(ExternalServerServiceServer).InsertOrUpdateAmmo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/UpdateAmmo",
+		FullMethod: "/ExternalServerService/InsertOrUpdateAmmo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).UpdateAmmo(ctx, req.(*Ammo))
+		return srv.(ExternalServerServiceServer).InsertOrUpdateAmmo(ctx, req.(*Ammo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalServerService_InsertOrUpdateCooldown_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InsertOrUpdateCooldownRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServerServiceServer).InsertOrUpdateCooldown(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalServerService/InsertOrUpdateCooldown",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServerServiceServer).InsertOrUpdateCooldown(ctx, req.(*InsertOrUpdateCooldownRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2236,20 +2537,56 @@ func _ExternalServerService_DeletePC_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExternalServerService_GetWorld_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExternalServerService_DeleteCooldown_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCooldownRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServerServiceServer).DeleteCooldown(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalServerService/DeleteCooldown",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServerServiceServer).DeleteCooldown(ctx, req.(*DeleteCooldownRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalServerService_FindWorldObjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(wrapperspb.StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExternalServerServiceServer).GetWorld(ctx, in)
+		return srv.(ExternalServerServiceServer).FindWorldObjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ExternalServerService/GetWorld",
+		FullMethod: "/ExternalServerService/FindWorldObjects",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExternalServerServiceServer).GetWorld(ctx, req.(*wrapperspb.StringValue))
+		return srv.(ExternalServerServiceServer).FindWorldObjects(ctx, req.(*wrapperspb.StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExternalServerService_FindCooldown_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindCooldownRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExternalServerServiceServer).FindCooldown(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ExternalServerService/FindCooldown",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExternalServerServiceServer).FindCooldown(ctx, req.(*FindCooldownRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2331,28 +2668,32 @@ var _ExternalServerService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*ExternalServerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UpdateWorld",
-			Handler:    _ExternalServerService_UpdateWorld_Handler,
+			MethodName: "InsertOrUpdateWorld",
+			Handler:    _ExternalServerService_InsertOrUpdateWorld_Handler,
 		},
 		{
-			MethodName: "UpdateMap",
-			Handler:    _ExternalServerService_UpdateMap_Handler,
+			MethodName: "InsertOrUpdateMap",
+			Handler:    _ExternalServerService_InsertOrUpdateMap_Handler,
 		},
 		{
-			MethodName: "UpdatePC",
-			Handler:    _ExternalServerService_UpdatePC_Handler,
+			MethodName: "InsertOrUpdatePC",
+			Handler:    _ExternalServerService_InsertOrUpdatePC_Handler,
 		},
 		{
-			MethodName: "UpdateElement",
-			Handler:    _ExternalServerService_UpdateElement_Handler,
+			MethodName: "InsertOrUpdateElement",
+			Handler:    _ExternalServerService_InsertOrUpdateElement_Handler,
 		},
 		{
-			MethodName: "UpdateWeapon",
-			Handler:    _ExternalServerService_UpdateWeapon_Handler,
+			MethodName: "InsertOrUpdateWeapon",
+			Handler:    _ExternalServerService_InsertOrUpdateWeapon_Handler,
 		},
 		{
-			MethodName: "UpdateAmmo",
-			Handler:    _ExternalServerService_UpdateAmmo_Handler,
+			MethodName: "InsertOrUpdateAmmo",
+			Handler:    _ExternalServerService_InsertOrUpdateAmmo_Handler,
+		},
+		{
+			MethodName: "InsertOrUpdateCooldown",
+			Handler:    _ExternalServerService_InsertOrUpdateCooldown_Handler,
 		},
 		{
 			MethodName: "DeleteWorld",
@@ -2363,8 +2704,16 @@ var _ExternalServerService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ExternalServerService_DeletePC_Handler,
 		},
 		{
-			MethodName: "GetWorld",
-			Handler:    _ExternalServerService_GetWorld_Handler,
+			MethodName: "DeleteCooldown",
+			Handler:    _ExternalServerService_DeleteCooldown_Handler,
+		},
+		{
+			MethodName: "FindWorldObjects",
+			Handler:    _ExternalServerService_FindWorldObjects_Handler,
+		},
+		{
+			MethodName: "FindCooldown",
+			Handler:    _ExternalServerService_FindCooldown_Handler,
 		},
 		{
 			MethodName: "GetStatistics",

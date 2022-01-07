@@ -27,8 +27,15 @@ func Process() {
 			return
 		}
 
-		// middlewares.UseMiddlewares().Audio().UseAfter(func() {
 		statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_UNDONE)
-		// })
+	}
+
+	switch statemachine.UseStateMachine().Mouse().GetState() {
+	case statemachine.MOUSE_BUTTON_CLICK:
+		// startmenu.Exec()
+	case statemachine.MOUSE_CLICK:
+		// game.Exec()
+	default:
+		return
 	}
 }

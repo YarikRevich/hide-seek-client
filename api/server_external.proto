@@ -89,8 +89,8 @@ message Position {
 };
 
 message PositionInt {
-    double x = 1;
-    double y = 2;
+    int64 x = 1;
+    int64 y = 2;
 }
 
 message RemovePCRequest{
@@ -133,18 +133,37 @@ message GetStatisticsResponse {
     reserved 2 to 4;
 }
 
+message InsertOrUpdateCooldownRequest {
+    string worldId = 1;
+    string pcId = 2;
+}
+
+message FindCooldownRequest {
+    string worldId = 1;
+    string pcId = 2;   
+}
+
+message DeleteCooldownRequest {
+    string worldId = 1;
+    string pcId = 2;   
+}
+
 service ExternalServerService {
     //Game process
-    rpc UpdateWorld (World) returns (google.protobuf.Empty);
-    rpc UpdateMap (Map) returns (google.protobuf.Empty);
-    rpc UpdatePC (PC) returns (google.protobuf.Empty);
-    rpc UpdateElement (Element) returns (google.protobuf.Empty);
-    rpc UpdateWeapon (Weapon) returns (google.protobuf.Empty);
-    rpc UpdateAmmo (Ammo) returns (google.protobuf.Empty);
+    rpc InsertOrUpdateWorld (World) returns (google.protobuf.Empty);
+    rpc InsertOrUpdateMap (Map) returns (google.protobuf.Empty);
+    rpc InsertOrUpdatePC (PC) returns (google.protobuf.Empty);
+    rpc InsertOrUpdateElement (Element) returns (google.protobuf.Empty);
+    rpc InsertOrUpdateWeapon (Weapon) returns (google.protobuf.Empty);
+    rpc InsertOrUpdateAmmo (Ammo) returns (google.protobuf.Empty);
+    rpc InsertOrUpdateCooldown(InsertOrUpdateCooldownRequest) returns (google.protobuf.Empty);
+    
     rpc DeleteWorld(google.protobuf.StringValue) returns (google.protobuf.Empty);
     rpc DeletePC(google.protobuf.StringValue) returns (google.protobuf.Empty);
-    rpc GetWorld(google.protobuf.StringValue) returns (GetWorldResponse);
-
+    rpc DeleteCooldown(DeleteCooldownRequest) returns (google.protobuf.Empty);
+    
+    rpc FindWorldObjects(google.protobuf.StringValue) returns (GetWorldResponse);
+    rpc FindCooldown(FindCooldownRequest) returns (google.protobuf.BoolValue);
     //Statistics
     rpc GetStatistics(google.protobuf.StringValue) returns (GetStatisticsResponse);
 

@@ -1,7 +1,6 @@
 package objects
 
 import (
-	"image"
 	"unsafe"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
@@ -156,12 +155,12 @@ type Map struct {
 
 // 	return (y-mm.Buffs.Speed.Y - mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y + mo.Size.Height/2)
 // }
-func (w *Map) GetSpawns() []*image.Point {
-	var r []*image.Point
+func (w *Map) GetSpawns() []*server_external.PositionInt {
+	var r []*server_external.PositionInt
 
 	hudOffsetY := screen.UseScreen().GetHeight() / 12
 	for _, v := range w.ModelCombination.Modified.Spawns {
-		r = append(r, &image.Point{Y: v.Y + int(hudOffsetY), X: v.X})
+		r = append(r, &server_external.PositionInt{Y: v.Y + int64(hudOffsetY), X: v.X})
 	}
 
 	return r

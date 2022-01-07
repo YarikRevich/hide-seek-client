@@ -6,7 +6,7 @@ go_library(
     importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/audio/game",
     visibility = ["//:__subpackages__"],
     deps = [
-        "//internal/core/audiocontroller",
+        "//internal/core/player",
         "//internal/core/world",
     ],
 )

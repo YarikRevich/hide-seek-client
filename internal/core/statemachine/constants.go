@@ -56,3 +56,9 @@ const (
 	PC_DEAD_NOW
 	PC_IN_FIGHT
 )
+
+const (
+	MOUSE_BUTTON_CLICK = iota
+	MOUSE_CLICK        = iota
+	MOUSE_NONE         = iota
+)

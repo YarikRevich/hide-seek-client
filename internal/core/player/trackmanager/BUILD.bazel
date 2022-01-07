@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "trackmanager",
+    srcs = ["trackmanager.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/core/player/trackmanager",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/sources",
+    ],
+)

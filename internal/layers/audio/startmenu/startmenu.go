@@ -1,9 +1,7 @@
 package startmenu
 
-import "github.com/YarikRevich/hide-seek-client/internal/core/audiocontroller"
+import "github.com/YarikRevich/hide-seek-client/internal/core/player"
 
 func Exec() {
-	c := audiocontroller.UseAudioController()
-	c.Wrap("background")
-	c.Start()
+	player.UsePlayer().Play("background", player.PlayerOpts{Infinite: true})
 }
