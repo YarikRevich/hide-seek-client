@@ -29,36 +29,43 @@ func Process() {
 			return
 		case statemachine.UI_JOIN_MENU:
 			if joinmenu.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
 		case statemachine.UI_WAIT_ROOM_START:
 			if waitroomstart.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
 		case statemachine.UI_WAIT_ROOM_JOIN:
 			if waitroomjoin.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
 		case statemachine.UI_START_MENU:
 			if startmenu.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
-
 		case statemachine.UI_SETTINGS_MENU:
 			if settingsmenu.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
 		case statemachine.UI_MAP_CHOOSE:
 			if mapchoose.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
 		case statemachine.UI_HERO_CHOOSE:
 			if herochoose.Exec() {
+				statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_BUTTON_CLICK)
 				return
 			}
 		}
 
 		if events.UseEvents().Mouse().IsAnyMouseButtonsPressed() {
+			statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_CLICK)
 			unfocus.Exec()
 		}
 	}

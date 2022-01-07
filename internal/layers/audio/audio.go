@@ -2,9 +2,12 @@ package audio
 
 import (
 	// "github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
+	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/buttonclick"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/click"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/game"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/startmenu"
 
@@ -16,6 +19,14 @@ func Process() {
 		profiling.UseProfiler().StartMonitoring(profiling.AUDIO)
 		defer profiling.UseProfiler().EndMonitoring()
 	}
+
+	switch statemachine.UseStateMachine().Mouse().GetState() {
+	case statemachine.MOUSE_BUTTON_CLICK:
+		buttonclick.Exec()
+	case statemachine.MOUSE_CLICK:
+		click.Exec()
+	}
+	statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_NONE)
 
 	if statemachine.UseStateMachine().Audio().GetState() == statemachine.AUDIO_DONE {
 		switch statemachine.UseStateMachine().UI().GetState() {
@@ -30,12 +41,4 @@ func Process() {
 		statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_UNDONE)
 	}
 
-	switch statemachine.UseStateMachine().Mouse().GetState() {
-	case statemachine.MOUSE_BUTTON_CLICK:
-		// startmenu.Exec()
-	case statemachine.MOUSE_CLICK:
-		// game.Exec()
-	default:
-		return
-	}
 }

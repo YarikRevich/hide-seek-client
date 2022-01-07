@@ -1,12 +1,13 @@
 package player
 
 import (
+	"fmt"
 	"math"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/player/trackmanager"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 	"github.com/sirupsen/logrus"
 )
@@ -38,25 +39,29 @@ func (a *Player) silentlyStopCurrentTrack() {
 }
 
 func (a *Player) waitTrackEnds(track *sources.Track) {
-	ticker := time.NewTicker(time.Millisecond * 500)
-	for range ticker.C {
-		if track.Streamer.Position() == track.Streamer.Len() {
-			break
-		}
-	}
-	ticker.Stop()
+	// ticker := time.NewTicker(time.Millisecond * 500)
+	// for range ticker.C {
+	// 	streamer := track.Buffer.Streamer(0, track.Buffer.Len())
+	// 	fmt.Println(streamer.Position(), streamer.Len())
+	// 	if streamer.Position() == streamer.Len() {
+	// 		break
+	// 	}
+	// }
+	// ticker.Stop()
 
-	track.Ctrl.Paused = true
+	// fmt.Println(track.Ctrl.Paused, track.TrackPath)
+	// track.Ctrl.Paused = true
 
-	statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
+	// statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
 }
 
 func (a *Player) Play(trackPath string, opts PlayerOpts) {
 	go func() {
-		if track := a.trackManager.Find(trackPath); track != nil {
-			track.Ctrl.Paused = false
-			return
-		}
+		// a.trackManager.DebugCollection()
+		// if track := a.trackManager.Find(trackPath); track != nil {
+		// 	track.Ctrl.Paused = false
+		// 	return
+		// }
 
 		track := sources.UseSources().Audio().GetAudioController(trackPath)
 
@@ -67,7 +72,11 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 		if err := speaker.Init(track.Format.SampleRate, track.Format.SampleRate.N(time.Second/100)); err != nil {
 			logrus.Fatal("error happened initializing audio speaker")
 		}
-		speaker.Play(track.Volume)
+
+		streamer := track.Buffer.Streamer(0, track.Buffer.Len())
+		speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+			fmt.Println("DONE")
+		})))
 
 		a.trackManager.Push(track)
 

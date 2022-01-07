@@ -30,6 +30,10 @@ func (g *Loop) Update() error {
 	screen.UseScreen().CleanScreen()
 	render.UseRender().CleanRenderPool()
 
+	if !params.IsWithoutSound() {
+		audio.Process()
+	}
+
 	mouse.Process()
 	networking.Process()
 	animation.Process()
@@ -44,10 +48,6 @@ func (g *Loop) Update() error {
 	transition.UseTransitionPool().Process()
 
 	keyboard.Process()
-
-	if !params.IsWithoutSound() {
-		audio.Process()
-	}
 
 	return nil
 }

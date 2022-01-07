@@ -18,7 +18,7 @@ type Track struct {
 	Volume    *effects.Volume
 	Ctrl      *beep.Ctrl
 	Format    beep.Format
-	Streamer  beep.StreamSeekCloser
+	Buffer    *beep.Buffer
 	TrackPath string
 }
 
@@ -39,29 +39,38 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 		var (
 			streamer beep.StreamSeekCloser
 			format   beep.Format
+			loop     beep.Streamer
 		)
+
 		if regexp.MustCompile(`\.(mp3)*$`).MatchString(path) {
 			streamer, format, err = mp3.Decode(sound)
 			if err != nil {
 				logrus.Fatal("error happened decoding mp3 audio file from embedded fs", err)
 			}
-		} else if regexp.MustCompile(`\.(waw)*$`).MatchString(path) {
+			loop = beep.Loop(-1, streamer)
+		} else if regexp.MustCompile(`\.(wav)*$`).MatchString(path) {
 			streamer, format, err = wav.Decode(sound)
 			if err != nil {
 				logrus.Fatal("error happened decoding wav audio file from embedded fs", err)
 			}
+			loop = beep.Loop(1, streamer)
 		}
 
-		ctrl := &beep.Ctrl{Streamer: beep.Loop(-1, streamer), Paused: false}
+		ctrl := &beep.Ctrl{Streamer: loop, Paused: false}
 		volume := &effects.Volume{
 			Streamer: ctrl,
 			Base:     2,
 			Volume:   0.001,
 		}
+		buffer := beep.NewBuffer(format)
+		buffer.Append(streamer)
+		if err := streamer.Close(); err != nil {
+			logrus.Fatal(err)
+		}
 
 		a.Lock()
 		trackPath := reg.Split(path, -1)[0]
-		a.Collection[trackPath] = &Track{volume, ctrl, format, streamer, trackPath}
+		a.Collection[trackPath] = &Track{volume, ctrl, format, buffer, trackPath}
 		a.Unlock()
 	}
 }
@@ -72,7 +81,6 @@ func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 }
 
 func (a *Audio) GetAudioController(path string) *Track {
-	fmt.Println(path)
 	path = filepath.Join("dist/audio", path)
 
 	audio, ok := a.Collection[path]

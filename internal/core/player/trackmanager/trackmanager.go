@@ -1,6 +1,8 @@
 package trackmanager
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 )
 
@@ -25,6 +27,7 @@ func (tm *TrackManager) NextToPlayAfter(trackPath string) *sources.Track {
 //Pushed a new track to the sequence connecting
 //it to already present ones
 func (tm *TrackManager) Push(track *sources.Track) {
+
 	if len(tm.trackCollection) != 0 {
 		tm.trackCollection = append(tm.trackCollection, struct {
 			track *sources.Track
@@ -33,11 +36,13 @@ func (tm *TrackManager) Push(track *sources.Track) {
 			track: track,
 			prev:  tm.trackCollection[len(tm.trackCollection)-1].track,
 		})
+	} else {
+		tm.trackCollection = append(tm.trackCollection, struct {
+			track *sources.Track
+			prev  *sources.Track
+		}{track: track})
 	}
-	tm.trackCollection = append(tm.trackCollection, struct {
-		track *sources.Track
-		prev  *sources.Track
-	}{track: track})
+	fmt.Println(track.TrackPath, len(tm.trackCollection))
 }
 
 //Removes passed track from the player sequence
@@ -63,6 +68,12 @@ func (tm *TrackManager) Find(trackPath string) *sources.Track {
 		}
 	}
 	return nil
+}
+
+func (tm *TrackManager) DebugCollection() {
+	// for _, v := range tm.trackCollection {
+	// fmt.Println(v.track.TrackPath, v.track.Ctrl.Paused)
+	// }
 }
 
 //Returns track which is not paused and is being currently played

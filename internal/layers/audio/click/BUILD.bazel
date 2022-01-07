@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "click",
+    srcs = ["click.go"],
+    importpath = "github.com/YarikRevich/hide-seek-client/internal/layers/audio/click",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/core/player",
+    ],
+)
