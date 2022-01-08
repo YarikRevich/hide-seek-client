@@ -40,6 +40,10 @@ SERVICE_ENV = """
         touch /usr/local/share/games/HideSeek/log/log.log;\
     fi;\
     chmod 666 /usr/local/share/games/HideSeek/log/log.log;\
+    if ! [[ -f "/usr/local/share/games/HideSeek/db/storage.db" ]]; then\
+        touch /usr/local/share/games/HideSeek/db/storage.db;\
+    fi;\
+    chmod 666 /usr/local/share/games/HideSeek/db/storage.db;\
     echo EOF > $@;
 """
 

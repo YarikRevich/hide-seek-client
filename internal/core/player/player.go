@@ -1,7 +1,6 @@
 package player
 
 import (
-	"fmt"
 	"math"
 	"time"
 
@@ -63,8 +62,21 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 		}
 
 		streamer := track.Buffer.Streamer(0, track.Buffer.Len())
+
+		// if track.Streamer.Position() == track.Streamer.Len() {
+
+		// // speaker.Lock()
+		// track.Ctrl.Paused = true
+		// fmt.Println("BEFORE ", track.Streamer.Position(), track.Streamer.Len())
+		// if err := track.Streamer.Seek(0); err != nil {
+		// 	logrus.Fatal(err)
+		// }
+		// track.Ctrl.Paused = false
+		// fmt.Println("AFTER", track.Streamer.Position(), track.Ctrl.Paused)
+		// // speaker.Unlock()
+
 		speaker.Play(beep.Seq(streamer, beep.Callback(func() {
-			fmt.Println("DONE")
+			// fmt.Println("DONE")
 		})))
 
 		a.trackManager.Push(track)

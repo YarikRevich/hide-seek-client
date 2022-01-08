@@ -63,21 +63,24 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 			Volume:   0.001,
 		}
 
-		buffer := beep.NewBuffer(format)
-		buffer.Append(streamer)
-		if err := streamer.Close(); err != nil {
-			logrus.Fatal(err)
-		}
-
 		a.Lock()
-		trackPath := reg.Split(path, -1)[0]
-		a.Collection[trackPath] = &Track{volume, ctrl, format, buffer, trackPath}
-		a.Unlock()
+		go func() {
+			buffer := beep.NewBuffer(format)
+			buffer.Append(streamer)
+			if err := streamer.Close(); err != nil {
+				logrus.Fatal(err)
+			}
+			trackPath := reg.Split(path, -1)[0]
+			a.Collection[trackPath] = &Track{volume, ctrl, format, buffer, trackPath}
+			a.Unlock()
+		}()
+
 	}
 }
 
 func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, a.loadFile).Parse()
+	fmt.Println("AUDIO")
 	wg.Done()
 }
 

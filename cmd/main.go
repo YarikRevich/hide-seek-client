@@ -67,6 +67,7 @@ func init() {
 	}
 
 	debug.SetGCPercent(2000)
+
 }
 
 func main() {
