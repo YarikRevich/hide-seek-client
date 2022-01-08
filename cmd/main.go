@@ -16,6 +16,8 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/loop"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/speaker"
 
 	"github.com/YarikRevich/hide-seek-client/tools/params"
 	"github.com/YarikRevich/hide-seek-client/tools/printer"
@@ -25,6 +27,11 @@ import (
 )
 
 func init() {
+	sr := beep.SampleRate(44100)
+	if err := speaker.Init(sr, sr.N(time.Second/10000)); err != nil {
+		logrus.Fatal("error happened initializing audio speaker")
+	}
+
 	rand.Seed(time.Now().Unix())
 
 	flag.Parse()

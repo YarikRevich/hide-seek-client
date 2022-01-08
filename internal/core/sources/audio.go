@@ -55,6 +55,7 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 			}
 			loop = beep.Loop(1, streamer)
 		}
+		fmt.Println(format.SampleRate)
 
 		ctrl := &beep.Ctrl{Streamer: loop, Paused: false}
 		volume := &effects.Volume{

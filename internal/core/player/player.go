@@ -9,7 +9,6 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
-	"github.com/sirupsen/logrus"
 )
 
 var instance *Player
@@ -69,10 +68,6 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 			a.silentlyStopCurrentTrack()
 		}
 
-		if err := speaker.Init(track.Format.SampleRate, track.Format.SampleRate.N(time.Second/100)); err != nil {
-			logrus.Fatal("error happened initializing audio speaker")
-		}
-
 		streamer := track.Buffer.Streamer(0, track.Buffer.Len())
 		speaker.Play(beep.Seq(streamer, beep.Callback(func() {
 			fmt.Println("DONE")
@@ -80,9 +75,9 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 
 		a.trackManager.Push(track)
 
-		if !opts.Infinite {
-			a.waitTrackEnds(track)
-		}
+		// if !opts.Infinite {
+		// 	a.waitTrackEnds(track)
+		// }
 	}()
 }
 func (a *Player) Pause(trackPath string) {
