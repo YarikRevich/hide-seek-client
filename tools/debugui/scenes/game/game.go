@@ -6,9 +6,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
-type DebugGameScene struct{}
-
-func (dgs *DebugGameScene) Call() {
+func Show() {
 	world.UseWorld().DebugInit()
 
 	middlewares.UseMiddlewares().UI().UseAfter(func() {
@@ -16,8 +14,4 @@ func (dgs *DebugGameScene) Call() {
 	})
 
 	statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_GAME)
-}
-
-func New() *DebugGameScene {
-	return new(DebugGameScene)
 }

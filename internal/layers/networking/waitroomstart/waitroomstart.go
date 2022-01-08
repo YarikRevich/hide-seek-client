@@ -23,19 +23,19 @@ func Exec() {
 		worldMess := w.ToAPIMessage()
 		mapMess := w.GetWorldMap().ToAPIMessage()
 		pcMess := w.GetPC().ToAPIMessage()
-		fmt.Println("HERE1")
+		// fmt.Println("HERE1")
 		if _, err := server.InsertOrUpdateWorld(context.Background(), worldMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Error(err)
 			return
 		}
-		fmt.Println("HERE2", mapMess)
+		// fmt.Println("HERE2", mapMess)
 		if _, err := server.InsertOrUpdateMap(context.Background(), mapMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Error(err)
 			return
 		}
-		fmt.Println("HERE3", pcMess)
+		// fmt.Println("HERE3", pcMess)
 		if _, err := server.InsertOrUpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Error(err)
@@ -48,20 +48,20 @@ func Exec() {
 		w := world.UseWorld()
 		server := networking.UseNetworking().Clients().Base().GetClient()
 
-		fmt.Println("GAME STARTED BEFORE", w.GetGameSettings().IsGameStarted)
+		// fmt.Println("GAME STARTED BEFORE", w.GetGameSettings().IsGameStarted)
 		if _, err := server.InsertOrUpdateWorld(context.Background(), w.ToAPIMessage(), grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Error(err)
 			return
 		}
 
-		if !w.GetGameSettings().IsWorldExist {
-			if _, err := server.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{}); err != nil {
-				notifications.PopUp.WriteError(err.Error())
-				logrus.Error(err)
-				return
-			}
-		}
+		// if !w.GetGameSettings().IsWorldExist {
+		// 	if _, err := server.DeleteWorld(context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{}); err != nil {
+		// 		notifications.PopUp.WriteError(err.Error())
+		// 		logrus.Error(err)
+		// 		return
+		// 	}
+		// }
 
 		worldObjects, err := server.FindWorldObjects(
 			context.Background(), &wrappers.StringValue{Value: w.ID.String()}, grpc.EmptyCallOption{})
@@ -69,10 +69,13 @@ func Exec() {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Fatal(err)
 		}
+		// fmt.Println(worldObjects)
 
 		w.Update(worldObjects)
 
-		fmt.Println("GAME STARTED AFTER", w.GetGameSettings().IsGameStarted)
+		fmt.Println("HERER")
+
+		// fmt.Println("GAME STARTED AFTER", w.GetGameSettings().IsGameStarted)
 
 	}, statemachine.UI_WAIT_ROOM_START, time.Second)
 }

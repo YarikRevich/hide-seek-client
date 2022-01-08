@@ -61,7 +61,6 @@ func (r *Render) UseAfter(c func()) {
 	default:
 	}
 
-	// statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_NONE)
 	//Handles sound disabling, because in debug
 	//mode sound can be disabled after music play start
 	if params.IsWithoutSound() {

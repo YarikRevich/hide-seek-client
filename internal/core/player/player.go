@@ -56,12 +56,6 @@ func (a *Player) waitTrackEnds(track *sources.Track) {
 
 func (a *Player) Play(trackPath string, opts PlayerOpts) {
 	go func() {
-		// a.trackManager.DebugCollection()
-		// if track := a.trackManager.Find(trackPath); track != nil {
-		// 	track.Ctrl.Paused = false
-		// 	return
-		// }
-
 		track := sources.UseSources().Audio().GetAudioController(trackPath)
 
 		if opts.Fading {

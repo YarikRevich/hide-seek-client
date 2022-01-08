@@ -62,7 +62,6 @@ func (d *Dialer) dialServices() {
 	d.services_conn = services_conn
 }
 
-//Dials all the clients
 func (d *Dialer) Dial() {
 	d.dialServer()
 	d.dialServices()

@@ -4,6 +4,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/YarikRevich/hide-seek-client/tools/debugui/scenes/game"
+	"github.com/YarikRevich/hide-seek-client/tools/debugui/scenes/waitroomjoin"
 	"github.com/YarikRevich/hide-seek-client/tools/params"
 	"github.com/gabstv/ebiten-imgui/renderer"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -25,23 +26,42 @@ func (d *DebugImGUI) Render(screen *ebiten.Image) {
 	d.renderer.BeginFrame()
 	pc := world.UseWorld().GetPC()
 	{
-		imgui.Begin("It works")
+		imgui.Begin("Debug menu")
 
-		if imgui.Button("KILL PC") {
-			statemachine.UseStateMachine().PCs().SetState(pc.ID, statemachine.PC_DEAD_NOW)
+		if imgui.BeginMenu("Actions") {
+			if imgui.Button("Kill pc") {
+				statemachine.UseStateMachine().PCs().SetState(pc.ID, statemachine.PC_DEAD_NOW)
+			}
+
+			imgui.EndMenu()
 		}
 
 		if imgui.BeginMenu("Scenes") {
 			if imgui.Button("Game") {
-				game.New().Call()
+				game.Show()
+			}
+
+			if imgui.Button("Waitroomjoin") {
+				waitroomjoin.Show()
 			}
 
 			imgui.EndMenu()
 		}
 
 		if imgui.BeginMenu("Commands") {
-			if imgui.Button("Disable sound") {
-				params.SetWithoutSoundManually(true)
+			var (
+				label  string
+				action bool
+			)
+			if params.IsWithoutSound() {
+				label = "Enable sound"
+				action = false
+			} else {
+				label = "Disable sound"
+				action = true
+			}
+			if imgui.Button(label) {
+				params.SetWithoutSoundManually(action)
 			}
 			imgui.EndMenu()
 		}

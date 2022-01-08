@@ -24,9 +24,7 @@ func (u *UI) cleanBuffers() {
 }
 
 func (u *UI) setSuspendedMusicDone() {
-	// UseMiddlewares().Audio().UseAfter(func() {
 	statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
-	// })
 }
 
 func (u *UI) UseAfter(c func()) {

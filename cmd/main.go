@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime/debug"
+	"runtime/pprof"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/assets"
@@ -37,6 +38,11 @@ func init() {
 	flag.Parse()
 
 	logrus.SetFormatter(new(logrus.JSONFormatter))
+
+	f, _ := os.OpenFile("log.log", os.O_RDWR, 0666)
+	if err := pprof.Lookup("goroutine").WriteTo(f, 1); err != nil {
+		logrus.Fatal(err)
+	}
 
 	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "/log.log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {

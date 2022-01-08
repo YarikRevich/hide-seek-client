@@ -10,6 +10,7 @@ go_library(
         "//internal/core/statemachine",
         "//internal/layers/audio/game",
         "//internal/layers/audio/startmenu",
+        "//internal/layers/audio/notificationnew",
         "//internal/layers/audio/click",
         "//internal/layers/audio/buttonclick",
         "//tools/params",

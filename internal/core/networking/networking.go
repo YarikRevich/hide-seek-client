@@ -20,6 +20,12 @@ func (n *Networking) Clients() *clients.Clients {
 	return n.clients
 }
 
+func (n *Networking) Init() {
+	n.dialer.Dial()
+	n.clients.Base().Connect(n.dialer.GetServerConn())
+	n.clients.Services().Connect(n.dialer.GetServicesConn())
+}
+
 func UseNetworking() *Networking {
 	if instance == nil {
 		instance = &Networking{

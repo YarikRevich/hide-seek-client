@@ -12,6 +12,7 @@ type StateMachine struct {
 	game                   ISingleState
 	pcs                    IMultipleState
 	mouse                  ISingleState
+	notification           ISingleState
 }
 
 type IStateMachine interface {
@@ -24,6 +25,7 @@ type IStateMachine interface {
 	SettingsMenuCheckbox() ISingleState
 	PCs() IMultipleState
 	Mouse() ISingleState
+	Notification() ISingleState
 }
 
 func (s *StateMachine) Audio() ISingleState {
@@ -62,6 +64,10 @@ func (s *StateMachine) Mouse() ISingleState {
 	return s.mouse
 }
 
+func (s *StateMachine) Notification() ISingleState {
+	return s.notification
+}
+
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
@@ -74,6 +80,7 @@ func UseStateMachine() IStateMachine {
 			game:                   NewSingleState(GAME_START),
 			pcs:                    NewMultipleState(PC_ALIVE),
 			mouse:                  NewSingleState(MOUSE_NONE),
+			notification:           NewSingleState(NOTIFICATION_NONE),
 		}
 	}
 	return instance
