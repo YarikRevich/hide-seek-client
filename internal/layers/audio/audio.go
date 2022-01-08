@@ -1,16 +1,15 @@
 package audio
 
 import (
-	// "github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"fmt"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
-
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/buttonclick"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/click"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/game"
+	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/notificationnew"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/startmenu"
-
 	"github.com/YarikRevich/hide-seek-client/tools/params"
 )
 
@@ -27,6 +26,13 @@ func Process() {
 		click.Exec()
 	}
 	statemachine.UseStateMachine().Mouse().SetState(statemachine.MOUSE_NONE)
+
+	switch statemachine.UseStateMachine().Notification().GetState() {
+	case statemachine.NOTIFICATION_NEW:
+		fmt.Println("HERE")
+		notificationnew.Exec()
+	}
+	statemachine.UseStateMachine().Notification().SetState(statemachine.NOTIFICATION_NONE)
 
 	if statemachine.UseStateMachine().Audio().GetState() == statemachine.AUDIO_DONE {
 		switch statemachine.UseStateMachine().UI().GetState() {

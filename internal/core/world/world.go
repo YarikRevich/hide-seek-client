@@ -4,11 +4,8 @@ import (
 	"fmt"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings"
-	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
-	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statistics"
 	"github.com/google/uuid"
 )
@@ -41,26 +38,28 @@ func (w *World) DeletePCs() {
 }
 
 func (w *World) UpdatePCs(m []*server_external.PC) {
+	fmt.Println(m)
 	w.DeletePCs()
 
-	var foundPC bool
+	// var foundPC bool
 	for _, pc := range m {
+		// fmt.Println("ITERATE \n", pc.Base.Skin, "\n")
 		if pc.Base.Id == w.pc.ID.String() {
-			w.pc.FromAPIMessage(pc)
-			foundPC = true
-			w.AddPCs(w.pc)
+			// 	w.pc.FromAPIMessage(pc)
+			// 	// foundPC = true
+			// 	w.AddPCs(w.pc)
 		} else {
 			npc := objects.NewPC()
 			npc.FromAPIMessage(pc)
 			w.AddPCs(npc)
 		}
 	}
-	if !foundPC {
-		middlewares.UseMiddlewares().UI().UseAfter(func() {
-			statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
-		})
-		notifications.PopUp.WriteError("You were kicked from the session")
-	}
+	// if !foundPC {
+	// 	middlewares.UseMiddlewares().UI().UseAfter(func() {
+	// 		statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
+	// 	})
+	// 	notifications.PopUp.WriteError("You were kicked from the session")
+	// }
 }
 
 func (w *World) AddElements(el *objects.Element) {
@@ -103,6 +102,7 @@ func (w *World) UpdateAmmos(m []*server_external.Ammo) {
 }
 
 func (w *World) Update(m *server_external.GetWorldResponse) {
+	// fmt.Println(m.World)
 	w.FromAPIMessage(m.World)
 	w.UpdatePCs(m.PCs)
 	w.UpdateElements(m.Elements)
@@ -181,6 +181,7 @@ func (w *World) ToAPIMessage() *server_external.World {
 func (w *World) FromAPIMessage(m *server_external.World) {
 	// w.gamesettings.Regime = m.GameSettings.Regime
 	// fmt.Println(m)
+	// fmt.Println(m.GameSettings)
 	w.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted
 	w.gamesettings.IsWorldExist = m.GameSettings.IsWorldExist
 }

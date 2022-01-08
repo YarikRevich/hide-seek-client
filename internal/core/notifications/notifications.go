@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 )
 
 type NotificatorEntity struct {
@@ -37,6 +38,7 @@ func (p *notificator) write(m string) {
 	}); ok {
 		r.(*NotificatorEntity).Timestamp = timestamp
 	} else {
+		statemachine.UseStateMachine().Notification().SetState(statemachine.NOTIFICATION_NEW)
 		p.queue.Add(&NotificatorEntity{Timestamp: timestamp, Message: m})
 	}
 	p.Unlock()

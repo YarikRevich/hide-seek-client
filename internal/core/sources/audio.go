@@ -55,7 +55,6 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 			}
 			loop = beep.Loop(1, streamer)
 		}
-		fmt.Println(format.SampleRate)
 
 		ctrl := &beep.Ctrl{Streamer: loop, Paused: false}
 		volume := &effects.Volume{
@@ -63,27 +62,30 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 			Base:     2,
 			Volume:   0.001,
 		}
-		buffer := beep.NewBuffer(format)
-		buffer.Append(streamer)
-		if err := streamer.Close(); err != nil {
-			logrus.Fatal(err)
-		}
 
 		a.Lock()
-		trackPath := reg.Split(path, -1)[0]
-		a.Collection[trackPath] = &Track{volume, ctrl, format, buffer, trackPath}
-		a.Unlock()
+		go func() {
+			buffer := beep.NewBuffer(format)
+			buffer.Append(streamer)
+			if err := streamer.Close(); err != nil {
+				logrus.Fatal(err)
+			}
+			trackPath := reg.Split(path, -1)[0]
+			a.Collection[trackPath] = &Track{volume, ctrl, format, buffer, trackPath}
+			a.Unlock()
+		}()
+
 	}
 }
 
 func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, a.loadFile).Parse()
+	fmt.Println("AUDIO")
 	wg.Done()
 }
 
 func (a *Audio) GetAudioController(path string) *Track {
 	path = filepath.Join("dist/audio", path)
-
 	audio, ok := a.Collection[path]
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("audio with path '%s' not found", path))

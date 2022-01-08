@@ -5,6 +5,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/layers/networking/game"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/networking/waitroomjoin"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/networking/waitroomstart"
+	"github.com/YarikRevich/hide-seek-client/tools/params"
 )
 
 func Process() {
@@ -14,8 +15,9 @@ func Process() {
 	case statemachine.UI_WAIT_ROOM_JOIN:
 		waitroomjoin.Exec()
 	case statemachine.UI_GAME:
-		game.Exec()
-
+		if !params.IsDebug() {
+			game.Exec()
+		}
 	}
 }
 

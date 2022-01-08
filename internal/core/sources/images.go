@@ -44,6 +44,7 @@ func (i *Images) loadFile(fs embed.FS, path string) {
 
 func (i *Images) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, i.loadFile).Parse()
+	fmt.Println("IMAGE")
 	wg.Done()
 }
 

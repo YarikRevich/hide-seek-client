@@ -1,0 +1,36 @@
+goroutine profile: total 3
+1 @ 0x468296 0x477732 0x4d3bba 0x4d4025 0x97b5d6 0x97d6e5 0x97d7fb 0x495a41
+#	0x4d3bb9	io.(*pipe).Write+0x219				/usr/local/go/src/io/pipe.go:94
+#	0x4d4024	io.(*PipeWriter).Write+0x24			/usr/local/go/src/io/pipe.go:163
+#	0x97b5d5	github.com/hajimehoshi/oto.(*Player).Write+0x75	/home/yaroslav/go/pkg/mod/github.com/hajimehoshi/oto@v0.7.1/player.go:66
+#	0x97d6e4	github.com/faiface/beep/speaker.update+0xc4	/home/yaroslav/go/pkg/mod/github.com/faiface/beep@v1.0.2/speaker/speaker.go:129
+#	0x97d7fa	github.com/faiface/beep/speaker.Init.func1+0x1a	/home/yaroslav/go/pkg/mod/github.com/faiface/beep@v1.0.2/speaker/speaker.go:52
+
+1 @ 0x476dc5 0x477290 0x4d3717 0x4d3f05 0x52c7c3 0x52c91d 0x97988f 0x4d2312 0x97ab29 0x97ab02 0x495a41
+#	0x4d3716	io.(*pipe).Read+0xb6						/usr/local/go/src/io/pipe.go:57
+#	0x4d3f04	io.(*PipeReader).Read+0x24					/usr/local/go/src/io/pipe.go:134
+#	0x52c7c2	bufio.(*Reader).fill+0x102					/usr/local/go/src/bufio/bufio.go:101
+#	0x52c91c	bufio.(*Reader).Peek+0x5c					/usr/local/go/src/bufio/bufio.go:139
+#	0x97988e	github.com/hajimehoshi/oto/internal/mux.(*Mux).Read+0x28e	/home/yaroslav/go/pkg/mod/github.com/hajimehoshi/oto@v0.7.1/internal/mux/mux.go:89
+#	0x4d2311	io.copyBuffer+0x1b1						/usr/local/go/src/io/io.go:423
+#	0x97ab28	io.Copy+0x48							/usr/local/go/src/io/io.go:382
+#	0x97ab01	github.com/hajimehoshi/oto.NewContext.func1+0x21		/home/yaroslav/go/pkg/mod/github.com/hajimehoshi/oto@v0.7.1/context.go:85
+
+1 @ 0x48ff65 0x543135 0x542f4d 0x5400cb 0x9ded11 0x475043 0x467e86 0x495a41
+#	0x48ff64	runtime/pprof.runtime_goroutineProfileWithLabels+0x24	/usr/local/go/src/runtime/mprof.go:746
+#	0x543134	runtime/pprof.writeRuntimeProfile+0xb4			/usr/local/go/src/runtime/pprof/pprof.go:724
+#	0x542f4c	runtime/pprof.writeGoroutine+0x4c			/usr/local/go/src/runtime/pprof/pprof.go:684
+#	0x5400ca	runtime/pprof.(*Profile).WriteTo+0x14a			/usr/local/go/src/runtime/pprof/pprof.go:331
+#	0x9ded10	main.init.0+0x190					/home/yaroslav/files/go/src/hide-seek-client/cmd/main.go:43
+#	0x475042	runtime.doInit+0x122					/usr/local/go/src/runtime/proc.go:6498
+#	0x467e85	runtime.main+0x1e5					/usr/local/go/src/runtime/proc.go:238
+
+.go:238
+
+	/usr/local/go/src/runtime/proc.go:238
+
+/runtime/pprof/pprof.go:331
+#	0x45b35d0	main.init.0+0x190					/Volumes/Files/go/src/hide-seek-client/cmd/main.go:44
+#	0x40482a2	runtime.doInit+0x122					/usr/local/Cellar/go/1.17.5/libexec/src/runtime/proc.go:6498
+#	0x403b165	runtime.main+0x1e5					/usr/local/Cellar/go/1.17.5/libexec/src/runtime/proc.go:238
+

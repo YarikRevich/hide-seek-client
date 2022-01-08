@@ -62,3 +62,8 @@ const (
 	MOUSE_CLICK        = iota
 	MOUSE_NONE         = iota
 )
+
+const (
+	NOTIFICATION_NEW  = iota
+	NOTIFICATION_NONE = iota
+)
