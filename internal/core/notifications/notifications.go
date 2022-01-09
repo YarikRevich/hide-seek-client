@@ -9,6 +9,8 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 )
 
+const DEFAULT_POPUP_MESSAGE_TIME = 7
+
 type NotificatorEntity struct {
 	Timestamp int64
 	Message   string
@@ -19,6 +21,7 @@ type Notificator interface {
 	WriteWarning(string)
 	WriteDebug(string)
 	WriteInfo(string)
+	WriteInfoWithPopUpTime(string, int)
 
 	Read() []NotificatorEntity
 
@@ -30,9 +33,12 @@ type notificator struct {
 	queue zeroshifter.IZeroShifter
 }
 
-func (p *notificator) write(m string) {
+//Writes popup message
+//popTime param means a time in seconds
+//the popup message will be shown
+func (p *notificator) write(m string, popTime int) {
 	p.Lock()
-	timestamp := time.Now().Add(time.Second * 7).Unix()
+	timestamp := time.Now().Add(time.Second * time.Duration(popTime)).Unix()
 	if r, ok := p.queue.IsExist(func(i interface{}) bool {
 		return i.(*NotificatorEntity).Message == m
 	}); ok {
@@ -45,19 +51,23 @@ func (p *notificator) write(m string) {
 }
 
 func (p *notificator) WriteError(m string) {
-	p.write(fmt.Sprintf("Error: %s", m))
+	p.write(fmt.Sprintf("Error: %s", m), DEFAULT_POPUP_MESSAGE_TIME)
 }
 
 func (p *notificator) WriteWarning(m string) {
-	p.write(fmt.Sprintf("Warning: %s", m))
+	p.write(fmt.Sprintf("Warning: %s", m), DEFAULT_POPUP_MESSAGE_TIME)
 }
 
 func (p *notificator) WriteDebug(m string) {
-	p.write(fmt.Sprintf("Debug: %s", m))
+	p.write(fmt.Sprintf("Debug: %s", m), DEFAULT_POPUP_MESSAGE_TIME)
 }
 
 func (p *notificator) WriteInfo(m string) {
-	p.write(fmt.Sprintf("Info: %s", m))
+	p.write(fmt.Sprintf("Info: %s", m), DEFAULT_POPUP_MESSAGE_TIME)
+}
+
+func (p *notificator) WriteInfoWithPopUpTime(m string, popTime int) {
+	p.write(fmt.Sprintf("Info: %s", m), popTime)
 }
 
 func (p *notificator) Read() []NotificatorEntity {

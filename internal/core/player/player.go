@@ -1,6 +1,7 @@
 package player
 
 import (
+	"fmt"
 	"math"
 	"time"
 
@@ -56,12 +57,13 @@ func (a *Player) waitTrackEnds(track *sources.Track) {
 func (a *Player) Play(trackPath string, opts PlayerOpts) {
 	go func() {
 		track := sources.UseSources().Audio().GetAudioController(trackPath)
+		track.Lock()
 
 		if opts.Fading {
 			a.silentlyStopCurrentTrack()
 		}
 
-		streamer := track.Buffer.Streamer(0, track.Buffer.Len())
+		streamer := track.Track.Buffer.Streamer(0, track.Track.Buffer.Len())
 
 		// if track.Streamer.Position() == track.Streamer.Len() {
 
@@ -76,14 +78,16 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 		// // speaker.Unlock()
 
 		speaker.Play(beep.Seq(streamer, beep.Callback(func() {
-			// fmt.Println("DONE")
+			fmt.Println("DONE")
 		})))
 
-		a.trackManager.Push(track)
+		a.trackManager.Push(track.Track)
 
 		// if !opts.Infinite {
 		// 	a.waitTrackEnds(track)
 		// }
+		// track.State.L.Unlock()
+		track.Unlock()
 	}()
 }
 func (a *Player) Pause(trackPath string) {

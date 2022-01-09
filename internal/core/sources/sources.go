@@ -23,6 +23,7 @@ type SourcesProvider interface {
 	Images() *Images
 	Metadata() *Metadata
 	Shaders() *Shaders
+	IsLoadingEnded() bool
 }
 
 //Loads all sources asynchronously
@@ -59,6 +60,15 @@ func (p *provider) Metadata() *Metadata {
 
 func (p *provider) Shaders() *Shaders {
 	return p.shaders
+}
+
+//Returns a condition of sources' loading process
+func (p *provider) IsLoadingEnded() bool {
+	if p.audio.IsAllAudioLoaded() {
+		return true
+	}
+	//TODO: include other load checkers
+	return false
 }
 
 func UseSources() SourcesProvider {

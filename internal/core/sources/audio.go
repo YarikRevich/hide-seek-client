@@ -22,10 +22,15 @@ type Track struct {
 	TrackPath string
 }
 
+type Cell struct {
+	sync.Mutex
+	Track *Track
+}
+
 type Audio struct {
 	sync.Mutex
 
-	Collection map[string]*Track
+	Collection map[string]*Cell
 }
 
 func (a *Audio) loadFile(fs embed.FS, path string) {
@@ -63,28 +68,43 @@ func (a *Audio) loadFile(fs embed.FS, path string) {
 			Volume:   0.001,
 		}
 
+		trackPath := reg.Split(path, -1)[0]
 		a.Lock()
+		a.Collection[trackPath] = &Cell{}
+		a.Unlock()
+
+		a.Collection[trackPath].Lock()
 		go func() {
 			buffer := beep.NewBuffer(format)
 			buffer.Append(streamer)
 			if err := streamer.Close(); err != nil {
 				logrus.Fatal(err)
 			}
-			trackPath := reg.Split(path, -1)[0]
-			a.Collection[trackPath] = &Track{volume, ctrl, format, buffer, trackPath}
-			a.Unlock()
+
+			c := a.Collection[trackPath]
+			c.Track = &Track{volume, ctrl, format, buffer, trackPath}
+			a.Collection[trackPath].Unlock()
 		}()
 
 	}
 }
 
+//Checks if there is any unloaded audio
+func (a *Audio) IsAllAudioLoaded() bool {
+	for _, v := range a.Collection {
+		if v.Track == nil {
+			return false
+		}
+	}
+	return true
+}
+
 func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	NewParser(fs, path, a.loadFile).Parse()
-	fmt.Println("AUDIO")
 	wg.Done()
 }
 
-func (a *Audio) GetAudioController(path string) *Track {
+func (a *Audio) GetAudioController(path string) *Cell {
 	path = filepath.Join("dist/audio", path)
 	audio, ok := a.Collection[path]
 	if !ok {
@@ -94,5 +114,5 @@ func (a *Audio) GetAudioController(path string) *Track {
 }
 
 func NewAudio() *Audio {
-	return &Audio{Collection: make(map[string]*Track)}
+	return &Audio{Collection: make(map[string]*Cell)}
 }
