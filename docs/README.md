@@ -15,12 +15,12 @@ Go to sources
 $ cd $(go env GOPATH)/src/github.com/YarikRevich/Hide-Seek-with-Guns
 ```
 
-Use GNU Make
+Use Bazel
 
 ```
-$ make 
-$ make build
-$ make install
+$ sudo bazel build :deps
+$ sudo bazel build --action_env=USER=$USER :service_env
+$ sudo bazel build //cmd:hide-seek-client 
 ```
 
 Run and enjoy the game👌

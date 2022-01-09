@@ -344,6 +344,10 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Spawn.Y = m.Spawn.Y
 	o.Direction = keycodes.Direction(m.Direction)
 	o.Role = Role(m.Role)
+
+	if o.ModelCombination == nil {
+		o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
+	}
 }
 
 func (o *Base) GetScaledPosX() float64 {

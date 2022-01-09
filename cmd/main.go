@@ -36,8 +36,9 @@ func init() {
 
 	flag.Parse()
 
+	paths.InitSystemPaths()
 	logrus.SetFormatter(new(logrus.JSONFormatter))
-	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "/log.log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "log.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
