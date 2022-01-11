@@ -8,11 +8,12 @@ import (
 var instance SourcesProvider
 
 type provider struct {
-	audio    *Audio
-	font     *Font
-	images   *Images
-	metadata *Metadata
-	shaders  *Shaders
+	audio     *Audio
+	font      *Font
+	images    *Images
+	metadata  *Metadata
+	shaders   *Shaders
+	colliders *Colliders
 }
 
 type SourcesProvider interface {
@@ -23,6 +24,7 @@ type SourcesProvider interface {
 	Images() *Images
 	Metadata() *Metadata
 	Shaders() *Shaders
+	Colliders() *Colliders
 	IsLoadingEnded() bool
 }
 
@@ -36,6 +38,7 @@ func (p *provider) LoadSources(fs embed.FS) {
 	go p.images.Load(fs, "dist/images", &wg)
 	go p.font.Load(fs, "dist/fonts", &wg)
 	go p.shaders.Load(fs, "dist/shaders", &wg)
+	go p.colliders.Load(fs, "dist/colliders", &wg)
 
 	wg.Wait()
 
@@ -62,6 +65,10 @@ func (p *provider) Shaders() *Shaders {
 	return p.shaders
 }
 
+func (p *provider) Colliders() *Colliders {
+	return p.colliders
+}
+
 //Returns a condition of sources' loading process
 func (p *provider) IsLoadingEnded() bool {
 	if p.audio.IsAllAudioLoaded() {
@@ -74,11 +81,12 @@ func (p *provider) IsLoadingEnded() bool {
 func UseSources() SourcesProvider {
 	if instance == nil {
 		instance = &provider{
-			font:     NewFont(),
-			metadata: NewMetadata(),
-			images:   NewImages(),
-			audio:    NewAudio(),
-			shaders:  NewShaders(),
+			font:      NewFont(),
+			metadata:  NewMetadata(),
+			images:    NewImages(),
+			audio:     NewAudio(),
+			shaders:   NewShaders(),
+			colliders: NewColliders(),
 		}
 	}
 	return instance
