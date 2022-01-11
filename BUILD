@@ -30,20 +30,16 @@ genrule(
 )
 
 SERVICE_ENV = """
-    if ! [[ -d "/usr/local/share/games/HideSeek/log" ]]; then\
-        mkdir -p /usr/local/share/games/HideSeek/log;\
+    if ! [[ -d "/home/$$USER/games/HideSeek/log" ]]; then\
+        mkdir -p /home/$$USER/games/HideSeek/log;\
     fi;\
-    if ! [[ -d "/usr/local/share/games/HideSeek/db" ]]; then\
-        mkdir -p /usr/local/share/games/HideSeek/db;\
+    if ! [[ -d "/home/$$USER/games/HideSeek/db" ]]; then\
+        mkdir -p /home/$$USER/games/HideSeek/db;\
     fi;\
-    if ! [[ -f "/usr/local/share/games/HideSeek/log/log.log" ]]; then\
-        touch /usr/local/share/games/HideSeek/log/log.log;\
+    if ! [[ -f "/home/$$USER/games/HideSeek/log/log.log" ]]; then\
+        touch /home/$$USER/games/HideSeek/log/log.log;\
     fi;\
-    chmod 666 /usr/local/share/games/HideSeek/log/log.log;\
-    if ! [[ -f "/usr/local/share/games/HideSeek/db/storage.db" ]]; then\
-        touch /usr/local/share/games/HideSeek/db/storage.db;\
-    fi;\
-    chmod 666 /usr/local/share/games/HideSeek/db/storage.db;\
+    chmod 666 /home/$$USER/games/HideSeek/log/log.log;\
     echo EOF > $@;
 """
 

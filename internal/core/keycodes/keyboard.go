@@ -41,3 +41,8 @@ var UserKeys = []ebiten.Key{
 	ebiten.Key8,
 	ebiten.Key9,
 }
+
+var ServiceKeyPrefixes = []string{
+	"ControlLeft",
+	"Digit",
+}

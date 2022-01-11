@@ -1,8 +1,11 @@
 package events
 
 import (
+	"regexp"
+	"strings"
 	"time"
 
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -16,7 +19,8 @@ type KeyBoardEntity struct {
 
 	//Describes combined keys like: "CTRL+V" or "CTRL+C"
 	Combination struct {
-		AwaitKey, ControlKey ebiten.Key
+		AwaitKey   []ebiten.Key
+		ControlKey ebiten.Key
 	}
 	Pressed  bool
 	Callback func(IBuffer, rune)
@@ -35,9 +39,8 @@ func (b *KeyBoard) IsKeyInList(k ebiten.Key, l []ebiten.Key) bool {
 	return false
 }
 
-//Checks if pressed key is service
-func (b *KeyBoard) IsServiceKey(k ebiten.Key) bool {
-	return len(k.String()) != 1
+func (k *KeyBoard) CleanPressedKey(key ebiten.Key) string {
+	return regexp.MustCompile(strings.Join(keycodes.ServiceKeyPrefixes, "|")).ReplaceAllString(key.String(), "")
 }
 
 func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
@@ -46,8 +49,12 @@ func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
 	for _, pk := range inpututil.PressedKeys() {
 	entities:
 		for _, e := range ke {
-			if pk == e.Combination.AwaitKey {
-				k.awaitKeyTimer = time.Now().Add(time.Millisecond * 700)
+		awaitkey:
+			for _, v := range e.Combination.AwaitKey {
+				if v == pk {
+					k.awaitKeyTimer = time.Now().Add(time.Millisecond * 700)
+					break awaitkey
+				}
 			}
 			if inpututil.KeyPressDuration(pk) == 1 && pk == e.Combination.ControlKey {
 				if time.Since(k.awaitKeyTimer) <= 0 {
@@ -58,14 +65,10 @@ func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
 
 			if inpututil.KeyPressDuration(pk) == 1 || (e.Pressed && inpututil.KeyPressDuration(pk)%11 == 0) {
 				if k.IsKeyInList(pk, e.SingleKeys) {
-					if k.IsServiceKey(pk) {
-						e.Callback(b, '0')
-						break
-					}
-					for _, k := range pk.String() {
+					for _, k := range k.CleanPressedKey(pk) {
 						e.Callback(b, k)
 					}
-					break
+					break entities
 				}
 			}
 		}
@@ -79,8 +82,8 @@ func (k *KeyBoard) IsAnyKeyPressed() bool {
 	return len(inpututil.PressedKeys()) != 0
 }
 
-func (k *KeyBoard) AreKeysCombinedInOrder(m, s ebiten.Key) bool{
-	return ebiten.IsKeyPressed(m) == true && ebiten.IsKeyPressed(s) == true &&  inpututil.KeyPressDuration(m) > inpututil.KeyPressDuration(s)
+func (k *KeyBoard) AreKeysCombinedInOrder(m, s ebiten.Key) bool {
+	return ebiten.IsKeyPressed(m) == true && ebiten.IsKeyPressed(s) == true && inpututil.KeyPressDuration(m) > inpututil.KeyPressDuration(s)
 }
 
 func NewKeyBoard() *KeyBoard {
