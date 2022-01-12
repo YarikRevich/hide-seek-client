@@ -42,6 +42,14 @@ type Map struct {
 	Followed *objects.PC
 }
 
+// if m := mc.Modified.Scale.X / 100 * c.Zoom; m != mc.RuntimeDefined.ZoomedScale.X {
+// 	mc.RuntimeDefined.ZoomedScale.X = m
+// }
+
+// if m := mc.Modified.Scale.Y / 100 * c.Zoom; m != mc.RuntimeDefined.ZoomedScale.Y {
+// 	mc.RuntimeDefined.ZoomedScale.Y = m
+// }
+
 func (m *Map) GetMatrix() ebiten.GeoM {
 	return m.matrix
 }

@@ -30,16 +30,33 @@ genrule(
 )
 
 SERVICE_ENV = """
+    
     if ! [[ -d "/home/$$USER/games/HideSeek/log" ]]; then\
-        mkdir -p /home/$$USER/games/HideSeek/log;\
+        if [[ $$OSTYPE == "darwin"* ]]; then\
+            mkdir -p /Users/$$USER/games/HideSeek/log;\
+        else\
+            mkdir -p /home/$$USER/games/HideSeek/log;\
+        fi;\
     fi;\
     if ! [[ -d "/home/$$USER/games/HideSeek/db" ]]; then\
-        mkdir -p /home/$$USER/games/HideSeek/db;\
+        if [[ $$OSTYPE == "darwin"* ]]; then\
+            mkdir -p /Users/$$USER/games/HideSeek/db;\
+        else\
+            mkdir -p /home/$$USER/games/HideSeek/db;\
+        fi;\
     fi;\
     if ! [[ -f "/home/$$USER/games/HideSeek/log/log.log" ]]; then\
-        touch /home/$$USER/games/HideSeek/log/log.log;\
+        if [[ $$OSTYPE == "darwin"* ]]; then\
+            touch /Users/$$USER/games/HideSeek/log/log.log;\
+        else\
+            touch /home/$$USER/games/HideSeek/log/log.log;\
+        fi;\
     fi;\
-    chmod 666 /home/$$USER/games/HideSeek/log/log.log;\
+    if [[ $$OSTYPE == "darwin"* ]]; then\
+        chmod 666 /Users/$$USER/games/HideSeek/log/log.log;\
+    else\
+        chmod 666 /home/$$USER/games/HideSeek/log/log.log;\
+    fi;\
     echo EOF > $@;
 """
 

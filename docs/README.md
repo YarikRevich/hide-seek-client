@@ -19,7 +19,7 @@ Use Bazel
 
 ```
 $ sudo bazel build :deps
-$ sudo bazel build --action_env=USER=$USER :service_env
+$ sudo bazel build --action_env=USER=$USER :service_env --spawn_strategy=standalone
 $ sudo bazel build //cmd:hide-seek-client 
 ```
 

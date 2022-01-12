@@ -18,7 +18,7 @@ type Base struct {
 
 	font     font.Face
 	img      *ebiten.Image
-	metadata *sources.Model
+	metadata *sources.MetadataModel
 }
 
 func (b *Base) updateMetrics() {
@@ -72,7 +72,7 @@ func (b *Base) next() bool {
 	return b.index < len(b.examined)-1
 }
 
-func (b *Base) Init(i *ebiten.Image, m *sources.Model, f font.Face, t string) {
+func (b *Base) Init(i *ebiten.Image, m *sources.MetadataModel, f font.Face, t string) {
 	if len(t) == 0 {
 		return
 	}

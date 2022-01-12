@@ -45,7 +45,8 @@ type Skin struct {
 each object on the map
 */
 type Base struct {
-	*sources.ModelCombination
+	*sources.MetadataModel
+	*sources.CollidersCombination
 
 	Animation
 	Skin
@@ -345,8 +346,8 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Direction = keycodes.Direction(m.Direction)
 	o.Role = Role(m.Role)
 
-	if o.ModelCombination == nil {
-		o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
+	if o.MetadataModel == nil {
+		o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
 	}
 }
 

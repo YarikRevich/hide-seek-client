@@ -5,7 +5,6 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
-	"github.com/YarikRevich/hide-seek-client/internal/core/sourceupgrader"
 	"github.com/YarikRevich/hide-seek-client/internal/core/transition"
 
 	"github.com/YarikRevich/hide-seek-client/internal/layers/animation"
@@ -54,8 +53,6 @@ func (g *Loop) Update() error {
 
 func (g *Loop) Draw(i *ebiten.Image) {
 	screen.UseScreen().SetScreen(i)
-
-	sourceupgrader.NewUpgrader().Upgrade()
 
 	if params.IsDebug() {
 		profiling.UseProfiler().StartMonitoring(profiling.RENDER)

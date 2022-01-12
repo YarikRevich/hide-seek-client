@@ -82,7 +82,7 @@ func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		var (
 			img *ebiten.Image
-			m   *sources.Model
+			m   *sources.MetadataModel
 		)
 
 		mt := sources.UseSources().Metadata().GetMetadata("fonts/settingsmenu/settingsmenu").Modified

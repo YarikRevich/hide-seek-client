@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "paths",
     srcs = [
+        "paths_darwin.go",
         "paths_unix.go",
         "paths_windows.go",
     ],

@@ -5,6 +5,7 @@ import (
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -24,6 +25,8 @@ import (
 
 type Map struct {
 	Base
+
+	*sources.CollidersModel
 
 	// Regime regime
 
@@ -159,7 +162,7 @@ func (w *Map) GetSpawns() []*server_external.PositionInt {
 	var r []*server_external.PositionInt
 
 	hudOffsetY := screen.UseScreen().GetHeight() / 12
-	for _, v := range w.ModelCombination.Modified.Spawns {
+	for _, v := range w.MetadataModel.Spawns {
 		r = append(r, &server_external.PositionInt{Y: v.Y + int64(hudOffsetY), X: v.X})
 	}
 
@@ -169,7 +172,7 @@ func (w *Map) GetSpawns() []*server_external.PositionInt {
 func (w *Map) ToAPIMessage() *server_external.Map {
 	return &server_external.Map{
 		Base:   w.Base.ToAPIMessage(),
-		Spawns: *(*[]*server_external.PositionInt)(unsafe.Pointer(&w.Base.ModelCombination.Origin.Spawns)),
+		Spawns: *(*[]*server_external.PositionInt)(unsafe.Pointer(&w.Base.MetadataModel.Spawns)),
 	}
 }
 

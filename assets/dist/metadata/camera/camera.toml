@@ -1,3 +1,6 @@
+#Type of the metadata
+type = "camera"
+
 [camera]
 maxzoom = 60.0
 minzoom = 40.0

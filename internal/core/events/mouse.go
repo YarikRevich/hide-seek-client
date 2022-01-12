@@ -14,13 +14,15 @@ type Mouse struct {
 
 type MousePress struct{}
 
-func (p *MousePress) IsMousePressLeftOnce(m sources.Model) bool {
+func (p *MousePress) IsMousePressLeftOnce(m sources.MetadataModel) bool {
 	currX, currY := ebiten.CursorPosition()
-	mx, my := m.Margins.LeftMargin*m.Scale.X, m.Margins.TopMargin*m.Scale.Y
+	// mx, my := m.Margins.LeftMargin*m.Scale.X, m.Margins.TopMargin*m.Scale.Y
+	ms := m.GetMargins()
+	s := m.GetSize()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(mx) && currX <= int((m.Size.Width)+(mx))) &&
-		(currY >= int(my) && currY <= int((m.Size.Height)+(my)))
+		(currX >= int(ms.X) && currX <= int((s.X)+(ms.X))) &&
+		(currY >= int(ms.Y) && currY <= int((s.Y)+(ms.Y)))
 }
 
 func (p *Mouse) IsAnyMouseButtonsPressed() bool {

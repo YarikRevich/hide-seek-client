@@ -70,12 +70,6 @@ func (tm *TrackManager) Find(trackPath string) *sources.Track {
 	return nil
 }
 
-func (tm *TrackManager) DebugCollection() {
-	// for _, v := range tm.trackCollection {
-	// fmt.Println(v.track.TrackPath, v.track.Ctrl.Paused)
-	// }
-}
-
 //Returns track which is not paused and is being currently played
 func (tm *TrackManager) TopCurrentTrack() *sources.Track {
 	for i := len(tm.trackCollection) - 1; i != 0; i-- {

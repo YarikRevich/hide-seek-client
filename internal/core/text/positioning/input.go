@@ -1,8 +1,6 @@
 package positioning
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/text/color"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -32,7 +30,6 @@ func (i *Input) getRowWidth(symbolSize int) float64 {
 
 func (i *Input) getPlaceholder(rowWidth float64, symbolSize int) string {
 	t := i.examined[i.index]
-	fmt.Println(t)
 	return string(t[:len(t)-int((rowWidth-i.metadata.Size.Width)/float64(symbolSize))] + "...")
 }
 
@@ -58,7 +55,6 @@ func (i *Input) getCenterCoords() (int, int) {
 func (i *Input) Draw() {
 	for i.next() {
 		x, y := i.getPosition()
-		fmt.Println(x, y)
 		fc := color.NewColor().GetColor(i.metadata.Fonts.FontColor)
 		text.Draw(i.img, i.getText(), i.font, x, y, fc)
 	}

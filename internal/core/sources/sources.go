@@ -3,6 +3,8 @@ package sources
 import (
 	"embed"
 	"sync"
+
+	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
 )
 
 var instance SourcesProvider
@@ -31,18 +33,25 @@ type SourcesProvider interface {
 //Loads all sources asynchronously
 func (p *provider) LoadSources(fs embed.FS) {
 	var wg sync.WaitGroup
-	wg.Add(5)
+	wg.Add(6)
 
 	go p.audio.Load(fs, "dist/audio", &wg)
-	go p.metadata.Load(fs, "dist/metadata", &wg)
-	go p.images.Load(fs, "dist/images", &wg)
+	latency.Seq(func() {
+		var s sync.WaitGroup
+		s.Add(1)
+		go p.images.Load(fs, "dist/images", &wg, &s)
+		s.Wait()
+	}, func() {
+		var s sync.WaitGroup
+		s.Add(1)
+		go p.metadata.Load(fs, "dist/metadata", &wg, &s)
+		s.Wait()
+	})
 	go p.font.Load(fs, "dist/fonts", &wg)
 	go p.shaders.Load(fs, "dist/shaders", &wg)
 	go p.colliders.Load(fs, "dist/colliders", &wg)
 
 	wg.Wait()
-
-	NewPostLoader().ConnectImageSizeToMetadata()
 }
 
 func (p *provider) Audio() *Audio {

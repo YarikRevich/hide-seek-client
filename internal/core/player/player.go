@@ -1,13 +1,11 @@
 package player
 
 import (
-	"fmt"
 	"math"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/player/trackmanager"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 )
 
@@ -54,6 +52,7 @@ func (a *Player) waitTrackEnds(track *sources.Track) {
 	// statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
 }
 
+//TODO: create effect of volume lowering when music is stoped
 func (a *Player) Play(trackPath string, opts PlayerOpts) {
 	go func() {
 		track := sources.UseSources().Audio().GetAudioController(trackPath)
@@ -65,28 +64,13 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 
 		streamer := track.Track.Buffer.Streamer(0, track.Track.Buffer.Len())
 
-		// if track.Streamer.Position() == track.Streamer.Len() {
-
-		// // speaker.Lock()
-		// track.Ctrl.Paused = true
-		// fmt.Println("BEFORE ", track.Streamer.Position(), track.Streamer.Len())
-		// if err := track.Streamer.Seek(0); err != nil {
-		// 	logrus.Fatal(err)
-		// }
-		// track.Ctrl.Paused = false
-		// fmt.Println("AFTER", track.Streamer.Position(), track.Ctrl.Paused)
-		// // speaker.Unlock()
-
-		speaker.Play(beep.Seq(streamer, beep.Callback(func() {
-			fmt.Println("DONE")
-		})))
+		speaker.Play(streamer)
 
 		a.trackManager.Push(track.Track)
 
 		// if !opts.Infinite {
 		// 	a.waitTrackEnds(track)
 		// }
-		// track.State.L.Unlock()
 		track.Unlock()
 	}()
 }

@@ -2,62 +2,82 @@ package collisions
 
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
+	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	// "github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	// "github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
 
-//Returns the objects the object collides with
-//if it collides though one object it will return ok as true
-func IsPCCollideWithPCs(o objects.Base) ([]*objects.PC, bool) {
-	// w := objects.UseObjects().World()
-	// worldMap := world.UseWorld().GetWorldMap()
-	// worldMap.ModelCombination.Modified.Size
-	// m := w.GetMetadata().Modified
-	// r := []*objects.PC{}
-	// var ok bool
+// //Model for elements in collisions pool
+// type CollisionPoolCell struct {
+// 	ObjectPosition, Collider struct {
+// 		X, Y float64
+// 	}
+// 	IsColliding bool
+// }
 
-	// oMaxX := (m.Margins.LeftMargin + m.Size.Width)
-	// oMinX := (m.Margins.LeftMargin)
-	// oMaxY := (m.Margins.TopMargin + m.Size.Height)
-	// oMinY := (m.Margins.TopMargin)
-	// for _, v := range w.PCs {
-	// 	vMaxX := (m.Margins.LeftMargin + m.Size.Width)
-	// 	vMinX := (m.Margins.LeftMargin)
-	// 	vMaxY := (m.Margins.TopMargin + m.Size.Height)
-	// 	vMinY := (m.Margins.TopMargin)
+var instance *Collisions
 
-	// 	if (oMinX <= vMaxX && vMinX <= oMaxX) ||
-	// 		(oMinY <= vMaxY && vMinY <= oMaxY) {
-	// 		r = append(r, v)
-	// 		ok = true
-	// 	}
-	// }
-	// return r, ok
-	return nil, false
+type Collisions struct {
+	//Cache for performace
+	cache map[*objects.Base][]*sources.CollidersModel
 }
 
-//Returns the objects the object collides with
-//if it collides though one object it will return ok as true
-func IsAmmoCollideWithObject(o objects.Weapon) ([]*objects.Weapon, bool) {
-	// w := objects.UseObjects().World()
-	// r := []*{}
-	// var ok bool
+//Checks whether passed object collides with any position
+//in a collider set
+func (c *Collisions) IsCollide(object *objects.Base, collidersSet string) bool {
+	cs := sources.UseSources().Colliders().GetCollider(collidersSet)
+	for _, v := range c.cache {
+		for _, e := range v {
+			for _, q := range cs {
+				if e.X == q.X && e.Y == q.Y {
+					return true
+				}
+			}
+		}
+	}
 
-	// oMaxX := (m.Margins.LeftMargin + m.Size.Width)
-	// oMinX := (m.Margins.LeftMargin)
-	// oMaxY := (m.Margins.TopMargin + m.Size.Height)
-	// oMinY := (m.Margins.TopMargin)
-	// for _, v := range w.Ammo {
-	// 	vMaxX := (m.Margins.LeftMargin + m.Size.Width)
-	// 	vMinX := (m.Margins.LeftMargin)
-	// 	vMaxY := (m.Margins.TopMargin + m.Size.Height)
-	// 	vMinY := (m.Margins.TopMargin)
+	for _, q := range cs {
 
-	// 	if (oMinX <= vMaxX && vMinX <= oMaxX) &&
-	// 		(oMinY <= vMaxY && vMinY <= oMaxY) {
-	// 		r = append(r, v)
-	// 		ok = true
-	// 	}
-	// }
-	// return r, ok
-	return nil, false
+		//Checks for collision detection
+		if ((object.ModelCombination.Modified.GetSizeMinX() <= q.GetSizeMaxX() &&
+			object.ModelCombination.Modified.GetSizeMinX() >= q.GetSizeMinX()) || (object.ModelCombination.Modified.GetSizeMinX() >= q.GetSizeMaxX() &&
+			object.ModelCombination.Modified.GetSizeMinX() <= q.GetSizeMinX())) &&
+			((object.ModelCombination.Modified.GetSizeMinY() <= q.GetSizeMaxY() &&
+				object.ModelCombination.Modified.GetSizeMinY() >= q.GetSizeMinY()) || (object.ModelCombination.Modified.GetSizeMinY() >= q.GetSizeMaxY() &&
+				object.ModelCombination.Modified.GetSizeMinY() <= q.GetSizeMinY())) {
+			return true
+		}
+	}
+	return false
+}
+
+// //Cleans cache checking if such collision still exists
+// //in tiled map, because due to the resizing of the screen
+// //some collisions may change
+// func (c *Collisions) CleanCache() {
+// 	cs := sources.UseSources().Colliders().Collection
+// 	for k, v := range c.cache {
+// 	colliderscache:
+// 		for i, e := range v {
+// 			for p, q := range cs {
+// 				if p == e.Name {
+// 					for _, r := range q {
+// 						if e.X == r.X && e.Y == r.Y {
+// 							continue colliderscache
+// 						}
+// 					}
+// 				}
+// 			}
+// 			c.cache[k] = append(c.cache[k][:i], c.cache[k][i+1:]...)
+// 		}
+// 	}
+// }
+
+func UseCollisions() *Collisions {
+	if instance == nil {
+		instance = &Collisions{
+			cache: make(map[*objects.Base][]*sources.CollidersModel),
+		}
+	}
+	return instance
 }
