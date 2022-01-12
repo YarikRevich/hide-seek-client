@@ -27,8 +27,8 @@ func Draw() {
 				Velocity:          [2]float64{0.01, 0.01},
 				VelocityVariation: [2]float64{2.0, 0.5},
 				Position:          [2]float64{0.0, 30.0},
-				ColorBegin:        color.CreateColorFromArray(pc.ModelCombination.Modified.Effects.TraceColorBegin),
-				ColorEnd:          color.CreateColorFromArray(pc.ModelCombination.Modified.Effects.TraceColorEnd),
+				ColorBegin:        color.CreateColorFromArray(pc.MetadataModel.Effects.TraceColorBegin),
+				ColorEnd:          color.CreateColorFromArray(pc.MetadataModel.Effects.TraceColorEnd),
 			}
 
 			particlesPool.Fill(particle)

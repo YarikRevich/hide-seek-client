@@ -23,13 +23,14 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
-
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 		screen.DrawImage(img, opts)
 	})
 
@@ -37,19 +38,20 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/inputs/input")
-		mm := sources.UseSources().Metadata().GetMetadata("system/inputs/joingameinput").Modified
-		mo := sources.UseSources().Metadata().GetMetadata("system/inputs/joingameinput").Origin
+		m := sources.UseSources().Metadata().GetMetadata("system/inputs/joingameinput")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		t := events.UseEvents().Input().JoinGameBuffer.Read()
 
-		s := positioning.UsePositioning().Input()
-		s.Init(img, mo, f, t)
-		s.Draw()
+		p := positioning.UsePositioning().Input()
+		p.Init(img, m, f, t)
+		p.Draw()
 
 		screen.DrawImage(img, opts)
 
@@ -58,16 +60,18 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
-		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Modified
-		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Origin
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
 
-		s := positioning.UsePositioning().Button()
-		s.Init(img, mo, f, mo.Text.Symbols)
-		s.Draw()
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
+
+		p := positioning.UsePositioning().Button()
+		p.Init(img, m, f, m.Text.Symbols)
+		p.Draw()
 
 		screen.DrawImage(img, opts)
 	})

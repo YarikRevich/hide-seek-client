@@ -37,8 +37,7 @@ type Animation struct {
 }
 
 type Skin struct {
-	Name string
-	Path string
+	Name, Path string
 }
 
 /*The object structure which describes
@@ -46,7 +45,7 @@ each object on the map
 */
 type Base struct {
 	*sources.MetadataModel
-	*sources.CollidersCombination
+	CollidersModel []*sources.CollidersModel
 
 	Animation
 	Skin
@@ -257,11 +256,12 @@ func (o *Base) GetAnimationStartPosition() (float64, float64) {
 
 //Sets skin for the object
 func (o *Base) SetSkin(path string) {
-	o.Path = path
+	o.Skin.Path = path
 	_, file := filepath.Split(path)
-	o.Name = file
+	o.Skin.Name = file
 
-	o.ModelCombination = sources.UseSources().Metadata().GetMetadata(o.Path)
+	o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Path)
+	o.CollidersModel = sources.UseSources().Colliders().GetCollider(o.Path)
 }
 
 //Returns images for the skin selected
@@ -276,8 +276,8 @@ func (o *Base) GetCopyOfImage() *ebiten.Image {
 //Returns image where animation properties applied to
 func (o *Base) GetAnimatedImage() *ebiten.Image {
 	i := o.GetImage()
-	sx, sy := int((o.ModelCombination.Modified.Animation.FrameX+float64(o.Animation.FrameCount))*o.ModelCombination.Modified.Animation.FrameWidth), int(o.ModelCombination.Modified.Animation.FrameY)
-	return i.SubImage(image.Rect(sx, sy, sx+int(o.ModelCombination.Modified.Animation.FrameWidth), sy+int(o.ModelCombination.Modified.Animation.FrameHeight))).(*ebiten.Image)
+	sx, sy := int((o.MetadataModel.Animation.FrameX+float64(o.Animation.FrameCount))*o.MetadataModel.Animation.FrameWidth), int(o.MetadataModel.Animation.FrameY)
+	return i.SubImage(image.Rect(sx, sy, sx+int(o.MetadataModel.Animation.FrameWidth), sy+int(o.MetadataModel.Animation.FrameHeight))).(*ebiten.Image)
 }
 
 //API//
@@ -294,8 +294,8 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 			CurrentFrameMatrix: o.CurrentFrameMatrix,
 		},
 		Skin: &server_external.Skin{
-			Name: o.Name,
-			Path: o.Path,
+			Name: o.Skin.Name,
+			Path: o.Skin.Path,
 		},
 		Physics: &server_external.Physics{
 			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
@@ -352,21 +352,25 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 }
 
 func (o *Base) GetScaledPosX() float64 {
-	return (o.RawPos.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
+	return 0
+	// return (o.RawPos.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
 }
 
 func (o *Base) GetScaledPosY() float64 {
-	return (o.RawPos.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
+	return 0
+	// return (o.RawPos.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
 }
 
 func (o *Base) GetScaledOffsetX() float64 {
-	return (o.RawOffset.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
+	return 0
+	// return (o.RawOffset.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
 	// return (o.RawOffset.X) - o.Modified.Offset.X
 }
 
 func (o *Base) GetScaledOffsetY() float64 {
+	return 0
 	// fmt.Println(o.Parent.Modified.RuntimeDefined.ZoomedScale.Y)
-	return (o.RawOffset.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
+	// return (o.RawOffset.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
 	// return (o.RawOffset.Y) - o.Modified.Offset.Y
 }
 

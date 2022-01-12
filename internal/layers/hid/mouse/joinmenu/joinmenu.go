@@ -13,12 +13,12 @@ import (
 func Exec() bool {
 	m := events.UseEvents().Mouse()
 	if m.IsAnyMouseButtonsPressed() {
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/joingameinput").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/joingameinput")) {
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_JOIN_MENU)
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back")) {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
 			})
@@ -26,7 +26,7 @@ func Exec() bool {
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)
 			return true
 		}
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_join_game")) {
 			worldId := events.UseEvents().Input().JoinGameBuffer.ReadClean()
 			id, err := uuid.Parse(worldId)
 			if err != nil {

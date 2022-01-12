@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -198,7 +199,7 @@ func (m *Metadata) loadFile(fs embed.FS, path string) {
 		}
 
 		if len(mm.Info.Parent) != 0 {
-			path := filepath.Join(utils.GetBasePath(path), mm.Info.Parent)
+			path := filepath.Join(utils.GetBasePath(strings.Split(path, "dist/metadata/")[1]), mm.Info.Parent)
 			img := UseSources().Images().GetImage(path)
 
 			x, y := img.Size()

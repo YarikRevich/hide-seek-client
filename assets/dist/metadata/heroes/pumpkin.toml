@@ -1,3 +1,5 @@
+type = ["hero"]
+
 [info]
 parent="pumpkin"
 

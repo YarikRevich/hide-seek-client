@@ -13,13 +13,13 @@ func Exec() bool {
 	m := events.UseEvents().Mouse()
 	if m.IsAnyMouseButtonsPressed() {
 
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput")) {
 
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_SETTINGS_MENU_USERNAME)
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back")) {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
 			})
@@ -27,7 +27,7 @@ func Exec() bool {
 			statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_EMPTY)
 			return true
 		}
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config")) {
 			storage.UseStorage().User().SetUsername(events.UseEvents().Input().SettingsMenuNameBuffer.ReadClean())
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
@@ -38,8 +38,8 @@ func Exec() bool {
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxoff").Modified) ||
-			m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxoff")) ||
+			m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon")) {
 			switch statemachine.UseStateMachine().SettingsMenuCheckbox().GetState() {
 			case statemachine.UI_SETTINGS_MENU_CHECKBOX_OFF:
 				statemachine.UseStateMachine().SettingsMenuCheckbox().SetState(statemachine.UI_SETTINGS_MENU_CHECKBOX_ON)

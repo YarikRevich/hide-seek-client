@@ -1,3 +1,5 @@
+type = ["textarea"]
+
 [info]
 parent="textarea"
 

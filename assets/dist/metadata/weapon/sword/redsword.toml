@@ -1,3 +1,5 @@
+type = ["weapon"]
+
 [info]
 parent="redsword"
 

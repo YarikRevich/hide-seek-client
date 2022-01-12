@@ -30,13 +30,14 @@ func (i *Input) getRowWidth(symbolSize int) float64 {
 
 func (i *Input) getPlaceholder(rowWidth float64, symbolSize int) string {
 	t := i.examined[i.index]
-	return string(t[:len(t)-int((rowWidth-i.metadata.Size.Width)/float64(symbolSize))] + "...")
+
+	return string(t[:len(t)-int((rowWidth-i.metadata.GetSize().X)/float64(symbolSize))] + "...")
 }
 
 func (i *Input) getText() string {
 	symbolSize := i.getSymbolSize()
 	rowWidth := i.getRowWidth(symbolSize)
-	if i.metadata.Size.Width < rowWidth {
+	if i.metadata.GetSize().X < rowWidth {
 		return i.getPlaceholder(rowWidth, symbolSize)
 	}
 	return i.Base.getText()
@@ -45,9 +46,10 @@ func (i *Input) getText() string {
 func (i *Input) getCenterCoords() (int, int) {
 	symbolSize := i.getSymbolSize()
 	rowWidth := i.getRowWidth(symbolSize)
-	if i.metadata.Size.Width < rowWidth {
-		s := i.getPlaceholder(rowWidth, symbolSize)
-		return (int(i.metadata.Size.Width) - symbolSize*len(s)) / 2, int(i.metadata.Size.Height/2) + i.indent
+	s := i.metadata.GetSize()
+	if s.X < rowWidth {
+		q := i.getPlaceholder(rowWidth, symbolSize)
+		return (int(s.X) - symbolSize*len(q)) / 2, int(s.Y/2) + i.indent
 	}
 	return i.Base.getCenterCoords()
 }

@@ -1,3 +1,5 @@
+type = ["font"]
+
 [margins]
 leftmargin = 300.0
 topmargin = 35.0

@@ -13,7 +13,7 @@ func Exec() bool {
 	m.UpdateMouseWheelOffsets()
 
 	if m.IsAnyMouseButtonsPressed() {
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back")) {
 			middlewares.UseMiddlewares().UI().UseAfter(func() {
 				statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
 			})
@@ -25,7 +25,7 @@ func Exec() bool {
 			"maps/thumbnails/helloween": "maps/helloween/background/background",
 			"maps/thumbnails/starwars":  "maps/starwars/background/background",
 		} {
-			if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata(k).Modified) {
+			if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata(k)) {
 				world.UseWorld().GetWorldMap().SetSkin(v)
 
 				middlewares.UseMiddlewares().UI().UseAfter(func() {

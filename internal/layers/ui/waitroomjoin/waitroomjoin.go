@@ -15,7 +15,6 @@ func Draw() {
 	f := sources.UseSources().Font().GetFont("base")
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-
 		img := sources.UseSources().Images().GetCopyOfImage("system/background/background")
 
 		opts := &ebiten.DrawImageOptions{}
@@ -24,32 +23,38 @@ func Draw() {
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom").Modified
+		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom")
+		ms := m.GetMargins()
 
-		text.Draw(img, fmt.Sprintf("World ID: %s", world.UseWorld().ID), f, int(m.Margins.LeftMargin), int(m.Margins.TopMargin), color.White)
+		text.Draw(img, fmt.Sprintf("World ID: %s", world.UseWorld().ID), f, int(ms.X), int(ms.Y), color.White)
 
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		screen.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/textareas/textarea")
-		m := sources.UseSources().Metadata().GetMetadata("system/textareas/textarea").Modified
+		m := sources.UseSources().Metadata().GetMetadata("system/textareas/textarea")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
+
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 

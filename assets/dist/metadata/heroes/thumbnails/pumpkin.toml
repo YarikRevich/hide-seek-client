@@ -1,3 +1,5 @@
+type = ["thumbnail"]
+
 [info]
 parent="pumpkin"
 scrollablex=true

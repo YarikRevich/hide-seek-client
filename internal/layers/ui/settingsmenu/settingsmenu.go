@@ -27,12 +27,14 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -41,19 +43,20 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/inputs/input")
-		mm := sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput").Modified
-		mo := sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput").Origin
+		m := sources.UseSources().Metadata().GetMetadata("system/inputs/settingsmenuinput")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		t := events.UseEvents().Input().SettingsMenuNameBuffer.Read()
 
-		s := positioning.UsePositioning().Input()
-		s.Init(img, mo, f, t)
-		s.Draw()
+		p := positioning.UsePositioning().Input()
+		p.Init(img, m, f, t)
+		p.Draw()
 
 		screen.DrawImage(img, opts)
 
@@ -62,17 +65,18 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
-		mm := sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config").Modified
-		mo := sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config").Origin
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_save_config")
+		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(mm.Margins.LeftMargin, mm.Margins.TopMargin)
-		opts.GeoM.Scale(mm.Scale.X, mm.Scale.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
-		s := positioning.UsePositioning().Button()
-		s.Init(img, mo, f, mo.Text.Symbols)
-		s.Draw()
+		p := positioning.UsePositioning().Button()
+		p.Init(img, m, f, m.Text.Symbols)
+		p.Draw()
 
 		screen.DrawImage(img, opts)
 
@@ -84,22 +88,24 @@ func Draw() {
 			img *ebiten.Image
 			m   *sources.MetadataModel
 		)
+		ms := m.GetMargins()
 
-		mt := sources.UseSources().Metadata().GetMetadata("fonts/settingsmenu/settingsmenu").Modified
+		mt := sources.UseSources().Metadata().GetMetadata("fonts/settingsmenu/settingsmenu")
+		mts := mt.GetMargins()
 		switch statemachine.UseStateMachine().SettingsMenuCheckbox().GetState() {
 		case statemachine.UI_SETTINGS_MENU_CHECKBOX_OFF:
 			img = sources.UseSources().Images().GetImage("system/checkbox/greencheckboxoff")
-			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxoff").Modified
-			text.Draw(screen, "Enable LAN server", f, int(mt.Margins.LeftMargin), int(mt.Margins.TopMargin), color.White)
+			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxoff")
+			text.Draw(screen, "Enable LAN server", f, int(mts.X), int(mts.Y), color.White)
 		case statemachine.UI_SETTINGS_MENU_CHECKBOX_ON:
 			img = sources.UseSources().Images().GetImage("system/checkbox/greencheckboxon")
-			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon").Modified
-			text.Draw(screen, "Disable LAN server", f, int(mt.Margins.LeftMargin), int(mt.Margins.TopMargin), color.White)
+			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon")
+			text.Draw(screen, "Disable LAN server", f, int(mts.X), int(mts.Y), color.White)
 		}
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
 		screen.DrawImage(img, opts)

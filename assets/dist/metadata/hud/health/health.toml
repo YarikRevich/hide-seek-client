@@ -1,3 +1,5 @@
+type = ["icon"]
+
 [info]
 parent="health"
 

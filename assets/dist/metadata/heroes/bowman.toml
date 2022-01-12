@@ -1,2 +1,4 @@
+type = ["hero"]
+
 [info]
 parent="bowman"

@@ -1,5 +1,5 @@
 #Type of the metadata
-type = "camera"
+type = ["camera"]
 
 [camera]
 maxzoom = 60.0

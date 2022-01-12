@@ -1,3 +1,5 @@
+type = ["thumbnail", "scrollabley"]
+
 [info]
 parent="starwars"
 scrollabley=true

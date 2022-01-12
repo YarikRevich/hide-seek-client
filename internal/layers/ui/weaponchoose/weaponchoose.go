@@ -21,11 +21,12 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("system/buttons/back")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified
+		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back")
+		ms := m.GetMargins()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(m.Margins.LeftMargin, m.Margins.TopMargin)
+		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
 		screen.DrawImage(img, opts)

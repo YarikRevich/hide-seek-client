@@ -1,3 +1,5 @@
+type = ["element"]
+
 [info]
 parent="verticaldoor"
 

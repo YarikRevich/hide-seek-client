@@ -12,7 +12,7 @@ func Exec() bool {
 	m := events.UseEvents().Mouse()
 
 	if m.IsAnyMouseButtonsPressed() {
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back").Modified) {
+		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("system/buttons/back")) {
 			world.UseWorld().DeletePCs()
 
 			middlewares.UseMiddlewares().UI().UseAfter(func() {

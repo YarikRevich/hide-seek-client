@@ -22,7 +22,7 @@ func (j *Jump) Calculate() {
 		return
 	}
 
-	t := int(math.Round((math.Sqrt((2*p.ModelCombination.Modified.Size.Height)/p.Parent.ModelCombination.Modified.Physics.G) / 2)))
+	t := int(math.Round((math.Sqrt((2*p.MetadataModel.Size.Height)/p.Parent.MetadataModel.Physics.G) / 2)))
 
 	for t%2 != 0 {
 		t++

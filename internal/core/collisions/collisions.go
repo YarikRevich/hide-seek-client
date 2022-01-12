@@ -15,36 +15,28 @@ import (
 // 	IsColliding bool
 // }
 
-var instance *Collisions
+// var instance *Collisions
 
-type Collisions struct {
-	//Cache for performace
-	cache map[*objects.Base][]*sources.CollidersModel
-}
+// type Collisions struct {
+// 	//Cache for performace
+// 	cache map[*objects.Base][]*sources.CollidersModel
+// }
 
 //Checks whether passed object collides with any position
 //in a collider set
-func (c *Collisions) IsCollide(object *objects.Base, collidersSet string) bool {
+
+func IsCollision(object *objects.Base, collidersSet string) bool {
 	cs := sources.UseSources().Colliders().GetCollider(collidersSet)
-	for _, v := range c.cache {
-		for _, e := range v {
-			for _, q := range cs {
-				if e.X == q.X && e.Y == q.Y {
-					return true
-				}
-			}
-		}
-	}
 
 	for _, q := range cs {
 
 		//Checks for collision detection
-		if ((object.ModelCombination.Modified.GetSizeMinX() <= q.GetSizeMaxX() &&
-			object.ModelCombination.Modified.GetSizeMinX() >= q.GetSizeMinX()) || (object.ModelCombination.Modified.GetSizeMinX() >= q.GetSizeMaxX() &&
-			object.ModelCombination.Modified.GetSizeMinX() <= q.GetSizeMinX())) &&
-			((object.ModelCombination.Modified.GetSizeMinY() <= q.GetSizeMaxY() &&
-				object.ModelCombination.Modified.GetSizeMinY() >= q.GetSizeMinY()) || (object.ModelCombination.Modified.GetSizeMinY() >= q.GetSizeMaxY() &&
-				object.ModelCombination.Modified.GetSizeMinY() <= q.GetSizeMinY())) {
+		if ((object.MetadataModel.GetSizeMinX() <= q.GetSizeMaxX() &&
+			object.MetadataModel.GetSizeMinX() >= q.GetSizeMinX()) || (object.MetadataModel.GetSizeMinX() >= q.GetSizeMaxX() &&
+			object.MetadataModel.GetSizeMinX() <= q.GetSizeMinX())) &&
+			((object.MetadataModel.GetSizeMinY() <= q.GetSizeMaxY() &&
+				object.MetadataModel.GetSizeMinY() >= q.GetSizeMinY()) || (object.MetadataModel.GetSizeMinY() >= q.GetSizeMaxY() &&
+				object.MetadataModel.GetSizeMinY() <= q.GetSizeMinY())) {
 			return true
 		}
 	}
@@ -73,11 +65,11 @@ func (c *Collisions) IsCollide(object *objects.Base, collidersSet string) bool {
 // 	}
 // }
 
-func UseCollisions() *Collisions {
-	if instance == nil {
-		instance = &Collisions{
-			cache: make(map[*objects.Base][]*sources.CollidersModel),
-		}
-	}
-	return instance
-}
+// func UseCollisions() *Collisions {
+// 	if instance == nil {
+// 		instance = &Collisions{
+// 			cache: make(map[*objects.Base][]*sources.CollidersModel),
+// 		}
+// 	}
+// 	return instance
+// }

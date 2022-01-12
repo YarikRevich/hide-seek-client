@@ -56,16 +56,19 @@ func (b *Base) getText() string {
 
 func (b *Base) getCenterCoords() (int, int) {
 	symbolSize := b.getSymbolSize()
-	return (int(b.metadata.Size.Width) - symbolSize*len(b.examined[b.index])) / 2, int(b.metadata.Size.Height/2) + b.indent
+	s := b.metadata.GetSize()
+	return (int(s.X) - symbolSize*len(b.examined[b.index])) / 2, int(s.Y/2) + b.indent
 }
 
 func (b *Base) getLeftCoords() (int, int) {
-	return 0, int(b.metadata.Size.Height/2) + b.indent
+	s := b.metadata.GetSize()
+	return 0, int(s.Y/2) + b.indent
 }
 
 func (b *Base) getRightCoords() (int, int) {
 	symbolSize := b.getSymbolSize()
-	return (int(b.metadata.Size.Width) - symbolSize*len(b.examined[b.index])) / 2, 0
+	s := b.metadata.GetSize()
+	return (int(s.X) - symbolSize*len(b.examined[b.index])) / 2, 0
 }
 
 func (b *Base) next() bool {

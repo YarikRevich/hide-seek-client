@@ -1,3 +1,5 @@
+type = ["thumbnail", "scrollabley"]
+
 [info]
 parent="helloween"
 scrollabley=true

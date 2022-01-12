@@ -1,3 +1,5 @@
+type = ["button"]
+
 [info]
 parent="button"
 

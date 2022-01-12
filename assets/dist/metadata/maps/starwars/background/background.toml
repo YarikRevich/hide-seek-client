@@ -1,3 +1,5 @@
+type = ["map"]
+
 [info]
 parent="background"
 
