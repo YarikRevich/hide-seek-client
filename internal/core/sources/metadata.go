@@ -29,8 +29,6 @@ func (t *Type) Contains(q string) bool {
 	return false
 }
 
-type Vec2 struct{ X, Y float64 }
-
 //Predefined options of allowed text positions
 const (
 	Center TextPosition = "center"
@@ -140,13 +138,21 @@ func (m *MetadataModel) GetSizeMinY() float64 {
 }
 
 func (m *MetadataModel) GetSize() Vec2 {
-	s := m.GetScale()
-	return Vec2{X: m.Size.X * s.X, Y: m.Size.Y * s.Y}
+	// s := screen.UseScreen()
+	// screenWidth := s.GetMaxWidth()
+	// screenHeight := s.GetMaxHeight()
+	// screenLastWidth, screenLastHeight := s.GetLastSize()
+	// return Vec2{X: m.Size.X / (float64(screenWidth) / screenLastWidth), Y: m.Size.Y / (float64(screenHeight) / screenLastHeight)}
+	return Vec2{X: m.Size.X, Y: m.Size.Y}
 }
 
 func (m *MetadataModel) GetMargins() Vec2 {
-	s := m.GetScale()
-	r := Vec2{X: m.Margins.X * s.X, Y: m.Margins.Y * s.Y}
+	// s := screen.UseScreen()
+	r := Vec2{X: m.Margins.X, Y: m.Margins.Y}
+	// screenWidth := s.GetMaxWidth()
+	// screenHeight := s.GetMaxHeight()
+	// screenLastWidth, screenLastHeight := s.GetLastSize()
+	// r := Vec2{X: m.Margins.X / (float64(screenWidth) / screenLastWidth), Y: m.Margins.Y / (float64(screenHeight) / screenLastHeight)}
 
 	if m.Type.Contains("scrollable") {
 		o := m.GetOffset()
@@ -163,25 +169,38 @@ func (m *MetadataModel) GetMargins() Vec2 {
 }
 
 func (m *MetadataModel) GetScale() Vec2 {
+	// return Vec2{X: m.Scale.X, Y: m.Scale.Y}
 	s := screen.UseScreen()
-	screenWidth, screenHeight := s.GetSize()
+	screenWidth := s.GetMaxWidth()
+	screenHeight := s.GetMaxHeight()
 	screenLastWidth, screenLastHeight := s.GetLastSize()
-	return Vec2{X: (m.Scale.X * screenWidth) / screenLastWidth, Y: (m.Scale.Y * screenHeight) / screenLastHeight}
+	return Vec2{X: m.Scale.X / (float64(screenWidth) / screenLastWidth), Y: m.Scale.Y / (float64(screenHeight) / screenLastHeight)}
 }
 
+// func (m *MetadataModel) GetRawScale() Vec2 {
+// 	// s := screen.UseScreen()
+// 	// screenWidth := s.GetMaxWidth()
+// 	// screenHeight := s.GetMaxHeight()
+// 	// screenLastWidth, screenLastHeight := s.GetLastSize()
+// 	// return Vec2{X: screenLastWidth / float64(screenWidth), Y: screenLastHeight / float64(screenHeight)}
+// 	// return Vec2{X: 1550 / screenWidth, Y: 1050 / screenHeight}
+// }
+
 func (m *MetadataModel) GetBuffSpeed() Vec2 {
-	s := m.GetScale()
-	return Vec2{X: m.Buffs.Speed.X * s.X, Y: m.Buffs.Speed.Y * s.Y}
+	s := screen.UseScreen()
+	screenWidth := s.GetMaxWidth()
+	screenHeight := s.GetMaxHeight()
+	screenLastWidth, screenLastHeight := s.GetLastSize()
+	return Vec2{X: m.Buffs.Speed.X * (float64(screenWidth) / screenLastWidth), Y: m.Buffs.Speed.Y * (float64(screenHeight) / screenLastHeight)}
 }
 
 func (m *MetadataModel) GetOffset() Vec2 {
-	s := m.GetScale()
-	return Vec2{X: m.Offset.X * s.X, Y: m.Offset.Y * s.Y}
-}
-
-type ModelCombination struct {
-	Modified, Origin *MetadataModel
-	*RuntimeDefined
+	// s := screen.UseScreen()
+	return Vec2{X: m.Offset.X, Y: m.Offset.Y}
+	// screenWidth := s.GetMaxWidth()
+	// screenHeight := s.GetMaxHeight()
+	// screenLastWidth, screenLastHeight := s.GetLastSize()
+	// return Vec2{X: m.Offset.X * (float64(screenWidth) / screenLastWidth), Y: m.Offset.Y * (float64(screenHeight) / screenLastHeight)}
 }
 
 type Metadata struct {

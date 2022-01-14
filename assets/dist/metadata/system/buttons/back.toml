@@ -4,8 +4,8 @@ type = ["button"]
 parent="back"
 
 [margins]
-leftmargin = 15.0
-topmargin = 15.0
+x = 15.0
+y = 15.0
 
 [scale]
 x = 2.5

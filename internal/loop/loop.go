@@ -25,8 +25,6 @@ type Loop struct{}
 var _ ebiten.Game = (*Loop)(nil)
 
 func (g *Loop) Update() error {
-
-	screen.UseScreen().CleanScreen()
 	render.UseRender().CleanRenderPool()
 
 	if !params.IsWithoutSound() {
@@ -34,6 +32,7 @@ func (g *Loop) Update() error {
 	}
 
 	mouse.Process()
+
 	networking.Process()
 	animation.Process()
 
@@ -47,6 +46,8 @@ func (g *Loop) Update() error {
 	transition.UseTransitionPool().Process()
 
 	keyboard.Process()
+
+	screen.UseScreen().CleanScreen()
 
 	return nil
 }

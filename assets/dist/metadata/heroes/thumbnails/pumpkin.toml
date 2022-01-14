@@ -5,8 +5,8 @@ parent="pumpkin"
 scrollablex=true
 
 [margins]
-leftmargin = 850.0
-topmargin = 370.0
+x = 850.0
+y = 370.0
 
 [scale]
 x = 0.5

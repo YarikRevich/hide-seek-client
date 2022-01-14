@@ -96,8 +96,8 @@ func (b *Base) Init(i *ebiten.Image, m *sources.MetadataModel, f font.Face, t st
 func (b *Base) Draw() {
 	for b.next() {
 		x, y := b.getPosition()
-
 		fc := color.NewColor().GetColor(b.metadata.Fonts.FontColor)
+
 		text.Draw(b.img, b.getText(), b.font, x, y, fc)
 	}
 }

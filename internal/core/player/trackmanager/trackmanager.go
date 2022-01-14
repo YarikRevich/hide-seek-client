@@ -1,8 +1,6 @@
 package trackmanager
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 )
 
@@ -27,7 +25,6 @@ func (tm *TrackManager) NextToPlayAfter(trackPath string) *sources.Track {
 //Pushed a new track to the sequence connecting
 //it to already present ones
 func (tm *TrackManager) Push(track *sources.Track) {
-
 	if len(tm.trackCollection) != 0 {
 		tm.trackCollection = append(tm.trackCollection, struct {
 			track *sources.Track
@@ -42,7 +39,6 @@ func (tm *TrackManager) Push(track *sources.Track) {
 			prev  *sources.Track
 		}{track: track})
 	}
-	fmt.Println(track.TrackPath, len(tm.trackCollection))
 }
 
 //Removes passed track from the player sequence

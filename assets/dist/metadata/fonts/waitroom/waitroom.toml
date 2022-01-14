@@ -1,8 +1,8 @@
 type = ["font"]
 
 [margins]
-leftmargin = 300.0
-topmargin = 35.0
+x = 300.0
+y = 35.0
 
 [size]
 width = 450.0
