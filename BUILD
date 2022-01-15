@@ -30,7 +30,6 @@ genrule(
 )
 
 SERVICE_ENV = """
-    
     if ! [[ -d "/home/$$USER/games/HideSeek/log" ]]; then\
         if [[ $$OSTYPE == "darwin"* ]]; then\
             mkdir -p /Users/$$USER/games/HideSeek/log;\
@@ -45,6 +44,13 @@ SERVICE_ENV = """
             mkdir -p /home/$$USER/games/HideSeek/db;\
         fi;\
     fi;\
+    if ! [[ -f "/home/$$USER/games/HideSeek/db/storage.db" ]]; then\
+        if [[ $$OSTYPE == "darwin"* ]]; then\
+            touch /Users/$$USER/games/HideSeek/db/storage.db;\
+        else\
+            touch /home/$$USER/games/HideSeek/db/storage.db;\
+        fi;\
+    fi;\
     if ! [[ -f "/home/$$USER/games/HideSeek/log/log.log" ]]; then\
         if [[ $$OSTYPE == "darwin"* ]]; then\
             touch /Users/$$USER/games/HideSeek/log/log.log;\
@@ -53,9 +59,9 @@ SERVICE_ENV = """
         fi;\
     fi;\
     if [[ $$OSTYPE == "darwin"* ]]; then\
-        chmod 666 /Users/$$USER/games/HideSeek/log/log.log;\
+        chmod -R 777 /Users/$$USER/games/HideSeek/db/storage.db;\
     else\
-        chmod 666 /home/$$USER/games/HideSeek/log/log.log;\
+        chmod -R 777 /home/$$USER/games/HideSeek/db/storage.db;\
     fi;\
     echo EOF > $@;
 """

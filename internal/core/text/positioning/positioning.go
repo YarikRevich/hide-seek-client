@@ -15,6 +15,7 @@ func (p *Positioning) Button() *Button {
 	return p.button
 }
 
+//TODO: refactor interface for text positioning
 func UsePositioning() *Positioning {
 	if instance == nil {
 		instance = &Positioning{

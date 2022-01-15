@@ -13,6 +13,7 @@ type StateMachine struct {
 	pcs                    IMultipleState
 	mouse                  ISingleState
 	notification           ISingleState
+	minimap                ISingleState
 }
 
 type IStateMachine interface {
@@ -26,6 +27,7 @@ type IStateMachine interface {
 	PCs() IMultipleState
 	Mouse() ISingleState
 	Notification() ISingleState
+	Minimap() ISingleState
 }
 
 func (s *StateMachine) Audio() ISingleState {
@@ -68,6 +70,10 @@ func (s *StateMachine) Notification() ISingleState {
 	return s.notification
 }
 
+func (s *StateMachine) Minimap() ISingleState {
+	return s.minimap
+}
+
 func UseStateMachine() IStateMachine {
 	if instance == nil {
 		instance = &StateMachine{
@@ -81,6 +87,7 @@ func UseStateMachine() IStateMachine {
 			pcs:                    NewMultipleState(PC_ALIVE),
 			mouse:                  NewSingleState(MOUSE_NONE),
 			notification:           NewSingleState(NOTIFICATION_NONE),
+			minimap:                NewSingleState(MINIMAP_OFF),
 		}
 	}
 	return instance

@@ -59,11 +59,16 @@ const (
 
 const (
 	MOUSE_BUTTON_CLICK = iota
-	MOUSE_CLICK        = iota
-	MOUSE_NONE         = iota
+	MOUSE_CLICK
+	MOUSE_NONE
 )
 
 const (
-	NOTIFICATION_NEW  = iota
-	NOTIFICATION_NONE = iota
+	NOTIFICATION_NEW = iota
+	NOTIFICATION_NONE
+)
+
+const (
+	MINIMAP_ON = iota
+	MINIMAP_OFF
 )

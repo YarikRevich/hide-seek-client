@@ -72,7 +72,7 @@ func (p *notificator) WriteInfoWithPopUpTime(m string, popTime int) {
 
 func (p *notificator) Read() []NotificatorEntity {
 	m := p.queue.Get()
-	r := make([]NotificatorEntity, len(m))
+	var r []NotificatorEntity
 	for _, v := range m {
 		r = append(r, *v.(*NotificatorEntity))
 	}

@@ -113,15 +113,16 @@ func (c *Colliders) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func (c *Colliders) GetCollider(path string) []*CollidersModel {
+func (c *Colliders) GetCollider(path string) ([]*CollidersModel, error) {
 	path = filepath.Join("dist/colliders", path)
 
 	image, ok := c.Collection[path]
 	if !ok {
-		logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
+		// logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
+		return nil, fmt.Errorf("image with path '%s' not found", path)
 	}
 
-	return image
+	return image, nil
 }
 
 func NewColliders() *Colliders {

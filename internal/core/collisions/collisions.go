@@ -3,6 +3,7 @@ package collisions
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/sirupsen/logrus"
 	// "github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	// "github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
@@ -26,7 +27,10 @@ import (
 //in a collider set
 
 func IsCollision(object *objects.Base, collidersSet string) bool {
-	cs := sources.UseSources().Colliders().GetCollider(collidersSet)
+	cs, err := sources.UseSources().Colliders().GetCollider(collidersSet)
+	if err != nil {
+		logrus.Fatal(err)
+	}
 
 	for _, q := range cs {
 

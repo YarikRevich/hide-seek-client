@@ -24,8 +24,10 @@ func Draw() {
 	}
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+		var offset int
 		for _, m := range notifications.PopUp.Read() {
-			text.Draw(screen, m.Message, basicfont.Face7x13, 40, 40, color.RGBA{0xff, 0x00, 0x00, 0xff})
+			text.Draw(screen, m.Message, basicfont.Face7x13, 40, 40+offset, color.RGBA{0xff, 0x00, 0x00, 0xff})
+			offset += 40
 		}
 	})
 }

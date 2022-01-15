@@ -23,11 +23,12 @@ func Draw() {
 		img := sources.UseSources().Images().GetImage("system/buttons/back")
 		m := sources.UseSources().Metadata().GetMetadata("system/buttons/back")
 		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(ms.X, ms.Y)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -36,11 +37,12 @@ func Draw() {
 		img := sources.UseSources().Images().GetImage("heroes/thumbnails/pumpkin")
 		m := sources.UseSources().Metadata().GetMetadata("heroes/thumbnails/pumpkin")
 		ms := m.GetMargins()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(ms.X, ms.Y)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
 		screen.DrawImage(img, opts)
 	})

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/rs/xid"
@@ -44,7 +45,8 @@ func (d *DB) init() {
 
 func NewDB() *sql.DB {
 	//filepath.Join(paths.GAME_STORAGE_DIR, "/storage.db")
-	d, err := sql.Open("sqlite3", "/home/yaroslav/.storage.db")
+
+	d, err := sql.Open("sqlite3", filepath.Join("/usr/local/var/HideSeek", "storage.db"))
 	if err != nil {
 		logrus.Fatal("connection to db failed: ", err)
 	}

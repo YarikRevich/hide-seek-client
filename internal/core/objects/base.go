@@ -261,7 +261,11 @@ func (o *Base) SetSkin(path string) {
 	o.Skin.Name = file
 
 	o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Path)
-	o.CollidersModel = sources.UseSources().Colliders().GetCollider(o.Path)
+
+	cs, err := sources.UseSources().Colliders().GetCollider(o.Path)
+	if err == nil {
+		o.CollidersModel = cs
+	}
 }
 
 //Returns images for the skin selected
