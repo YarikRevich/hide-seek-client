@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -27,6 +28,11 @@ type Physics struct {
 	Jump []keycodes.Direction
 }
 
+//Checks if pc executes animation
+func (p *Physics) IsAnimated() bool {
+	return len(p.Jump) != 0
+}
+
 type Animation struct {
 	AnimationStartPosition struct {
 		X, Y float64
@@ -44,7 +50,8 @@ func (s *Skin) IsSet() bool {
 	return len(s.Name) != 0 && len(s.Path) != 0
 }
 
-/*The object structure which describes
+/*
+The object structure which describes
 each object on the map
 */
 type Base struct {
@@ -250,11 +257,6 @@ func (o *Base) SetSpawn(spawns []image.Point) {
 	o.RawPos.Y = 500
 }
 
-//Checks if pc executes animation
-func (o *Base) IsAnimatied() bool {
-	return len(o.Physics.Jump) != 0
-}
-
 //Returns last saved position before animation was executed
 func (o *Base) GetAnimationStartPosition() (float64, float64) {
 	return o.Animation.AnimationStartPosition.X, o.Animation.AnimationStartPosition.Y
@@ -276,7 +278,7 @@ func (o *Base) SetSkin(path string) {
 
 //Returns images for the skin selected
 func (o *Base) GetImage() *ebiten.Image {
-	return sources.UseSources().Images().GetImage(o.Path)
+	return sources.UseSources().Images().GetImage(o.Skin.Path)
 }
 
 func (o *Base) GetCopyOfImage() *ebiten.Image {
@@ -330,6 +332,9 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 }
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
+	if m.Type == "worldMap" {
+		fmt.Println(o.Parent, "BEFORE\n")
+	}
 	o.Type = m.Type
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
@@ -344,12 +349,13 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 
 	if o.Parent != nil {
 		o.Parent.FromAPIMessage(m.Parent)
-		o.ID = uuid.MustParse(m.Id)
+
 	} else if m.Parent != nil {
 		o.Parent = &Base{}
 		o.Parent.FromAPIMessage(m.Parent)
-		o.ID = uuid.MustParse(m.Id)
 	}
+
+	o.ID = uuid.MustParse(m.Id)
 
 	o.RawPos.X = m.RawPos.X
 	o.RawPos.Y = m.RawPos.Y
@@ -360,6 +366,9 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 
 	if o.MetadataModel == nil && o.Skin.IsSet() {
 		o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
+	}
+	if m.Type == "worldMap" {
+		fmt.Println(o.Parent, "AFTER\n")
 	}
 }
 

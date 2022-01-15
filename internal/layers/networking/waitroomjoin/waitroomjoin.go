@@ -2,9 +2,11 @@ package waitroomjoin
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
+	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
@@ -40,16 +42,18 @@ func Exec() {
 
 		w.Update(worldObjects)
 
-		// if !w.GetGameSettings().IsWorldExist {
-		// 	middlewares.UseMiddlewares().UI().UseAfter(func() {
-		// 		statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
-		// 	})
-		// 	notifications.PopUp.WriteError("The room was closed by the creator")
-		// }
-		// if w.GetGameSettings().IsGameStarted {
-		// 	middlewares.UseMiddlewares().UI().UseAfter(func() {
-		// 		statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)
-		// 	})
-		// }
+		fmt.Println(w.GetGameSettings().IsGameStarted)
+
+		if !w.GetGameSettings().IsWorldExist {
+			middlewares.UseMiddlewares().UI().UseAfter(func() {
+				statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
+			})
+			notifications.PopUp.WriteError("The room was closed by the creator")
+		}
+		if w.GetGameSettings().IsGameStarted {
+			middlewares.UseMiddlewares().UI().UseAfter(func() {
+				statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)
+			})
+		}
 	}, statemachine.UI_WAIT_ROOM_JOIN, time.Second)
 }

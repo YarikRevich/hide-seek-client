@@ -29,7 +29,7 @@ func Exec() {
 			logrus.Error(err)
 			return
 		}
-		// fmt.Println("HERE2", mapMess)
+		fmt.Println("HERE2", mapMess)
 		if _, err := server.InsertOrUpdateMap(context.Background(), mapMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Error(err)
@@ -70,6 +70,7 @@ func Exec() {
 			logrus.Fatal(err)
 		}
 
+		// fmt.Println(worldObjects.WorldMap)
 		w.Update(worldObjects)
 
 		// fmt.Println("GAME STARTED AFTER", w.GetGameSettings().IsGameStarted)

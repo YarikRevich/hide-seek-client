@@ -103,12 +103,13 @@ message IsGameStartedResponse{
     bool started = 1;
 };
 
-message GetWorldResponse{
+message FindWorldObjectsResponse{
     World world = 1;
-    repeated PC PCs = 2;
-    repeated Element elements = 3;
-    repeated Weapon weapons = 4;
-    repeated Ammo ammos = 5;
+    Map worldMap = 2;
+    repeated PC PCs = 3;
+    repeated Element elements = 4;
+    repeated Weapon weapons = 5;
+    repeated Ammo ammos = 6;
 };
 
 message DeletePCRequest{
@@ -163,7 +164,7 @@ service ExternalServerService {
     rpc DeletePC(google.protobuf.StringValue) returns (google.protobuf.Empty);
     rpc DeleteCooldown(DeleteCooldownRequest) returns (google.protobuf.Empty);
     
-    rpc FindWorldObjects(google.protobuf.StringValue) returns (GetWorldResponse);
+    rpc FindWorldObjects(google.protobuf.StringValue) returns (FindWorldObjectsResponse);
     rpc FindCooldown(FindCooldownRequest) returns (google.protobuf.BoolValue);
     //Statistics
     rpc GetStatistics(google.protobuf.StringValue) returns (GetStatisticsResponse);

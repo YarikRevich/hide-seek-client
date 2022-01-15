@@ -32,7 +32,6 @@ type World struct {
 }
 
 func (w *World) AddPCs(pc *objects.PC) {
-	pc.Parent.ID = w.ID
 	w.pcs = append(w.pcs, pc)
 }
 
@@ -40,13 +39,21 @@ func (w *World) DeletePCs() {
 	w.pcs = w.pcs[:0]
 }
 
+func (w *World) UpdateWorld(m *server_external.World) {
+	w.FromAPIMessage(m)
+}
+
+func (w *World) UpdateWorldMap(m *server_external.Map) {
+	w.worldMap.FromAPIMessage(m)
+}
+
 func (w *World) UpdatePCs(m []*server_external.PC) {
 	w.DeletePCs()
 
 	var foundPC bool
 	for _, pc := range m {
-		fmt.Println(pc.Base.Skin)
 		if pc.Base.Id == w.pc.ID.String() {
+			pc.Base.Parent = w.worldMap.Base.ToAPIMessage()
 			w.pc.FromAPIMessage(pc)
 			foundPC = true
 			w.AddPCs(w.pc)
@@ -103,13 +110,14 @@ func (w *World) UpdateAmmos(m []*server_external.Ammo) {
 	w.DeleteAmmos()
 }
 
-func (w *World) Update(m *server_external.GetWorldResponse) {
-	// fmt.Println(m.World)
-	w.FromAPIMessage(m.World)
+func (w *World) Update(m *server_external.FindWorldObjectsResponse) {
+	w.UpdateWorld(m.World)
+	w.UpdateWorldMap(m.WorldMap)
+	// fmt.Println(m.WorldMap, "\n\n", w.worldMap, "\n\n")
 	w.UpdatePCs(m.PCs)
-	// w.UpdateElements(m.Elements)
-	// w.UpdateWeapons(m.Weapons)
-	// w.UpdateAmmos(m.Ammos)
+	w.UpdateElements(m.Elements)
+	w.UpdateWeapons(m.Weapons)
+	w.UpdateAmmos(m.Ammos)
 }
 
 func (w *World) SwapPCsSpawns() {
