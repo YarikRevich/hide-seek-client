@@ -4,7 +4,7 @@ type = ["button"]
 parent="button"
 
 [margins]
-x = 45.0
+x = 50.0
 y = 70.0
 
 [scale]

@@ -1,12 +1,12 @@
-type = ["thumbnail"]
+type = ["thumbnail", "scrollablex"]
 
 [info]
 parent="pumpkin"
 scrollablex=true
 
 [margins]
-x = 850.0
-y = 370.0
+x = 50.0
+y = 50.0
 
 [scale]
 x = 0.5

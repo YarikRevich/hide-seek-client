@@ -69,11 +69,8 @@ func Exec() {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Fatal(err)
 		}
-		// fmt.Println(worldObjects)
 
 		w.Update(worldObjects)
-
-		fmt.Println("HERER")
 
 		// fmt.Println("GAME STARTED AFTER", w.GetGameSettings().IsGameStarted)
 

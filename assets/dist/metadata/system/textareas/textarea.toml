@@ -4,8 +4,8 @@ type = ["textarea"]
 parent="textarea"
 
 [margins]
-x = 112.5
-y = 37.0
+x = 50.5
+y = 35.0
 
 [scale]
 x = 3.0

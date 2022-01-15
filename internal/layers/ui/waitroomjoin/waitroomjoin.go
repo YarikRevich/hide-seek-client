@@ -23,10 +23,8 @@ func Draw() {
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom")
-		ms := m.GetMargins()
-
-		text.Draw(img, fmt.Sprintf("World ID: %s", world.UseWorld().ID), f, int(ms.X), int(ms.Y), color.White)
+		worldMap := world.UseWorld().GetWorldMap()
+		text.Draw(img, fmt.Sprintf("World ID: %s", worldMap.ID), f, 340, 60, color.White)
 
 		screen.DrawImage(img, opts)
 	})
@@ -39,8 +37,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -53,8 +51,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 

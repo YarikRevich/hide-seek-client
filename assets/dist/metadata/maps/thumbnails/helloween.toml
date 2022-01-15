@@ -5,8 +5,8 @@ parent="helloween"
 scrollabley=true
 
 [margins]
-x = 750.0
-y = 370.0
+x = 50.0
+y = 30.0
 
 [scale]
 x = 0.5

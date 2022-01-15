@@ -24,13 +24,18 @@ func Draw() {
 		screenW, screenH := screen.Size()
 		opts.GeoM.Scale(float64(screenW)/float64(imageW), float64(screenH)/float64(imageH))
 
-		m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom")
-		ms := m.GetMargins()
+		// m := sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom")
+		// ms := m.GetMargins()
+		// s := m.GetSize()
 		worldMap := world.UseWorld().GetWorldMap()
 
-		text.Draw(img, fmt.Sprintf("World ID: %s", worldMap.ID), f, int(ms.X), int(ms.Y), color.White)
+		text.Draw(img, fmt.Sprintf("World ID: %s", worldMap.ID), f, 340, 60, color.White)
 
 		screen.DrawImage(img, opts)
+	})
+
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+
 	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
@@ -41,8 +46,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -55,8 +60,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
 
@@ -71,8 +76,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		p := positioning.UsePositioning().Button()
 		p.Init(img, m, f, m.Text.Symbols)

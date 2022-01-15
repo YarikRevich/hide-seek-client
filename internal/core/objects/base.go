@@ -1,7 +1,6 @@
 package objects
 
 import (
-	"fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -331,8 +330,6 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 }
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
-	fmt.Println(m.Skin)
-
 	o.Type = m.Type
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y

@@ -40,7 +40,7 @@ func Exec() bool {
 			return true
 		}
 
-		if m.IsMousePressLeftOnce(*sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom")) {
+		if m.IsMousePressLeftOnceStatic(*sources.UseSources().Metadata().GetMetadata("fonts/waitroom/waitroom")) {
 			if err := clipboard.WriteAll(world.UseWorld().ID.String()); err != nil {
 				logrus.Fatal(err)
 			}

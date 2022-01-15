@@ -139,12 +139,7 @@ func (m *MetadataModel) GetSizeMinY() float64 {
 }
 
 func (m *MetadataModel) GetSize() Vec2 {
-	// s := screen.UseScreen()
-	// screenWidth := s.GetMaxWidth()
-	// screenHeight := s.GetMaxHeight()
-	// screenLastWidth, screenLastHeight := s.GetLastSize()
-	// return Vec2{X: m.Size.X / (float64(screenWidth) / screenLastWidth), Y: m.Size.Y / (float64(screenHeight) / screenLastHeight)}
-	return Vec2{X: m.Size.X, Y: m.Size.Y}
+	return m.Size
 }
 
 func (m *MetadataModel) GetMargins() Vec2 {
@@ -178,15 +173,6 @@ func (m *MetadataModel) GetScale() Vec2 {
 	return Vec2{X: m.Scale.X / (float64(screenWidth) / screenLastWidth), Y: m.Scale.Y / (float64(screenHeight) / screenLastHeight)}
 }
 
-// func (m *MetadataModel) GetRawScale() Vec2 {
-// 	// s := screen.UseScreen()
-// 	// screenWidth := s.GetMaxWidth()
-// 	// screenHeight := s.GetMaxHeight()
-// 	// screenLastWidth, screenLastHeight := s.GetLastSize()
-// 	// return Vec2{X: screenLastWidth / float64(screenWidth), Y: screenLastHeight / float64(screenHeight)}
-// 	// return Vec2{X: 1550 / screenWidth, Y: 1050 / screenHeight}
-// }
-
 func (m *MetadataModel) GetBuffSpeed() Vec2 {
 	s := screen.UseScreen()
 	screenWidth := s.GetMaxWidth()
@@ -196,7 +182,6 @@ func (m *MetadataModel) GetBuffSpeed() Vec2 {
 }
 
 func (m *MetadataModel) GetOffset() Vec2 {
-	// s := screen.UseScreen()
 	return Vec2{X: m.Offset.X, Y: m.Offset.Y}
 	// screenWidth := s.GetMaxWidth()
 	// screenHeight := s.GetMaxHeight()

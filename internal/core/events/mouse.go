@@ -1,6 +1,8 @@
 package events
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -20,9 +22,29 @@ func (p *MousePress) IsMousePressLeftOnce(m sources.MetadataModel) bool {
 	q := m.GetScale()
 	s := m.GetSize()
 
+	// if m.Type.Contains("font") {
+	// 	fmt.Println((currX >= int(ms.X) && currX <= int((s.X*q.X)+(ms.X))))
+	// }
+
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
 		(currX >= int(ms.X) && currX <= int((s.X*q.X)+(ms.X))) &&
 		(currY >= int(ms.Y) && currY <= int((s.Y*q.Y)+(ms.Y)))
+}
+
+//It checks collision with a static object, which won't change its size
+//after window resizing
+func (p *MousePress) IsMousePressLeftOnceStatic(m sources.MetadataModel) bool {
+	currX, currY := ebiten.CursorPosition()
+	ms := m.GetMargins()
+	s := m.GetSize()
+
+	if m.Type.Contains("font") {
+		fmt.Println((currY >= int(ms.Y) && currY <= int((s.Y)+(ms.Y))))
+	}
+
+	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
+		(currX >= int(ms.X) && currX <= int((s.X)+(ms.X))) &&
+		(currY >= int(ms.Y) && currY <= int((s.Y)+(ms.Y)))
 }
 
 func (p *Mouse) IsAnyMouseButtonsPressed() bool {

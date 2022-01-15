@@ -27,8 +27,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -41,8 +41,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -55,8 +55,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})

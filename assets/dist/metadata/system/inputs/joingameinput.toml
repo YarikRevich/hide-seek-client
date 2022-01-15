@@ -4,8 +4,8 @@ type = ["input"]
 parent="input"
 
 [margins]
-x = 194.0
-y = 120.0
+x = 50.0
+y = 30.0
 
 [scale]
 x = 2.0

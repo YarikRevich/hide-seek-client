@@ -63,7 +63,7 @@ func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
 				}
 			}
 
-			if inpututil.KeyPressDuration(pk) == 1 || (e.Pressed && inpututil.KeyPressDuration(pk)%11 == 0) {
+			if inpututil.KeyPressDuration(pk) == 1 || (e.Pressed && inpututil.KeyPressDuration(pk)%15 == 0) {
 				if k.IsKeyInList(pk, e.SingleKeys) {
 					for _, k := range k.CleanPressedKey(pk) {
 						e.Callback(b, k)
