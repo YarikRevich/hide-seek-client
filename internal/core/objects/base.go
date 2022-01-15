@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -40,12 +41,18 @@ type Skin struct {
 	Name, Path string
 }
 
+func (s *Skin) IsSet() bool {
+	return len(s.Name) != 0 && len(s.Path) != 0
+}
+
 /*The object structure which describes
 each object on the map
 */
 type Base struct {
 	*sources.MetadataModel
 	CollidersModel []*sources.CollidersModel
+
+	Type string
 
 	Animation
 	Skin
@@ -288,6 +295,7 @@ func (o *Base) GetAnimatedImage() *ebiten.Image {
 
 func (o *Base) ToAPIMessage() *server_external.Base {
 	m := &server_external.Base{
+		Type: o.Type,
 		Animation: &server_external.Animation{
 			PositionBeforeAnimation: &server_external.Position{
 				X: o.Animation.AnimationStartPosition.X,
@@ -323,6 +331,9 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 }
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
+	fmt.Println(m.Skin)
+
+	o.Type = m.Type
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
 	o.Animation.FrameCount = m.Animation.FrameCount
@@ -350,7 +361,7 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Direction = keycodes.Direction(m.Direction)
 	o.Role = Role(m.Role)
 
-	if o.MetadataModel == nil {
+	if o.MetadataModel == nil && o.Skin.IsSet() {
 		o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
 	}
 }

@@ -64,6 +64,7 @@ type Transition struct {
 	StartScale, EndScale Vec2
 }
 
+//All the positioning properties should be in range (0; 100)
 type MetadataModel struct {
 	Type
 
@@ -147,12 +148,13 @@ func (m *MetadataModel) GetSize() Vec2 {
 }
 
 func (m *MetadataModel) GetMargins() Vec2 {
-	// s := screen.UseScreen()
-	r := Vec2{X: m.Margins.X, Y: m.Margins.Y}
-	// screenWidth := s.GetMaxWidth()
-	// screenHeight := s.GetMaxHeight()
-	// screenLastWidth, screenLastHeight := s.GetLastSize()
-	// r := Vec2{X: m.Margins.X / (float64(screenWidth) / screenLastWidth), Y: m.Margins.Y / (float64(screenHeight) / screenLastHeight)}
+	ss := m.GetSize()
+	sc := m.GetScale()
+	s := screen.UseScreen()
+	screenHeight := s.GetMaxHeight()
+	screenWidth := s.GetMaxWidth()
+	screenLastWidth, screenLastHeight := s.GetLastSize()
+	r := Vec2{X: (((m.Margins.X * float64(screenWidth)) / 100) / (float64(screenWidth) / screenLastWidth)) - (ss.X * sc.X / 2), Y: (((m.Margins.Y * float64(screenHeight)) / 100) / (float64(screenHeight) / screenLastHeight)) - (ss.Y * sc.Y / 2)}
 
 	if m.Type.Contains("scrollable") {
 		o := m.GetOffset()
@@ -169,7 +171,6 @@ func (m *MetadataModel) GetMargins() Vec2 {
 }
 
 func (m *MetadataModel) GetScale() Vec2 {
-	// return Vec2{X: m.Scale.X, Y: m.Scale.Y}
 	s := screen.UseScreen()
 	screenWidth := s.GetMaxWidth()
 	screenHeight := s.GetMaxHeight()

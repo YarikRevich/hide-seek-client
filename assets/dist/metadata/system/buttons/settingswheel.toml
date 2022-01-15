@@ -4,8 +4,8 @@ type = ["button"]
 parent="settingswheel"
 
 [margins]
-x = 50.0
-y = 50.0
+x = 3.0
+y = 6.0
 
 [scale]
 x = 1.0

@@ -27,5 +27,6 @@ func NewWeapon() *Weapon {
 		logrus.Fatal("failed to create uuid for world:", err)
 	}
 	w.ID = id
+	w.Type = "weapon"
 	return w
 }

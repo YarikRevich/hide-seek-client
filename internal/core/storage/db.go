@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"path/filepath"
 
+	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
@@ -46,7 +47,7 @@ func (d *DB) init() {
 func NewDB() *sql.DB {
 	//filepath.Join(paths.GAME_STORAGE_DIR, "/storage.db")
 
-	d, err := sql.Open("sqlite3", filepath.Join("/usr/local/var/HideSeek", "storage.db"))
+	d, err := sql.Open("sqlite3", filepath.Join(paths.GAME_STORAGE_DIR, "storage.db"))
 	if err != nil {
 		logrus.Fatal("connection to db failed: ", err)
 	}

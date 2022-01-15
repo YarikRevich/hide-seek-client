@@ -65,6 +65,7 @@ message Base {
 
     int64 direction = 8;
     int64 role = 9;
+    string type = 10;
 };
 
 message Animation {

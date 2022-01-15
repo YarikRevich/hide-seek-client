@@ -21,8 +21,8 @@ func (p *MousePress) IsMousePressLeftOnce(m sources.MetadataModel) bool {
 	s := m.GetSize()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(ms.X*q.X) && currX <= int((s.X*q.X)+(ms.X*q.X))) &&
-		(currY >= int(ms.Y*q.Y) && currY <= int((s.Y*q.Y)+(ms.Y*q.Y)))
+		(currX >= int(ms.X) && currX <= int((s.X*q.X)+(ms.X))) &&
+		(currY >= int(ms.Y) && currY <= int((s.Y*q.Y)+(ms.Y)))
 }
 
 func (p *Mouse) IsAnyMouseButtonsPressed() bool {

@@ -45,6 +45,7 @@ func (w *World) UpdatePCs(m []*server_external.PC) {
 
 	var foundPC bool
 	for _, pc := range m {
+		fmt.Println(pc.Base.Skin)
 		if pc.Base.Id == w.pc.ID.String() {
 			w.pc.FromAPIMessage(pc)
 			foundPC = true
@@ -106,9 +107,9 @@ func (w *World) Update(m *server_external.GetWorldResponse) {
 	// fmt.Println(m.World)
 	w.FromAPIMessage(m.World)
 	w.UpdatePCs(m.PCs)
-	w.UpdateElements(m.Elements)
-	w.UpdateWeapons(m.Weapons)
-	w.UpdateAmmos(m.Ammos)
+	// w.UpdateElements(m.Elements)
+	// w.UpdateWeapons(m.Weapons)
+	// w.UpdateAmmos(m.Ammos)
 }
 
 func (w *World) SwapPCsSpawns() {

@@ -27,8 +27,8 @@ func Draw() {
 		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -43,8 +43,10 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
+		// fmt.Println((ms.X*ms.X)/(ms.X*s.X), (ms.Y*ms.Y)/(ms.Y*s.Y))
+		// opts.GeoM.Translate((ms.X*ms.X)/(ms.X*s.X), (ms.Y*ms.Y)/(ms.Y*s.Y))
 
 		p := positioning.UsePositioning().Button()
 		p.Init(img, m, f, m.Text.Symbols)
@@ -63,8 +65,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		p := positioning.UsePositioning().Button()
 		p.Init(img, m, f, m.Text.Symbols)

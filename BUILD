@@ -59,9 +59,9 @@ SERVICE_ENV = """
         fi;\
     fi;\
     if [[ $$OSTYPE == "darwin"* ]]; then\
-        chmod -R 777 /Users/$$USER/games/HideSeek/db/storage.db;\
+        chmod -R 666 /Users/$$USER/games;\
     else\
-        chmod -R 777 /home/$$USER/games/HideSeek/db/storage.db;\
+        chmod -R 666 /home/$$USER/games;\
     fi;\
     echo EOF > $@;
 """

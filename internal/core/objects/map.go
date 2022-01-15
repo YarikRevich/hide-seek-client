@@ -206,11 +206,12 @@ func (m *Map) DebugInit() {
 // }
 
 func NewMap() *Map {
-	world := new(Map)
+	worldMap := new(Map)
 	id, err := uuid.NewUUID()
 	if err != nil {
-		logrus.Fatal("failed to create uuid for world:", err)
+		logrus.Fatal("failed to create uuid for worldMap:", err)
 	}
-	world.ID = id
-	return world
+	worldMap.ID = id
+	worldMap.Type = "worldMap"
+	return worldMap
 }

@@ -92,5 +92,6 @@ func NewPC() *PC {
 	pc.ID = uuid.New()
 	pc.PositionHistorySequence = zeroshifter.New(2)
 	pc.Health = 10
+	pc.Type = "pc"
 	return pc
 }

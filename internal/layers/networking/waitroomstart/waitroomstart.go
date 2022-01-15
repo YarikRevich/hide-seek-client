@@ -35,7 +35,7 @@ func Exec() {
 			logrus.Error(err)
 			return
 		}
-		// fmt.Println("HERE3", pcMess)
+		fmt.Println("HERE3", pcMess.Base.Skin)
 		if _, err := server.InsertOrUpdatePC(context.Background(), pcMess, grpc.EmptyCallOption{}); err != nil {
 			notifications.PopUp.WriteError(err.Error())
 			logrus.Error(err)

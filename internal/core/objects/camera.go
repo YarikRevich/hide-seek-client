@@ -48,5 +48,6 @@ func NewCamera() *Camera {
 	c := new(Camera)
 	c.SetSkin("camera/camera")
 	c.Zoom = c.MetadataModel.Camera.InitZoom
+	c.Type = "camera"
 	return c
 }
