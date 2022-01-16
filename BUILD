@@ -30,38 +30,36 @@ genrule(
 )
 
 SERVICE_ENV = """
-    if ! [[ -d "/home/$$USER/games/HideSeek/log" ]]; then\
-        if [[ $$OSTYPE == "darwin"* ]]; then\
-            mkdir -p /Users/$$USER/games/HideSeek/log;\
-        else\
-            mkdir -p /home/$$USER/games/HideSeek/log;\
-        fi;\
-    fi;\
-    if ! [[ -d "/home/$$USER/games/HideSeek/db" ]]; then\
-        if [[ $$OSTYPE == "darwin"* ]]; then\
-            mkdir -p /Users/$$USER/games/HideSeek/db;\
-        else\
-            mkdir -p /home/$$USER/games/HideSeek/db;\
-        fi;\
-    fi;\
-    if ! [[ -f "/home/$$USER/games/HideSeek/db/storage.db" ]]; then\
-        if [[ $$OSTYPE == "darwin"* ]]; then\
-            touch /Users/$$USER/games/HideSeek/db/storage.db;\
-        else\
-            touch /home/$$USER/games/HideSeek/db/storage.db;\
-        fi;\
-    fi;\
-    if ! [[ -f "/home/$$USER/games/HideSeek/log/log.log" ]]; then\
-        if [[ $$OSTYPE == "darwin"* ]]; then\
-            touch /Users/$$USER/games/HideSeek/log/log.log;\
-        else\
-            touch /home/$$USER/games/HideSeek/log/log.log;\
-        fi;\
-    fi;\
     if [[ $$OSTYPE == "darwin"* ]]; then\
-        chmod -R 666 /Users/$$USER/games;\
-    else\
-        chmod -R 666 /home/$$USER/games;\
+        log_dir_path="/Users/$$USER/games/HideSeek/log";
+        log_file_path="/Users/$$USER/games/HideSeek/log/log.log";
+        db_dir_path="/Users/$$USER/games/HideSeek/db";
+        db_file_path="/Users/$$USER/games/HideSeek/db/storage.db";
+    elif [[ $$OSTYPE == "linux"* ]]; then\
+        log_dir_path="/home/$$USER/games/HideSeek/log";
+        log_file_path="/home/$$USER/games/HideSeek/log/log.log";
+        db_dir_path="/home/$$USER/games/HideSeek/db";
+        db_file_path="/home/$$USER/games/HideSeek/db/storage.db";
+    fi;\
+    
+    if ! [[ -d $$log_dir_path ]]; then\
+        mkdir -p $$log_dir_path;\
+    fi;\
+    if ! [[ -d $$db_dir_path ]]; then\
+        mkdir -p $$db_dir_path;\
+    fi;\
+
+    if ! [[ -f $$log_file_path ]]; then\
+        touch $$log_file_path;\
+    fi;\
+    if ! [[ -f $$db_file_path ]]; then\
+        touch $$db_file_path;\
+    fi;\
+
+    if [[ $$OSTYPE == "darwin"* ]]; then\
+        chmod -R 777 /Users/$$USER/games;\
+    elif [[ $$OSTYPE == "linux"* ]]; then\
+        chmod -R 777 /home/$$USER/games;\
     fi;\
     echo EOF > $@;
 """
