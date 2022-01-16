@@ -1,9 +1,10 @@
 package startmenu
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-	"github.com/YarikRevich/hide-seek-client/internal/core/text/positioning"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -26,6 +27,8 @@ func Draw() {
 		ms := m.GetMargins()
 		s := m.GetScale()
 
+		fmt.Println(s)
+
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Scale(s.X, s.Y)
 		opts.GeoM.Translate(ms.X, ms.Y)
@@ -33,49 +36,49 @@ func Draw() {
 		screen.DrawImage(img, opts)
 	})
 
-	f := sources.UseSources().Font().GetFont("base")
+	// f := sources.UseSources().Font().GetFont("base")
 
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_start")
-		ms := m.GetMargins()
-		s := m.GetScale()
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
+	// 	m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_start")
+	// 	ms := m.GetMargins()
+	// 	s := m.GetScale()
 
-		opts := &ebiten.DrawImageOptions{}
+	// 	opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Scale(s.X, s.Y)
-		opts.GeoM.Translate(ms.X, ms.Y)
-		// fmt.Println((ms.X*ms.X)/(ms.X*s.X), (ms.Y*ms.Y)/(ms.Y*s.Y))
-		// opts.GeoM.Translate((ms.X*ms.X)/(ms.X*s.X), (ms.Y*ms.Y)/(ms.Y*s.Y))
+	// 	opts.GeoM.Scale(s.X, s.Y)
+	// 	opts.GeoM.Translate(ms.X, ms.Y)
+	// 	// fmt.Println((ms.X*ms.X)/(ms.X*s.X), (ms.Y*ms.Y)/(ms.Y*s.Y))
+	// 	// opts.GeoM.Translate((ms.X*ms.X)/(ms.X*s.X), (ms.Y*ms.Y)/(ms.Y*s.Y))
 
-		p := positioning.UsePositioning().Button()
-		p.Init(img, m, f, m.Text.Symbols)
-		p.Draw()
+	// 	p := positioning.UsePositioning().Button()
+	// 	p.Init(img, m, f, m.Text.Symbols)
+	// 	p.Draw()
 
-		screen.DrawImage(img, opts)
+	// 	screen.DrawImage(img, opts)
 
-		img.Dispose()
-	})
+	// 	img.Dispose()
+	// })
 
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
-		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
-		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join")
-		ms := m.GetMargins()
-		s := m.GetScale()
+	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	// 	img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
+	// 	m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_join")
+	// 	ms := m.GetMargins()
+	// 	s := m.GetScale()
 
-		opts := &ebiten.DrawImageOptions{}
+	// 	opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Scale(s.X, s.Y)
-		opts.GeoM.Translate(ms.X, ms.Y)
+	// 	opts.GeoM.Scale(s.X, s.Y)
+	// 	opts.GeoM.Translate(ms.X, ms.Y)
 
-		p := positioning.UsePositioning().Button()
-		p.Init(img, m, f, m.Text.Symbols)
-		p.Draw()
+	// 	p := positioning.UsePositioning().Button()
+	// 	p.Init(img, m, f, m.Text.Symbols)
+	// 	p.Draw()
 
-		screen.DrawImage(img, opts)
+	// 	screen.DrawImage(img, opts)
 
-		img.Dispose()
-	})
+	// 	img.Dispose()
+	// })
 
 	// s.winConf.TextAreas.GameLogo.Clear()
 	// IsOld := func(value float64, list []float64) bool {

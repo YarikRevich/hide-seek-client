@@ -1,7 +1,6 @@
 package objects
 
 import (
-	"fmt"
 	"image"
 	"path/filepath"
 	"unsafe"
@@ -332,9 +331,9 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 }
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
-	if m.Type == "worldMap" {
-		fmt.Println(o.Parent, "BEFORE\n")
-	}
+	// if m.Type == "worldMap" {
+	// 	fmt.Println(o.Parent, "BEFORE\n")
+	// }
 	o.Type = m.Type
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
@@ -367,9 +366,9 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	if o.MetadataModel == nil && o.Skin.IsSet() {
 		o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
 	}
-	if m.Type == "worldMap" {
-		fmt.Println(o.Parent, "AFTER\n")
-	}
+	// if m.Type == "worldMap" {
+	// 	fmt.Println(o.Parent, "AFTER\n")
+	// }
 }
 
 func (o *Base) GetScaledPosX() float64 {

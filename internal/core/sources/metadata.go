@@ -167,10 +167,16 @@ func (m *MetadataModel) GetMargins() Vec2 {
 
 func (m *MetadataModel) GetScale() Vec2 {
 	s := screen.UseScreen()
-	screenWidth := s.GetMaxWidth()
 	screenHeight := s.GetMaxHeight()
+	screenWidth := s.GetMaxWidth()
 	screenLastWidth, screenLastHeight := s.GetLastSize()
-	return Vec2{X: m.Scale.X / (float64(screenWidth) / screenLastWidth), Y: m.Scale.Y / (float64(screenHeight) / screenLastHeight)}
+	return Vec2{X: (((m.Scale.X * float64(screenWidth)) / 100) / (float64(screenWidth) / screenLastWidth)), Y: (((m.Scale.Y * float64(screenHeight)) / 100) / (float64(screenHeight) / screenLastHeight))}
+
+	// s := screen.UseScreen()
+	// screenWidth := s.GetMaxWidth()
+	// screenHeight := s.GetMaxHeight()
+	// screenLastWidth, screenLastHeight := s.GetLastSize()
+	// return Vec2{X: m.Scale.X / (float64(screenWidth) / screenLastWidth), Y: m.Scale.Y / (float64(screenHeight) / screenLastHeight)}
 }
 
 func (m *MetadataModel) GetBuffSpeed() Vec2 {
