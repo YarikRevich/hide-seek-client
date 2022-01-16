@@ -107,6 +107,7 @@ func (a *Audio) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 func (a *Audio) GetAudioController(path string) *Cell {
 	path = filepath.Join("dist/audio", path)
 	audio, ok := a.Collection[path]
+	fmt.Println(ok)
 	if !ok {
 		logrus.Fatal(fmt.Sprintf("audio with path '%s' not found", path))
 	}

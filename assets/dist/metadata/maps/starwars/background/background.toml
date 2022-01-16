@@ -1,4 +1,4 @@
-type = ["map"]
+type = ["map", "starwars"]
 
 [info]
 parent="background"

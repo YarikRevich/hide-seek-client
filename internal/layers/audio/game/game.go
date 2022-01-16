@@ -8,10 +8,9 @@ import (
 func Exec() {
 	p := player.UsePlayer()
 	worldMap := world.UseWorld().GetWorldMap()
-	switch worldMap.Name {
-	case "helloween":
-		p.Play("game", player.PlayerOpts{Infinite: true})
-	case "starwars":
-		p.Play("starwarsmaptheme", player.PlayerOpts{Infinite: true})
+	if worldMap.MetadataModel.Type.Contains("helloween") {
+		p.Play("helloween", player.PlayerOpts{Infinite: true})
+	} else if worldMap.MetadataModel.Type.Contains("starwars") {
+		p.Play("starwars", player.PlayerOpts{Infinite: true})
 	}
 }

@@ -184,6 +184,10 @@ func (m *Map) DebugInit() {
 	m.Base.SetSkin("maps/helloween/background/background")
 }
 
+func (m *Map) String() string {
+	return m.Skin.Name
+}
+
 // func (w *World) GetScaleForSkin() (float64, float64) {
 // 	m := w.GetMetadata().Modified
 // 	sx, sy := w.GetMapScale()

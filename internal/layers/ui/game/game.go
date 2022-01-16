@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
@@ -36,18 +34,18 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
-		fmt.Println(worldMap)
-		s := worldMap.GetScale()
+		// fmt.Println(img)
+		// s := worldMap.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Scale(s.X, s.Y)
+		// opts.GeoM.Scale(s.X, s.Y)
 
 		// opts.GeoM.Scale(worldMap..RuntimeDefined.ZoomedScale.X, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
 
 		// opts.GeoM.Translate(-(c.GetScaledPosX() + c.AlignOffset.X), -(c.GetScaledPosY() + c.AlignOffset.Y))
 
-		opts.Filter = ebiten.FilterLinear
+		// opts.Filter = ebiten.FilterLinear
 		screen.DrawImage(img, opts)
 	})
 
