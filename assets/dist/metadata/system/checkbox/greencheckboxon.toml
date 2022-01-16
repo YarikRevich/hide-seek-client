@@ -4,9 +4,9 @@ type = ["checkbox"]
 parent="greencheckboxon"
 
 [margins]
-x = 900.0
-y = 600.0
+x = 35.0
+y = 53.0
 
 [scale]
-x = 0.5
-y = 0.5
+x = 0.055
+y = 0.08

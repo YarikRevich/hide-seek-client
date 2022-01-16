@@ -56,11 +56,11 @@ func Draw() {
 		img := sources.UseSources().Images().GetImage("system/textareas/textarea")
 		m := sources.UseSources().Metadata().GetMetadata("system/textareas/textarea")
 		ms := m.GetMargins()
-		// s := m.GetScale()
+		s := m.GetScale()
 
 		opts := &ebiten.DrawImageOptions{}
 
-		// opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 		opts.GeoM.Translate(ms.X, ms.Y)
 
 		text.Draw(img, world.UseWorld().String(), f, 10, 20, &color.RGBA{100, 100, 100, 255})
@@ -72,13 +72,13 @@ func Draw() {
 		img := sources.UseSources().Images().GetCopyOfImage("system/buttons/button")
 		m := sources.UseSources().Metadata().GetMetadata("system/buttons/button_confirm_game")
 		ms := m.GetMargins()
-		// s := m.GetScale()
+		s := m.GetScale()
 
 		fmt.Println(ms)
 
 		opts := &ebiten.DrawImageOptions{}
 
-		// opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 		opts.GeoM.Translate(ms.X, ms.Y)
 
 		p := positioning.UsePositioning().Button()

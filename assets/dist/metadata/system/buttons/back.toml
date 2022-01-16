@@ -4,9 +4,9 @@ type = ["button"]
 parent="back"
 
 [margins]
-x = 5.0
-y = 15.0
+x = 7.0
+y = 13.0
 
 [scale]
-x = 2.5
-y = 2.5
+x = 0.3
+y = 0.4

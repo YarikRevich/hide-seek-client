@@ -8,8 +8,8 @@ x = 50.0
 y = 30.0
 
 [scale]
-x = 2.0
-y = 1.2
+x = 0.3
+y = 0.25
 
 [text]
 position = "center"

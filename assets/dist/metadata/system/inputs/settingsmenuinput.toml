@@ -4,12 +4,12 @@ type = ["input"]
 parent="input"
 
 [margins]
-x = 194.0
-y = 120.0
+x = 50.0
+y = 30.0
 
 [scale]
-x = 2.0
-y = 1.2
+x = 0.25
+y = 0.2
 
 [text]
 position = "center"

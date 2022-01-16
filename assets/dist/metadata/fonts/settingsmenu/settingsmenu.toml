@@ -1,11 +1,11 @@
 type = ["font"]
 
 [margins]
-x = 510.0
-y = 325.0
+x = 40.0
+y = 53.0
 
 [size]
-width = 450.0
+width = 100.0
 height = 10.0
 
 

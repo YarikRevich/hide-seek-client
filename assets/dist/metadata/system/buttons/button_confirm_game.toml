@@ -5,11 +5,11 @@ parent="button"
 
 [margins]
 x = 50.0
-y = 70.0
+y = 80.0
 
 [scale]
-x = 4.0
-y = 4.0
+x = 0.3
+y = 0.5
 
 [text]
 symbols = "Confirm\ngame"

@@ -33,8 +33,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		screen.DrawImage(img, opts)
 	})
@@ -49,8 +49,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		t := events.UseEvents().Input().SettingsMenuNameBuffer.Read()
 
@@ -71,8 +71,8 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Translate(ms.X, ms.Y)
 		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Translate(ms.X, ms.Y)
 
 		p := positioning.UsePositioning().Button()
 		p.Init(img, m, f, m.Text.Symbols)
@@ -88,7 +88,6 @@ func Draw() {
 			img *ebiten.Image
 			m   *sources.MetadataModel
 		)
-		ms := m.GetMargins()
 
 		mt := sources.UseSources().Metadata().GetMetadata("fonts/settingsmenu/settingsmenu")
 		mts := mt.GetMargins()
@@ -102,11 +101,13 @@ func Draw() {
 			m = sources.UseSources().Metadata().GetMetadata("system/checkbox/greencheckboxon")
 			text.Draw(screen, "Disable LAN server", f, int(mts.X), int(mts.Y), color.White)
 		}
+		s := m.GetScale()
+		ms := m.GetMargins()
 
 		opts := &ebiten.DrawImageOptions{}
 
+		opts.GeoM.Scale(s.X, s.Y)
 		opts.GeoM.Translate(ms.X, ms.Y)
-		opts.GeoM.Scale(m.Scale.X, m.Scale.Y)
 
 		screen.DrawImage(img, opts)
 	})
