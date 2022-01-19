@@ -33,6 +33,8 @@ func (g *Loop) Update() error {
 
 	mouse.Process()
 
+	screen.UseScreen().CleanScreen()
+
 	networking.Process()
 	animation.Process()
 
@@ -46,8 +48,6 @@ func (g *Loop) Update() error {
 	transition.UseTransitionPool().Process()
 
 	keyboard.Process()
-
-	screen.UseScreen().CleanScreen()
 
 	return nil
 }

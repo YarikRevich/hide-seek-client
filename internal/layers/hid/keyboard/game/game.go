@@ -12,15 +12,18 @@ import (
 )
 
 func Exec() {
-	// wM := world.UseWorld().GetWorldMap()
+
 	g := events.UseEvents().Gamepad()
 	k := events.UseEvents().Keyboard()
 
 	c := world.UseWorld().GetCamera()
-	// cPos := c.GetZoomedPos(&c.Base)
+	cPos := c.GetZoomedPos(&c.Base)
 	p := world.UseWorld().GetPC()
 	pOffset := c.GetZoomedOffset(&p.Base)
 	pSpeed := p.MetadataModel.GetBuffSpeed()
+	wM := world.UseWorld().GetWorldMap()
+	wMScale := c.GetZoomedScale(&wM.Base)
+	wMSize := wM.GetScale()
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
 		c.ZoomIn(&p.Base)
@@ -114,14 +117,16 @@ func Exec() {
 		p.UpdateDirection()
 
 		if p.TranslationMovementYBlocked {
-			// if cPos.Y <= -sHUD && p.IsDirectionUP() {
-			// 	p.SetTranslationYMovementBlocked(false)
-			// }
+			if cPos.Y <= -sHUD/2 && p.IsDirectionUP() {
+				c.SetRawY(0)
+				p.SetTranslationYMovementBlocked(false)
+			}
 
-			// if cPos.Y+sAxis.Y*2 >= worldMap.Modified.Size.Height/1.81 &&
-			// 	p.IsDirectionDOWN() {
-			// 	p.SetTranslationYMovementBlocked(false)
-			// }
+			fmt.Println(cPos, sAxis, wMSize.Y)
+			if cPos.Y+sAxis.Y >= wMSize.Y*wMScale.Y && p.IsDirectionDOWN() {
+				c.SetRawY(wMSize.Y)
+				p.SetTranslationYMovementBlocked(false)
+			}
 		}
 
 		if p.TranslationMovementXBlocked {
@@ -130,9 +135,10 @@ func Exec() {
 			// 	p.IsDirectionRIGHT() {
 			// 	p.SetTranslationXMovementBlocked(false)
 			// }
-			// if cPos.X <= 0 && p.IsDirectionLEFT() {
-			// 	p.SetTranslationXMovementBlocked(false)
-			// }
+			if cPos.X <= 0 && p.IsDirectionLEFT() {
+				c.SetRawX(0)
+				p.SetTranslationXMovementBlocked(false)
+			}
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeySpace) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTUPPERCLICKERButton) {
