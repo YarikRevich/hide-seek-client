@@ -161,7 +161,7 @@ type Map struct {
 func (w *Map) GetSpawns() []*server_external.PositionInt {
 	var r []*server_external.PositionInt
 
-	hudOffsetY := screen.UseScreen().GetHeight() / 12
+	hudOffsetY := screen.UseScreen().GetHUDOffset()
 	for _, v := range w.MetadataModel.Spawns {
 		r = append(r, &server_external.PositionInt{Y: v.Y + int64(hudOffsetY), X: v.X})
 	}

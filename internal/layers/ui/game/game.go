@@ -22,7 +22,7 @@ import (
 
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
-	// c := world.UseWorld().GetCamera()
+	c := world.UseWorld().GetCamera()
 	// p := world.UseWorld().GetPC()
 	// fmt.Println(world.UseWorld().GetGameSettings().IsGameStarted)
 
@@ -34,16 +34,17 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
-		// fmt.Println(img)
-		// s := worldMap.GetScale()
+		s := c.GetZoomedScale(&worldMap.Base)
 
 		opts := &ebiten.DrawImageOptions{}
 
-		// opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Scale(s.X, s.Y)
 
-		// opts.GeoM.Scale(worldMap..RuntimeDefined.ZoomedScale.X, worldMap.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
+		cp := c.GetZoomedPos(&c.Base)
 
-		// opts.GeoM.Translate(-(c.GetScaledPosX() + c.AlignOffset.X), -(c.GetScaledPosY() + c.AlignOffset.Y))
+		// fmt.Println(cp)
+
+		opts.GeoM.Translate(-(cp.X + c.AlignOffset.X), -(cp.Y + c.AlignOffset.Y))
 
 		// opts.Filter = ebiten.FilterLinear
 		screen.DrawImage(img, opts)

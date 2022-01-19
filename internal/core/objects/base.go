@@ -10,6 +10,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/google/uuid"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -33,12 +34,10 @@ func (p *Physics) IsAnimated() bool {
 }
 
 type Animation struct {
-	AnimationStartPosition struct {
-		X, Y float64
-	}
-	FrameCount         uint64
-	FrameDelayCounter  uint64
-	CurrentFrameMatrix []float64
+	AnimationStartPosition types.Vec2
+	FrameCount             uint64
+	FrameDelayCounter      uint64
+	CurrentFrameMatrix     []float64
 }
 
 type Skin struct {
@@ -68,11 +67,8 @@ type Base struct {
 	// Names parentid the object referes to
 	ID uuid.UUID
 
-	RawPos, RawOffset, LastRawPos struct {
-		X, Y float64
-	}
-
-	Direction, SubDirection keycodes.Direction
+	RawPos, RawOffset, LastRawPos types.Vec2
+	Direction, SubDirection       keycodes.Direction
 
 	Spawn server_external.PositionInt
 
@@ -85,7 +81,7 @@ type Base struct {
 	PositionHistorySequence zeroshifter.IZeroShifter
 }
 
-func (o *Base) IsEqualTo(ob Base) bool {
+func (o *Base) IsEqualTo(ob *Base) bool {
 	return o.ID == ob.ID
 }
 
@@ -184,7 +180,7 @@ func (o *Base) IsDirectionDOWN() bool {
 	return o.Direction == keycodes.DOWN || o.SubDirection == keycodes.DOWN
 }
 
-func (o *Base) SaveLastPosition() {
+func (o *Base) UpdateLastPosition() {
 	o.LastRawPos = struct {
 		X float64
 		Y float64
@@ -369,29 +365,6 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	// if m.Type == "worldMap" {
 	// 	fmt.Println(o.Parent, "AFTER\n")
 	// }
-}
-
-func (o *Base) GetScaledPosX() float64 {
-	return 0
-	// return (o.RawPos.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
-}
-
-func (o *Base) GetScaledPosY() float64 {
-	return 0
-	// return (o.RawPos.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
-}
-
-func (o *Base) GetScaledOffsetX() float64 {
-	return 0
-	// return (o.RawOffset.X * o.Parent.Modified.RuntimeDefined.ZoomedScale.X) - o.Modified.Offset.X
-	// return (o.RawOffset.X) - o.Modified.Offset.X
-}
-
-func (o *Base) GetScaledOffsetY() float64 {
-	return 0
-	// fmt.Println(o.Parent.Modified.RuntimeDefined.ZoomedScale.Y)
-	// return (o.RawOffset.Y * o.Parent.Modified.RuntimeDefined.ZoomedScale.Y) - o.Modified.Offset.Y
-	// return (o.RawOffset.Y) - o.Modified.Offset.Y
 }
 
 func (o *Base) SetTranslationXMovementBlocked(s bool) {

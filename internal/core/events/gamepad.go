@@ -1,11 +1,12 @@
 package events
 
 import (
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-type Gamepad struct{
+type Gamepad struct {
 	GamepadPress
 }
 
@@ -49,15 +50,34 @@ func (g *GamepadPress) AreGamepadButtonsCombined(button1, button2 ebiten.Gamepad
 
 func (g *GamepadPress) AreGamepadButtonsCombinedInOrder(m, s ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
-		if ebiten.IsGamepadButtonPressed(v, m) == true && ebiten.IsGamepadButtonPressed(v, s) == true && inpututil.GamepadButtonPressDuration(v, m) > inpututil.GamepadButtonPressDuration(v, s){
+		if ebiten.IsGamepadButtonPressed(v, m) == true && ebiten.IsGamepadButtonPressed(v, s) == true && inpututil.GamepadButtonPressDuration(v, m) > inpututil.GamepadButtonPressDuration(v, s) {
 			return true
 		}
 	}
 	return false
 }
 
+func (g *GamepadPress) IsAnyButtonPressed() bool {
+	for _, v := range ebiten.GamepadIDs() {
+		for _, q := range []ebiten.GamepadButton{
+			keycodes.GamepadUPButton,
+			keycodes.GamepadRIGHTButton,
+			keycodes.GamepadDOWNButton,
+			keycodes.GamepadLEFTButton,
+			keycodes.GamepadLEFTUPPERCLICKERButton,
+			keycodes.GamepadRIGHTUPPERCLICKERButton,
+			keycodes.GamepadLEFTLOWERCLICKERButton,
+			keycodes.GamepadRIGHTLOWERCLICKERButton} {
+			if ebiten.IsGamepadButtonPressed(v, q) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 //Checks if any gamepad is connected
-func (g *GamepadPress) IsGamepadConnected()bool{
+func (g *GamepadPress) IsGamepadConnected() bool {
 	return len(ebiten.GamepadIDs()) != 0
 }
 

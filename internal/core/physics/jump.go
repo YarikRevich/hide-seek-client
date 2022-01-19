@@ -22,7 +22,8 @@ func (j *Jump) Calculate() {
 		return
 	}
 
-	t := int(math.Round((math.Sqrt((2*p.MetadataModel.Size.Height)/p.Parent.MetadataModel.Physics.G) / 2)))
+	s := p.MetadataModel.GetSize()
+	t := int(math.Round((math.Sqrt((2*s.Y)/p.Parent.MetadataModel.Physics.G) / 2)))
 
 	for t%2 != 0 {
 		t++

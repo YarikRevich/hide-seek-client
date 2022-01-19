@@ -16,6 +16,7 @@ type Line struct {
 
 func (l *Line) Shift(x, y float64, scale float64) {
 	s := screen.UseScreen()
+	size := s.GetSize()
 
 	l.x0 = l.x1
 	l.y0 = l.y1
@@ -25,7 +26,7 @@ func (l *Line) Shift(x, y float64, scale float64) {
 	if l.brightness > 0xff {
 		l.brightness = 0xff
 	}
-	if l.x0 < 0 || s.GetWidth()*scale < l.x0 || l.y0 < 0 || s.GetHeight()*scale < l.y0 {
+	if l.x0 < 0 || size.X*scale < l.x0 || l.y0 < 0 || size.Y*scale < l.y0 {
 		l.SetRandomValues(scale)
 	}
 
@@ -47,9 +48,10 @@ func (l *Line) Raw() (float64, float64, float64, float64, color.RGBA) {
 
 func (l *Line) SetRandomValues(scale float64) {
 	s := screen.UseScreen()
-	l.x1 = rand.Float64() * s.GetWidth() * scale
+	size := s.GetSize()
+	l.x1 = rand.Float64() * size.X * scale
 	l.x0 = l.x1
-	l.y1 = rand.Float64() * s.GetHeight() * scale
+	l.y1 = rand.Float64() * size.Y * scale
 	l.y0 = l.y1
 	l.brightness = rand.Float64() * 0xff
 	l.color = colornames.White
