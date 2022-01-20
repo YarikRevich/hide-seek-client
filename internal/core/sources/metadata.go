@@ -93,7 +93,7 @@ type MetadataModel struct {
 	}
 
 	Buffs struct {
-		Speed types.Vec2
+		Speed float64
 	}
 
 	Scale types.Vec2
@@ -176,7 +176,10 @@ func (m *MetadataModel) GetBuffSpeed() types.Vec2 {
 	s := screen.UseScreen()
 	size := s.GetSize()
 	lastSize := s.GetLastSize()
-	return types.Vec2{X: m.Buffs.Speed.X * (size.X / lastSize.X), Y: m.Buffs.Speed.Y * (size.Y / lastSize.Y)}
+	y := m.Buffs.Speed * (size.Y / lastSize.Y)
+	x := (m.Buffs.Speed * (size.X / lastSize.X)) - (y / 2)
+	avg := (y + x) / 2
+	return types.Vec2{X: avg, Y: avg}
 }
 
 func (m *MetadataModel) GetOffset() types.Vec2 {

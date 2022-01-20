@@ -1,6 +1,8 @@
 package objects
 
-import "github.com/YarikRevich/hide-seek-client/internal/core/types"
+import (
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
+)
 
 type Camera struct {
 	Base
@@ -38,23 +40,14 @@ func (c *Camera) ZoomOut(o *Base) {
 	// }
 }
 
-//Returns zoomed offset for passed object
-func (c *Camera) GetZoomedOffset(b *Base) types.Vec2 {
-	s := b.MetadataModel.GetScale()
-	o := c.MetadataModel.GetOffset()
-	return types.Vec2{X: (b.RawOffset.X * (s.X * c.Zoom / 100)) - o.X, Y: (b.RawOffset.Y * (s.Y * c.Zoom / 100)) - o.Y}
-}
-
-//Returns zoomed position for passed object
-func (c *Camera) GetZoomedPos(b *Base) types.Vec2 {
-	s := b.MetadataModel.GetScale()
-	o := c.MetadataModel.GetOffset()
-	return types.Vec2{X: (b.RawPos.X * (s.X * c.Zoom / 100)) - o.X, Y: (b.RawPos.Y * (s.Y * c.Zoom / 100)) - o.Y}
-}
-
 func (c *Camera) GetZoomedScale(b *Base) types.Vec2 {
 	s := b.MetadataModel.GetScale()
-	return types.Vec2{X: (s.X * c.Zoom / 100), Y: (s.Y * c.Zoom / 100)}
+	return types.Vec2{X: ((s.X * c.Zoom) / 100), Y: ((s.Y * c.Zoom) / 100)}
+}
+
+//Checks if passed v2 is outta range of v1
+func (c *Camera) IsOuttaRange(v1, v2 float64) bool {
+	return v2 >= v1
 }
 
 func NewCamera() *Camera {

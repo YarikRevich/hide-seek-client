@@ -1,8 +1,12 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -23,30 +27,35 @@ import (
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
 	c := world.UseWorld().GetCamera()
-	// p := world.UseWorld().GetPC()
+	p := world.UseWorld().GetPC()
+	s := screen.UseScreen()
+	// size := s.GetSize()
+	// lastSize := s.GetLastSize()
 	// fmt.Println(world.UseWorld().GetGameSettings().IsGameStarted)
 
-	// if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
-	// 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
+		render.UseRender().SetToRender(func(screen *ebiten.Image) {
 
-	// 	})
-	// }
+		})
+	}
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
-		s := c.GetZoomedScale(&worldMap.Base)
+		zs := c.GetZoomedScale(&worldMap.Base)
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Scale(s.X, s.Y)
+		opts.GeoM.Scale(zs.X, zs.Y)
+		//TODO: apply align when zoom gets changed
+		pScale := c.GetZoomedScale(&p.Base)
+		fmt.Println(-c.RawPos.X, pScale.X)
+		opts.GeoM.Translate(-(c.RawPos.X * pScale.X), -(c.RawPos.Y * pScale.Y))
 
-		cp := c.GetZoomedPos(&c.Base)
+		opts.GeoM.Translate(0, s.GetHUDOffset())
 
-		// fmt.Println(cp)
-
-		opts.GeoM.Translate(-(cp.X + c.AlignOffset.X), -(cp.Y + c.AlignOffset.Y))
-
-		// opts.Filter = ebiten.FilterLinear
+		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
+			opts.Filter = ebiten.FilterLinear
+		}
 		screen.DrawImage(img, opts)
 	})
 
@@ -56,6 +65,7 @@ func Draw() {
 		opts := &ebiten.DrawImageOptions{}
 
 		opts.GeoM.Translate(100, 100)
+		opts.GeoM.Translate(0, s.GetHUDOffset())
 		i.DrawImage(img, opts)
 	})
 
@@ -81,28 +91,29 @@ func Draw() {
 	// 	i.DrawImage(img, opts)
 	// })
 
-	// render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 
-	// 	pcs := world.UseWorld().GetPCs()
+		pcs := world.UseWorld().GetPCs()
 
-	// 	for _, pc := range pcs {
-	// 		img := pc.GetAnimatedImage()
+		for _, pc := range pcs {
+			img := pc.GetAnimatedImage()
 
-	// 		opts := &ebiten.DrawImageOptions{}
+			opts := &ebiten.DrawImageOptions{}
+			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
 
-	// 		opts.GeoM.Scale(pc.GetMovementRotation(), 1)
-	// 		// opts.GeoM.Scale(pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.X,
-	// 		// 	pc.ModelCombination.Modified.RuntimeDefined.ZoomedScale.Y)
+			pScale := c.GetZoomedScale(&pc.Base)
+			opts.GeoM.Scale(pScale.X, pScale.Y)
+			if pc.IsEqualTo(&pc.Base) {
+				opts.GeoM.Translate((pc.RawOffset.X*pScale.X)-c.AlignOffset.X, (pc.RawOffset.Y*pScale.Y)-c.AlignOffset.Y)
+			} else {
+				opts.GeoM.Translate(pc.RawOffset.X, pc.RawOffset.Y)
+			}
 
-	// 		if pc.IsEqualTo(p.Base) {
-	// 			opts.GeoM.Translate(pc.GetScaledOffsetX()-c.AlignOffset.X, pc.GetScaledOffsetY()-c.AlignOffset.Y)
-	// 		} else {
-	// 			opts.GeoM.Translate(pc.GetScaledPosX(), pc.GetScaledPosY())
-	// 		}
+			opts.GeoM.Translate(0, s.GetHUDOffset())
 
-	// 		screen.DrawImage(img, opts)
-	// 	}
-	// })
+			screen.DrawImage(img, opts)
+		}
+	})
 
 	// 	// render.UseRender().SetToRender(func(i *ebiten.Image) {
 	// 	// 	img := p.GetImage()

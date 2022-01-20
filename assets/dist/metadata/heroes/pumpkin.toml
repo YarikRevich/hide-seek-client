@@ -11,13 +11,12 @@ frameY = 0.0
 frameWidth = 16.0
 frameHeight = 50.0
 
-[buffs.speed]
-    x = 2.0
-    y = 2.0
+[buffs]
+    speed = 5.0
 
 [scale]
-x = 3.0
-y = 3.0
+x = 0.4
+y = 0.6
 
 [effects]
 tracecolorbegin = [255.0, 168.0, 5.0, 255.0]
