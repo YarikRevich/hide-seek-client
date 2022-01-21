@@ -152,6 +152,7 @@ func Exec() {
 			}
 
 			if c.IsOuttaRange(wMSize.X*wMScale.X-sAxis.X*2, cPos.X) {
+				c.SetRawX((wMSize.X*wMScale.X - sAxis.X*2) / pScale.X)
 				p.SetTranslationXMovementBlocked(false)
 			}
 		}

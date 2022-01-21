@@ -1,6 +1,9 @@
 package game
 
 import (
+	"fmt"
+	"image/color"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
@@ -27,6 +30,7 @@ func Draw() {
 	c := world.UseWorld().GetCamera()
 	p := world.UseWorld().GetPC()
 	s := screen.UseScreen()
+	sAxis := s.GetAxis()
 	// size := s.GetSize()
 	// lastSize := s.GetLastSize()
 	// fmt.Println(world.UseWorld().GetGameSettings().IsGameStarted)
@@ -41,16 +45,17 @@ func Draw() {
 		img := worldMap.GetImage()
 
 		opts := &ebiten.DrawImageOptions{}
-
 		wMScale := c.GetZoomedScale(&worldMap.Base)
-		// ws := worldMap.GetScale()
 		opts.GeoM.Scale(wMScale.X, wMScale.Y)
-		// opts.GeoM.Scale(c.Zoom/100, c.Zoom/100)
+		// fmt.Println(c.DeltaOffset)
 
-		//TODO: apply align when zoom gets changed
 		pScale := c.GetZoomedScale(&p.Base)
-		// fmt.Println(-c.RawPos.X, pScale.X)
-		opts.GeoM.Translate(-(c.RawPos.X * pScale.X), -(c.RawPos.Y * pScale.Y))
+
+		fmt.Println(((c.RawPos.Y-sAxis.Y)*pScale.Y+sAxis.Y)+sAxis.Y*2, c.RawPos.Y, sAxis.Y, pScale.Y, "CAMERA")
+		fmt.Println((c.RawPos.Y * pScale.Y))
+		// fmt.Println(-((c.RawPos.X+sAxisXHalf)*pScale.X - sAxisXHalf), -((c.RawPos.Y+sAxisYHalf)*pScale.Y - sAxisYHalf))
+		// opts.GeoM.Translate(-(c.RawPos.X * pScale.X), -(c.RawPos.Y * pScale.Y))
+		opts.GeoM.Translate(-((c.RawPos.X+sAxis.X)*pScale.X - sAxis.X), -((c.RawPos.Y+sAxis.Y)*pScale.Y - sAxis.Y))
 
 		opts.GeoM.Translate(0, s.GetHUDOffset())
 
@@ -79,18 +84,16 @@ func Draw() {
 	// 	}
 	// })
 
-	// render.UseRender().SetToRender(func(i *ebiten.Image) {
-	// 	s := screen.UseScreen()
-	// 	screenWidth := s.GetWidth()
-	// 	hudHeight := s.GetHUDOffset()
-	// 	img := ebiten.NewImage(int(screenWidth), int(hudHeight))
+	render.UseRender().SetToRender(func(i *ebiten.Image) {
+		s := screen.UseScreen()
+		hudHeight := s.GetHUDOffset()
+		img := ebiten.NewImage(int(s.GetSize().X), int(hudHeight))
 
-	// 	opts := &ebiten.DrawImageOptions{}
+		opts := &ebiten.DrawImageOptions{}
 
-	// 	img.Fill(color.Black)
-
-	// 	i.DrawImage(img, opts)
-	// })
+		img.Fill(color.Black)
+		i.DrawImage(img, opts)
+	})
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 
@@ -107,7 +110,8 @@ func Draw() {
 			// opts.GeoM.Scale(c.Zoom/100, c.Zoom/100)
 
 			if pc.IsEqualTo(&pc.Base) {
-				opts.GeoM.Translate((pc.RawOffset.X*pScale.X)-c.AlignOffset.X, (pc.RawOffset.Y*pScale.Y)-c.AlignOffset.Y)
+				// fmt.Println(((pc.RawOffset.Y+sAxis.Y)*pScale.Y - sAxis.Y), "PC")
+				opts.GeoM.Translate(((pc.RawOffset.X) * pScale.X), ((pc.RawOffset.Y-sAxis.Y)*pScale.Y + sAxis.Y))
 			} else {
 				opts.GeoM.Translate(pc.RawOffset.X, pc.RawOffset.Y)
 			}
