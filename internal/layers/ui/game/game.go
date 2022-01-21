@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
@@ -41,14 +39,17 @@ func Draw() {
 
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
-		zs := c.GetZoomedScale(&worldMap.Base)
 
 		opts := &ebiten.DrawImageOptions{}
 
-		opts.GeoM.Scale(zs.X, zs.Y)
+		wMScale := c.GetZoomedScale(&worldMap.Base)
+		// ws := worldMap.GetScale()
+		opts.GeoM.Scale(wMScale.X, wMScale.Y)
+		// opts.GeoM.Scale(c.Zoom/100, c.Zoom/100)
+
 		//TODO: apply align when zoom gets changed
 		pScale := c.GetZoomedScale(&p.Base)
-		fmt.Println(-c.RawPos.X, pScale.X)
+		// fmt.Println(-c.RawPos.X, pScale.X)
 		opts.GeoM.Translate(-(c.RawPos.X * pScale.X), -(c.RawPos.Y * pScale.Y))
 
 		opts.GeoM.Translate(0, s.GetHUDOffset())
@@ -103,6 +104,8 @@ func Draw() {
 
 			pScale := c.GetZoomedScale(&pc.Base)
 			opts.GeoM.Scale(pScale.X, pScale.Y)
+			// opts.GeoM.Scale(c.Zoom/100, c.Zoom/100)
+
 			if pc.IsEqualTo(&pc.Base) {
 				opts.GeoM.Translate((pc.RawOffset.X*pScale.X)-c.AlignOffset.X, (pc.RawOffset.Y*pScale.Y)-c.AlignOffset.Y)
 			} else {

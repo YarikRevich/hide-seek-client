@@ -1,8 +1,6 @@
 package screen
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -89,7 +87,6 @@ func (s *Screen) IsHigherAxisXCrossed(x float64, speedX float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
-	fmt.Println(x, a.X-(speedX+asz.X), "SLEEPING")
 	return x > a.X-(speedX+asz.X) && x < a.X+(speedX+asz.X)
 }
 

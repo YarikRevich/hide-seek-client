@@ -1,13 +1,12 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/physics"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -21,10 +20,12 @@ func Exec() {
 	c := world.UseWorld().GetCamera()
 	// cPos := c.GetZoomedPos(&c.Base)
 	p := world.UseWorld().GetPC()
-	// pOffset := p.MetadataModel.GetOffset()
+
+	// p.RawOffset := p.MetadataModel.GetOffset()
 	pSpeed := p.MetadataModel.GetBuffSpeed()
 	pScale := c.GetZoomedScale(&p.Base)
 	wM := world.UseWorld().GetWorldMap()
+	wMScale := c.GetZoomedScale(&wM.Base)
 	// wMScale := c.GetZoomedScale(&wM.Base)
 	wMSize := wM.GetSize()
 
@@ -46,7 +47,7 @@ func Exec() {
 		sAxis := s.GetAxis()
 		sHUD := s.GetHUDOffset()
 
-		fmt.Println(pSpeed)
+		// fmt.Println(pSpeed)
 
 		//Handles in-game minimap
 		if inpututil.IsKeyJustPressed(ebiten.KeyM) {
@@ -58,8 +59,9 @@ func Exec() {
 			}
 		}
 
+		pOffset := c.GetZoomedOffset(&p.Base)
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
-			if p.RawOffset.Y > -sHUD/4 {
+			if pOffset.Y > -sHUD/4 {
 				p.SetRawY(p.RawPos.Y - pSpeed.Y)
 				if !p.TranslationMovementYBlocked {
 					p.SetRawOffsetY(p.RawOffset.Y - pSpeed.Y)
@@ -71,16 +73,18 @@ func Exec() {
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-			if p.RawOffset.Y < sAxis.Y*2 {
+			// fmt.Println(pOffset.Y, ((sAxis.Y * 2) - sHUD - p.MetadataModel.GetSize().X))
+			// -sHUD*2 - p.MetadataModel.GetSize().X
+			if pOffset.Y < (sAxis.Y * 2) {
 				p.SetRawY(p.RawPos.Y + pSpeed.Y)
 				if !p.TranslationMovementYBlocked {
 					p.SetRawOffsetY(p.RawOffset.Y + pSpeed.Y)
 				}
-
 				if p.TranslationMovementYBlocked {
 					c.SetRawY(c.RawPos.Y + pSpeed.Y)
 				}
 			}
+
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
@@ -95,7 +99,7 @@ func Exec() {
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
-			if p.RawOffset.X > 0 {
+			if pOffset.X > 0 {
 				p.SetRawX(p.RawPos.X - pSpeed.X)
 				if !p.TranslationMovementXBlocked {
 					p.SetRawOffsetX(p.RawOffset.X - pSpeed.X)
@@ -107,58 +111,50 @@ func Exec() {
 			}
 		}
 
-		// if p.TranslationMovementYBlocked {
-
-		// 	if c.RawPos.Y <= -sHUD/2 && p.IsDirectionUP() {
-		// 		c.SetRawY(0)
-		// 		p.SetTranslationYMovementBlocked(false)
-		// 	}
-
-		// 	// fmt.Println(cPos, sAxis, wMSize, wMScale)
-		fmt.Println(wMSize.Y+(sAxis.Y*2)+sHUD, c.RawPos.Y, "MAP RANGE")
-
-		// 	fmt.Println(wMSize.Y, c.RawPos.Y)
-		// 	if !c.IsOuttaRange(wMSize.Y, c.RawPos.Y) {
-		// 		if c.RawPos.Y+sAxis.Y >= wMSize.Y && p.IsDirectionDOWN() {
-		// 			// c.SetRawY(wMSize.Y - (sAxis.Y))
-		// 			// fmt.Println(cPos, sAxis, wMSize, wMScale, "HERE")
-		// 			p.SetTranslationYMovementBlocked(false)
-		// 		}
-		// 	}
-		// }
-
-		// if p.TranslationMovementXBlocked {
-		// 	// wM.MetadataModel.GetSize()
-		// 	// if cPos.X+sAxis.X*2 >= worldMap.Modified.Size.Width/worldMap.Modified.RuntimeDefined.ZoomedScale.X*1.81 &&
-		// 	// 	p.IsDirectionRIGHT() {
-		// 	// 	p.SetTranslationXMovementBlocked(false)
-		// 	// }
-		// 	if cPos.X <= 0 && p.IsDirectionLEFT() {
-		// 		c.SetRawX(0)
-		// 		p.SetTranslationXMovementBlocked(false)
-		// 	}
-		// }
-
-		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(p.RawOffset.X, pSpeed.X) && p.IsDirectionLEFT() {
+		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionLEFT() {
 			p.SetTranslationXMovementBlocked(true)
 		}
 
-		fmt.Println(p.RawOffset.X*pScale.X, pSpeed.X, s.IsHigherAxisXCrossed(p.RawOffset.X*pScale.X, pSpeed.X))
-		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(p.RawOffset.X, pSpeed.X) && p.IsDirectionRIGHT() {
+		// fmt.Println(p.RawOffset.X*pScale.X, pSpeed.X, s.IsHigherAxisXCrossed(p.RawOffset.X*pScale.X, pSpeed.X))
+		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionRIGHT() {
 			p.SetTranslationXMovementBlocked(true)
 		}
 
-		if !p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(p.RawOffset.Y, pSpeed.Y) && p.IsDirectionUP() {
+		// fmt.Println(!p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionUP())
+		if !p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionUP() {
 			p.SetTranslationYMovementBlocked(true)
 		}
 
-		// fmt.Println(s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y), pOffset.Y, pSpeed.Y)
-
-		if !p.TranslationMovementYBlocked && s.IsHigherAxisYCrossed(p.RawOffset.Y, pSpeed.Y) && p.IsDirectionDOWN() {
+		if !p.TranslationMovementYBlocked && s.IsHigherAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionDOWN() {
 			p.SetTranslationYMovementBlocked(true)
 		}
 
 		p.UpdateDirection()
+
+		cPos := types.Vec2{X: c.RawPos.X * pScale.X, Y: c.RawPos.Y * pScale.Y}
+
+		if p.TranslationMovementYBlocked {
+			if cPos.Y <= 0 && p.IsDirectionUP() {
+				c.SetRawY(0)
+				p.SetTranslationYMovementBlocked(false)
+			}
+
+			if c.IsOuttaRange(wMSize.Y*wMScale.Y-sAxis.Y*2+sHUD, cPos.Y) {
+				c.SetRawY((wMSize.Y*wMScale.Y - sAxis.Y*2 + sHUD) / pScale.Y)
+				p.SetTranslationYMovementBlocked(false)
+			}
+		}
+
+		if p.TranslationMovementXBlocked {
+			if cPos.X <= 0 && p.IsDirectionLEFT() {
+				c.SetRawX(0)
+				p.SetTranslationXMovementBlocked(false)
+			}
+
+			if c.IsOuttaRange(wMSize.X*wMScale.X-sAxis.X*2, cPos.X) {
+				p.SetTranslationXMovementBlocked(false)
+			}
+		}
 
 		if ebiten.IsKeyPressed(ebiten.KeySpace) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTUPPERCLICKERButton) {
 			physics.UsePhysics().Jump().Calculate()

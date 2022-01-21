@@ -45,6 +45,16 @@ func (c *Camera) GetZoomedScale(b *Base) types.Vec2 {
 	return types.Vec2{X: ((s.X * c.Zoom) / 100), Y: ((s.Y * c.Zoom) / 100)}
 }
 
+func (c *Camera) GetZoomedPos(b *Base) types.Vec2 {
+	s := b.MetadataModel.GetScale()
+	return types.Vec2{X: b.RawPos.X * ((s.X * c.Zoom) / 100), Y: b.RawPos.Y * ((s.Y * c.Zoom) / 100)}
+}
+
+func (c *Camera) GetZoomedOffset(b *Base) types.Vec2 {
+	s := b.MetadataModel.GetScale()
+	return types.Vec2{X: b.RawOffset.X * ((s.X * c.Zoom) / 100), Y: b.RawOffset.Y * ((s.Y * c.Zoom) / 100)}
+}
+
 //Checks if passed v2 is outta range of v1
 func (c *Camera) IsOuttaRange(v1, v2 float64) bool {
 	return v2 >= v1
