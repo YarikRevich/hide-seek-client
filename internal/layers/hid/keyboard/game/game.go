@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/physics"
@@ -30,11 +31,13 @@ func Exec() {
 	wMSize := wM.GetSize()
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
-		c.ZoomIn(&p.Base)
+		// c.ZoomIn(&p.Base)
+		camera.Cam.Zoom(1.1)
 		p.UpdateLastActivity()
 		return
 	} else if g.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
-		c.ZoomOut(&p.Base)
+		// c.ZoomOut(&p.Base)
+		camera.Cam.Zoom(0.9)
 		p.UpdateLastActivity()
 		return
 	}
@@ -67,6 +70,7 @@ func Exec() {
 					p.SetRawOffsetY(p.RawOffset.Y - pSpeed.Y)
 				}
 				if p.TranslationMovementYBlocked {
+					camera.Cam.MovePosition(0, -pSpeed.Y)
 					c.SetRawY(c.RawPos.Y - pSpeed.Y)
 				}
 			}
@@ -81,6 +85,7 @@ func Exec() {
 					p.SetRawOffsetY(p.RawOffset.Y + pSpeed.Y)
 				}
 				if p.TranslationMovementYBlocked {
+					camera.Cam.MovePosition(0, pSpeed.Y)
 					c.SetRawY(c.RawPos.Y + pSpeed.Y)
 				}
 			}
@@ -94,6 +99,7 @@ func Exec() {
 			}
 
 			if p.TranslationMovementXBlocked {
+				camera.Cam.MovePosition(pSpeed.X, 0)
 				c.SetRawX(c.RawPos.X + pSpeed.X)
 			}
 		}
@@ -106,6 +112,7 @@ func Exec() {
 				}
 
 				if p.TranslationMovementXBlocked {
+					camera.Cam.MovePosition(-pSpeed.X, 0)
 					c.SetRawX(c.RawPos.X - pSpeed.X)
 				}
 			}

@@ -1,7 +1,7 @@
 package keyboard
 
 import (
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard/game"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard/joinmenu"
@@ -11,8 +11,8 @@ import (
 
 func Process() {
 	if params.IsDebug() {
-		profiling.UseProfiler().StartMonitoring(profiling.KEYBOARD)
-		defer profiling.UseProfiler().EndMonitoring()
+		ingame.UseProfiler().StartMonitoring(ingame.KEYBOARD)
+		defer ingame.UseProfiler().StopMonitoring(ingame.KEYBOARD)
 	}
 
 	switch statemachine.UseStateMachine().Input().GetState() {

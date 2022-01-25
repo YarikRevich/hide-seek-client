@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
 	"github.com/YarikRevich/hide-seek-client/internal/layers/ui/debug"
@@ -20,24 +20,24 @@ import (
 
 func Process() {
 	if params.IsDebug() {
-		profiling.UseProfiler().StartMonitoring(profiling.UI)
-		defer profiling.UseProfiler().EndMonitoring()
+		ingame.UseProfiler().StartMonitoring(ingame.UI)
+		defer ingame.UseProfiler().StopMonitoring(ingame.UI)
 	}
 
 	switch statemachine.UseStateMachine().UI().GetState() {
 	case statemachine.UI_GAME:
 		func() {
 			if params.IsDebug() {
-				profiling.UseProfiler().StartMonitoring(profiling.UI_GAME_MENU)
-				defer profiling.UseProfiler().EndMonitoring()
+				ingame.UseProfiler().StartMonitoring(ingame.UI_GAME_MENU)
+				defer ingame.UseProfiler().StopMonitoring(ingame.UI_GAME_MENU)
 			}
 			game.Draw()
 		}()
 	case statemachine.UI_START_MENU:
 		func() {
 			if params.IsDebug() {
-				profiling.UseProfiler().StartMonitoring(profiling.UI_START_MENU)
-				defer profiling.UseProfiler().EndMonitoring()
+				ingame.UseProfiler().StartMonitoring(ingame.UI_START_MENU)
+				defer ingame.UseProfiler().StopMonitoring(ingame.UI_START_MENU)
 			}
 			startmenu.Draw()
 		}()

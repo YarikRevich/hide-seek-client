@@ -1,16 +1,19 @@
 package objects
 
 import (
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 )
 
 type Camera struct {
 	Base
 
-	Zoom        float64
-	AlignOffset types.Vec2
+	Zoom    float64
+	COffset types.Vec2
+	CScale  types.Vec2
 
-	DeltaOffset types.Vec2
+	// fOffsetX += (fMouseWorldX_BeforeZoom - fMouseWorldX_AfterZoom);
+	// 	fOffsetY += (fMouseWorldY_BeforeZoom - fMouseWorldY_AfterZoom);
 }
 
 func (c *Camera) GetZoom() types.Vec2 {
@@ -20,17 +23,19 @@ func (c *Camera) GetZoom() types.Vec2 {
 
 //Increments zoom property
 func (c *Camera) ZoomIn(o *Base) {
-	pScale := c.GetZoomedScale(o)
-	cPosOld := types.Vec2{X: c.RawPos.X * pScale.X, Y: c.RawPos.Y * pScale.Y}
-	if c.Zoom < c.MetadataModel.Camera.MaxZoom {
-		// c.AlignOffset.X += pScale.X
-		// c.AlignOffset.Y -= pScale.Y
+	// pScaleOld := c.GetZoomedScale(o)
 
-		c.Zoom++
-		pScale = c.GetZoomedScale(o)
-		cPos := types.Vec2{X: c.RawPos.X * pScale.X, Y: c.RawPos.Y * pScale.Y}
-		c.DeltaOffset.X += cPos.X - cPosOld.X
-		c.DeltaOffset.Y += cPos.Y - cPosOld.Y
+	cPosOld := c.ConvertScreenToWorld(c.RawPos)
+	if c.Zoom < c.MetadataModel.Camera.MaxZoom {
+		// c.Zoom = 2.001
+		// c.Zoom++
+		c.CScale.X += 0.05
+		c.CScale.Y += 0.05
+
+		// pScale := c.GetZoomedScale(o)
+		cPos := c.ConvertScreenToWorld(c.RawPos)
+		c.COffset.X += cPosOld.X - cPos.X
+		c.COffset.Y += cPosOld.Y - cPos.Y
 		// o.SetTranslationYMovementBlocked(false)
 		// o.SetTranslationXMovementBlocked(false)
 	}
@@ -38,20 +43,18 @@ func (c *Camera) ZoomIn(o *Base) {
 
 //Decrements zoom property
 func (c *Camera) ZoomOut(o *Base) {
-	pScaleOld := c.GetZoomedScale(o)
-	cPosOld := types.Vec2{X: c.RawPos.X * pScaleOld.X, Y: c.RawPos.Y * pScaleOld.Y}
-	// fmt.Println(!math.Signbit(cPos.X+c.AlignOffset.X), !math.Signbit(cPos.Y+c.AlignOffset.Y))
-	// if !math.Signbit(cPos.X+c.AlignOffset.X) && !math.Signbit(cPos.Y+c.AlignOffset.Y) {
-	// if !math.Signbit(c.GetScaledPosX()+c.AlignOffset.X) && !math.Signbit(c.GetScaledPosY()+c.AlignOffset.Y) {
+	// pScaleOld := c.GetZoomedScale(o)
+	cPosOld := c.ConvertScreenToWorld(c.RawPos)
 	if c.Zoom > c.MetadataModel.Camera.MinZoom {
 		// c.AlignOffset.X -= pScale.X
 		// c.AlignOffset.Y += pScale.Y
-		c.Zoom--
-		pScale := c.GetZoomedScale(o)
-		cPos := types.Vec2{X: c.RawPos.X * pScale.X, Y: c.RawPos.Y * pScale.Y}
-		c.DeltaOffset.X += cPos.X - cPosOld.X
-		c.DeltaOffset.Y += cPos.Y - cPosOld.Y
+		// c.Zoom--
+		c.CScale.X -= 0.05
+		c.CScale.Y -= 0.05
 
+		cPos := c.ConvertScreenToWorld(c.RawPos)
+		c.COffset.X += cPosOld.X - cPos.X
+		c.COffset.Y += cPosOld.Y - cPos.Y
 		// fmt.Println(cPos, cPosOld)
 		// o.SetTranslationYMovementBlocked(false)
 		// o.SetTranslationXMovementBlocked(false)
@@ -80,10 +83,21 @@ func (c *Camera) IsOuttaRange(v1, v2 float64) bool {
 	return v2 > v1
 }
 
+func (c *Camera) ConvertWorldToScreen(w types.Vec2) types.Vec2 {
+	return types.Vec2{X: (w.X - c.COffset.X) * c.Scale.X, Y: (w.Y - c.COffset.Y) * c.Scale.Y}
+}
+func (c *Camera) ConvertScreenToWorld(s types.Vec2) types.Vec2 {
+	return types.Vec2{X: (s.X / c.Scale.X) + c.COffset.X, Y: (s.Y / c.Scale.Y) + c.COffset.Y}
+}
+
 func NewCamera() *Camera {
 	c := new(Camera)
 	c.SetSkin("camera/camera")
 	c.Zoom = c.MetadataModel.Camera.InitZoom
 	c.Type = "camera"
+	c.COffset.X = -screen.UseScreen().GetAxis().X
+	c.COffset.Y = -screen.UseScreen().GetAxis().Y
+	c.CScale.X = 1
+	c.CScale.Y = 1
 	return c
 }

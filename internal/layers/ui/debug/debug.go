@@ -3,7 +3,7 @@ package debug
 import (
 	"image/color"
 
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -21,6 +21,6 @@ func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		f := sources.UseSources().Font().GetFont("base")
 
-		text.Draw(screen, profiling.UseProfiler().String(), f, 0, 0, color.White)
+		text.Draw(screen, ingame.UseProfiler().Show(), f, 0, 0, color.White)
 	})
 }

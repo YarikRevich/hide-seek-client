@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime/debug"
 	"time"
@@ -12,7 +13,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/assets"
 	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/runtime"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/loop"
@@ -46,7 +47,6 @@ func init() {
 
 	if params.IsDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
-		profiling.UseProfiler().Init()
 	} else {
 		logrus.SetLevel(logrus.WarnLevel)
 	}
@@ -65,6 +65,19 @@ func init() {
 }
 
 func main() {
+	if params.IsProfileCPU() {
+		runtime.UseProfiler().StartMonitoring()
+
+		c := make(chan os.Signal)
+		signal.Notify(c, os.Interrupt)
+		go func() {
+			for range c {
+				runtime.UseProfiler().StopMonitoring()
+				os.Exit(0)
+			}
+		}()
+	}
+
 	s := screen.UseScreen()
 	maxSize := s.GetMaxSize()
 	minSize := s.GetMinSize()

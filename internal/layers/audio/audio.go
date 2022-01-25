@@ -3,7 +3,7 @@ package audio
 import (
 	"fmt"
 
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/buttonclick"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio/click"
@@ -15,8 +15,8 @@ import (
 
 func Process() {
 	if params.IsDebug() {
-		profiling.UseProfiler().StartMonitoring(profiling.AUDIO)
-		defer profiling.UseProfiler().EndMonitoring()
+		ingame.UseProfiler().StartMonitoring(ingame.AUDIO)
+		defer ingame.UseProfiler().StopMonitoring(ingame.AUDIO)
 	}
 
 	switch statemachine.UseStateMachine().Mouse().GetState() {

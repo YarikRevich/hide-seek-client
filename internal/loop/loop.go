@@ -2,7 +2,7 @@ package loop
 
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/transition"
@@ -56,8 +56,8 @@ func (g *Loop) Draw(i *ebiten.Image) {
 	screen.UseScreen().SetScreen(i)
 
 	if params.IsDebug() {
-		profiling.UseProfiler().StartMonitoring(profiling.RENDER)
-		defer profiling.UseProfiler().EndMonitoring()
+		ingame.UseProfiler().StartMonitoring(ingame.RENDER)
+		defer ingame.UseProfiler().StopMonitoring(ingame.RENDER)
 	}
 
 	middlewares.UseMiddlewares().Render().UseAfter(render.UseRender().Render)

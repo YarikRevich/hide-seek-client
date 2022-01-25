@@ -2,7 +2,7 @@ package mouse
 
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
-	"github.com/YarikRevich/hide-seek-client/internal/core/profiling"
+	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 
 	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse/herochoose"
@@ -19,8 +19,8 @@ import (
 
 func Process() {
 	if params.IsDebug() {
-		profiling.UseProfiler().StartMonitoring(profiling.MOUSE)
-		defer profiling.UseProfiler().EndMonitoring()
+		ingame.UseProfiler().StartMonitoring(ingame.MOUSE)
+		defer ingame.UseProfiler().StopMonitoring(ingame.MOUSE)
 	}
 
 	if statemachine.UseStateMachine().Networking().GetState() == statemachine.NETWORKING_ONLINE {
