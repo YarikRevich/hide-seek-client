@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -28,8 +27,8 @@ import (
 
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
-	c := world.UseWorld().GetCamera()
-	p := world.UseWorld().GetPC()
+	// c := world.UseWorld().GetCamera()
+	// p := world.UseWorld().GetPC()
 	s := screen.UseScreen()
 	// sAxis := s.GetAxis()
 
@@ -45,7 +44,7 @@ func Draw() {
 		// opts := &ebiten.DrawImageOptions{}
 
 		// wMScale := c.GetZoomedScale(&worldMap.Base)
-		pScale := c.GetZoomedScale(&p.Base)
+		// pScale := c.GetZoomedScale(&p.Base)
 		// opts.GeoM.Scale(wMScale.X, wMScale.Y)
 		// fmt.Println(c.DeltaOffset)
 
@@ -84,7 +83,7 @@ func Draw() {
 		// opts.GeoM.Translate(0, s.GetHUDOffset())
 		opts := camera.Cam.Blit(screen)
 
-		fmt.Println(pScale)
+		// fmt.Println(pScale)
 		// camera.Cam.GetTranslation()
 		// camera.Cam.GetTranslation()
 		// opts.GeoM.Translate(-c.RawPos.X*pScale.X, -c.RawPos.Y*pScale.Y)
@@ -134,20 +133,26 @@ func Draw() {
 			opts := &ebiten.DrawImageOptions{}
 			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
 
-			pScale := c.GetZoomedScale(&pc.Base)
-			opts.GeoM.Scale(pScale.X, pScale.Y)
+			// pScale := c.GetZoomedScale(&pc.Base)
+			// opts.GeoM.Scale(pScale.X, pScale.Y)
+			pcScale := pc.GetScale()
+			opts.GeoM.Scale(pcScale.X, pcScale.Y)
+			opts.GeoM.Scale(camera.Cam.Scale/2, camera.Cam.Scale/2)
 			// opts.GeoM.Scale(c.Zoom/100, c.Zoom/100)
 
 			if pc.IsEqualTo(&pc.Base) {
 				// fmt.Println(((pc.RawOffset.Y+sAxis.Y)*pScale.Y - sAxis.Y), "PC")
 				// opts.GeoM.Concat(camera.Cam.GetTranslation(pc.RawOffset.X*pScale.X, pc.RawOffset.Y*pScale.Y).GeoM)
-				opts.GeoM.Translate(pc.RawOffset.X*pScale.X, pc.RawOffset.Y*pScale.Y)
+				//
+				opts.GeoM.Translate(camera.Cam.GetScreenCoords(pc.RawOffset.X, pc.RawOffset.Y))
+				// opts = camera.Cam.GetScreenCoords(pc.RawOffset.X, pc.RawOffset.Y)
+
 				// opts.GeoM.Translate((pc.RawOffset.X*pScale.X + c.COffset.X), (pc.RawOffset.Y*pScale.Y + c.COffset.Y))
 			} else {
-				opts.GeoM.Translate(pc.RawOffset.X, pc.RawOffset.Y)
+				// opts.GeoM.Translate(pc.RawOffset.X, pc.RawOffset.Y)
 			}
 
-			opts.GeoM.Translate(0, s.GetHUDOffset())
+			// opts.GeoM.Translate(0, s.GetHUDOffset())
 
 			screen.DrawImage(img, opts)
 		}

@@ -62,7 +62,8 @@ func Exec() {
 			}
 		}
 
-		pOffset := c.GetZoomedOffset(&p.Base)
+		// pOffset := c.GetZoomedOffset(&p.Base)
+		pOffset := p.RawOffset
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if pOffset.Y > -sHUD/4 {
 				p.SetRawY(p.RawPos.Y - pSpeed.Y)

@@ -186,13 +186,12 @@
 package camera
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/hajimehoshi/ebiten/v2"
 )
-
-var s = screen.UseScreen()
 
 // Camera can look at positions, zoom and rotate.
 type Camera struct {
@@ -244,6 +243,7 @@ func (c *Camera) SetRotation(rot float64) *Camera {
 // Zoom *= the current zoom
 func (c *Camera) Zoom(mul float64) *Camera {
 	c.Scale *= mul
+	fmt.Println(c.Scale, c.X, c.Y)
 	if c.Scale <= 0.01 {
 		c.Scale = 0.01
 	}
@@ -265,12 +265,6 @@ func (c *Camera) SetZoom(zoom float64) *Camera {
 func (c *Camera) Resize(w, h int) *Camera {
 	c.Width = w
 	c.Height = h
-	newW := int(float64(w) * 1.0 / c.Scale)
-	newH := int(float64(h) * 1.0 / c.Scale)
-	if newW <= 16384 && newH <= 16384 {
-		// c.Surface.Dispose()
-		// c.Surface = ebiten.NewImage(newW, newH)
-	}
 	return c
 }
 
@@ -280,18 +274,19 @@ func (c *Camera) GetTranslation(x, y float64) *ebiten.DrawImageOptions {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(c.Width)/2, float64(c.Height)/2)
 	op.GeoM.Translate(-c.X+x, -c.Y+y)
+	op.GeoM.Scale(c.Scale, c.Scale)
 	return op
 }
 
 // Blit draws the camera's surface to the screen and applies zoom
 func (c *Camera) Blit(scr *ebiten.Image) *ebiten.DrawImageOptions {
 	op := &ebiten.DrawImageOptions{}
-	// w, h := c.Surface.Size()
 	cx := float64(c.Width) / 2.0
 	cy := float64(c.Height) / 2.0
 
 	op.GeoM.Rotate(c.Rot)
 	op.GeoM.Translate(-cx, -cy)
+	op.GeoM.Translate(-c.X, -c.Y)
 
 	s := screen.UseScreen().GetAxis()
 
@@ -302,21 +297,69 @@ func (c *Camera) Blit(scr *ebiten.Image) *ebiten.DrawImageOptions {
 	op.GeoM.Translate(s.X, s.Y)
 	op.GeoM.Translate(cx*c.Scale, cy*c.Scale)
 
-	return op
+	fmt.Println(-cx + (-c.X) + ((c.X-s.X)+(-s.X/2)+(-(c.X - s.X)))*c.Scale + s.X + cx*c.Scale)
 
-	// screen.DrawImage(c.Surface, op)
+	return op
 }
 
 // GetScreenCoords converts world coords into screen coords
-func (c *Camera) GetScreenCoords(x, y float64) (float64, float64) {
+func (c *Camera) GetScreenCoordsv1(x, y float64) (float64, float64) {
 	w, h := c.Width, c.Height
-	co := math.Cos(c.Rot)
-	si := math.Sin(c.Rot)
+	// co := math.Cos(c.Rot)
+	// si := math.Sin(c.Rot)
 
-	x, y = x-c.X, y-c.Y
-	x, y = co*x-si*y, si*x+co*y
+	s := screen.UseScreen()
+	sAxis := s.GetAxis()
+	x, y = (x - c.X), (y - c.Y)
+	x, y = x-(sAxis.X/2), y-(sAxis.Y/2)
+	fmt.Println(x, y, "POS")
+	// x, y = co*x-si*y, si*x+co*y
 
-	return x*c.Scale + float64(w)/2, y*c.Scale + float64(h)/2
+	return (x*c.Scale + float64(w/2)), y*c.Scale + float64(h/2)
+}
+
+func (c *Camera) GetScreenCoords(x, y float64) (float64, float64) {
+	var rX, rY float64
+
+	cx := float64(c.Width) / 2.0
+	cy := float64(c.Height) / 2.0
+
+	rX += -cx
+	rY += -cy
+
+	rX += x
+	rY += y
+
+	s := screen.UseScreen().GetAxis()
+	rX += -(x - s.X)
+	rY += -(y - s.Y)
+
+	rX += -s.X / 2
+	rY += -(s.Y/2 - screen.UseScreen().GetHUDOffset()/2)
+
+	rX += (x - s.X)
+	rY += (y - s.Y)
+
+	rX *= c.Scale
+	rY *= c.Scale
+
+	rX += s.X
+	rY += s.Y
+
+	rX += cx * c.Scale
+	rY += cy * c.Scale
+
+	// op.GeoM.Translate(-(x - s.X), -(y - s.Y))
+	// op.GeoM.Translate(-s.X/2, -(s.Y/2 - screen.UseScreen().GetHUDOffset()/2))
+	// op.GeoM.Translate((x - s.X), (y - s.Y))
+	// op.GeoM.Scale(c.Scale, c.Scale)
+	// op.GeoM.Translate(s.X, s.Y)
+	// op.GeoM.Translate(cx*c.Scale, cy*c.Scale)
+	// fmt.Println(s.X)
+	// fmt.Println(op.GeoM.String())
+	// return op
+	// fmt.Println(x, y)
+	return rX, rY
 }
 
 // GetWorldCoords converts screen coords into world coords
@@ -337,4 +380,4 @@ func (c *Camera) GetCursorCoords() (float64, float64) {
 	return c.GetWorldCoords(float64(cx), float64(cy))
 }
 
-var Cam = NewCamera(int(s.GetSize().X), int(s.GetSize().Y), 20, 30, 0, 2)
+var Cam = NewCamera(1113, 670, 0, 0, 0, 2)
