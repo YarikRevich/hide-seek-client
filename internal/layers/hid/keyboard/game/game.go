@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -26,9 +27,9 @@ func Exec() {
 
 	// p.RawOffset := p.MetadataModel.GetOffset()
 	pSpeed := p.MetadataModel.GetBuffSpeed()
-	pScale := c.GetZoomedScale(&p.Base)
+	// pScale := c.GetZoomedScale(&p.Base)
 	wM := world.UseWorld().GetWorldMap()
-	wMScale := c.GetZoomedScale(&wM.Base)
+	// wMScale := c.GetZoomedScale(&wM.Base)
 	// wMScale := c.GetZoomedScale(&wM.Base)
 	wMSize := wM.GetSize()
 
@@ -125,15 +126,6 @@ func Exec() {
 			}
 		}
 
-		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionLEFT() {
-			p.SetTranslationXMovementBlocked(true)
-		}
-
-		// fmt.Println(p.RawOffset.X*pScale.X, pSpeed.X, s.IsHigherAxisXCrossed(p.RawOffset.X*pScale.X, pSpeed.X))
-		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionRIGHT() {
-			p.SetTranslationXMovementBlocked(true)
-		}
-
 		// fmt.Println(!p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionUP())
 		if !p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionUP() {
 			p.SetTranslationYMovementBlocked(true)
@@ -143,30 +135,42 @@ func Exec() {
 			p.SetTranslationYMovementBlocked(true)
 		}
 
+		// fmt.Println(pOffset.X)
+		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionLEFT() {
+			p.SetTranslationXMovementBlocked(true)
+		}
+
+		// fmt.Println(p.RawOffset.X*pScale.X, pSpeed.X, s.IsHigherAxisXCrossed(p.RawOffset.X*pScale.X, pSpeed.X))
+		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionRIGHT() {
+			p.SetTranslationXMovementBlocked(true)
+		}
+
 		p.UpdateDirection()
 
-		cPos := types.Vec2{X: c.RawPos.X * pScale.X, Y: c.RawPos.Y * pScale.Y}
+		cScreenOffsetX, cScreenOffsetY := camera.Cam.GetCameraTranslation()
+		cPos := types.Vec2{X: cScreenOffsetX, Y: cScreenOffsetY}
 
 		if p.TranslationMovementYBlocked {
-			if cPos.Y <= 0 && p.IsDirectionUP() {
-				c.SetRawY(0)
+			if -cPos.Y <= 0 && p.IsDirectionUP() {
+				camera.Cam.SetPositionY(0)
 				p.SetTranslationYMovementBlocked(false)
 			}
 
-			if c.IsOuttaRange(wMSize.Y*wMScale.Y-sAxis.Y*2+sHUD, cPos.Y) {
-				c.SetRawY((wMSize.Y*wMScale.Y - sAxis.Y*2 + sHUD) / pScale.Y)
+			fmt.Println(wMSize.Y-sAxis.Y, camera.Cam.Y, sHUD)
+			if c.IsOuttaRange(wMSize.Y*camera.Cam.Scale-sAxis.Y+sHUD/2, -cPos.Y) {
+				camera.Cam.SetPositionY(wMSize.Y - sAxis.Y + sHUD/2)
 				p.SetTranslationYMovementBlocked(false)
 			}
 		}
 
 		if p.TranslationMovementXBlocked {
-			if cPos.X <= 0 && p.IsDirectionLEFT() {
-				c.SetRawX(0)
+			if -cPos.X <= 0 && p.IsDirectionLEFT() {
+				camera.Cam.SetPositionX(0)
 				p.SetTranslationXMovementBlocked(false)
 			}
 
-			if c.IsOuttaRange(wMSize.X*wMScale.X-sAxis.X*2, cPos.X) {
-				c.SetRawX((wMSize.X*wMScale.X - sAxis.X*2) / pScale.X)
+			if c.IsOuttaRange(wMSize.X*camera.Cam.Scale-sAxis.X*2, -cPos.X) {
+				camera.Cam.SetPositionX(wMSize.X - sAxis.X)
 				p.SetTranslationXMovementBlocked(false)
 			}
 		}

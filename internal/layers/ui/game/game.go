@@ -41,7 +41,7 @@ func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
 
-		opts := camera.Cam.GetCameraOptions(screen)
+		opts := camera.Cam.GetCameraOptions()
 
 		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 			opts.Filter = ebiten.FilterLinear

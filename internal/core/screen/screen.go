@@ -82,6 +82,7 @@ func (s *Screen) IsLessAxisXCrossed(x float64, speedX float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
+	fmt.Println(x, a.X)
 	return x < a.X+(speedX+asz.X) && x > a.X-(speedX+asz.X)
 }
 
@@ -89,7 +90,6 @@ func (s *Screen) IsHigherAxisXCrossed(x float64, speedX float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
-	fmt.Println(x, a.X)
 	return x > a.X-(speedX+asz.X) && x < a.X+(speedX+asz.X)
 }
 
