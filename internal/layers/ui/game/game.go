@@ -41,52 +41,8 @@ func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
 
-		// opts := &ebiten.DrawImageOptions{}
+		opts := camera.Cam.GetCameraOptions(screen)
 
-		// wMScale := c.GetZoomedScale(&worldMap.Base)
-		// pScale := c.GetZoomedScale(&p.Base)
-		// opts.GeoM.Scale(wMScale.X, wMScale.Y)
-		// fmt.Println(c.DeltaOffset)
-
-		// pScale := c.GetZoomedScale(&p.Base)
-		// fmt.Println(-((c.RawPos.X+sAxisXHalf)*pScale.X - sAxisXHalf), -((c.RawPos.Y+sAxisYHalf)*pScale.Y - sAxisYHalf))
-		// opts.GeoM.Translate(-(c.RawPos.X * pScale.X), -(c.RawPos.Y * pScale.Y))
-		// opts.GeoM.Translate(-((c.RawPos.X+a)*pScale.X - a), -((c.RawPos.Y+b)*pScale.Y - b))
-		// rh :=
-		// fmt.Println(-((c.RawPos.Y+sAxis.Y)*pScale.Y - sAxis.Y), -(c.RawPos.Y * pScale.Y))
-
-		// opts.GeoM.Translate(-((c.RawPos.X / pScale.X) + c.COffset.X), -((c.RawPos.Y / pScale.Y) + c.COffset.Y))
-		// opts.GeoM.Translate(-((c.RawPos.X - c.COffset.X) * pScale.X), -((c.RawPos.Y - c.COffset.Y) * pScale.Y))
-
-		// fmt.Println(, )
-		// opts.GeoM.Translate((-((c.RawPos.X+sAxis.X)*pScale.X - sAxis.X)), -((c.RawPos.Y+sAxis.Y)*pScale.Y - sAxis.Y))
-		// opts.GeoM.Translate(c.RawPos.X*pScale.X, c.RawPos.Y*pScale.Y)
-		// fmt.Println(, (c.RawPos.X/pScale.X)+c.COffset.X)
-		// ws := c.ConvertWorldToScreen(c.RawPos)
-		// fmt.Println()
-		// fmt.Println(sAxis)
-		// opts.GeoM.Scale(c.CScale.X, c.CScale.Y)
-		// x, y := img.Size()
-
-		// opts.GeoM.Translate(-(ws.X - float64(x)/2*c.CScale.X), -(ws.Y - float64(y)/2*c.CScale.Y))
-		// opts.GeoM.Translate(-(ws.X - c.COffset.X), -(ws.Y - c.COffset.Y))
-		// opts.GeoM.Translate(-((c.RawPos.X-sAxis.X)*c.CScale.X + sAxis.X), -((c.RawPos.Y-sAxis.Y)*c.CScale.Y + sAxis.Y))
-		// opts.GeoM.Translate()
-		// var halfScreenWidth = Screen.width/2.0f;
-
-		// var x = (sprite.x - halfScreenWidth) * Camera.finalScaleX + halfScreenWidth;
-		// opts.GeoM.Translate(-ws.X, -ws.Y)
-		// fmt.Println(-(ws.X), (c.Offset.X), -(ws.Y), (c.Offset.Y), "oFFSET")
-		// opts.GeoM.Translate(-(ws.X), -(ws.Y))
-		// opts.GeoM.Translate(-((c.RawPos.X * pScale.X) - c.COffset.X), -((c.RawPos.Y * pScale.Y) - c.COffset.Y))
-		// opts.GeoM.Translate(-((c.RawPos.X * pScale.X) - c.COffset.X), -((c.RawPos.Y * pScale.Y) - c.COffset.Y))
-		// opts.GeoM.Translate(0, s.GetHUDOffset())
-		opts := camera.Cam.Blit(screen)
-
-		// fmt.Println(pScale)
-		// camera.Cam.GetTranslation()
-		// camera.Cam.GetTranslation()
-		// opts.GeoM.Translate(-c.RawPos.X*pScale.X, -c.RawPos.Y*pScale.Y)
 		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 			opts.Filter = ebiten.FilterLinear
 		}
@@ -133,23 +89,14 @@ func Draw() {
 			opts := &ebiten.DrawImageOptions{}
 			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
 
-			// pScale := c.GetZoomedScale(&pc.Base)
-			// opts.GeoM.Scale(pScale.X, pScale.Y)
 			pcScale := pc.GetScale()
 			opts.GeoM.Scale(pcScale.X, pcScale.Y)
 			opts.GeoM.Scale(camera.Cam.Scale/2, camera.Cam.Scale/2)
-			// opts.GeoM.Scale(c.Zoom/100, c.Zoom/100)
 
 			if pc.IsEqualTo(&pc.Base) {
-				// fmt.Println(((pc.RawOffset.Y+sAxis.Y)*pScale.Y - sAxis.Y), "PC")
-				// opts.GeoM.Concat(camera.Cam.GetTranslation(pc.RawOffset.X*pScale.X, pc.RawOffset.Y*pScale.Y).GeoM)
-				//
-				opts.GeoM.Translate(camera.Cam.GetScreenCoords(pc.RawOffset.X, pc.RawOffset.Y))
-				// opts = camera.Cam.GetScreenCoords(pc.RawOffset.X, pc.RawOffset.Y)
-
-				// opts.GeoM.Translate((pc.RawOffset.X*pScale.X + c.COffset.X), (pc.RawOffset.Y*pScale.Y + c.COffset.Y))
+				opts.GeoM.Translate(camera.Cam.GetScreenCoordsTranslation(pc.RawOffset.X, pc.RawOffset.Y))
 			} else {
-				// opts.GeoM.Translate(pc.RawOffset.X, pc.RawOffset.Y)
+				opts.GeoM.Translate(camera.Cam.GetScreenCoordsTranslation(pc.RawPos.X, pc.RawPos.Y))
 			}
 
 			// opts.GeoM.Translate(0, s.GetHUDOffset())

@@ -1,6 +1,8 @@
 package game
 
 import (
+	"time"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
@@ -62,8 +64,12 @@ func Exec() {
 			}
 		}
 
-		// pOffset := c.GetZoomedOffset(&p.Base)
-		pOffset := p.RawOffset
+		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+			camera.Cam.RunShakingLimitedAnimation(time.Second*1/3, time.Millisecond*15, 0.07, 0.02, make(chan int))
+		}
+
+		pScreenOffsetX, pScreenOffsetY := camera.Cam.GetScreenCoordsTranslation(p.RawOffset.X, p.RawOffset.Y)
+		pOffset := types.Vec2{X: pScreenOffsetX, Y: pScreenOffsetY}
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if pOffset.Y > -sHUD/4 {
 				p.SetRawY(p.RawPos.Y - pSpeed.Y)
