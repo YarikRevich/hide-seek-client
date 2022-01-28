@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -10,7 +9,6 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/physics"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
-	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -69,8 +67,8 @@ func Exec() {
 			camera.Cam.RunShakingLimitedAnimation(time.Second*1/3, time.Millisecond*15, 0.07, 0.02, make(chan int))
 		}
 
-		pScreenOffsetX, pScreenOffsetY := camera.Cam.GetScreenCoordsTranslation(p.RawOffset.X, p.RawOffset.Y)
-		pOffset := types.Vec2{X: pScreenOffsetX, Y: pScreenOffsetY}
+		pOffset := camera.Cam.GetScreenCoordsTranslation(p.RawOffset.X, p.RawOffset.Y)
+
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if pOffset.Y > -sHUD/4 {
 				p.SetRawY(p.RawPos.Y - pSpeed.Y)
@@ -147,30 +145,28 @@ func Exec() {
 
 		p.UpdateDirection()
 
-		cScreenOffsetX, cScreenOffsetY := camera.Cam.GetCameraTranslation()
-		cPos := types.Vec2{X: cScreenOffsetX, Y: cScreenOffsetY}
+		cPos := camera.Cam.GetCameraTranslation()
 
 		if p.TranslationMovementYBlocked {
 			if -cPos.Y <= 0 && p.IsDirectionUP() {
-				camera.Cam.SetPositionY(0)
+				camera.Cam.SetPositionY(camera.Cam.GetCameraTranslationYM(sHUD) / camera.Cam.Scale)
 				p.SetTranslationYMovementBlocked(false)
 			}
 
-			fmt.Println(wMSize.Y-sAxis.Y, camera.Cam.Y, sHUD)
-			if c.IsOuttaRange(wMSize.Y*camera.Cam.Scale-sAxis.Y+sHUD/2, -cPos.Y) {
-				camera.Cam.SetPositionY(wMSize.Y - sAxis.Y + sHUD/2)
+			if c.IsOuttaRange(wMSize.Y*camera.Cam.Scale-sAxis.Y*2, -cPos.Y) && p.IsDirectionDOWN() {
+				camera.Cam.SetPositionY(camera.Cam.GetWorldCoordY(wMSize.Y*camera.Cam.Scale - sAxis.Y*2))
 				p.SetTranslationYMovementBlocked(false)
 			}
 		}
 
 		if p.TranslationMovementXBlocked {
 			if -cPos.X <= 0 && p.IsDirectionLEFT() {
-				camera.Cam.SetPositionX(0)
+				camera.Cam.SetPositionX(camera.Cam.GetCameraTranslationXM(0) / camera.Cam.Scale)
 				p.SetTranslationXMovementBlocked(false)
 			}
 
-			if c.IsOuttaRange(wMSize.X*camera.Cam.Scale-sAxis.X*2, -cPos.X) {
-				camera.Cam.SetPositionX(wMSize.X - sAxis.X)
+			if c.IsOuttaRange(wMSize.X*camera.Cam.Scale-sAxis.X*2, -cPos.X) && p.IsDirectionRIGHT() {
+				camera.Cam.SetPositionX(camera.Cam.GetWorldCoordX(wMSize.X*camera.Cam.Scale - sAxis.X*2))
 				p.SetTranslationXMovementBlocked(false)
 			}
 		}

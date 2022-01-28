@@ -191,6 +191,7 @@ import (
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -271,6 +272,20 @@ func (c *Camera) MovePosition(x, y float64) *Camera {
 	return c
 }
 
+func (c *Camera) SetZeroScreenCameraPositionX() {
+	// prevCPos := c.GetCameraTranslation()
+	// prevX := c.X
+	// fmt.Println(prevX, prevCPos.X)
+	c.SetPositionX(0)
+	cPos := c.GetCameraTranslation()
+	fmt.Println(cPos.X, "ZERO")
+	c.SetPositionX(c.GetWorldCoordX(cPos.X))
+	// fmt.Println(cPos, prevCPos, prevX)
+	// fmt.Println((prevX * cPos.X) / prevCPos.X)
+	// c.SetPositionX(c.X / cPos.X)
+	// c.SetPositionX((prevX * -cPos.X) / -prevCPos.X)
+}
+
 func (c *Camera) SetPositionX(x float64) *Camera {
 	c.X = x
 	return c
@@ -297,9 +312,9 @@ func (c *Camera) SetRotation(rot float64) *Camera {
 func (c *Camera) Zoom(mul float64) *Camera {
 	previousScale := c.Scale
 	c.Scale *= mul
-	s := screen.UseScreen().GetAxis()
-	appliedX, appliedY := c.GetCameraTranslation()
-	appliedY -= screen.UseScreen().GetHUDOffset()
+	// s := screen.UseScreen().GetAxis()
+	appliedCPos := c.GetCameraTranslation()
+	appliedCPos.Y -= screen.UseScreen().GetHUDOffset()
 
 	wM := world.UseWorld().GetWorldMap()
 	wMSize := wM.GetSize()
@@ -312,8 +327,8 @@ func (c *Camera) Zoom(mul float64) *Camera {
 	// appliedWorldY -= screen.UseScreen().GetHUDOffset()
 
 	// fmt.Println(v1-c.X, vq-c.Y)
-	fmt.Println(appliedX, s.X/c.Scale)
-	if (!math.Signbit(appliedX) || !math.Signbit(appliedY)) || ((wMSize.X*c.Scale < wMSize.X) || (wMSize.Y*c.Scale < wMSize.Y)) {
+	// fmt.Println(appliedX, s.X/c.Scale)s
+	if (!math.Signbit(appliedCPos.X) || !math.Signbit(appliedCPos.Y)) || ((wMSize.X*c.Scale < wMSize.X) || (wMSize.Y*c.Scale < wMSize.Y)) {
 		fmt.Println(previousScale)
 		c.Scale = previousScale
 	}
@@ -368,7 +383,19 @@ func (c *Camera) GetCameraOptions() *ebiten.DrawImageOptions {
 	return op
 }
 
-func (c Camera) GetCameraTranslation() (float64, float64) {
+func (c *Camera) GetCameraTranslationXM(x float64) float64 {
+	return c.getCameraTranslation(x, 0).X
+}
+
+func (c *Camera) GetCameraTranslationYM(y float64) float64 {
+	return c.getCameraTranslation(y, 0).Y
+}
+
+func (c *Camera) GetCameraTranslation() types.Vec2 {
+	return c.getCameraTranslation(c.X, c.Y)
+}
+
+func (c *Camera) getCameraTranslation(x, y float64) types.Vec2 {
 	var rX, rY float64
 
 	s := screen.UseScreen().GetAxis()
@@ -376,17 +403,17 @@ func (c Camera) GetCameraTranslation() (float64, float64) {
 	rX += -s.X
 	rY += -s.Y
 
-	rX += -c.X
-	rY += -c.Y
+	rX += -x
+	rY += -y
 
-	rX += c.X - s.X
-	rY += c.Y - s.Y
+	rX += x - s.X
+	rY += y - s.Y
 
 	rX += -s.X / 2
 	rY += -(s.Y/2 - screen.UseScreen().GetHUDOffset()/2)
 
-	rX += -(c.X - s.X)
-	rY += -(c.Y - s.Y)
+	rX += -(x - s.X)
+	rY += -(y - s.Y)
 
 	rX *= c.Scale
 	rY *= c.Scale
@@ -396,10 +423,11 @@ func (c Camera) GetCameraTranslation() (float64, float64) {
 
 	rX += s.X * c.Scale
 	rY += s.Y * c.Scale
-	return rX, rY
+
+	return types.Vec2{X: rX, Y: rY}
 }
 
-func (c *Camera) GetScreenCoordsTranslation(x, y float64) (float64, float64) {
+func (c *Camera) GetScreenCoordsTranslation(x, y float64) types.Vec2 {
 	var rX, rY float64
 
 	s := screen.UseScreen().GetAxis()
@@ -428,7 +456,17 @@ func (c *Camera) GetScreenCoordsTranslation(x, y float64) (float64, float64) {
 	rX += s.X * c.Scale
 	rY += s.Y * c.Scale
 
-	return rX, rY
+	return types.Vec2{X: rX, Y: rY}
+}
+
+func (c *Camera) GetWorldCoordX(wc float64) float64 {
+	cPos := c.GetCameraTranslation()
+	fmt.Println((wc*c.X)/-cPos.X, "GET WORLD COORD X")
+	return (wc * c.X) / -cPos.X
+}
+func (c *Camera) GetWorldCoordY(wc float64) float64 {
+	cPos := c.GetCameraTranslation()
+	return (wc * c.Y) / -cPos.Y
 }
 
 // // GetCursorCoords converts cursor/screen coords into world coords

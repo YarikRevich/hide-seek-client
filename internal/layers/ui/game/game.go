@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -42,6 +43,8 @@ func Draw() {
 		img := worldMap.GetImage()
 
 		opts := camera.Cam.GetCameraOptions()
+		fmt.Println()
+		fmt.Println(camera.Cam.GetCameraTranslation(), camera.Cam.X, "GAME")
 
 		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 			opts.Filter = ebiten.FilterLinear
@@ -94,9 +97,11 @@ func Draw() {
 			opts.GeoM.Scale(camera.Cam.Scale/2, camera.Cam.Scale/2)
 
 			if pc.IsEqualTo(&pc.Base) {
-				opts.GeoM.Translate(camera.Cam.GetScreenCoordsTranslation(pc.RawOffset.X, pc.RawOffset.Y))
+				pOffset := camera.Cam.GetScreenCoordsTranslation(pc.RawOffset.X, pc.RawOffset.Y)
+				opts.GeoM.Translate(pOffset.X, pOffset.Y)
 			} else {
-				opts.GeoM.Translate(camera.Cam.GetScreenCoordsTranslation(pc.RawPos.X, pc.RawPos.Y))
+				pPos := camera.Cam.GetScreenCoordsTranslation(pc.RawPos.X, pc.RawPos.Y)
+				opts.GeoM.Translate(pPos.X, pPos.Y)
 			}
 
 			// opts.GeoM.Translate(0, s.GetHUDOffset())
