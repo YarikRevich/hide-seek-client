@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -43,8 +42,8 @@ func Draw() {
 		img := worldMap.GetImage()
 
 		opts := camera.Cam.GetCameraOptions()
-		fmt.Println()
-		fmt.Println(camera.Cam.GetCameraTranslation(), camera.Cam.X, "GAME")
+		// fmt.Println()
+		// fmt.Println(camera.Cam.GetCameraTranslation(), camera.Cam.X, "GAME")
 
 		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 			opts.Filter = ebiten.FilterLinear

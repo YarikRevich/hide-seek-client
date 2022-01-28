@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -148,8 +149,9 @@ func Exec() {
 		cPos := camera.Cam.GetCameraTranslation()
 
 		if p.TranslationMovementYBlocked {
-			if -cPos.Y <= 0 && p.IsDirectionUP() {
-				camera.Cam.SetPositionY(camera.Cam.GetCameraTranslationYM(sHUD) / camera.Cam.Scale)
+			if -cPos.Y <= -sHUD && p.IsDirectionUP() {
+				fmt.Println(cPos.Y, camera.Cam.Y)
+				camera.Cam.SetPositionY(camera.Cam.GetCameraTranslationYM(0)/camera.Cam.Scale - sHUD/camera.Cam.Scale)
 				p.SetTranslationYMovementBlocked(false)
 			}
 
