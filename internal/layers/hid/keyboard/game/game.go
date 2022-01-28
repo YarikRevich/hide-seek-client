@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -125,7 +124,6 @@ func Exec() {
 			}
 		}
 
-		// fmt.Println(!p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionUP())
 		if !p.TranslationMovementYBlocked && s.IsLessAxisYCrossed(pOffset.Y, pSpeed.Y) && p.IsDirectionUP() {
 			p.SetTranslationYMovementBlocked(true)
 		}
@@ -134,12 +132,10 @@ func Exec() {
 			p.SetTranslationYMovementBlocked(true)
 		}
 
-		// fmt.Println(pOffset.X)
 		if !p.TranslationMovementXBlocked && s.IsLessAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionLEFT() {
 			p.SetTranslationXMovementBlocked(true)
 		}
 
-		// fmt.Println(p.RawOffset.X*pScale.X, pSpeed.X, s.IsHigherAxisXCrossed(p.RawOffset.X*pScale.X, pSpeed.X))
 		if !p.TranslationMovementXBlocked && s.IsHigherAxisXCrossed(pOffset.X, pSpeed.X) && p.IsDirectionRIGHT() {
 			p.SetTranslationXMovementBlocked(true)
 		}
@@ -150,8 +146,7 @@ func Exec() {
 
 		if p.TranslationMovementYBlocked {
 			if -cPos.Y <= -sHUD && p.IsDirectionUP() {
-				fmt.Println(cPos.Y, camera.Cam.Y)
-				camera.Cam.SetPositionY(camera.Cam.GetCameraTranslationYM(0)/camera.Cam.Scale - sHUD/camera.Cam.Scale)
+				camera.Cam.SetZeroPositionY()
 				p.SetTranslationYMovementBlocked(false)
 			}
 
@@ -163,7 +158,7 @@ func Exec() {
 
 		if p.TranslationMovementXBlocked {
 			if -cPos.X <= 0 && p.IsDirectionLEFT() {
-				camera.Cam.SetPositionX(camera.Cam.GetCameraTranslationXM(0) / camera.Cam.Scale)
+				camera.Cam.SetZeroPositionX()
 				p.SetTranslationXMovementBlocked(false)
 			}
 
