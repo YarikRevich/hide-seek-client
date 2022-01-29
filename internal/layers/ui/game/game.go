@@ -27,6 +27,7 @@ import (
 
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
+	c := camera.UseCamera()
 	// c := world.UseWorld().GetCamera()
 	// p := world.UseWorld().GetPC()
 	s := screen.UseScreen()
@@ -41,7 +42,7 @@ func Draw() {
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := worldMap.GetImage()
 
-		opts := camera.Cam.GetCameraOptions()
+		opts := c.GetCameraOptions()
 		// fmt.Println()
 		// fmt.Println(camera.Cam.GetCameraTranslation(), camera.Cam.X, "GAME")
 
@@ -93,13 +94,13 @@ func Draw() {
 
 			pcScale := pc.GetScale()
 			opts.GeoM.Scale(pcScale.X, pcScale.Y)
-			opts.GeoM.Scale(camera.Cam.Scale/2, camera.Cam.Scale/2)
+			opts.GeoM.Scale(c.Scale/2, c.Scale/2)
 
 			if pc.IsEqualTo(&pc.Base) {
-				pOffset := camera.Cam.GetScreenCoordsTranslation(pc.RawOffset.X, pc.RawOffset.Y)
+				pOffset := c.GetScreenCoordsTranslation(pc.RawOffset.X, pc.RawOffset.Y)
 				opts.GeoM.Translate(pOffset.X, pOffset.Y)
 			} else {
-				pPos := camera.Cam.GetScreenCoordsTranslation(pc.RawPos.X, pc.RawPos.Y)
+				pPos := c.GetScreenCoordsTranslation(pc.RawPos.X, pc.RawPos.Y)
 				opts.GeoM.Translate(pPos.X, pPos.Y)
 			}
 

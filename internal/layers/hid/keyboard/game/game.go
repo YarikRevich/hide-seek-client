@@ -15,30 +15,21 @@ import (
 )
 
 func Exec() {
-
 	g := events.UseEvents().Gamepad()
 	k := events.UseEvents().Keyboard()
-
-	c := world.UseWorld().GetCamera()
-	// cPos := c.GetZoomedPos(&c.Base)
 	p := world.UseWorld().GetPC()
+	c := camera.UseCamera()
 
-	// p.RawOffset := p.MetadataModel.GetOffset()
 	pSpeed := p.MetadataModel.GetBuffSpeed()
-	// pScale := c.GetZoomedScale(&p.Base)
 	wM := world.UseWorld().GetWorldMap()
-	// wMScale := c.GetZoomedScale(&wM.Base)
-	// wMScale := c.GetZoomedScale(&wM.Base)
 	wMSize := wM.GetSize()
 
 	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
-		// c.ZoomIn(&p.Base)
-		camera.Cam.Zoom(1.1)
+		c.Zoom(1.1)
 		p.UpdateLastActivity()
 		return
 	} else if g.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
-		// c.ZoomOut(&p.Base)
-		camera.Cam.Zoom(0.9)
+		c.Zoom(0.9)
 		p.UpdateLastActivity()
 		return
 	}
@@ -51,8 +42,6 @@ func Exec() {
 		sAxis := s.GetAxis()
 		sHUD := s.GetHUDOffset()
 
-		// fmt.Println(pSpeed)
-
 		//Handles in-game minimap
 		if inpututil.IsKeyJustPressed(ebiten.KeyM) {
 			switch statemachine.UseStateMachine().Minimap().GetState() {
@@ -64,10 +53,16 @@ func Exec() {
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-			camera.Cam.RunShakingLimitedAnimation(time.Second*1/3, time.Millisecond*15, 0.07, 0.02, make(chan int))
+			camera.UseCamera().StartAnimation(camera.AnimationOpts{
+				Type:        camera.LavaZoneAnimation,
+				Duration:    time.Second * 1 / 3,
+				Delay:       time.Millisecond * 15,
+				MaxRotation: 0.07,
+				RotationGap: 0.02,
+			})
 		}
 
-		pOffset := camera.Cam.GetScreenCoordsTranslation(p.RawOffset.X, p.RawOffset.Y)
+		pOffset := c.GetScreenCoordsTranslation(p.RawOffset.X, p.RawOffset.Y)
 
 		if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) || g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			if pOffset.Y > -sHUD/4 {
@@ -76,26 +71,21 @@ func Exec() {
 					p.SetRawOffsetY(p.RawOffset.Y - pSpeed.Y)
 				}
 				if p.TranslationMovementYBlocked {
-					camera.Cam.MovePosition(0, -pSpeed.Y)
-					c.SetRawY(c.RawPos.Y - pSpeed.Y)
+					c.MovePosition(0, -pSpeed.Y)
 				}
 			}
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) || g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-			// fmt.Println(pOffset.Y, ((sAxis.Y * 2) - sHUD - p.MetadataModel.GetSize().X))
-			// -sHUD*2 - p.MetadataModel.GetSize().X
 			if pOffset.Y < (sAxis.Y * 2) {
 				p.SetRawY(p.RawPos.Y + pSpeed.Y)
 				if !p.TranslationMovementYBlocked {
 					p.SetRawOffsetY(p.RawOffset.Y + pSpeed.Y)
 				}
 				if p.TranslationMovementYBlocked {
-					camera.Cam.MovePosition(0, pSpeed.Y)
-					c.SetRawY(c.RawPos.Y + pSpeed.Y)
+					c.MovePosition(0, pSpeed.Y)
 				}
 			}
-
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) || g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
@@ -105,8 +95,7 @@ func Exec() {
 			}
 
 			if p.TranslationMovementXBlocked {
-				camera.Cam.MovePosition(pSpeed.X, 0)
-				c.SetRawX(c.RawPos.X + pSpeed.X)
+				c.MovePosition(pSpeed.X, 0)
 			}
 		}
 
@@ -118,8 +107,7 @@ func Exec() {
 				}
 
 				if p.TranslationMovementXBlocked {
-					camera.Cam.MovePosition(-pSpeed.X, 0)
-					c.SetRawX(c.RawPos.X - pSpeed.X)
+					c.MovePosition(-pSpeed.X, 0)
 				}
 			}
 		}
@@ -142,28 +130,26 @@ func Exec() {
 
 		p.UpdateDirection()
 
-		cPos := camera.Cam.GetCameraTranslation()
-
 		if p.TranslationMovementYBlocked {
-			if -cPos.Y <= -sHUD && p.IsDirectionUP() {
-				camera.Cam.SetZeroPositionY()
+			if c.IsLowerZeroCoordY() && p.IsDirectionUP() {
+				c.SetZeroPositionY()
 				p.SetTranslationYMovementBlocked(false)
 			}
 
-			if c.IsOuttaRange(wMSize.Y*camera.Cam.Scale-sAxis.Y*2, -cPos.Y) && p.IsDirectionDOWN() {
-				camera.Cam.SetPositionY(camera.Cam.GetWorldCoordY(wMSize.Y*camera.Cam.Scale - sAxis.Y*2))
+			if c.IsOuttaCoordY(wMSize.Y*c.Scale-sAxis.Y*2) && p.IsDirectionDOWN() {
+				c.SetPositionY(c.GetWorldCoordY(wMSize.Y*c.Scale - sAxis.Y*2))
 				p.SetTranslationYMovementBlocked(false)
 			}
 		}
 
 		if p.TranslationMovementXBlocked {
-			if -cPos.X <= 0 && p.IsDirectionLEFT() {
-				camera.Cam.SetZeroPositionX()
+			if c.IsLowerZeroCoordX() && p.IsDirectionLEFT() {
+				c.SetZeroPositionX()
 				p.SetTranslationXMovementBlocked(false)
 			}
 
-			if c.IsOuttaRange(wMSize.X*camera.Cam.Scale-sAxis.X*2, -cPos.X) && p.IsDirectionRIGHT() {
-				camera.Cam.SetPositionX(camera.Cam.GetWorldCoordX(wMSize.X*camera.Cam.Scale - sAxis.X*2))
+			if c.IsOuttaCoordX(wMSize.X*c.Scale-sAxis.X*2) && p.IsDirectionRIGHT() {
+				c.SetPositionX(c.GetWorldCoordX(wMSize.X*c.Scale - sAxis.X*2))
 				p.SetTranslationXMovementBlocked(false)
 			}
 		}

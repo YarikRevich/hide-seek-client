@@ -21,7 +21,6 @@ type World struct {
 	gamesettings gamesettings.GameSettings
 	worldMap     *objects.Map
 	pc           *objects.PC
-	camera       *objects.Camera
 
 	pcs      []*objects.PC
 	elements []*objects.Element
@@ -165,10 +164,6 @@ func (w *World) GetPCs() []*objects.PC {
 	return w.pcs
 }
 
-func (w *World) GetCamera() *objects.Camera {
-	return w.camera
-}
-
 func (w *World) GetWeapons() []*objects.Weapon {
 	return w.weapons
 }
@@ -200,7 +195,6 @@ func (w *World) SetID(id uuid.UUID) {
 	w.ID = id
 	w.pc.Parent.ID = id
 	w.worldMap.Parent.ID = id
-	w.camera.Parent.ID = id
 	for _, pc := range w.pcs {
 		pc.Parent.ID = id
 	}
@@ -267,12 +261,10 @@ func UseWorld() *World {
 			ID:       uuid.New(),
 			pc:       objects.NewPC(),
 			worldMap: objects.NewMap(),
-			camera:   objects.NewCamera(),
 		}
 
 		instance.worldMap.Parent = &objects.Base{ID: instance.ID}
 		instance.pc.Parent = &instance.worldMap.Base
-		instance.camera.Parent = &instance.worldMap.Base
 
 		instance.AddPCs(instance.pc)
 
