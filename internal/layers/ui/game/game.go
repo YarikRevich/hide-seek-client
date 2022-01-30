@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -12,26 +13,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// import (
-// 	"image/color"
-// 	"time"
-
-// 	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
-// 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
-// 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
-// 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-// 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
-// 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
-// 	"github.com/hajimehoshi/ebiten/v2"
-// )
-
 func Draw() {
 	worldMap := world.UseWorld().GetWorldMap()
 	c := camera.UseCamera()
-	// c := world.UseWorld().GetCamera()
-	// p := world.UseWorld().GetPC()
 	s := screen.UseScreen()
-	// sAxis := s.GetAxis()
 
 	if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 		render.UseRender().SetToRender(func(screen *ebiten.Image) {
@@ -43,8 +28,6 @@ func Draw() {
 		img := worldMap.GetImage()
 
 		opts := c.GetCameraOptions()
-		// fmt.Println()
-		// fmt.Println(camera.Cam.GetCameraTranslation(), camera.Cam.X, "GAME")
 
 		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 			opts.Filter = ebiten.FilterLinear
@@ -77,6 +60,8 @@ func Draw() {
 		img := ebiten.NewImage(int(s.GetSize().X), int(hudHeight))
 
 		opts := &ebiten.DrawImageOptions{}
+
+		fmt.Println(sources.UseSources().Colliders().Collection)
 
 		img.Fill(color.Black)
 		i.DrawImage(img, opts)

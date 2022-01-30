@@ -3,6 +3,7 @@ package sources
 import (
 	"embed"
 	"fmt"
+	"image"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -119,24 +120,11 @@ type MetadataModel struct {
 	}
 }
 
-func (m *MetadataModel) GetSizeMaxX() float64 {
+func (m *MetadataModel) GetRect() image.Rectangle {
 	ms := m.GetMargins()
 	s := m.GetSize()
-	return (ms.X + s.X)
-}
-
-func (m *MetadataModel) GetSizeMaxY() float64 {
-	ms := m.GetMargins()
-	s := m.GetSize()
-	return (ms.Y + s.Y)
-}
-
-func (m *MetadataModel) GetSizeMinX() float64 {
-	return m.GetMargins().X
-}
-
-func (m *MetadataModel) GetSizeMinY() float64 {
-	return m.GetMargins().Y
+	ma := m.GetMargins()
+	return image.Rect(int(ma.X), int(ma.Y), int(ms.X+s.X), int(ms.Y+s.Y))
 }
 
 func (m *MetadataModel) GetSize() types.Vec2 {

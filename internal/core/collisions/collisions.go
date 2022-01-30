@@ -3,7 +3,7 @@ package collisions
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-	"github.com/sirupsen/logrus"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	// "github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	// "github.com/YarikRevich/hide-seek-client/internal/core/world"
 )
@@ -26,25 +26,28 @@ import (
 //Checks whether passed object collides with any position
 //in a collider set
 
-func IsCollision(object *objects.Base, collidersSet string) bool {
-	cs, err := sources.UseSources().Colliders().GetCollider(collidersSet)
-	if err != nil {
-		logrus.Fatal(err)
-	}
+var instance *CollisionDetector
 
-	for _, q := range cs {
+type CollisionDetector struct {
+}
 
-		//Checks for collision detection
-		if ((object.MetadataModel.GetSizeMinX() <= q.GetSizeMaxX() &&
-			object.MetadataModel.GetSizeMinX() >= q.GetSizeMinX()) || (object.MetadataModel.GetSizeMinX() >= q.GetSizeMaxX() &&
-			object.MetadataModel.GetSizeMinX() <= q.GetSizeMinX())) &&
-			((object.MetadataModel.GetSizeMinY() <= q.GetSizeMaxY() &&
-				object.MetadataModel.GetSizeMinY() >= q.GetSizeMinY()) || (object.MetadataModel.GetSizeMinY() >= q.GetSizeMaxY() &&
-				object.MetadataModel.GetSizeMinY() <= q.GetSizeMinY())) {
-			return true
-		}
+//Returns information about collision
+func (cd *CollisionDetector) GetObjectsCollision(v1, v2 *objects.Base) (*sources.CollidersModel, bool) {
+	return nil, false
+}
+
+//Returns information about collision
+func (cd *CollisionDetector) GetTMXCollision(c types.Vec2) (*sources.CollidersModel, bool) {
+	return nil, false
+}
+
+// sources.CollidersModel
+
+func UseCollisionDetector() *CollisionDetector {
+	if instance == nil {
+		instance = &CollisionDetector{}
 	}
-	return false
+	return instance
 }
 
 // //Cleans cache checking if such collision still exists

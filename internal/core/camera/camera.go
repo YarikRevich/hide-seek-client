@@ -58,15 +58,11 @@ type Camera struct {
 	X, Y, Rot, Scale, MaxScale, MinScale float64
 
 	//Means the objects camera follows
-	followed *objects.Base
+	Followed *objects.Base
 }
 
 func (c *Camera) SetFollowed(b *objects.Base) {
-	c.followed = b
-}
-
-func (c *Camera) GetFollowed() *objects.Base {
-	return c.followed
+	c.Followed = b
 }
 
 //Defines camera shaking animation

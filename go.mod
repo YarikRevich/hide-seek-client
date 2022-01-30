@@ -26,6 +26,7 @@ require (
 	github.com/inkyblackness/imgui-go v1.12.0 // indirect
 	github.com/inkyblackness/imgui-go/v2 v2.4.1 // indirect
 	github.com/inkyblackness/imgui-go/v4 v4.4.0 // indirect
+	github.com/lafriks/go-tiled v0.7.0 // indirect
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
 	github.com/veandco/go-sdl2 v0.4.10 // indirect
 	golang.org/x/mod v0.4.2 // indirect

@@ -54,7 +54,7 @@ each object on the map
 */
 type Base struct {
 	*sources.MetadataModel
-	CollidersModel []*sources.CollidersModel
+	CollidersModel []sources.CollidersModel
 
 	Type string
 
@@ -327,9 +327,6 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 }
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
-	// if m.Type == "worldMap" {
-	// 	fmt.Println(o.Parent, "BEFORE\n")
-	// }
 	o.Type = m.Type
 	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
@@ -362,9 +359,6 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	if o.MetadataModel == nil && o.Skin.IsSet() {
 		o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
 	}
-	// if m.Type == "worldMap" {
-	// 	fmt.Println(o.Parent, "AFTER\n")
-	// }
 }
 
 func (o *Base) SetTranslationXMovementBlocked(s bool) {
@@ -377,6 +371,19 @@ func (o *Base) SetTranslationYMovementBlocked(s bool) {
 
 func (o *Base) IsTranslationMovementBlocked() bool {
 	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
+}
+
+//Checks if two bases collide with each other
+func (o *Base) Collide(v *Base) bool {
+	r1 := o.MetadataModel.GetRect()
+	r2 := v.MetadataModel.GetRect()
+
+	return ((r1.Min.X <= r2.Max.X &&
+		r1.Min.X >= r2.Min.X) || (r1.Min.X >= r2.Max.X &&
+		r1.Min.X <= r2.Min.X)) &&
+		((r1.Min.Y <= r2.Max.Y &&
+			r1.Min.Y >= r2.Min.Y) || (r1.Min.Y >= r2.Max.Y &&
+			r1.Min.Y <= r2.Min.Y))
 }
 
 func NewBase() *Base {

@@ -2,109 +2,94 @@ package sources
 
 import (
 	"embed"
-	"encoding/json"
 	"fmt"
+	"image"
 	_ "image/png"
 	"path/filepath"
 	"regexp"
 	"sync"
 
+	"github.com/lafriks/go-tiled"
 	"github.com/sirupsen/logrus"
 )
 
-//Model used only for input files parsing
-type CollidersParseModel struct {
-	ImageHeight int `json:"imageheight"`
-	ImageWidth  int `json:"imagewidth"`
-	TileHeight  int `json:"tileheight"`
-	TileWidth   int `json:"tilewidth"`
-	Tiles       []struct {
-		Objectgroup struct {
-			Id      int `json:"id"`
-			Objects []struct {
-				Id     int     `json:"id"`
-				Height float64 `json:"height"`
-				Width  float64 `json:"width"`
-				X      float64 `json:"x"`
-				Y      float64 `json:"y"`
-			} `json:"objects"`
-		} `json:"objectgroup"`
-		Properties []struct {
-			Name  string      `json:"name"`
-			Type  string      `json:"type"`
-			Value interface{} `json:"value"`
-		} `json:"properties"`
-	} `json:"tiles"`
-}
-
 type CollidersModel struct {
-	Name                  string
-	X, Y                  float64
-	TileHeight, TileWidth int
-	Properties            struct {
-		IsCollision, IsWalkable bool
+	Layer      string
+	Properties struct {
+		Collision, Walkable bool
 	}
 }
 
-func (m *CollidersModel) GetSizeMaxX() float64 {
-	return (m.X + float64(m.TileWidth/2))
+func (cm *CollidersModel) IsCollision() bool {
+	return cm.Properties.Collision
 }
 
-func (m *CollidersModel) GetSizeMaxY() float64 {
-	return (m.Y + float64(m.TileHeight/2))
+func (cm *CollidersModel) IsWalkable() bool {
+	return cm.Properties.Walkable
 }
 
-func (m *CollidersModel) GetSizeMinX() float64 {
-	return (m.X - float64(m.TileWidth/2))
-}
+type CollidersBatch map[image.Rectangle]CollidersModel
 
-func (m *CollidersModel) GetSizeMinY() float64 {
-	return (m.Y - float64(m.TileHeight/2))
+//Returns collider object collides with
+func (cb *CollidersBatch) GetCollider(r image.Rectangle) (CollidersModel, bool) {
+	for q, v := range *cb {
+		if ((q.Min.X <= r.Max.X &&
+			q.Min.X >= r.Min.X) || (q.Min.X >= r.Max.X &&
+			q.Min.X <= r.Min.X)) &&
+			((q.Min.Y <= r.Max.Y &&
+				q.Min.Y >= r.Min.Y) || (q.Min.Y >= r.Max.Y &&
+				q.Min.Y <= r.Min.Y)) {
+			return v, true
+		}
+	}
+	return CollidersModel{}, false
 }
 
 type Colliders struct {
 	sync.Mutex
 
-	Collection map[string][]*CollidersModel
+	Collection map[string]CollidersBatch
 }
 
 func (c *Colliders) loadFile(fs embed.FS, path string) {
-	if reg := regexp.MustCompile(`\.json*$`); reg.MatchString(path) {
-		file, err := fs.ReadFile(path)
+	if reg := regexp.MustCompile(`\.tmx*$`); reg.MatchString(path) {
+		gameMap, err := tiled.LoadFile(path, tiled.WithFileSystem(fs))
 		if err != nil {
-			logrus.Fatal("error happened opening image file from embedded fs", err)
-		}
-
-		var collidersParseModel CollidersParseModel
-		if err := json.Unmarshal(file, &collidersParseModel); err != nil {
 			logrus.Fatal(err)
 		}
 
-		for _, v := range collidersParseModel.Tiles {
-			for _, o := range v.Objectgroup.Objects {
+		colliders := make(map[image.Rectangle]CollidersModel)
 
-				collidersModel := &CollidersModel{
-					X:          float64((int(o.Id-v.Objectgroup.Id) % (int(collidersParseModel.ImageWidth / collidersParseModel.TileWidth)))) * float64(collidersParseModel.TileWidth),
-					Y:          float64((int(o.Id-v.Objectgroup.Id) / (int(collidersParseModel.ImageHeight / collidersParseModel.TileHeight)))) * float64(collidersParseModel.TileHeight),
-					TileHeight: collidersParseModel.TileHeight,
-					TileWidth:  collidersParseModel.TileWidth,
-					Name:       path,
-				}
-				for _, v := range v.Properties {
-					switch v.Name {
-					case "walkable":
-						collidersModel.Properties.IsWalkable = v.Value.(bool)
-					case "collision":
-						collidersModel.Properties.IsCollision = v.Value.(bool)
+		for _, l := range gameMap.Layers {
+			for _, t := range l.Tiles {
+				if !t.IsNil() {
+					var collider CollidersModel
+
+					tileID := int(t.ID - t.Tileset.FirstGID)
+					x := (tileID % gameMap.Width) * gameMap.TileWidth
+					y := (tileID % gameMap.Height) * gameMap.TileHeight
+
+					for _, e := range t.Tileset.Tiles {
+						if int(e.ID) == tileID {
+							collider.Properties.Walkable = e.Properties.GetBool("walkable")
+							collider.Properties.Collision = e.Properties.GetBool("collision")
+						}
 					}
-				}
 
-				c.Lock()
-				path = reg.Split(path, -1)[0]
-				c.Collection[path] = append(c.Collection[path], collidersModel)
-				c.Unlock()
+					collider.Layer = l.Name
+
+					colliders[image.Rect(x, y, x+gameMap.TileWidth, y+gameMap.TileHeight)] = collider
+					// collider.Rect =
+
+					// colliders = append(colliders, collider)
+				}
 			}
 		}
+
+		c.Lock()
+		path = reg.Split(path, -1)[0]
+		c.Collection[path] = colliders
+		c.Unlock()
 	}
 }
 
@@ -113,18 +98,18 @@ func (c *Colliders) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func (c *Colliders) GetCollider(path string) ([]*CollidersModel, error) {
+func (c *Colliders) GetCollider(path string) (CollidersBatch, error) {
 	path = filepath.Join("dist/colliders", path)
 
-	image, ok := c.Collection[path]
+	colliders, ok := c.Collection[path]
 	if !ok {
 		// logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
 		return nil, fmt.Errorf("image with path '%s' not found", path)
 	}
 
-	return image, nil
+	return colliders, nil
 }
 
 func NewColliders() *Colliders {
-	return &Colliders{Collection: make(map[string][]*CollidersModel)}
+	return &Colliders{Collection: make(map[string]CollidersBatch)}
 }
