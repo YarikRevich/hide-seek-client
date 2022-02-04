@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
@@ -24,15 +23,25 @@ func Draw() {
 		})
 	}
 
-	render.UseRender().SetToRender(func(screen *ebiten.Image) {
+	render.UseRender().SetToRender(func(i *ebiten.Image) {
 		img := worldMap.GetImage()
+		// scale := worldMap.GetScale()
 
-		opts := c.GetCameraOptions()
+		opts := &ebiten.DrawImageOptions{}
+		// s := screen.UseScreen().GetSize()
+		// opts.GeoM.Scale((c.Scale.X*s.X)/100, (c.Scale.Y*s.Y)/100)
+		// opts.GeoM.Scale(scale.X*c.Scale.X, scale.Y*c.Scale.Y)
+		opts.GeoM.Concat(c.GetCameraOptions().GeoM)
+		// opts.GeoM.Scale(scale.X, scale.Y)
+		// cPos := c.GetCameraTranslation()
+		// opts.GeoM.Translate(cPos.X/(c.Scale.X*s.X)/100, cPos.Y/(c.Scale.Y*s.Y)/100)
+		// cPos := c.GetCameraTranslation()
+		// opts.GeoM.Translate(cPos.X*scale.X, cPos.Y*scale.Y)
 
 		if statemachine.UseStateMachine().Minimap().GetState() == statemachine.MINIMAP_ON {
 			opts.Filter = ebiten.FilterLinear
 		}
-		screen.DrawImage(img, opts)
+		i.DrawImage(img, opts)
 	})
 
 	render.UseRender().SetToRender(func(i *ebiten.Image) {
@@ -61,8 +70,6 @@ func Draw() {
 
 		opts := &ebiten.DrawImageOptions{}
 
-		fmt.Println(sources.UseSources().Colliders().Collection)
-
 		img.Fill(color.Black)
 		i.DrawImage(img, opts)
 	})
@@ -78,8 +85,9 @@ func Draw() {
 			opts.GeoM.Scale(pc.GetMovementRotation(), 1)
 
 			pcScale := pc.GetScale()
+
 			opts.GeoM.Scale(pcScale.X, pcScale.Y)
-			opts.GeoM.Scale(c.Scale/2, c.Scale/2)
+			opts.GeoM.Scale(c.Scale.X/2, c.Scale.Y/2)
 
 			if pc.IsEqualTo(&pc.Base) {
 				pOffset := c.GetScreenCoordsTranslation(pc.RawOffset.X, pc.RawOffset.Y)

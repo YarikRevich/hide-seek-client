@@ -71,7 +71,7 @@ func Exec() {
 					p.SetRawOffsetY(p.RawOffset.Y - pSpeed.Y)
 				}
 				if p.TranslationMovementYBlocked {
-					c.MovePosition(0, -pSpeed.Y)
+					// c.MovePosition(0, -pSpeed.Y)
 				}
 			}
 		}
@@ -83,7 +83,7 @@ func Exec() {
 					p.SetRawOffsetY(p.RawOffset.Y + pSpeed.Y)
 				}
 				if p.TranslationMovementYBlocked {
-					c.MovePosition(0, pSpeed.Y)
+					// c.MovePosition(0, pSpeed.Y)
 				}
 			}
 		}
@@ -95,19 +95,20 @@ func Exec() {
 			}
 
 			if p.TranslationMovementXBlocked {
-				c.MovePosition(pSpeed.X, 0)
+				// c.MovePosition(pSpeed.X, 0)
 			}
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
 			if pOffset.X > 0 {
+				// fmt.Println(wM.GetCollider(p.GetRect()))
 				p.SetRawX(p.RawPos.X - pSpeed.X)
 				if !p.TranslationMovementXBlocked {
 					p.SetRawOffsetX(p.RawOffset.X - pSpeed.X)
 				}
 
 				if p.TranslationMovementXBlocked {
-					c.MovePosition(-pSpeed.X, 0)
+					// c.MovePosition(-pSpeed.X, 0)
 				}
 			}
 		}
@@ -132,24 +133,24 @@ func Exec() {
 
 		if p.TranslationMovementYBlocked {
 			if c.IsLowerZeroCoordY() && p.IsDirectionUP() {
-				c.SetZeroPositionY()
+				// c.SetZeroPositionY()
 				p.SetTranslationYMovementBlocked(false)
 			}
 
-			if c.IsOuttaCoordY(wMSize.Y*c.Scale-sAxis.Y*2) && p.IsDirectionDOWN() {
-				c.SetPositionY(c.GetWorldCoordY(wMSize.Y*c.Scale - sAxis.Y*2))
+			if c.IsOuttaCoordY(wMSize.Y*c.Scale.X-sAxis.Y*2) && p.IsDirectionDOWN() {
+				// c.SetPositionY(c.GetWorldCoordY(wMSize.Y*c.Scale.X - sAxis.Y*2))
 				p.SetTranslationYMovementBlocked(false)
 			}
 		}
 
 		if p.TranslationMovementXBlocked {
 			if c.IsLowerZeroCoordX() && p.IsDirectionLEFT() {
-				c.SetZeroPositionX()
+				// c.SetZeroPositionX()
 				p.SetTranslationXMovementBlocked(false)
 			}
 
-			if c.IsOuttaCoordX(wMSize.X*c.Scale-sAxis.X*2) && p.IsDirectionRIGHT() {
-				c.SetPositionX(c.GetWorldCoordX(wMSize.X*c.Scale - sAxis.X*2))
+			if c.IsOuttaCoordX(wMSize.X*c.Scale.X-sAxis.X*2) && p.IsDirectionRIGHT() {
+				// c.SetPositionX(c.GetWorldCoordX(wMSize.X*c.Scale.X - sAxis.X*2))
 				p.SetTranslationXMovementBlocked(false)
 			}
 		}

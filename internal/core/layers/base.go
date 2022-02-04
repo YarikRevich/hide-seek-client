@@ -9,6 +9,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/google/uuid"
@@ -54,7 +55,7 @@ each object on the map
 */
 type Base struct {
 	*sources.MetadataModel
-	CollidersModel []sources.CollidersModel
+	sources.CollidersBatch
 
 	Type string
 
@@ -67,6 +68,7 @@ type Base struct {
 	// Names parentid the object referes to
 	ID uuid.UUID
 
+	WorldPos, ScreenPos           types.Vec2
 	RawPos, RawOffset, LastRawPos types.Vec2
 	Direction, SubDirection       keycodes.Direction
 
@@ -267,7 +269,7 @@ func (o *Base) SetSkin(path string) {
 
 	cs, err := sources.UseSources().Colliders().GetCollider(o.Path)
 	if err == nil {
-		o.CollidersModel = cs
+		o.CollidersBatch = cs
 	}
 }
 
@@ -373,19 +375,23 @@ func (o *Base) IsTranslationMovementBlocked() bool {
 	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
 }
 
-//Checks if two bases collide with each other
-func (o *Base) Collide(v *Base) bool {
-	r1 := o.MetadataModel.GetRect()
-	r2 := v.MetadataModel.GetRect()
+func (o *Base) GetPosForCamera() types.Vec2 {
+	var rX, rY float64
+	if x := o.RawPos.X - o.RawOffset.X; x >= 0 {
+		rX = x
+	}
 
-	return ((r1.Min.X <= r2.Max.X &&
-		r1.Min.X >= r2.Min.X) || (r1.Min.X >= r2.Max.X &&
-		r1.Min.X <= r2.Min.X)) &&
-		((r1.Min.Y <= r2.Max.Y &&
-			r1.Min.Y >= r2.Min.Y) || (r1.Min.Y >= r2.Max.Y &&
-			r1.Min.Y <= r2.Min.Y))
+	if y := o.RawPos.Y - o.RawOffset.Y; y >= 0 {
+		rY = y
+	}
+	return types.Vec2{X: rX, Y: rY}
+}
+
+func (b *Base) OnDraw(screen *ebiten.Image) {
+
 }
 
 func NewBase() *Base {
-	return &Base{Parent: new(Base)}
+	s := screen.UseScreen().GetAxis()
+	return &Base{Parent: new(Base), ScreenPos: types.Vec2{X: s.X, Y: s.Y}}
 }

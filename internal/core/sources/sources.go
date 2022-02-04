@@ -36,16 +36,10 @@ func (p *provider) LoadSources(fs embed.FS) {
 	wg.Add(6)
 
 	go p.audio.Load(fs, "dist/audio", &wg)
-	latency.Seq(func() {
-		var s sync.WaitGroup
-		s.Add(1)
-		go p.images.Load(fs, "dist/images", &wg, &s)
-		s.Wait()
-	}, func() {
-		var s sync.WaitGroup
-		s.Add(1)
-		go p.metadata.Load(fs, "dist/metadata", &wg, &s)
-		s.Wait()
+	latency.Seq(func(s *sync.WaitGroup) {
+		p.images.Load(fs, "dist/images", &wg, s)
+	}, func(s *sync.WaitGroup) {
+		p.metadata.Load(fs, "dist/metadata", &wg, s)
 	})
 	go p.font.Load(fs, "dist/fonts", &wg)
 	go p.shaders.Load(fs, "dist/shaders", &wg)

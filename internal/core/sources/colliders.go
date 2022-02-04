@@ -15,6 +15,7 @@ import (
 
 type CollidersModel struct {
 	Layer      string
+	LayerNum   int
 	Properties struct {
 		Collision, Walkable bool
 	}
@@ -28,21 +29,9 @@ func (cm *CollidersModel) IsWalkable() bool {
 	return cm.Properties.Walkable
 }
 
-type CollidersBatch map[image.Rectangle]CollidersModel
-
-//Returns collider object collides with
-func (cb *CollidersBatch) GetCollider(r image.Rectangle) (CollidersModel, bool) {
-	for q, v := range *cb {
-		if ((q.Min.X <= r.Max.X &&
-			q.Min.X >= r.Min.X) || (q.Min.X >= r.Max.X &&
-			q.Min.X <= r.Min.X)) &&
-			((q.Min.Y <= r.Max.Y &&
-				q.Min.Y >= r.Min.Y) || (q.Min.Y >= r.Max.Y &&
-				q.Min.Y <= r.Min.Y)) {
-			return v, true
-		}
-	}
-	return CollidersModel{}, false
+type CollidersBatch struct {
+	RawData map[image.Rectangle]CollidersModel
+	Graph   map[image.Rectangle]map[image.Rectangle]CollidersModel
 }
 
 type Colliders struct {
@@ -58,31 +47,59 @@ func (c *Colliders) loadFile(fs embed.FS, path string) {
 			logrus.Fatal(err)
 		}
 
-		colliders := make(map[image.Rectangle]CollidersModel)
+		colliders := CollidersBatch{
+			RawData: make(map[image.Rectangle]CollidersModel),
+			Graph:   make(map[image.Rectangle]map[image.Rectangle]CollidersModel),
+		}
 
-		for _, l := range gameMap.Layers {
-			for _, t := range l.Tiles {
+		for n, l := range gameMap.Layers {
+			y := 0
+			for i, t := range l.Tiles {
+				if (i%gameMap.Width)*gameMap.TileWidth == ((gameMap.Width * gameMap.TileWidth) - gameMap.TileWidth) {
+					y += gameMap.TileHeight
+				}
 				if !t.IsNil() {
 					var collider CollidersModel
 
-					tileID := int(t.ID - t.Tileset.FirstGID)
-					x := (tileID % gameMap.Width) * gameMap.TileWidth
-					y := (tileID % gameMap.Height) * gameMap.TileHeight
+					collider.Layer = l.Name
+					collider.LayerNum = n
 
-					for _, e := range t.Tileset.Tiles {
-						if int(e.ID) == tileID {
-							collider.Properties.Walkable = e.Properties.GetBool("walkable")
-							collider.Properties.Collision = e.Properties.GetBool("collision")
+					x := (i % gameMap.Width) * gameMap.TileWidth
+					for _, w := range t.Tileset.Tiles {
+						if w.ID == t.ID {
+							collider.Properties.Walkable = w.Properties.GetBool("walkable")
+							collider.Properties.Collision = w.Properties.GetBool("collision")
 						}
 					}
 
-					collider.Layer = l.Name
+					fmt.Println(l.Tiles[0].Tileset.Tiles[0].Image)
 
-					colliders[image.Rect(x, y, x+gameMap.TileWidth, y+gameMap.TileHeight)] = collider
-					// collider.Rect =
-
-					// colliders = append(colliders, collider)
+					colliders.RawData[image.Rect(x-gameMap.TileWidth, y, x, y+gameMap.TileHeight)] = collider
 				}
+			}
+		}
+
+		for k := range colliders.RawData {
+			colliders.Graph[k] = make(map[image.Rectangle]CollidersModel)
+
+			topRect := image.Rect(k.Min.X, k.Min.Y-(gameMap.TileHeight*2), k.Max.X, k.Min.Y)
+			bottomRect := image.Rect(k.Min.X, k.Max.Y, k.Max.X, k.Max.Y+(gameMap.TileHeight*2))
+			rightRect := image.Rect(k.Max.X, k.Min.Y, k.Max.X+(gameMap.TileWidth*2), k.Max.Y)
+			leftRect := image.Rect(k.Max.X, k.Min.Y-(gameMap.TileWidth*2), k.Min.X, k.Max.Y)
+
+			if top, ok := colliders.RawData[topRect]; ok {
+				colliders.Graph[k][topRect] = top
+			}
+			if bottom, ok := colliders.RawData[bottomRect]; ok {
+				colliders.Graph[k][bottomRect] = bottom
+			}
+
+			if right, ok := colliders.RawData[rightRect]; ok {
+				colliders.Graph[k][rightRect] = right
+			}
+
+			if left, ok := colliders.RawData[leftRect]; ok {
+				colliders.Graph[k][leftRect] = left
 			}
 		}
 
@@ -104,7 +121,7 @@ func (c *Colliders) GetCollider(path string) (CollidersBatch, error) {
 	colliders, ok := c.Collection[path]
 	if !ok {
 		// logrus.Fatal(fmt.Sprintf("image with path '%s' not found", path))
-		return nil, fmt.Errorf("image with path '%s' not found", path)
+		return CollidersBatch{}, fmt.Errorf("image with path '%s' not found", path)
 	}
 
 	return colliders, nil

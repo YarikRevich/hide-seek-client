@@ -1,7 +1,13 @@
 package latency
 
-func Seq(callbacks ...func()) {
+import "sync"
+
+//Asynchronyse sequence
+func Seq(callbacks ...func(*sync.WaitGroup)) {
+	var s sync.WaitGroup
 	for _, v := range callbacks {
-		v()
+		s.Add(1)
+		go v(&s)
+		s.Wait()
 	}
 }

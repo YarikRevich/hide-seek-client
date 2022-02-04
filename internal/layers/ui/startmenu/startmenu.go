@@ -10,6 +10,21 @@ import (
 )
 
 func Draw() {
+	render.Render(RenderOpts{
+		UI: UIOpts{
+			Buttons: []Button{
+				NewButton() ...
+			}, 
+			Labels: []Label{
+				NewLabel() ...
+			},
+			Input: []Input{
+				NewLabel() ...
+			},
+		},
+	})
+
+
 	render.UseRender().SetToRender(func(screen *ebiten.Image) {
 		img := sources.UseSources().Images().GetImage("system/background/background")
 

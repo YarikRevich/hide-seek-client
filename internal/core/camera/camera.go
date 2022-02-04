@@ -55,7 +55,8 @@ var instance *Camera
 
 // Camera can look at positions, zoom and rotate.
 type Camera struct {
-	X, Y, Rot, Scale, MaxScale, MinScale float64
+	Rot                       float64
+	Scale, MaxScale, MinScale types.Vec2
 
 	//Means the objects camera follows
 	Followed *objects.Base
@@ -124,32 +125,38 @@ func (c *Camera) StartAnimation(opts AnimationOpts) {
 	}
 }
 
-// MovePosition moves the Camera by x and y.
-// Use SetPosition if you want to set the position
-func (c *Camera) MovePosition(x, y float64) *Camera {
-	c.X += x
-	c.Y += y
-	return c
-}
+// // MovePosition moves the Camera by x and y.
+// // Use SetPosition if you want to set the position
+// func (c *Camera) MovePosition(x, y float64) *Camera {
+// 	// cPos.X += x
+// 	// cPos.Y += y
+// 	return c
+// }
 
-func (c *Camera) SetPositionX(x float64) *Camera {
-	c.X = x
-	return c
-}
+// func (c *Camera) SetPositionX(x float64) *Camera {
+// 	// cPos.X = x
+// 	return c
+// }
 
-func (c *Camera) SetPositionY(y float64) *Camera {
-	c.Y = y
-	return c
-}
+// func (c *Camera) SetPositionY(y float64) *Camera {
+// 	cPos.Y = y
+// 	return c
+// }
 
-func (c *Camera) SetZeroPositionX() {
-	c.SetPositionX(c.getCameraTranslationX(0) / c.Scale)
-}
+// func (c *Camera) SetZeroPositionX() {
+// 	c.SetPositionX(c.getCameraTranslationX(0) / c.Scale.X)
+// }
 
-func (c *Camera) SetZeroPositionY() {
-	sHUD := screen.UseScreen().GetHUDOffset()
-	c.SetPositionY(c.getCameraTranslationY(0)/c.Scale - sHUD/c.Scale)
-}
+// func (c *Camera) SetZeroPositionY() {
+// 	sHUD := screen.UseScreen().GetHUDOffset()
+// 	c.SetPositionY(c.getCameraTranslationY(0)/c.Scale.X - sHUD/c.Scale.X)
+// }
+
+// func (c *Camera) GetScale() types.Vec2 {
+// 	s := screen.UseScreen().GetSize()
+// 	// c.Scale
+// 	return types.Vec2{X: c.Scale.X * s.X / 100, Y: c.Scale.Y * s.Y / 100}
+// }
 
 // Rotate rotates by phi
 func (c *Camera) Rotate(phi float64) *Camera {
@@ -164,11 +171,11 @@ func (c *Camera) SetRotation(rot float64) *Camera {
 }
 
 func (c *Camera) Zoom(mul float64) *Camera {
-	fmt.Println(c.MinScale < mul, mul < c.MaxScale, c.MinScale, mul, c.MaxScale)
-	if c.MinScale < c.Scale*mul && c.Scale*mul < c.MaxScale {
+	if c.MinScale.X < c.Scale.X*mul && c.Scale.X*mul < c.MaxScale.X {
 
 		previousScale := c.Scale
-		c.Scale *= mul
+		c.Scale.X *= mul
+		c.Scale.Y *= mul
 		appliedCPos := c.GetCameraTranslation()
 		appliedCPos.Y -= screen.UseScreen().GetHUDOffset()
 
@@ -177,8 +184,8 @@ func (c *Camera) Zoom(mul float64) *Camera {
 
 		sAxis := screen.UseScreen().GetAxis()
 		if (!math.Signbit(appliedCPos.X) || !math.Signbit(appliedCPos.Y)) ||
-			((wMSize.X*c.Scale < wMSize.X) || (wMSize.Y*c.Scale < wMSize.Y)) ||
-			((math.Abs(appliedCPos.X) > wMSize.X*c.Scale-sAxis.X*2) || math.Abs(appliedCPos.Y) > wMSize.Y*c.Scale-sAxis.Y*2) {
+			((wMSize.X*c.Scale.X < wMSize.X) || (wMSize.Y*c.Scale.Y < wMSize.Y)) ||
+			((math.Abs(appliedCPos.X) > wMSize.X*c.Scale.X-sAxis.X*2) || math.Abs(appliedCPos.Y) > wMSize.Y*c.Scale.X-sAxis.Y*2) {
 			c.Scale = previousScale
 		}
 	}
@@ -188,35 +195,39 @@ func (c *Camera) Zoom(mul float64) *Camera {
 //Applies scale and further translation for draw
 func (c *Camera) GetCameraOptions() *ebiten.DrawImageOptions {
 	op := &ebiten.DrawImageOptions{}
-
-	s := screen.UseScreen().GetAxis()
+	sAxis := screen.UseScreen().GetAxis()
+	scale := c.Followed.GetScale()
+	cPos := c.Followed.GetPosForCamera()
 
 	op.GeoM.Rotate(c.Rot)
-	op.GeoM.Translate(-s.X, -s.Y)
-	op.GeoM.Translate(-c.X, -c.Y)
+	op.GeoM.Translate(-sAxis.X, -sAxis.Y)
+	op.GeoM.Translate(-cPos.X, -cPos.Y)
+	op.GeoM.Scale(scale.X, scale.Y)
 
-	op.GeoM.Translate((c.X - s.X), (c.Y - s.Y))
-	op.GeoM.Translate(-s.X/2, -(s.Y/2 - screen.UseScreen().GetHUDOffset()/2))
-	op.GeoM.Translate(-(c.X - s.X), -(c.Y - s.Y))
-	op.GeoM.Scale(c.Scale, c.Scale)
-	op.GeoM.Translate(s.X, s.Y)
-	op.GeoM.Translate(s.X*c.Scale, s.Y*c.Scale)
-
+	op.GeoM.Translate((cPos.X - sAxis.X), (cPos.Y - sAxis.Y))
+	op.GeoM.Translate(-sAxis.X/2, -(sAxis.Y/2 - screen.UseScreen().GetHUDOffset()/2))
+	op.GeoM.Translate(-(cPos.X - sAxis.X), -(cPos.Y - sAxis.Y))
+	op.GeoM.Scale(c.Scale.X, c.Scale.Y)
+	op.GeoM.Translate(sAxis.X, sAxis.Y)
+	// op.GeoM.Translate(sAxis.X*c.Scale.X, sAxis.Y*c.Scale.Y)
+	// op.GeoM.Scale(1/scale.X, 1/scale.Y)
+	fmt.Println(op.GeoM.String())
 	return op
 }
 
-func (c *Camera) getCameraTranslationX(x float64) float64 {
-	return c.getCameraTranslation(x, 0).X
-}
+// func (c *Camera) getCameraTranslationX(x float64) float64 {
+// 	return c.getCameraTranslation(x, 0).X
+// }
 
-func (c *Camera) getCameraTranslationY(y float64) float64 {
-	return c.getCameraTranslation(y, 0).Y
-}
+// func (c *Camera) getCameraTranslationY(y float64) float64 {
+// 	return c.getCameraTranslation(y, 0).Y
+// }
 
 func (c *Camera) getCameraTranslation(x, y float64) types.Vec2 {
 	var rX, rY float64
 
 	s := screen.UseScreen().GetAxis()
+	// size := screen.UseScreen().GetSize()
 
 	rX += -s.X
 	rY += -s.Y
@@ -233,20 +244,21 @@ func (c *Camera) getCameraTranslation(x, y float64) types.Vec2 {
 	rX += -(x - s.X)
 	rY += -(y - s.Y)
 
-	rX *= c.Scale
-	rY *= c.Scale
+	rX *= c.Scale.X
+	rY *= c.Scale.Y
 
 	rX += s.X
 	rY += s.Y
 
-	rX += s.X * c.Scale
-	rY += s.Y * c.Scale
+	rX += s.X * c.Scale.X
+	rY += s.Y * c.Scale.Y
 
 	return types.Vec2{X: rX, Y: rY}
 }
 
 func (c *Camera) GetCameraTranslation() types.Vec2 {
-	return c.getCameraTranslation(c.X, c.Y)
+	cPos := c.Followed.GetPosForCamera()
+	return c.getCameraTranslation(cPos.X, cPos.Y)
 }
 
 func (c *Camera) GetScreenCoordsTranslation(x, y float64) types.Vec2 {
@@ -269,26 +281,26 @@ func (c *Camera) GetScreenCoordsTranslation(x, y float64) types.Vec2 {
 	rX += (x - s.X)
 	rY += (y - s.Y)
 
-	rX *= c.Scale
-	rY *= c.Scale
+	rX *= c.Scale.X
+	rY *= c.Scale.Y
 
 	rX += s.X
 	rY += s.Y
 
-	rX += s.X * c.Scale
-	rY += s.Y * c.Scale
+	rX += s.X * c.Scale.X
+	rY += s.Y * c.Scale.Y
 
 	return types.Vec2{X: rX, Y: rY}
 }
 
 func (c *Camera) GetWorldCoordX(wc float64) float64 {
 	cPos := c.GetCameraTranslation()
-	return (wc * c.X) / -cPos.X
+	return (wc * cPos.X) / -cPos.X
 }
 
 func (c *Camera) GetWorldCoordY(wc float64) float64 {
 	cPos := c.GetCameraTranslation()
-	return (wc * c.Y) / -cPos.Y
+	return (wc * cPos.Y) / -cPos.Y
 }
 
 func (c *Camera) IsOuttaCoordX(x float64) bool {
@@ -315,9 +327,10 @@ func (c *Camera) IsLowerZeroCoordY() bool {
 func UseCamera() *Camera {
 	if instance == nil {
 		instance = &Camera{
-			Scale:    2.5,
-			MaxScale: 3.2,
-			MinScale: 2.3,
+			Followed: &world.UseWorld().GetPC().Base,
+			Scale:    types.Vec2{X: 2.5, Y: 2.5},
+			MaxScale: types.Vec2{X: 3.2, Y: 3.2},
+			MinScale: types.Vec2{X: 2.3, Y: 2.3},
 		}
 	}
 	return instance

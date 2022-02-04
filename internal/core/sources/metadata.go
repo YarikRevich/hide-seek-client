@@ -3,7 +3,6 @@ package sources
 import (
 	"embed"
 	"fmt"
-	"image"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -120,12 +119,12 @@ type MetadataModel struct {
 	}
 }
 
-func (m *MetadataModel) GetRect() image.Rectangle {
-	ms := m.GetMargins()
-	s := m.GetSize()
-	ma := m.GetMargins()
-	return image.Rect(int(ma.X), int(ma.Y), int(ms.X+s.X), int(ms.Y+s.Y))
-}
+// func (m *MetadataModel) GetRect() image.Rectangle {
+// 	ms := m.GetMargins()
+// 	s := m.GetSize()
+// 	ma := m.GetMargins()
+// 	return image.Rect(int(ma.X), int(ma.Y), int(ms.X+s.X), int(ms.Y+s.Y))
+// }
 
 func (m *MetadataModel) GetSize() types.Vec2 {
 	return m.Size
@@ -136,8 +135,7 @@ func (m *MetadataModel) GetMargins() types.Vec2 {
 	sc := m.GetScale()
 	s := screen.UseScreen()
 	size := s.GetSize()
-	lastSize := s.GetLastSize()
-	r := types.Vec2{X: (((m.Margins.X * size.X) / 100) / (size.X / lastSize.X)) - (ss.X * sc.X / 2), Y: (((m.Margins.Y * size.Y) / 100) / (size.Y / lastSize.Y)) - (ss.Y * sc.Y / 2)}
+	r := types.Vec2{X: ((m.Margins.X * size.X) / 100) - (ss.X * sc.X / 2), Y: ((m.Margins.Y * size.Y) / 100) - (ss.Y * sc.Y / 2)}
 
 	if m.Type.Contains("scrollable") {
 		o := m.GetOffset()
@@ -156,8 +154,8 @@ func (m *MetadataModel) GetMargins() types.Vec2 {
 func (m *MetadataModel) GetScale() types.Vec2 {
 	s := screen.UseScreen()
 	size := s.GetSize()
-	lastSize := s.GetLastSize()
-	return types.Vec2{X: (((m.Scale.X * size.X) / 100) / (size.X / lastSize.X)), Y: (((m.Scale.Y * size.Y) / 100) / (size.Y / lastSize.Y))}
+	// lastSize := s.GetLastSize()
+	return types.Vec2{X: ((m.Scale.X * size.X) / 100), Y: ((m.Scale.Y * size.Y) / 100)}
 }
 
 func (m *MetadataModel) GetBuffSpeed() types.Vec2 {

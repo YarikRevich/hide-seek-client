@@ -2,83 +2,141 @@ package screen
 
 import (
 	"fmt"
+	"image/color"
+	"math"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"golang.org/x/image/font"
 )
 
-var instance *Screen
+//All metrics of the ScreenManager are shown
+//in tiles
+type ScreenManager struct {
+	Pixels       []types.Vec2
+	OrigTileSize int
+	Scale        int
 
-type Screen struct {
-	//Describes full screen size
-	max, min, lastSize types.Vec2
+	TileSize int
 
-	screen *ebiten.Image
+	//Describes full ScreenManager size
+	MaxScreenSize, MinScreenSize, lastSize types.Vec2
+
+	ScreenManager *ebiten.Image
 }
 
-func (s *Screen) SetScreen(i *ebiten.Image) {
-	s.screen = i
+// NEW API
+
+type RenderTextCharachterOpts struct {
+	Position                            types.Vec2
+	FontAdvance, FontDistance, RowWidth float64
+	Font                                font.Face
+	Color                               color.Color
 }
 
-func (s *Screen) GetScreen() *ebiten.Image {
-	return s.screen
+//Renders text charachters for ui elements
+func (s *ScreenManager) RenderTextCharachter(cNum int, c rune, opts RenderTextCharachterOpts) {
+	var yOffset float64
+	if c != '\n' {
+		yOffset = math.Floor(opts.Position.X*float64(cNum) + opts.FontDistance*float64(cNum-1)/opts.RowWidth)
+	} else {
+		delta := float64(cNum) - opts.RowWidth
+		cNumInc := opts.RowWidth
+		if delta > 0 {
+			cNumInc = math.Ceil(float64(cNum) / cNumInc)
+		}
+		yOffset = math.Floor(opts.Position.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
+	}
+
+	text.Draw(
+		s.GetImage(),
+		string(c),
+		opts.Font,
+		int(opts.Position.X*float64(cNum)+opts.FontDistance*float64(cNum/(cNum+1))),
+		int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
+		opts.Color)
 }
 
-func (s *Screen) CleanScreen() {
-	s.screen = nil
+func (s *ScreenManager) RenderTile(position types.Vec2, tile sources.Tile) {
+	tileSize := tile.GetSize()
+yLoop:
+	for y := 0; y < tileSize.Y; y++ {
+		ya := y + int(position.Y)
+		for x := 0; x < tileSize.X; x++ {
+			xa := x + int(position.X)
+			screenWidth, screenHeight := s.GetImage().Size()
+			if xa < 0 || xa >= screenWidth || ya < 0 || ya >= screenHeight {
+				break yLoop
+			}
+			s.Pixels[x+y*screenWidth] = tile.Pixels[x+y*tileSize.X]
+		}
+	}
 }
 
-func (s *Screen) SetLastSize() {
-	width, height := s.screen.Size()
+func (s *ScreenManager) SetImage(i *ebiten.Image) {
+	s.ScreenManager = i
+}
+
+func (s *ScreenManager) GetImage() *ebiten.Image {
+	return s.ScreenManager
+}
+
+func (s *ScreenManager) CleanScreen() {
+	s.ScreenManager = nil
+}
+
+func (s *ScreenManager) SetLastSize() {
+	width, height := s.ScreenManager.Size()
 	s.lastSize = types.Vec2{X: float64(width), Y: float64(height)}
 }
 
-func (s *Screen) GetLastSize() types.Vec2 {
+func (s *ScreenManager) GetLastSize() types.Vec2 {
 	if s.lastSize.X == 0 || s.lastSize.Y == 0 {
 		return s.GetSize()
 	}
 	return s.lastSize
 }
 
-func (s *Screen) GetSize() types.Vec2 {
-	if s.screen != nil {
-		width, height := s.screen.Size()
+func (s *ScreenManager) GetSize() types.Vec2 {
+	if s.ScreenManager != nil {
+		width, height := s.ScreenManager.Size()
 		return types.Vec2{X: float64(width), Y: float64(height)}
 	}
 	return s.lastSize
 }
 
-func (s *Screen) GetMaxSize() types.Vec2 {
-	return s.max
+func (s *ScreenManager) GetMaxSize() types.Vec2 {
+	return s.MaxScreenSize
 }
 
-func (s *Screen) GetMinSize() types.Vec2 {
-	return s.min
+func (s *ScreenManager) GetMinSize() types.Vec2 {
+	return s.MinScreenSize
 }
 
-func (s *Screen) GetAxis() types.Vec2 {
-	if s.screen != nil {
-		x, y := s.screen.Size()
+func (s *ScreenManager) GetAxis() types.Vec2 {
+	if s.ScreenManager != nil {
+		x, y := s.ScreenManager.Size()
 		return types.Vec2{X: float64(x) / 2, Y: float64(y) / 2}
 	}
 	return types.Vec2{X: s.lastSize.X / 2, Y: s.lastSize.Y / 2}
 }
 
-func (s *Screen) GetAxisSleepingZones() types.Vec2 {
+func (s *ScreenManager) GetAxisSleepingZones() types.Vec2 {
 	a := s.GetAxis()
 	return types.Vec2{X: (a.X * 5) / 100, Y: (a.Y * 5) / 100}
 }
 
-func (s *Screen) IsResized() bool {
+func (s *ScreenManager) IsResized() bool {
 	size := s.GetSize()
 	return size.X != s.lastSize.X || size.Y != s.lastSize.Y
 }
 
-func (s *Screen) GetHUDOffset() float64 {
+func (s *ScreenManager) GetHUDOffset() float64 {
 	return s.GetSize().Y / 12
 }
 
-func (s *Screen) IsLessAxisXCrossed(x float64, speedX float64) bool {
+func (s *ScreenManager) IsLessAxisXCrossed(x float64, speedX float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
@@ -86,38 +144,48 @@ func (s *Screen) IsLessAxisXCrossed(x float64, speedX float64) bool {
 	return x < a.X+(speedX+asz.X) && x > a.X-(speedX+asz.X)
 }
 
-func (s *Screen) IsHigherAxisXCrossed(x float64, speedX float64) bool {
+func (s *ScreenManager) IsHigherAxisXCrossed(x float64, speedX float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
 	return x > a.X-(speedX+asz.X) && x < a.X+(speedX+asz.X)
 }
 
-func (s *Screen) IsLessAxisYCrossed(y float64, speedY float64) bool {
+func (s *ScreenManager) IsLessAxisYCrossed(y float64, speedY float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
 	return y < a.Y+(speedY+asz.Y) && y > a.Y-(speedY+asz.Y)
 }
 
-func (s *Screen) IsHigherAxisYCrossed(y float64, speedY float64) bool {
+func (s *ScreenManager) IsHigherAxisYCrossed(y float64, speedY float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
 	return y > a.Y-(speedY+asz.Y) && y < a.Y+(speedY+asz.Y)
 }
 
-// func (s *Screen) GetOffset() types.Vec2 {
+// func (s *ScreenManager) GetOffset() types.Vec2 {
 // 	return types.Vec2{X: math.Ceil(s.GetAxisX()), Y: math.Ceil(s.GetAxisY())}
 // }
 
-func UseScreen() *Screen {
-	if instance == nil {
-		fullWidth, fullHeight := ebiten.ScreenSizeInFullscreen()
-		instance = &Screen{
-			max: types.Vec2{X: float64(fullWidth) / 1.15, Y: float64(fullHeight) / 1.15},
-			min: types.Vec2{X: ((float64(fullWidth) / 1.15) * 60) / 100, Y: ((float64(fullHeight) / 1.15) * 60) / 100},
-		}
+func NewScreenManager() *ScreenManager {
+	fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
+	return &ScreenManager{
+		Pixels: make([]types.Vec2, fullScreenWidth*fullScreenHeight),
 	}
-	return instance
 }
+
+// 		fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
+// 		origTileSize := 17
+// 		scale := 1
+// 		tileSize := origTileSize * scale
+// 		maxScreenSize := types.Vec2{X: float64(fullScreenWidth / tileSize), Y: float64(fullScreenHeight / tileSize)}
+// 		minScreenSize := types.Vec2{X: math.Floor(float64(fullScreenWidth * 60 / 100 / tileSize)), Y: math.Floor(float64(fullScreenHeight * 60 / 100 / tileSize))}
+
+// 		instance = &ScreenManager{
+// 			OrigTileSize:  origTileSize,
+// 			Scale:         scale,
+// 			TileSize:      tileSize,
+// 			MaxScreenSize: maxScreenSize,
+// 			MinScreenSize: minScreenSize,

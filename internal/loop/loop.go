@@ -6,6 +6,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/transition"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 
 	"github.com/YarikRevich/hide-seek-client/internal/layers/animation"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio"
@@ -20,7 +21,11 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-type Loop struct{}
+type Loop struct {
+	screen.ScreenManager
+	UIManager
+	WorldManager
+}
 
 var _ ebiten.Game = (*Loop)(nil)
 
@@ -32,7 +37,6 @@ func (g *Loop) Update() error {
 	}
 
 	mouse.Process()
-
 	screen.UseScreen().CleanScreen()
 
 	networking.Process()
@@ -74,5 +78,5 @@ func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func New() *Loop {
-	return new(Loop)
+	return &Loop{ScreenManager: screen.ScreenManager{Pixels: make([]types.Vec2, 0)}}
 }
