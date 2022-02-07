@@ -1,59 +1,52 @@
 package render
 
-import (
-	"errors"
+// var instance IRender
 
-	screenhistory "github.com/YarikRevich/hide-seek-client/internal/core/screen"
-	"github.com/hajimehoshi/ebiten/v2"
-)
+// type render struct {
+// 	toRender                 []func(*ebiten.Image)
+// 	permitToGetNumOfRendered bool
+// 	numOfRendered            int
+// }
 
-var instance IRender
+// type IRender interface {
+// 	SetToRender(func(*ebiten.Image))
+// 	Render()
 
-type render struct {
-	toRender                 []func(*ebiten.Image)
-	permitToGetNumOfRendered bool
-	numOfRendered            int
-}
+// 	CleanRenderPool()
+// }
 
-type IRender interface {
-	SetToRender(func(*ebiten.Image))
-	Render()
+// func (r *render) SetToRender(c func(*ebiten.Image)) {
+// 	r.numOfRendered = 0
+// 	r.permitToGetNumOfRendered = false
+// 	r.toRender = append(r.toRender, c)
+// }
 
-	CleanRenderPool()
-}
+// func (r *render) Render() {
+// 	screen := screenhistory.UseScreen().GetScreen()
+// 	for _, v := range r.toRender {
+// 		v(screen)
+// 		r.numOfRendered++
+// 	}
+// 	r.permitToGetNumOfRendered = true
+// }
 
-func (r *render) SetToRender(c func(*ebiten.Image)) {
-	r.numOfRendered = 0
-	r.permitToGetNumOfRendered = false
-	r.toRender = append(r.toRender, c)
-}
+// //Used for testing purpose
+// func (r *render) NumOfRenderer() (int, error) {
+// 	if r.permitToGetNumOfRendered {
+// 		return r.numOfRendered, nil
+// 	}
+// 	return 0, errors.New("NumOfRendered should be called after Render")
+// }
 
-func (r *render) Render() {
-	screen := screenhistory.UseScreen().GetScreen()
-	for _, v := range r.toRender {
-		v(screen)
-		r.numOfRendered++
-	}
-	r.permitToGetNumOfRendered = true
-}
+// func (r *render) CleanRenderPool() {
+// 	r.toRender = r.toRender[:0]
+// }
 
-//Used for testing purpose
-func (r *render) NumOfRenderer() (int, error) {
-	if r.permitToGetNumOfRendered {
-		return r.numOfRendered, nil
-	}
-	return 0, errors.New("NumOfRendered should be called after Render")
-}
-
-func (r *render) CleanRenderPool() {
-	r.toRender = r.toRender[:0]
-}
-
-func UseRender() IRender {
-	if instance == nil {
-		instance = &render{
-			toRender: make([]func(*ebiten.Image), 0, 2000),
-		}
-	}
-	return instance
-}
+// func UseRender() IRender {
+// 	if instance == nil {
+// 		instance = &render{
+// 			toRender: make([]func(*ebiten.Image), 0, 2000),
+// 		}
+// 	}
+// 	return instance
+// }

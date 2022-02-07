@@ -1,25 +1,19 @@
 package color
 
-import (
-	"image/color"
+// type Color struct{}
 
-	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-)
+// //Returns RGBA representation of
+// //color saved in metadata
+// func (c *Color) GetColor(fc sources.FontColor) color.RGBA {
+// 	switch fc {
+// 	case sources.Black:
+// 		return color.RGBA{0, 0, 0, 255}
+// 	case sources.White:
+// 		return color.RGBA{255, 255, 255, 255}
+// 	}
+// 	return color.RGBA{}
+// }
 
-type Color struct{}
-
-//Returns RGBA representation of
-//color saved in metadata
-func (c *Color) GetColor(fc sources.FontColor) color.RGBA {
-	switch fc {
-	case sources.Black:
-		return color.RGBA{0, 0, 0, 255}
-	case sources.White:
-		return color.RGBA{255, 255, 255, 255}
-	}
-	return color.RGBA{}
-}
-
-func NewColor() *Color {
-	return new(Color)
-}
+// func NewColor() *Color {
+// 	return new(Color)
+// }

@@ -7,15 +7,11 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"runtime/debug"
 	"time"
 
-	"github.com/YarikRevich/hide-seek-client/assets"
-	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/runtime"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
-	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/loop"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
@@ -45,22 +41,21 @@ func init() {
 	}
 	logrus.SetOutput(lgf)
 
+	logrus.SetLevel(logrus.WarnLevel)
 	if params.IsDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
-	} else {
-		logrus.SetLevel(logrus.WarnLevel)
 	}
 
-	sources.UseSources().LoadSources(assets.Assets)
+	// sources.UseSources().LoadSources(assets.Assets)
 
-	middlewares.UseMiddlewares().Prepare().Use()
+	// middlewares.UseMiddlewares().Prepare().Use()
 
 	printer.PrintCliMessage("HideSeek\nClient!")
 	if params.IsDebug() {
 		printer.PrintCliMessage("You are in\nDebug mode")
 	}
 
-	debug.SetGCPercent(2000)
+	// debug.SetGCPercent(2000)
 
 }
 
@@ -78,14 +73,14 @@ func main() {
 		}()
 	}
 
-	s := screen.UseScreen()
-	maxSize := s.GetMaxSize()
-	minSize := s.GetMinSize()
+	sm := new(screen.ScreenManager)
+	maxSize := sm.GetMaxSize()
+	minSize := sm.GetMinSize()
 
 	ebiten.SetWindowSize(int(maxSize.X), int(maxSize.Y))
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(int(minSize.X), int(minSize.Y), -1, -1)
 
-	log.Fatalln(ebiten.RunGame(loop.New()))
+	log.Fatalln(ebiten.RunGame(loop.New(sm)))
 }

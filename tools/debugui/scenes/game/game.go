@@ -10,8 +10,7 @@ func Show() {
 	world.UseWorld().DebugInit()
 
 	middlewares.UseMiddlewares().UI().UseAfter(func() {
-		statemachine.UseStateMachine().UI().SetState(statemachine.UI_GAME)
+		statemachine.Layers.SetState(statemachine.LAYERS_SESSION)
 	})
-
-	statemachine.UseStateMachine().Input().SetState(statemachine.INPUT_GAME)
+	statemachine.Input.SetState(statemachine.INPUT_GAME)
 }

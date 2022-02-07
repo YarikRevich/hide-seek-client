@@ -1,14 +1,13 @@
 package loop
 
 import (
-	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
+	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
+	"github.com/YarikRevich/hide-seek-client/internal/core/player"
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
-	"github.com/YarikRevich/hide-seek-client/internal/core/render"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
-	"github.com/YarikRevich/hide-seek-client/internal/core/transition"
-	"github.com/YarikRevich/hide-seek-client/internal/core/types"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
+	"github.com/YarikRevich/hide-seek-client/internal/layers"
 
-	"github.com/YarikRevich/hide-seek-client/internal/layers/animation"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse"
@@ -22,16 +21,14 @@ import (
 )
 
 type Loop struct {
-	screen.ScreenManager
-	UIManager
-	WorldManager
+	*screen.ScreenManager
+	*world.WorldManager
+	*notifications.NotificationManager
 }
 
 var _ ebiten.Game = (*Loop)(nil)
 
 func (g *Loop) Update() error {
-	render.UseRender().CleanRenderPool()
-
 	if !params.IsWithoutSound() {
 		audio.Process()
 	}
@@ -40,7 +37,6 @@ func (g *Loop) Update() error {
 	screen.UseScreen().CleanScreen()
 
 	networking.Process()
-	animation.Process()
 
 	ui.Process()
 	particles.Process()
@@ -49,7 +45,11 @@ func (g *Loop) Update() error {
 		debugui.UseDebugImGUI().Update()
 	}
 
-	transition.UseTransitionPool().Process()
+	if params.IsWithoutSound() {
+		player.UsePlayer().StopAll()
+	}
+
+	// transition.UseTransitionPool().Process()
 
 	keyboard.Process()
 
@@ -57,16 +57,23 @@ func (g *Loop) Update() error {
 }
 
 func (g *Loop) Draw(i *ebiten.Image) {
-	screen.UseScreen().SetScreen(i)
+	g.ScreenManager.SetImage(i)
+	// screen.UseScreen().SetScreen(i)
 
 	if params.IsDebug() {
 		ingame.UseProfiler().StartMonitoring(ingame.RENDER)
 		defer ingame.UseProfiler().StopMonitoring(ingame.RENDER)
 	}
 
-	middlewares.UseMiddlewares().Render().UseAfter(render.UseRender().Render)
+	for _, v := range layers.Layers {
+		if v.IsActive() {
+			v.SetContext(g.WorldManager)
+			v.Update()
+			v.Render(g.ScreenManager)
+		}
+	}
 
-	screen.UseScreen().SetLastSize()
+	// screen.UseScreen().SetLastSize()
 
 	if params.IsDebug() {
 		debugui.UseDebugImGUI().Render(i)
@@ -77,6 +84,9 @@ func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return outsideWidth, outsideHeight
 }
 
-func New() *Loop {
-	return &Loop{ScreenManager: screen.ScreenManager{Pixels: make([]types.Vec2, 0)}}
+func New(sm *screen.ScreenManager) *Loop {
+	return &Loop{
+		ScreenManager:       sm,
+		WorldManager:        world.NewWorldManager(),
+		NotificationManager: notifications.NewNotificationManager()}
 }

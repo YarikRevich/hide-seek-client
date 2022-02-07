@@ -221,39 +221,39 @@ func (w *World) String() string {
 	return r
 }
 
-//Inits basic world for debug purpose
-func (w *World) DebugInit() {
-	w.pc.DebugInit()
-	w.worldMap.DebugInit()
-}
+// //Inits basic world for debug purpose
+// func (w *World) DebugInit() {
+// 	w.pc.DebugInit()
+// 	w.worldMap.DebugInit()
+// }
 
 //Checks if x and y pos collide with objects in the world
-func (w *World) IsCollision(x, y float64) (bool, int) {
-	for _, v := range w.pcs {
-		if v.RawPos.X == x && v.RawPos.Y == y {
-			return true, objects.PLAYER
-		}
-	}
+// func (w *World) IsCollision(x, y float64) (bool, int) {
+// for _, v := range w.pcs {
+// 	if v.RawPos.X == x && v.RawPos.Y == y {
+// 		return true, objects.PLAYER
+// 	}
+// }
 
-	for _, v := range w.weapons {
-		if v.RawPos.X == x && v.RawPos.Y == y {
-			return true, objects.WEAPON
-		}
-	}
+// for _, v := range w.weapons {
+// 		if v.RawPos.X == x && v.RawPos.Y == y {
+// 			return true, objects.WEAPON
+// 		}
+// 	}
 
-	for _, v := range w.ammos {
-		if v.RawPos.X == x && v.RawPos.Y == y {
-			return true, objects.AMMO
-		}
-	}
+// 	for _, v := range w.ammos {
+// 		if v.RawPos.X == x && v.RawPos.Y == y {
+// 			return true, objects.AMMO
+// 		}
+// 	}
 
-	for _, v := range w.elements {
-		if v.RawPos.X == x && v.RawPos.Y == y {
-			return true, objects.ELEMENT
-		}
-	}
-	return false, 0
-}
+// 	for _, v := range w.elements {
+// 		if v.RawPos.X == x && v.RawPos.Y == y {
+// 			return true, objects.ELEMENT
+// 		}
+// 	}
+// 	return false, 0
+// }
 
 func UseWorld() *World {
 	if instance == nil {
@@ -271,4 +271,28 @@ func UseWorld() *World {
 		instance.gamesettings.SetWorldExist(true)
 	}
 	return instance
+}
+
+type WorldManager struct {
+	objects []*objects.Base
+}
+
+//Creates snapshot of world and sends it to the server
+func (wm *WorldManager) ToAPIMessage() *server_external.World {
+	return &server_external.World{
+		Id:           w.ID.String(),
+		GameSettings: w.gamesettings.ToAPIMessage(),
+	}
+}
+
+func (wm *WorldManager) FromAPIMessage(m *server_external.World) {
+	// w.gamesettings.Regime = m.GameSettings.Regime
+	// fmt.Println(m)
+	// fmt.Println(m.GameSettings)
+	wm.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted
+	wm.gamesettings.IsWorldExist = m.GameSettings.IsWorldExist
+}
+
+func NewWorldManager() *WorldManager {
+	return new(WorldManager)
 }

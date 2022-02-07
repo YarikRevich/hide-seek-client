@@ -7,6 +7,9 @@ type SingleState struct {
 type ISingleState interface {
 	SetState(int)
 	GetState() int
+
+	//Checks if current state is equal to passed
+	Check(int) bool
 }
 
 func (s *SingleState) SetState(st int) {
@@ -16,6 +19,10 @@ func (s *SingleState) SetState(st int) {
 
 func (s *SingleState) GetState() int {
 	return s.state
+}
+
+func (s *SingleState) Check(v int) bool {
+	return s.state == v
 }
 
 func NewSingleState(defaultState int) ISingleState {

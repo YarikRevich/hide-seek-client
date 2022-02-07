@@ -2,13 +2,10 @@ package screen
 
 import (
 	"fmt"
-	"image/color"
-	"math"
 
+	// "github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
-	"golang.org/x/image/font"
 )
 
 //All metrics of the ScreenManager are shown
@@ -28,51 +25,53 @@ type ScreenManager struct {
 
 // NEW API
 
-type RenderTextCharachterOpts struct {
-	Position                            types.Vec2
-	FontAdvance, FontDistance, RowWidth float64
-	Font                                font.Face
-	Color                               color.Color
-}
+// type RenderTextCharachterOpts struct {
+// 	Position                            types.Vec2
+// 	FontAdvance, FontDistance, RowWidth float64
+// 	Font                                font.Face
+// 	Color                               color.Color
+// }
 
 //Renders text charachters for ui elements
-func (s *ScreenManager) RenderTextCharachter(cNum int, c rune, opts RenderTextCharachterOpts) {
-	var yOffset float64
-	if c != '\n' {
-		yOffset = math.Floor(opts.Position.X*float64(cNum) + opts.FontDistance*float64(cNum-1)/opts.RowWidth)
-	} else {
-		delta := float64(cNum) - opts.RowWidth
-		cNumInc := opts.RowWidth
-		if delta > 0 {
-			cNumInc = math.Ceil(float64(cNum) / cNumInc)
-		}
-		yOffset = math.Floor(opts.Position.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
-	}
+// func (s *ScreenManager) RenderTextCharachter(cNum int, c rune, opts RenderTextCharachterOpts) {
+// var yOffset float64
+// if c != '\n' {
+// 	yOffset = math.Floor(opts.Position.X*float64(cNum) + opts.FontDistance*float64(cNum-1)/opts.RowWidth)
+// } else {
+// 	delta := float64(cNum) - opts.RowWidth
+// 	cNumInc := opts.RowWidth
+// 	if delta > 0 {
+// 		cNumInc = math.Ceil(float64(cNum) / cNumInc)
+// 	}
+// 	yOffset = math.Floor(opts.Position.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
+// }
 
-	text.Draw(
-		s.GetImage(),
-		string(c),
-		opts.Font,
-		int(opts.Position.X*float64(cNum)+opts.FontDistance*float64(cNum/(cNum+1))),
-		int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
-		opts.Color)
-}
+// text.Draw(
+// 	s.GetImage(),
+// 	string(c),
+// 	opts.Font,
+// 	int(opts.Position.X*float64(cNum)+opts.FontDistance*float64(cNum/(cNum+1))),
+// 	int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
+// 	opts.Color)
+// }
 
-func (s *ScreenManager) RenderTile(position types.Vec2, tile sources.Tile) {
-	tileSize := tile.GetSize()
-yLoop:
-	for y := 0; y < tileSize.Y; y++ {
-		ya := y + int(position.Y)
-		for x := 0; x < tileSize.X; x++ {
-			xa := x + int(position.X)
-			screenWidth, screenHeight := s.GetImage().Size()
-			if xa < 0 || xa >= screenWidth || ya < 0 || ya >= screenHeight {
-				break yLoop
-			}
-			s.Pixels[x+y*screenWidth] = tile.Pixels[x+y*tileSize.X]
-		}
-	}
-}
+// func (s *ScreenManager) RenderTile(position types.Vec2, tile sources.Tile) {
+// 	// ebitenutil.DrawRect(screenImage)
+
+// 	tileSize := tile.GetSize()
+// yLoop:
+// 	for y := 0; y < tileSize.Y; y++ {
+// 		ya := y + int(position.Y)
+// 		for x := 0; x < tileSize.X; x++ {
+// 			xa := x + int(position.X)
+// 			screenWidth, screenHeight := s.GetImage().Size()
+// 			if xa < 0 || xa >= screenWidth || ya < 0 || ya >= screenHeight {
+// 				break yLoop
+// 			}
+// 			s.Pixels[x+y*screenWidth] = tile.Pixels[x+y*tileSize.X]
+// 		}
+// 	}
+// }
 
 func (s *ScreenManager) SetImage(i *ebiten.Image) {
 	s.ScreenManager = i

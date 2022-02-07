@@ -1,64 +1,80 @@
 package sources
 
 import (
-	"embed"
 	"fmt"
-	"path/filepath"
-	"regexp"
-	"sync"
+	"image/color"
+	"math"
+	"strconv"
+	"strings"
 
+	"github.com/YarikRevich/hide-seek-client/assets"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/golang/freetype/truetype"
-	"github.com/sirupsen/logrus"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 )
 
 type Font struct {
-	sync.Mutex
-
-	Collection map[string]font.Face
+	Name string
+	Font font.Face
 }
 
-func (f *Font) loadFile(fs embed.FS, path string) {
-	file, err := fs.ReadFile(path)
+func (f *Font) load(path string) error {
+	file, err := assets.Assets.ReadFile(path)
 	if err != nil {
-		logrus.Fatal("error happened opening font file from embedded fs: ", err)
+		return fmt.Errorf("error happened opening font file from embedded fs: %s", err)
 	}
 
-	ff, err := truetype.Parse(file)
+	parsedFont, err := truetype.Parse(file)
 	if err != nil {
-		logrus.Fatal("error happened parsing font file from embedded fs: ", err)
+		return fmt.Errorf("error happened parsing font file from embedded fs: %s", err)
 	}
 
-	reg := regexp.MustCompile(`\.[a-z0-9]*$`)
-	if reg.MatchString(path) {
-		fontPath := reg.Split(path, -1)[0]
-		f.Lock()
+	name := strings.Split(path, ".")[0]
 
-		f.Collection[fontPath] =
-			truetype.NewFace(ff, &truetype.Options{
-				Size:    9,
-				Hinting: font.HintingFull,
-			})
-
-		f.Unlock()
+	size, err := strconv.Atoi(strings.Split(path, "_")[1])
+	if err != nil {
+		return err
 	}
+
+	f.Name = name
+	f.Font = truetype.NewFace(parsedFont, &truetype.Options{
+		Size:    float64(size),
+		Hinting: font.HintingFull,
+	})
+
+	fontCollection[f.Name] = f
+	return nil
 }
 
-func (f *Font) Load(fs embed.FS, path string, wg *sync.WaitGroup) {
-	NewParser(fs, path, f.loadFile).Parse()
-	wg.Done()
+type RenderTextCharachterOpts struct {
+	Text                                string
+	Position                            types.Vec2
+	FontAdvance, FontDistance, RowWidth float64
+	Color                               color.Color
 }
 
-func (f *Font) GetFont(path string) font.Face {
-	path = filepath.Join("dist/fonts", path)
+func (f *Font) Render(sm screen.ScreenManager, opts RenderTextCharachterOpts) {
+	for i, c := range opts.Text {
+		var yOffset float64
+		if c != '\n' {
+			yOffset = math.Floor(opts.Position.X*float64(i) + opts.FontDistance*float64(i-1)/opts.RowWidth)
+		} else {
+			delta := float64(i) - opts.RowWidth
+			cNumInc := opts.RowWidth
+			if delta > 0 {
+				cNumInc = math.Ceil(float64(i) / cNumInc)
+			}
+			yOffset = math.Floor(opts.Position.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
+		}
 
-	font, ok := f.Collection[path]
-	if !ok {
-		logrus.Fatal(fmt.Sprintf("font with path '%s' not found", path))
+		text.Draw(
+			sm.GetImage(),
+			string(c),
+			f.Font,
+			int(opts.Position.X*float64(i)+opts.FontDistance*float64(i/(i+1))),
+			int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
+			opts.Color)
 	}
-	return font
-}
-
-func NewFont() *Font {
-	return &Font{Collection: make(map[string]font.Face)}
 }

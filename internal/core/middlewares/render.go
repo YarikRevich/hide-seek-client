@@ -1,30 +1,22 @@
 package middlewares
 
 import (
-	"math"
-	"sync"
-	"time"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
-	"github.com/YarikRevich/hide-seek-client/internal/core/player"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
-	"github.com/YarikRevich/hide-seek-client/tools/params"
 
 	isconnect "github.com/alimasyhur/is-connect"
 )
 
-type Render struct {
-	sync.Mutex
+// type Render struct {
+// 	sync.Mutex
 
-	ticker *time.Ticker
-}
+// 	ticker *time.Ticker
+// }
 
-func (r *Render) cleanPopUp() {
-	notifications.PopUp.Filter(func(e *notifications.NotificatorEntity) bool {
-		return math.Signbit(float64(time.Now().Unix() - e.Timestamp))
-	})
-}
+// func (r *Render) cleanPopUp() {
+
+// }
 
 func (r *Render) checkServersConnectivity() {
 	go func() {
@@ -41,10 +33,10 @@ func (r *Render) checkServersConnectivity() {
 				networking.UseNetworking().Dialer().ReconnectServerClient()
 
 				notifications.PopUp.WriteError("Servers are offline!")
-				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_OFFLINE)
+				statemachine.Networking.SetState(statemachine.NETWORKING_OFFLINE)
 
 			} else {
-				statemachine.UseStateMachine().Networking().SetState(statemachine.NETWORKING_ONLINE)
+				statemachine.Networking.SetState(statemachine.NETWORKING_ONLINE)
 			}
 		}
 
@@ -52,23 +44,11 @@ func (r *Render) checkServersConnectivity() {
 	}()
 }
 
-func (r *Render) UseAfter(c func()) {
-	c()
+// func (r *Render) UseAfter(c func()) {
+// // 	c()
 
-	select {
-	case <-r.ticker.C:
-		r.checkServersConnectivity()
-	default:
-	}
+// // }
 
-	//Handles sound disabling, because in debug
-	//mode sound can be disabled after music play start
-	if params.IsWithoutSound() {
-		player.UsePlayer().StopAll()
-	}
-	r.cleanPopUp()
-}
-
-func NewRender() *Render {
-	return &Render{ticker: time.NewTicker(3 * time.Second)}
-}
+// func NewRender() *Render {
+// 	return &Render{ticker: time.NewTicker(3 * time.Second)}
+// }

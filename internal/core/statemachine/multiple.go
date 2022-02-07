@@ -11,6 +11,7 @@ type IMultipleState interface {
 	SetState(uuid.UUID, int)
 	GetState(uuid.UUID) int
 	Reset()
+	Check(uuid.UUID, int) bool
 }
 
 func (s *MultipleState) SetState(i uuid.UUID, st int) {
@@ -24,6 +25,14 @@ func (s *MultipleState) GetState(i uuid.UUID) int {
 		return s.defaultState
 	}
 	return v
+}
+
+func (s *MultipleState) Check(i uuid.UUID, st int) bool {
+	v, ok := s.states[i]
+	if !ok {
+		return false
+	}
+	return v == st
 }
 
 func (s *MultipleState) Reset() {

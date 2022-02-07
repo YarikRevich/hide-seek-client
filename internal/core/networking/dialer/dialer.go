@@ -20,7 +20,7 @@ type Dialer struct {
 func (d *Dialer) dialServer() {
 	var endpoint strings.Builder
 
-	switch statemachine.UseStateMachine().Dial().GetState() {
+	switch statemachine.Dial.GetState() {
 	case statemachine.DIAL_LAN:
 		endpoint.WriteString("127.0.0.1:")
 	case statemachine.DIAL_WAN:
@@ -42,7 +42,7 @@ func (d *Dialer) dialServer() {
 func (d *Dialer) dialServices() {
 	var endpoint strings.Builder
 
-	switch statemachine.UseStateMachine().Dial().GetState() {
+	switch statemachine.Dial.GetState() {
 	case statemachine.DIAL_LAN:
 		endpoint.WriteString("127.0.0.1:")
 	case statemachine.DIAL_WAN:

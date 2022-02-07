@@ -30,7 +30,7 @@ func (d *DebugImGUI) Render(screen *ebiten.Image) {
 
 		if imgui.BeginMenu("Actions") {
 			if imgui.Button("Kill pc") {
-				statemachine.UseStateMachine().PCs().SetState(pc.ID, statemachine.PC_DEAD_NOW)
+				statemachine.PCs.SetState(pc.ID, statemachine.PC_DEAD_NOW)
 			}
 
 			imgui.EndMenu()

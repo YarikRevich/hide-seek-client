@@ -5,7 +5,6 @@ import (
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
-	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -26,7 +25,7 @@ import (
 type Map struct {
 	Base
 
-	*sources.CollidersModel
+	// *sources.CollidersModel
 
 	// Regime regime
 

@@ -74,6 +74,7 @@ func (a *Player) Play(trackPath string, opts PlayerOpts) {
 		track.Unlock()
 	}()
 }
+
 func (a *Player) Pause(trackPath string) {
 	if track := a.trackManager.Find(trackPath); track != nil {
 		track.Ctrl.Paused = true

@@ -9,7 +9,6 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/google/uuid"
@@ -387,11 +386,20 @@ func (o *Base) GetPosForCamera() types.Vec2 {
 	return types.Vec2{X: rX, Y: rY}
 }
 
-func (b *Base) OnDraw(screen *ebiten.Image) {
+func (b *Base) Render(screen *ebiten.Image) {
 
 }
 
+func (b *Base) Animate() {
+	b.Animation.FrameDelayCounter++
+	b.Animation.FrameDelayCounter %= uint64(b.MetadataModel.Animation.FrameDelay)
+	if b.Animation.FrameDelayCounter == 0 {
+		b.Animation.FrameCount++
+		b.Animation.FrameCount %= uint64(b.MetadataModel.Animation.FrameNum)
+	}
+}
+
 func NewBase() *Base {
-	s := screen.UseScreen().GetAxis()
-	return &Base{Parent: new(Base), ScreenPos: types.Vec2{X: s.X, Y: s.Y}}
+	// s := screen.UseScreen().GetAxis()
+	return &Base{Parent: new(Base)} //, ScreenPos: types.Vec2{X: s.X, Y: s.Y}}
 }

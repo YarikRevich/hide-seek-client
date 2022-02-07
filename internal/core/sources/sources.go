@@ -1,96 +1,81 @@
 package sources
 
 import (
-	"embed"
-	"sync"
-
-	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
+	"errors"
+	"fmt"
+	"path/filepath"
 )
 
-var instance SourcesProvider
+var tileMapCollection map[string]*Tilemap
+var shaderCollection map[string]*Shader
+var fontCollection map[string]*Font
+var audioCollection map[string]*Audio
 
-type provider struct {
-	audio     *Audio
-	font      *Font
-	images    *Images
-	metadata  *Metadata
-	shaders   *Shaders
-	colliders *Colliders
-}
+var ResourceNotFoundError error = errors.New("'%s' with path '%s' not found")
 
-type SourcesProvider interface {
-	LoadSources(embed.FS)
+func GetTileMap(path string) *Tilemap {
+	path = filepath.Join("dist/tilemaps", path)
 
-	Audio() *Audio
-	Font() *Font
-	Images() *Images
-	Metadata() *Metadata
-	Shaders() *Shaders
-	Colliders() *Colliders
-	IsLoadingEnded() bool
-}
-
-//Loads all sources asynchronously
-func (p *provider) LoadSources(fs embed.FS) {
-	var wg sync.WaitGroup
-	wg.Add(6)
-
-	go p.audio.Load(fs, "dist/audio", &wg)
-	latency.Seq(func(s *sync.WaitGroup) {
-		p.images.Load(fs, "dist/images", &wg, s)
-	}, func(s *sync.WaitGroup) {
-		p.metadata.Load(fs, "dist/metadata", &wg, s)
-	})
-	go p.font.Load(fs, "dist/fonts", &wg)
-	go p.shaders.Load(fs, "dist/shaders", &wg)
-	go p.colliders.Load(fs, "dist/colliders", &wg)
-
-	wg.Wait()
-}
-
-func (p *provider) Audio() *Audio {
-	return p.audio
-}
-
-func (p *provider) Font() *Font {
-	return p.font
-}
-
-func (p *provider) Images() *Images {
-	return p.images
-}
-
-func (p *provider) Metadata() *Metadata {
-	return p.metadata
-}
-
-func (p *provider) Shaders() *Shaders {
-	return p.shaders
-}
-
-func (p *provider) Colliders() *Colliders {
-	return p.colliders
-}
-
-//Returns a condition of sources' loading process
-func (p *provider) IsLoadingEnded() bool {
-	if p.audio.IsAllAudioLoaded() {
-		return true
-	}
-	//TODO: include other load checkers
-	return false
-}
-
-func UseSources() SourcesProvider {
-	if instance == nil {
-		instance = &provider{
-			font:      NewFont(),
-			metadata:  NewMetadata(),
-			images:    NewImages(),
-			audio:     NewAudio(),
-			shaders:   NewShaders(),
-			colliders: NewColliders(),
+	tileMap, ok := tileMapCollection[path]
+	if !ok {
+		newTileMap := new(Tilemap)
+		if err := newTileMap.load(path); err != nil {
+			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "tilemap", path))
 		}
+		return newTileMap
 	}
-	return instance
+	return tileMap
 }
+
+func GetShader(path string) *Shader {
+	path = filepath.Join("dist/shaders", path)
+
+	shader, ok := shaderCollection[path]
+	if !ok {
+		newShader := new(Shader)
+		if err := newShader.load(path); err != nil {
+			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "shader", path))
+		}
+		return newShader
+	}
+	return shader
+}
+
+func GetFont(path string, size int) *Font {
+	path = filepath.Join("dist/fonts", path)
+
+	font, ok := fontCollection[path]
+	if !ok {
+		newFont := new(Font)
+		if err := newFont.load(path); err != nil {
+			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "font", path))
+		}
+		return newFont
+	}
+	return font
+}
+
+func GetAudio(path string) *Audio {
+	path = filepath.Join("dist/audio", path)
+
+	audio, ok := audioCollection[path]
+	if !ok {
+		newAudio := new(Audio)
+		if err := newAudio.load(path); err != nil {
+			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "audio", path))
+		}
+		return newAudio
+	}
+	return audio
+}
+
+// 	IsLoadingEnded() bool
+
+// //Returns a condition of sources' loading process
+// func (p *provider) IsLoadingEnded() bool {
+// 	if p.audio.IsAllAudioLoaded() {
+// 		return true
+// 	}
+// 	//TODO: include other load checkers
+// 	return false
+// }

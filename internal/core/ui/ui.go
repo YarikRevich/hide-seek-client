@@ -3,7 +3,7 @@ package ui
 import "github.com/YarikRevich/hide-seek-client/internal/core/screen"
 
 type Component interface {
-	Render(screen.Screen)
+	Render(screen.ScreenManager)
 }
 
 type UIManager struct {
@@ -18,7 +18,7 @@ func (uim *UIManager) AddComponent(c Component) {
 	uim.components = append(uim.components, c)
 }
 
-func (uim *UIManager) Render(s screen.Screen) {
+func (uim *UIManager) Render(s screen.ScreenManager) {
 	for _, c := range uim.components {
 		c.Render(s)
 	}
