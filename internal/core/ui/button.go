@@ -9,7 +9,8 @@ import (
 )
 
 type ButtonOpts struct {
-	Metadata                  *sources.MetadataModel
+	// Metadata                  *sources.MetadataModel
+	Tilemap                   *sources.Tilemap
 	Position                  types.Vec2
 	FontDistance, FontAdvance float64
 	Text                      string
@@ -20,16 +21,19 @@ type ButtonOpts struct {
 }
 
 type Button struct {
-	opts *ButtonOpts
+	Opts *ButtonOpts
 }
 
-func (b *Button) Render(sm screen.ScreenManager) {
-	b.opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		Position:     b.opts.Position,
-		FontAdvance:  b.opts.FontAdvance,
-		FontDistance: b.opts.FontDistance,
-		Color:        b.opts.Color,
-		RowWidth:     b.opts.RowWidth,
+func (b *Button) Render(sm *screen.ScreenManager) {
+	b.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
+		Position: b.Opts.Position,
+	})
+	b.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
+		Position:     b.Opts.Position,
+		FontAdvance:  b.Opts.FontAdvance,
+		FontDistance: b.Opts.FontDistance,
+		Color:        b.Opts.Color,
+		RowWidth:     b.Opts.RowWidth,
 	})
 }
 

@@ -4,9 +4,14 @@ import (
 	"time"
 )
 
+const (
+	Connectivity = iota
+)
+
 type timingIndex struct {
-	state int
-	time  time.Duration
+	// state int
+	timingType int
+	time       time.Duration
 }
 
 type Timings struct {
@@ -26,7 +31,7 @@ type Timings struct {
 
 func (t *Timings) CleanEachTimings(s int) {
 	for k, v := range t.timingsEach {
-		if k.state == s {
+		if k.timingType == s {
 			go func() {
 				v.close <- 1
 			}()
@@ -48,7 +53,7 @@ func (t *Timings) ExecFor(c, e func(), s int, d time.Duration) {
 	}
 }
 
-func (t *Timings) ExecEach(c func(), s int, d time.Duration) {
+func (t *Timings) ExecEach(s int, d time.Duration, c func()) {
 	i := timingIndex{s, d}
 	if _, ok := t.timingsEach[i]; !ok {
 		t.timingsEach[i] = &struct {

@@ -4,7 +4,6 @@ import (
 	"unsafe"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -157,16 +156,16 @@ type Map struct {
 
 // 	return (y-mm.Buffs.Speed.Y - mo.Size.Height/2) <= ay && ay <= (y+mm.Buffs.Speed.Y + mo.Size.Height/2)
 // }
-func (w *Map) GetSpawns() []*server_external.PositionInt {
-	var r []*server_external.PositionInt
+// func (w *Map) GetSpawns() []*server_external.PositionInt {
+// 	var r []*server_external.PositionInt
 
-	hudOffsetY := screen.UseScreen().GetHUDOffset()
-	for _, v := range w.MetadataModel.Spawns {
-		r = append(r, &server_external.PositionInt{Y: v.Y + int64(hudOffsetY), X: v.X})
-	}
+// 	hudOffsetY := screen.UseScreen().GetHUDOffset()
+// 	for _, v := range w.MetadataModel.Spawns {
+// 		r = append(r, &server_external.PositionInt{Y: v.Y + int64(hudOffsetY), X: v.X})
+// 	}
 
-	return r
-}
+// 	return r
+// }
 
 func (w *Map) ToAPIMessage() *server_external.Map {
 	return &server_external.Map{
@@ -183,9 +182,9 @@ func (m *Map) DebugInit() {
 	m.Base.SetSkin("maps/helloween/background/background")
 }
 
-func (m *Map) String() string {
-	return m.Skin.Name
-}
+// func (m *Map) String() string {
+// 	return m.Skin.Name
+// }
 
 // func (w *World) GetScaleForSkin() (float64, float64) {
 // 	m := w.GetMetadata().Modified

@@ -12,7 +12,7 @@ type UI struct {
 }
 
 func (u *UI) cleanTimings() {
-	latency.UseLatency().Timings().CleanEachTimings(statemachine.UseStateMachine().UI().GetState())
+	latency.UseLatency().Timings().CleanEachTimings(statemachine.Layers.GetState())
 }
 
 func (u *UI) cleanLatencyOnce() {
@@ -24,7 +24,7 @@ func (u *UI) cleanBuffers() {
 }
 
 func (u *UI) setSuspendedMusicDone() {
-	statemachine.UseStateMachine().Audio().SetState(statemachine.AUDIO_DONE)
+	statemachine.Audio.SetState(statemachine.AUDIO_DONE)
 }
 
 func (u *UI) UseAfter(c func()) {

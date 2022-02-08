@@ -9,7 +9,7 @@ import (
 )
 
 type InputOpts struct {
-	Metadata     *sources.MetadataModel
+	// Metadata     *sources.MetadataModel
 	Position     types.Vec2
 	FontDistance float64
 	Text         string
@@ -19,15 +19,15 @@ type InputOpts struct {
 }
 
 type Input struct {
-	opts *InputOpts
+	Opts *InputOpts
 }
 
-func (in *Input) Render(sm screen.ScreenManager) {
-	in.opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		Position:     in.opts.Position,
-		FontDistance: in.opts.FontDistance,
-		Color:        in.opts.Color,
-		RowWidth:     in.opts.RowWidth,
+func (in *Input) Render(sm *screen.ScreenManager) {
+	in.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
+		Position:     in.Opts.Position,
+		FontDistance: in.Opts.FontDistance,
+		Color:        in.Opts.Color,
+		RowWidth:     in.Opts.RowWidth,
 	})
 }
 

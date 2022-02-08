@@ -9,6 +9,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/google/uuid"
@@ -53,8 +54,8 @@ The object structure which describes
 each object on the map
 */
 type Base struct {
-	*sources.MetadataModel
-	sources.CollidersBatch
+	// *sources.MetadataModel
+	// sources.CollidersBatch
 
 	Type string
 
@@ -266,10 +267,10 @@ func (o *Base) SetSkin(path string) {
 
 	o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Path)
 
-	cs, err := sources.UseSources().Colliders().GetCollider(o.Path)
-	if err == nil {
-		o.CollidersBatch = cs
-	}
+	// cs, err := sources.UseSources().Colliders().GetCollider(o.Path)
+	// if err == nil {
+	// 	o.CollidersBatch = cs
+	// }
 }
 
 //Returns images for the skin selected
@@ -386,8 +387,7 @@ func (o *Base) GetPosForCamera() types.Vec2 {
 	return types.Vec2{X: rX, Y: rY}
 }
 
-func (b *Base) Render(screen *ebiten.Image) {
-
+func (b *Base) Render(sm screen.ScreenManager) {
 }
 
 func (b *Base) Animate() {

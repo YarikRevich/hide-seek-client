@@ -55,7 +55,7 @@ type RenderTextCharachterOpts struct {
 	Color                               color.Color
 }
 
-func (f *Font) Render(sm screen.ScreenManager, opts RenderTextCharachterOpts) {
+func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 	for i, c := range opts.Text {
 		var yOffset float64
 		if c != '\n' {

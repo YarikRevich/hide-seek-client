@@ -9,8 +9,6 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/layers"
 
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio"
-	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/keyboard"
-	"github.com/YarikRevich/hide-seek-client/internal/layers/hid/mouse"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/particles"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/ui"
@@ -24,6 +22,7 @@ type Loop struct {
 	*screen.ScreenManager
 	*world.WorldManager
 	*notifications.NotificationManager
+	*networking.NetworkingManager
 }
 
 var _ ebiten.Game = (*Loop)(nil)
@@ -33,7 +32,7 @@ func (g *Loop) Update() error {
 		audio.Process()
 	}
 
-	mouse.Process()
+	// mouse.Process()
 	screen.UseScreen().CleanScreen()
 
 	networking.Process()
@@ -49,9 +48,15 @@ func (g *Loop) Update() error {
 		player.UsePlayer().StopAll()
 	}
 
+	for _, v := range layers.Layers {
+		if v.IsActive() {
+			v.Update()
+		}
+	}
+
 	// transition.UseTransitionPool().Process()
 
-	keyboard.Process()
+	// keyboard.Process()
 
 	return nil
 }
@@ -67,11 +72,11 @@ func (g *Loop) Draw(i *ebiten.Image) {
 
 	for _, v := range layers.Layers {
 		if v.IsActive() {
-			v.SetContext(g.WorldManager)
-			v.Update()
 			v.Render(g.ScreenManager)
 		}
 	}
+
+	g.ScreenManager.SetLastSize()
 
 	// screen.UseScreen().SetLastSize()
 
@@ -84,9 +89,14 @@ func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return outsideWidth, outsideHeight
 }
 
-func New(sm *screen.ScreenManager) *Loop {
-	return &Loop{
+func New(sm *screen.ScreenManager, nm *notifications.NotificationManager) *Loop {
+	l := &Loop{
 		ScreenManager:       sm,
-		WorldManager:        world.NewWorldManager(),
-		NotificationManager: notifications.NewNotificationManager()}
+		NotificationManager: nm,
+		WorldManager:        world.NewWorldManager()}
+
+	for _, v := range layers.Layers {
+		v.SetContext(l.WorldManager)
+	}
+	return l
 }

@@ -1,44 +1,8 @@
 package sources
 
-// type TextPosition string
-// type FontColor string
-// type GameRole string
-// type Type []string
-
-// func (t *Type) Contains(q string) bool {
-// 	for _, v := range *t {
-// 		if v == q {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
-
-// //Predefined options of allowed text positions
-// const (
-// 	Center TextPosition = "center"
-// 	Left   TextPosition = "left"
-// 	Right  TextPosition = "right"
-// )
-
-// const (
-// 	White FontColor = "white"
-// 	Black FontColor = "black"
-// )
-
 // const (
 // 	GameMap GameRole = "gamemap"
 // )
-
-// type Animation struct {
-// 	FrameDelay,
-// 	FrameX,
-// 	FrameY,
-// 	FrameWidth,
-// 	FrameHeight float64
-
-// 	FrameNum int
-// }
 
 // //Runtime defined metadata model
 // type RuntimeDefined struct {
@@ -152,27 +116,6 @@ package sources
 // 	return types.Vec2{X: avg, Y: avg}
 // }
 
-// func (m *MetadataModel) GetOffset() types.Vec2 {
-// 	s := screen.UseScreen()
-// 	size := s.GetSize()
-// 	lastSize := s.GetLastSize()
-// 	return types.Vec2{X: m.Offset.X * (size.X / lastSize.X), Y: m.Offset.Y * (size.Y / lastSize.Y)}
-// }
-
-// type Metadata struct {
-// 	sync.Mutex
-
-// 	Collection map[string]*MetadataModel
-// }
-
-// func (m *Metadata) loadFile(fs embed.FS, path string) {
-// 	if reg := regexp.MustCompile(`\.toml*$`); reg.MatchString(path) {
-// 		var mm MetadataModel
-
-// 		if _, err := toml.DecodeFS(fs, path, &mm); err != nil {
-// 			logrus.Fatal("error happened decoding toml metatdata file from embedded FS", err)
-// 		}
-
 // 		if len(mm.Info.Parent) != 0 {
 // 			path := filepath.Join(utils.GetBasePath(strings.Split(path, "dist/metadata/")[1]), mm.Info.Parent)
 // 			img := UseSources().Images().GetImage(path)
@@ -186,30 +129,3 @@ package sources
 // 			mm.Size.X = float64(x)
 // 			mm.Size.Y = float64(y)
 // 		}
-
-// 		m.Lock()
-// 		m.Collection[reg.Split(path, -1)[0]] = &mm
-// 		m.Unlock()
-// 	}
-// }
-
-// func (m *Metadata) Load(fs embed.FS, path string, s, wg *sync.WaitGroup) {
-// 	NewParser(fs, path, m.loadFile).Parse()
-// 	wg.Done()
-// 	s.Done()
-// }
-
-// func (m *Metadata) GetMetadata(path string) *MetadataModel {
-// 	path = filepath.Join("dist/metadata", path)
-
-// 	metadata, ok := m.Collection[path]
-// 	if !ok {
-// 		logrus.Fatal(fmt.Sprintf("metadata with path '%s' not found", path))
-// 	}
-
-// 	return metadata
-// }
-
-// func NewMetadata() *Metadata {
-// 	return &Metadata{Collection: make(map[string]*MetadataModel)}
-// }

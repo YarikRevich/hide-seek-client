@@ -9,10 +9,15 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/YarikRevich/hide-seek-client/internal/core/latency"
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
+	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
 	"github.com/YarikRevich/hide-seek-client/internal/core/paths"
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/runtime"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/loop"
+	isconnect "github.com/alimasyhur/is-connect"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 
@@ -24,39 +29,34 @@ import (
 )
 
 func init() {
+	flag.Parse()
+	paths.InitSystemPaths()
+	rand.Seed(time.Now().Unix())
+
+	if isconnect.IsOnline() {
+		statemachine.Networking.SetState(statemachine.NETWORKING_ONLINE)
+	}
+
 	sr := beep.SampleRate(44100)
 	if err := speaker.Init(sr, sr.N(time.Second/10000)); err != nil {
 		logrus.Fatal("error happened initializing audio speaker")
 	}
 
-	rand.Seed(time.Now().Unix())
-
-	flag.Parse()
-
-	paths.InitSystemPaths()
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	lgf, err := os.OpenFile(filepath.Join(paths.GAME_LOG_DIR, "log.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	logrus.SetOutput(lgf)
-
 	logrus.SetLevel(logrus.WarnLevel)
 	if params.IsDebug() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	// sources.UseSources().LoadSources(assets.Assets)
-
-	// middlewares.UseMiddlewares().Prepare().Use()
-
 	printer.PrintCliMessage("HideSeek\nClient!")
 	if params.IsDebug() {
 		printer.PrintCliMessage("You are in\nDebug mode")
 	}
-
-	// debug.SetGCPercent(2000)
-
 }
 
 func main() {
@@ -73,6 +73,26 @@ func main() {
 		}()
 	}
 
+	nm := networking.NewNetworkingManager()
+	nm.DialWANServer()
+
+	ntm := notifications.NewNotificationManager()
+	latency.UseLatency().Timings().ExecEach(latency.Connectivity, time.Second*3, func() {
+		if !isconnect.IsOnline() && statemachine.Dial.Check(statemachine.DIAL_WAN) {
+			ntm.Write("You are offline, turn on LAN server to play locally!", -1, notifications.Error)
+			if statemachine.Layers.Check(statemachine.LAYERS_SETTINGS_MENU) ||
+				statemachine.Layers.Check(statemachine.LAYERS_START_MENU) {
+				statemachine.Networking.SetState(statemachine.NETWORKING_OFFLINE)
+			}
+		} else if !nm.IsWANConnected() {
+			nm.WAN.Connect()
+			ntm.Write("Servers are offline!", -1, notifications.Error)
+			statemachine.Networking.SetState(statemachine.NETWORKING_OFFLINE)
+		} else {
+			statemachine.Networking.SetState(statemachine.NETWORKING_ONLINE)
+		}
+	})
+
 	sm := new(screen.ScreenManager)
 	maxSize := sm.GetMaxSize()
 	minSize := sm.GetMinSize()
@@ -82,5 +102,5 @@ func main() {
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(int(minSize.X), int(minSize.Y), -1, -1)
 
-	log.Fatalln(ebiten.RunGame(loop.New(sm)))
+	log.Fatalln(ebiten.RunGame(loop.New(sm, nm)))
 }

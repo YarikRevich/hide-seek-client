@@ -1,10 +1,10 @@
 package events
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
+	"github.com/YarikRevich/hide-seek-client/internal/core/ui"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -16,35 +16,23 @@ type Mouse struct {
 
 type MousePress struct{}
 
-func (p *MousePress) IsMousePressLeftOnce(m sources.MetadataModel) bool {
+func (p *MousePress) IsMousePressLeftOnce(sm screen.ScreenManager, tm sources.Tilemap, b ui.ButtonOpts) bool {
 	currX, currY := ebiten.CursorPosition()
-	ms := m.GetMargins()
-	q := m.GetScale()
-	s := m.GetSize()
-
-	// if m.Type.Contains("font") {
-	// 	fmt.Println((currX >= int(ms.X) && currX <= int((s.X*q.X)+(ms.X))))
-	// }
+	screenScale := sm.GetScale()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(ms.X) && currX <= int((s.X*q.X)+(ms.X))) &&
-		(currY >= int(ms.Y) && currY <= int((s.Y*q.Y)+(ms.Y)))
+		(currX >= int(b.Position.X) && currX <= int((tm.Size.X*screenScale.X)+(b.Position.X))) &&
+		(currY >= int(b.Position.Y) && currY <= int((tm.Size.Y*screenScale.Y)+(b.Position.Y)))
 }
 
 //It checks collision with a static object, which won't change its size
 //after window resizing
-func (p *MousePress) IsMousePressLeftOnceStatic(m sources.MetadataModel) bool {
+func (p *MousePress) IsMousePressLeftOnceStatic(tm sources.Tilemap, b ui.ButtonOpts) bool {
 	currX, currY := ebiten.CursorPosition()
-	ms := m.GetMargins()
-	s := m.GetSize()
-
-	if m.Type.Contains("font") {
-		fmt.Println((currY >= int(ms.Y) && currY <= int((s.Y)+(ms.Y))))
-	}
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(ms.X) && currX <= int((s.X)+(ms.X))) &&
-		(currY >= int(ms.Y) && currY <= int((s.Y)+(ms.Y)))
+		(currX >= int(b.Position.X) && currX <= int((tm.Size.X)+(b.Position.X))) &&
+		(currY >= int(b.Position.Y) && currY <= int((tm.Size.Y)+(b.Position.Y)))
 }
 
 func (p *Mouse) IsAnyMouseButtonsPressed() bool {

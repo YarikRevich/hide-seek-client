@@ -5,6 +5,10 @@ import "google/protobuf/empty.proto";
 
 option go_package="internal/core/networking/api/server_external";
 
+message AddPC {
+
+};
+
 message World {
     string id = 1;
     GameSettings gameSettings = 2;
@@ -150,8 +154,24 @@ message DeleteCooldownRequest {
     string pcId = 2;   
 }
 
+message CreateSessionResponse{
+    string ID = 1;
+}
+
 service ExternalServerService {
     //Game process
+    rpc CreateSession(google.protobuf.Empty) returns (CreateSessionResponse);
+    
+    
+    // rpc SetSessionProperties()returns (Create);
+
+
+    // rpc SetSessionMap()returns;
+    // rpc AddPCToMap()returns;
+    // rpc AddWeaponToPC()returns;
+    // rpc AddProjectileToMap()returns;
+
+
     rpc InsertOrUpdateWorld (World) returns (google.protobuf.Empty);
     rpc InsertOrUpdateMap (Map) returns (google.protobuf.Empty);
     rpc InsertOrUpdatePC (PC) returns (google.protobuf.Empty);

@@ -9,7 +9,7 @@ import (
 )
 
 type LabelOpts struct {
-	Metadata     *sources.MetadataModel
+	// Metadata     *sources.MetadataModel
 	Position     types.Vec2
 	FontDistance float64
 	Text         string
@@ -19,15 +19,15 @@ type LabelOpts struct {
 }
 
 type Label struct {
-	opts *LabelOpts
+	Opts *LabelOpts
 }
 
-func (l *Label) Render(sm screen.ScreenManager) {
-	l.opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		Position:     l.opts.Position,
-		FontDistance: l.opts.FontDistance,
-		Color:        l.opts.Color,
-		RowWidth:     l.opts.RowWidth,
+func (l *Label) Render(sm *screen.ScreenManager) {
+	l.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
+		Position:     l.Opts.Position,
+		FontDistance: l.Opts.FontDistance,
+		Color:        l.Opts.Color,
+		RowWidth:     l.Opts.RowWidth,
 	})
 }
 

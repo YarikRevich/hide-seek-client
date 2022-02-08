@@ -11,16 +11,17 @@ import (
 //All metrics of the ScreenManager are shown
 //in tiles
 type ScreenManager struct {
-	Pixels       []types.Vec2
-	OrigTileSize int
-	Scale        int
+	SizeOnStartup types.Vec2
+	// Pixels       []types.Vec2
+	// OrigTileSize int
+	// Scale        int
 
-	TileSize int
+	// TileSize int
 
 	//Describes full ScreenManager size
 	MaxScreenSize, MinScreenSize, lastSize types.Vec2
 
-	ScreenManager *ebiten.Image
+	Image *ebiten.Image
 }
 
 // NEW API
@@ -74,20 +75,26 @@ type ScreenManager struct {
 // }
 
 func (s *ScreenManager) SetImage(i *ebiten.Image) {
-	s.ScreenManager = i
+	s.Image = i
 }
 
 func (s *ScreenManager) GetImage() *ebiten.Image {
-	return s.ScreenManager
+	return s.Image
+}
+
+func (s *ScreenManager) GetScale() types.Vec2 {
+	currentSize := s.GetSize()
+	return types.Vec2{
+		X: s.SizeOnStartup.X / currentSize.X,
+		Y: s.SizeOnStartup.Y / currentSize.Y}
 }
 
 func (s *ScreenManager) CleanScreen() {
-	s.ScreenManager = nil
+	s.Image = nil
 }
 
 func (s *ScreenManager) SetLastSize() {
-	width, height := s.ScreenManager.Size()
-	s.lastSize = types.Vec2{X: float64(width), Y: float64(height)}
+	s.lastSize = s.GetSize()
 }
 
 func (s *ScreenManager) GetLastSize() types.Vec2 {
@@ -98,8 +105,8 @@ func (s *ScreenManager) GetLastSize() types.Vec2 {
 }
 
 func (s *ScreenManager) GetSize() types.Vec2 {
-	if s.ScreenManager != nil {
-		width, height := s.ScreenManager.Size()
+	if s.Image != nil {
+		width, height := s.Image.Size()
 		return types.Vec2{X: float64(width), Y: float64(height)}
 	}
 	return s.lastSize
@@ -114,8 +121,8 @@ func (s *ScreenManager) GetMinSize() types.Vec2 {
 }
 
 func (s *ScreenManager) GetAxis() types.Vec2 {
-	if s.ScreenManager != nil {
-		x, y := s.ScreenManager.Size()
+	if s.Image != nil {
+		x, y := s.Image.Size()
 		return types.Vec2{X: float64(x) / 2, Y: float64(y) / 2}
 	}
 	return types.Vec2{X: s.lastSize.X / 2, Y: s.lastSize.Y / 2}
@@ -169,9 +176,9 @@ func (s *ScreenManager) IsHigherAxisYCrossed(y float64, speedY float64) bool {
 // }
 
 func NewScreenManager() *ScreenManager {
-	fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
+	// fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
 	return &ScreenManager{
-		Pixels: make([]types.Vec2, fullScreenWidth*fullScreenHeight),
+		// Pixels: make([]types.Vec2, fullScreenWidth*fullScreenHeight),
 	}
 }
 

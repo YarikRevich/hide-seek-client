@@ -1,12 +1,12 @@
-type = ["button"]
+# type = ["button"]
 
-[info]
-parent="back"
+# [info]
+# parent="back"
 
-[margins]
-x = 7.0
-y = 13.0
+# [margins]
+# x = 7.0
+# y = 13.0
 
-[scale]
-x = 0.3
-y = 0.4
+# [scale]
+# x = 0.3
+# y = 0.4

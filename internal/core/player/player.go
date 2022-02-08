@@ -35,7 +35,7 @@ func (a *Player) silentlyStopCurrentTrack() {
 	}
 }
 
-func (a *Player) waitTrackEnds(track *sources.Track) {
+func (a *Player) waitTrackEnds(track *sources.Audio) {
 	// ticker := time.NewTicker(time.Millisecond * 500)
 	// for range ticker.C {
 	// 	streamer := track.Buffer.Streamer(0, track.Buffer.Len())
@@ -55,23 +55,23 @@ func (a *Player) waitTrackEnds(track *sources.Track) {
 //TODO: create effect of volume lowering when music is stoped
 func (a *Player) Play(trackPath string, opts PlayerOpts) {
 	go func() {
-		track := sources.UseSources().Audio().GetAudioController(trackPath)
-		track.Lock()
+		// track := sources.GetAudio(trackPath)
+		// // track.Lock()
 
-		if opts.Fading {
-			a.silentlyStopCurrentTrack()
-		}
-
-		streamer := track.Track.Buffer.Streamer(0, track.Track.Buffer.Len())
-
-		speaker.Play(streamer)
-
-		a.trackManager.Push(track.Track)
-
-		// if !opts.Infinite {
-		// 	a.waitTrackEnds(track)
+		// if opts.Fading {
+		// 	a.silentlyStopCurrentTrack()
 		// }
-		track.Unlock()
+
+		// streamer := track.Buffer.Streamer(0, track.Buffer.Len())
+
+		// speaker.Play(streamer)
+
+		// a.trackManager.Push(track)
+
+		// // if !opts.Infinite {
+		// // 	a.waitTrackEnds(track)
+		// // }
+		// track.Unlock()
 	}()
 }
 

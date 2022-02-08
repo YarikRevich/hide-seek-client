@@ -8,15 +8,18 @@ import (
 
 	"github.com/YarikRevich/hide-seek-client/assets"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
 )
 
 type Tile struct {
 	Rect       image.Rectangle
+	Image      *ebiten.Image
 	Layer      string
 	LayerNum   int
 	Properties struct {
-		Collision bool
+		Collision, Spawn bool
 	}
 }
 
@@ -46,7 +49,11 @@ type Tilemap struct {
 
 	Tiles      map[uint32]*Tile
 	Properties struct {
+		//Contains IDs of Spawn Tiles
+		Spawns []uint32
 	}
+
+	Size types.Vec2
 }
 
 func (tm *Tilemap) load(path string) error {
@@ -54,6 +61,10 @@ func (tm *Tilemap) load(path string) error {
 	if err != nil {
 		return err
 	}
+
+	tm.Size = types.Vec2{
+		X: float64(gameMap.Width * gameMap.TileWidth),
+		Y: float64(gameMap.Height * gameMap.TileHeight)}
 
 	tempTileCollection := make(map[image.Point]*Tile)
 	for n, l := range gameMap.Layers {
@@ -120,7 +131,11 @@ func (t *Tilemap) OnCollision(s screen.ScreenManager) {
 
 }
 
-func (t *Tilemap) Render(sm screen.ScreenManager) {
+type RenderTilemapOpts struct {
+	Position types.Vec2
+}
+
+func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	fmt.Println(sm)
 	// screenSize := sm.GetSize()
 	// for _, v := range t.Tiles {
