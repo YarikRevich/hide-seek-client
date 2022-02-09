@@ -1,39 +1,59 @@
 package layers
 
 import (
-	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
-	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"context"
+
+	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/ui"
-	"github.com/YarikRevich/hide-seek-client/internal/core/world"
+	"github.com/google/uuid"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type StartMenuLayer struct {
-	*world.WorldManager
+	opts      *ContextOpts
+	UIManager *ui.UIManager
 }
 
-func (sml *StartMenuLayer) SetContext(w *world.WorldManager) {
-	sml.WorldManager = w
+func (sml *StartMenuLayer) SetContext(opts *ContextOpts) {
+	sml.opts = opts
 }
 
 func (sml *StartMenuLayer) IsActive() bool {
 	return statemachine.Layers.Check(statemachine.LAYERS_START_MENU)
 }
 
-func (sml *StartMenuLayer) OnMouse()
+func (sml *StartMenuLayer) Update() {
+	// sml.UIManager.Update()
+}
 
-func (sml *StartMenuLayer) OnKeyboard()
+func (sml *StartMenuLayer) Render() {
+	sml.UIManager.Render(sml.opts.ScreenManager)
+}
 
-func (sml *StartMenuLayer) Update() {}
-
-func (sml *StartMenuLayer) Render(sm *screen.ScreenManager) {
-	ui.NewButton(&ui.ButtonOpts{
+func (sml *StartMenuLayer) Init() Layer {
+	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
 		OnMousePress: func() {
-			networking.UseNetworking().Clients().Base().GetClient().CreateSession()
+			resp, err := sml.opts.NetworkingManager.ServerClient.CreateSession(context.Background(), &emptypb.Empty{})
+			if err != nil {
+				sml.opts.NotificationManager.Write("Session was not created!", -1, notifications.Error)
+				return
+			}
+			sml.opts.WorldManager.ID = uuid.MustParse(resp.ID)
+			statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
 		},
-	}).Render(sm)
+	}))
+
+	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
+		OnMousePress: func() {
+			statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
+		},
+	}))
+	return sml
 }
 
 func NewStartMenuLayer() Layer {
-	return new(StartMenuLayer)
+	return &StartMenuLayer{
+		UIManager: ui.NewUIManager(),
+	}
 }

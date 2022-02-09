@@ -168,9 +168,10 @@ type Map struct {
 // }
 
 func (w *Map) ToAPIMessage() *server_external.Map {
+
 	return &server_external.Map{
 		Base:   w.Base.ToAPIMessage(),
-		Spawns: *(*[]*server_external.PositionInt)(unsafe.Pointer(&w.Base.MetadataModel.Spawns)),
+		Spawns: *(*[]*server_external.PositionInt)(unsafe.Pointer(&w.Tilemap.Properties.Spawns)),
 	}
 }
 

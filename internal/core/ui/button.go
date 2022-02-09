@@ -10,18 +10,23 @@ import (
 
 type ButtonOpts struct {
 	// Metadata                  *sources.MetadataModel
-	Tilemap                   *sources.Tilemap
-	Position                  types.Vec2
-	FontDistance, FontAdvance float64
-	Text                      string
-	RowWidth                  float64
-	Font                      *sources.Font
-	Color                     color.Color
-	OnMousePress              func()
+	Tilemap                       *sources.Tilemap
+	Position                      types.Vec2
+	FontDistance, FontAdvance     float64
+	Text                          string
+	RowWidth                      float64
+	Font                          *sources.Font
+	Color                         color.Color
+	OnMousePress, OnKeyboardPress func()
 }
 
 type Button struct {
 	Opts *ButtonOpts
+}
+
+func (b *Button) Update() {
+	b.Opts.OnMousePress()
+	b.Opts.OnKeyboardPress()
 }
 
 func (b *Button) Render(sm *screen.ScreenManager) {

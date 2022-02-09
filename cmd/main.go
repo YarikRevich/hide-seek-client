@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -16,6 +17,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/runtime"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
+	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/YarikRevich/hide-seek-client/internal/loop"
 	isconnect "github.com/alimasyhur/is-connect"
 	"github.com/faiface/beep"
@@ -93,14 +95,20 @@ func main() {
 		}
 	})
 
-	sm := new(screen.ScreenManager)
+	sm := screen.NewScreenManager()
 	maxSize := sm.GetMaxSize()
 	minSize := sm.GetMinSize()
 
+	fmt.Println(maxSize, minSize)
 	ebiten.SetWindowSize(int(maxSize.X), int(maxSize.Y))
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowSizeLimits(int(minSize.X), int(minSize.Y), -1, -1)
 
-	log.Fatalln(ebiten.RunGame(loop.New(sm, nm)))
+	log.Fatalln(ebiten.RunGame(loop.New(&loop.LoopOpts{
+		ScreenManager:       sm,
+		NotificationManager: ntm,
+		WorldManager:        world.NewWorldManager(),
+		NetworkingManager:   nm,
+	})))
 }

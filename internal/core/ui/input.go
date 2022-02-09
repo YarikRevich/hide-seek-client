@@ -10,16 +10,22 @@ import (
 
 type InputOpts struct {
 	// Metadata     *sources.MetadataModel
-	Position     types.Vec2
-	FontDistance float64
-	Text         string
-	RowWidth     float64
-	Font         *sources.Font
-	Color        color.Color
+	Position                      types.Vec2
+	FontDistance                  float64
+	Text                          string
+	RowWidth                      float64
+	Font                          *sources.Font
+	Color                         color.Color
+	OnMousePress, OnKeyboardPress func()
 }
 
 type Input struct {
 	Opts *InputOpts
+}
+
+func (i *Input) Update() {
+	i.Opts.OnMousePress()
+	i.Opts.OnKeyboardPress()
 }
 
 func (in *Input) Render(sm *screen.ScreenManager) {

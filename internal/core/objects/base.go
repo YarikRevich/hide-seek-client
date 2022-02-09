@@ -54,8 +54,7 @@ The object structure which describes
 each object on the map
 */
 type Base struct {
-	// *sources.MetadataModel
-	// sources.CollidersBatch
+	Tilemap *sources.Tilemap
 
 	Type string
 
@@ -265,7 +264,8 @@ func (o *Base) SetSkin(path string) {
 	_, file := filepath.Split(path)
 	o.Skin.Name = file
 
-	o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Path)
+	o.Tilemap = sources.GetTileMap(o.Path)
+	// o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Path)
 
 	// cs, err := sources.UseSources().Colliders().GetCollider(o.Path)
 	// if err == nil {
@@ -273,21 +273,21 @@ func (o *Base) SetSkin(path string) {
 	// }
 }
 
-//Returns images for the skin selected
-func (o *Base) GetImage() *ebiten.Image {
-	return sources.UseSources().Images().GetImage(o.Skin.Path)
-}
+// //Returns images for the skin selected
+// func (o *Base) GetImage() *ebiten.Image {
+// 	return sources.UseSources().Images().GetImage(o.Skin.Path)
+// }
 
-func (o *Base) GetCopyOfImage() *ebiten.Image {
-	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
-}
+// func (o *Base) GetCopyOfImage() *ebiten.Image {
+// 	return ebiten.NewImageFromImage(sources.UseSources().Images().GetImage(o.Path))
+// }
 
-//Returns image where animation properties applied to
-func (o *Base) GetAnimatedImage() *ebiten.Image {
-	i := o.GetImage()
-	sx, sy := int((o.MetadataModel.Animation.FrameX+float64(o.Animation.FrameCount))*o.MetadataModel.Animation.FrameWidth), int(o.MetadataModel.Animation.FrameY)
-	return i.SubImage(image.Rect(sx, sy, sx+int(o.MetadataModel.Animation.FrameWidth), sy+int(o.MetadataModel.Animation.FrameHeight))).(*ebiten.Image)
-}
+// //Returns image where animation properties applied to
+// func (o *Base) GetAnimatedImage() *ebiten.Image {
+// 	i := o.GetImage()
+// 	sx, sy := int((o.MetadataModel.Animation.FrameX+float64(o.Animation.FrameCount))*o.MetadataModel.Animation.FrameWidth), int(o.MetadataModel.Animation.FrameY)
+// 	return i.SubImage(image.Rect(sx, sy, sx+int(o.MetadataModel.Animation.FrameWidth), sy+int(o.MetadataModel.Animation.FrameHeight))).(*ebiten.Image)
+// }
 
 //API//
 
@@ -358,9 +358,9 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Direction = keycodes.Direction(m.Direction)
 	o.Role = Role(m.Role)
 
-	if o.MetadataModel == nil && o.Skin.IsSet() {
-		o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
-	}
+	// if o.MetadataModel == nil && o.Skin.IsSet() {
+	// 	o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
+	// }
 }
 
 func (o *Base) SetTranslationXMovementBlocked(s bool) {
@@ -375,28 +375,33 @@ func (o *Base) IsTranslationMovementBlocked() bool {
 	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
 }
 
-func (o *Base) GetPosForCamera() types.Vec2 {
-	var rX, rY float64
-	if x := o.RawPos.X - o.RawOffset.X; x >= 0 {
-		rX = x
-	}
+// func (o *Base) GetPosForCamera() types.Vec2 {
+// 	var rX, rY float64
+// 	if x := o.RawPos.X - o.RawOffset.X; x >= 0 {
+// 		rX = x
+// 	}
 
-	if y := o.RawPos.Y - o.RawOffset.Y; y >= 0 {
-		rY = y
-	}
-	return types.Vec2{X: rX, Y: rY}
-}
-
-func (b *Base) Render(sm screen.ScreenManager) {
-}
+// 	if y := o.RawPos.Y - o.RawOffset.Y; y >= 0 {
+// 		rY = y
+// 	}
+// 	return types.Vec2{X: rX, Y: rY}
+// }
 
 func (b *Base) Animate() {
-	b.Animation.FrameDelayCounter++
-	b.Animation.FrameDelayCounter %= uint64(b.MetadataModel.Animation.FrameDelay)
-	if b.Animation.FrameDelayCounter == 0 {
-		b.Animation.FrameCount++
-		b.Animation.FrameCount %= uint64(b.MetadataModel.Animation.FrameNum)
+	animationSet := b.Tilemap.Animations[1]
+	animationSet.DelayTrigger++
+	animationSet.DelayTrigger %= int(animationSet.Frames[animationSet.CurrentFrame].Duration)
+	if animationSet.DelayTrigger == 0 {
+		animationSet.CurrentFrame++
+		animationSet.CurrentFrame %= len(animationSet.Frames)
 	}
+}
+
+type ObjectRenderOpts struct {
+}
+
+func (b *Base) Render(sm screen.ScreenManager, opts *ObjectRenderOpts) {
+
 }
 
 func NewBase() *Base {

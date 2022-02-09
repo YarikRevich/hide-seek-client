@@ -176,9 +176,14 @@ func (s *ScreenManager) IsHigherAxisYCrossed(y float64, speedY float64) bool {
 // }
 
 func NewScreenManager() *ScreenManager {
-	// fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
+	fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
 	return &ScreenManager{
-		// Pixels: make([]types.Vec2, fullScreenWidth*fullScreenHeight),
+		MaxScreenSize: types.Vec2{
+			X: float64(fullScreenWidth),
+			Y: float64(fullScreenHeight)},
+		MinScreenSize: types.Vec2{
+			X: float64(fullScreenWidth * 60 / 100),
+			Y: float64(fullScreenHeight * 60 / 100)},
 	}
 }
 

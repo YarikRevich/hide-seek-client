@@ -22,6 +22,8 @@ type Label struct {
 	Opts *LabelOpts
 }
 
+func (l *Label) Update() {}
+
 func (l *Label) Render(sm *screen.ScreenManager) {
 	l.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
 		Position:     l.Opts.Position,

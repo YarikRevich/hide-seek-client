@@ -24,8 +24,8 @@ type Tile struct {
 }
 
 type Animation struct {
-	Frames       []*tiled.AnimationFrame
-	CurrentFrame int
+	Frames                     []*tiled.AnimationFrame
+	CurrentFrame, DelayTrigger int
 }
 
 type Graph map[*Tile][]*Tile
@@ -50,7 +50,7 @@ type Tilemap struct {
 	Tiles      map[uint32]*Tile
 	Properties struct {
 		//Contains IDs of Spawn Tiles
-		Spawns []uint32
+		Spawns []int64
 	}
 
 	Size types.Vec2
@@ -82,6 +82,7 @@ func (tm *Tilemap) load(path string) error {
 				x := (i % gameMap.Width) * gameMap.TileWidth
 				for _, w := range t.Tileset.Tiles {
 					if w.ID == t.ID {
+						// tile.Image = w.Image
 						animation := new(Animation)
 						animation.Frames = w.Animation
 						tm.Animations[len(tm.Animations)+1] = animation

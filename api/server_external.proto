@@ -158,10 +158,13 @@ message CreateSessionResponse{
     string ID = 1;
 }
 
+message GetSessionObjectResponse{};
+
 service ExternalServerService {
     //Game process
     rpc CreateSession(google.protobuf.Empty) returns (CreateSessionResponse);
-    
+    rpc FindSession(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+    rpc GetSessionObjects(google.protobuf.Int64Value) returns (stream GetSessionObjectResponse);
     
     // rpc SetSessionProperties()returns (Create);
 

@@ -17,8 +17,8 @@ import (
 type NetworkingManager struct {
 	LANProcess    *os.Process
 	WAN, LAN      *grpc.ClientConn
-	ServerClient  *server_external.ExternalServerServiceClient
-	ServiceClient *services_external.ExternalServicesServiceClient
+	ServerClient  server_external.ExternalServerServiceClient
+	ServiceClient services_external.ExternalServicesServiceClient
 }
 
 func (nm *NetworkingManager) dial(port string) *grpc.ClientConn {

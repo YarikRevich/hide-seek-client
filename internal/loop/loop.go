@@ -8,8 +8,10 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/YarikRevich/hide-seek-client/internal/layers"
 
+	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio"
-	"github.com/YarikRevich/hide-seek-client/internal/layers/networking"
+
+	// "github.com/YarikRevich/hide-seek-client/internal/layers/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/particles"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/ui"
 
@@ -18,11 +20,15 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+type LoopOpts struct {
+	ScreenManager       *screen.ScreenManager
+	WorldManager        *world.WorldManager
+	NotificationManager *notifications.NotificationManager
+	NetworkingManager   *networking.NetworkingManager
+}
+
 type Loop struct {
-	*screen.ScreenManager
-	*world.WorldManager
-	*notifications.NotificationManager
-	*networking.NetworkingManager
+	opts *LoopOpts
 }
 
 var _ ebiten.Game = (*Loop)(nil)
@@ -32,10 +38,9 @@ func (g *Loop) Update() error {
 		audio.Process()
 	}
 
-	// mouse.Process()
-	screen.UseScreen().CleanScreen()
+	// screen.UseScreen().CleanScreen()
 
-	networking.Process()
+	// networking.Process()
 
 	ui.Process()
 	particles.Process()
@@ -56,13 +61,11 @@ func (g *Loop) Update() error {
 
 	// transition.UseTransitionPool().Process()
 
-	// keyboard.Process()
-
 	return nil
 }
 
 func (g *Loop) Draw(i *ebiten.Image) {
-	g.ScreenManager.SetImage(i)
+	g.opts.ScreenManager.SetImage(i)
 	// screen.UseScreen().SetScreen(i)
 
 	if params.IsDebug() {
@@ -72,11 +75,11 @@ func (g *Loop) Draw(i *ebiten.Image) {
 
 	for _, v := range layers.Layers {
 		if v.IsActive() {
-			v.Render(g.ScreenManager)
+			v.Render()
 		}
 	}
 
-	g.ScreenManager.SetLastSize()
+	g.opts.ScreenManager.SetLastSize()
 
 	// screen.UseScreen().SetLastSize()
 
@@ -89,14 +92,14 @@ func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return outsideWidth, outsideHeight
 }
 
-func New(sm *screen.ScreenManager, nm *notifications.NotificationManager) *Loop {
-	l := &Loop{
-		ScreenManager:       sm,
-		NotificationManager: nm,
-		WorldManager:        world.NewWorldManager()}
-
+func New(opts *LoopOpts) *Loop {
 	for _, v := range layers.Layers {
-		v.SetContext(l.WorldManager)
+		v.SetContext(&layers.ContextOpts{
+			ScreenManager:       opts.ScreenManager,
+			NotificationManager: opts.NotificationManager,
+			NetworkingManager:   opts.NetworkingManager,
+			WorldManager:        opts.WorldManager,
+		})
 	}
-	return l
+	return &Loop{opts}
 }

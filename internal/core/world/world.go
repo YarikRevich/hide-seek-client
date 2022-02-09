@@ -4,9 +4,7 @@ import (
 	"fmt"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings"
-	"github.com/YarikRevich/hide-seek-client/internal/core/middlewares"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
-	"github.com/YarikRevich/hide-seek-client/internal/core/notifications"
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statistics"
@@ -63,10 +61,11 @@ func (w *World) UpdatePCs(m []*server_external.PC) {
 		}
 	}
 	if !foundPC {
-		middlewares.UseMiddlewares().UI().UseAfter(func() {
-			statemachine.UseStateMachine().UI().SetState(statemachine.UI_START_MENU)
-		})
-		notifications.PopUp.WriteError("You were kicked from the session")
+		// middlewares.UseMiddlewares().UI().UseAfter(func() {
+		statemachine.Layers.SetState(statemachine.LAYERS_START_MENU)
+		// })
+
+		// notifications.PopUp.WriteError("You were kicked from the session")
 	}
 }
 
@@ -275,13 +274,26 @@ func UseWorld() *World {
 
 type WorldManager struct {
 	objects []*objects.Base
+
+	ID uuid.UUID
+
+	gamesettings gamesettings.GameSettings
+	worldMap     *objects.Map
+	pc           *objects.PC
+
+	pcs      []*objects.PC
+	elements []*objects.Element
+	weapons  []*objects.Weapon
+	ammos    []*objects.Ammo
+
+	statistics *statistics.Statistics
 }
 
 //Creates snapshot of world and sends it to the server
 func (wm *WorldManager) ToAPIMessage() *server_external.World {
 	return &server_external.World{
-		Id:           w.ID.String(),
-		GameSettings: w.gamesettings.ToAPIMessage(),
+		Id:           wm.ID.String(),
+		GameSettings: wm.gamesettings.ToAPIMessage(),
 	}
 }
 
