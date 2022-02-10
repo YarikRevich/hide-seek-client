@@ -85,7 +85,6 @@ func (tm *Tilemap) load(path string) error {
 	for n, l := range gameMap.Layers {
 		y := 0
 		for i, t := range l.Tiles {
-			// fmt.Println(t)
 			if (i%gameMap.Width)*gameMap.TileWidth == ((gameMap.Width * gameMap.TileWidth) - gameMap.TileWidth) {
 				y += gameMap.TileHeight
 			}
@@ -98,7 +97,6 @@ func (tm *Tilemap) load(path string) error {
 					if err != nil {
 						logrus.Fatalln(err)
 					}
-					// fmt.Println(file.Stat())
 					pngFile, _, err := image.Decode(file)
 					if err != nil {
 						logrus.Fatalln(err)
@@ -119,15 +117,11 @@ func (tm *Tilemap) load(path string) error {
 				tile.LayerNum = n
 
 				x := (i % gameMap.Width) * gameMap.TileWidth
-				// fmt.Println(t.Tileset.Image, len(t.Tileset.Tiles))
 
 				for _, w := range t.Tileset.Tiles {
 					if w.ID == t.ID {
-						// tile.Image = w.Image
 						animation := new(Animation)
-						// fmt.Println("HERLLO")
 						for _, a := range w.Animation {
-
 							animation.Frames = append(animation.Frames, &AnimationFrame{
 								Duration: a.Duration,
 								TileID:   image.Point{X: x, Y: y},
@@ -160,7 +154,6 @@ func (tm *Tilemap) load(path string) error {
 						tile, left)
 				}
 
-				// fmt.Println(t.ID<<x, t.Tileset.FirstGID)
 				tempTileCollection[image.Point{X: x, Y: y}] = tile
 				tm.Tiles[image.Point{X: x, Y: y}] = tile
 			}
@@ -186,18 +179,15 @@ type RenderTilemapOpts struct {
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
-	// fmt.Println("START")
-	for _, v := range t.Tiles {
-		drawOpts := &ebiten.DrawImageOptions{}
-		drawOpts.GeoM.Translate(float64(v.Rect.Max.X)-t.TileSize.X, float64(v.Rect.Max.Y)-t.TileSize.Y)
-		sm.Image.DrawImage(v.Image, drawOpts)
+	screenSize := sm.GetSize()
+	for k, v := range t.Tiles {
+		if (float64(k.X)-t.TileSize.X < screenSize.X && float64(k.Y)-t.TileSize.Y < screenSize.Y) &&
+			(float64(k.X)+t.TileSize.X > 0 && float64(k.Y)+t.TileSize.Y > 0) {
+			drawOpts := &ebiten.DrawImageOptions{}
+			drawOpts.GeoM.Translate(float64(k.X), float64(k.Y))
+			sm.Image.DrawImage(v.Image, drawOpts)
+		}
 	}
-	// fmt.Println("END")
-	// screenSize := sm.GetSize()
-	// for _, v := range t.Tiles {
-	// 	v.Rect
-	// 	// sm.RenderTile(v.Rect, v)
-	// }
 }
 
 func NewTilemap() *Tilemap {
