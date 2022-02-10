@@ -17,7 +17,6 @@ import (
 )
 
 type Tile struct {
-	Rect       image.Rectangle
 	Image      *ebiten.Image
 	Layer      string
 	LayerNum   int
@@ -85,9 +84,6 @@ func (tm *Tilemap) load(path string) error {
 	for n, l := range gameMap.Layers {
 		y := 0
 		for i, t := range l.Tiles {
-			if (i%gameMap.Width)*gameMap.TileWidth == ((gameMap.Width * gameMap.TileWidth) - gameMap.TileWidth) {
-				y += gameMap.TileHeight
-			}
 
 			if !t.IsNil() {
 				tile := new(Tile)
@@ -132,8 +128,6 @@ func (tm *Tilemap) load(path string) error {
 					}
 				}
 
-				tile.Rect = image.Rect(x, y, x+gameMap.TileWidth, y+gameMap.TileHeight)
-
 				if top, ok := tempTileCollection[image.Point{X: x, Y: y - gameMap.TileHeight}]; ok {
 					tm.Graph.AddNode(
 						tile, top)
@@ -156,6 +150,10 @@ func (tm *Tilemap) load(path string) error {
 
 				tempTileCollection[image.Point{X: x, Y: y}] = tile
 				tm.Tiles[image.Point{X: x, Y: y}] = tile
+
+				if (i%gameMap.Width)*gameMap.TileWidth == ((gameMap.Width * gameMap.TileWidth) - gameMap.TileWidth) {
+					y += gameMap.TileHeight
+				}
 			}
 		}
 	}
@@ -166,25 +164,26 @@ func (tm *Tilemap) load(path string) error {
 	return nil
 }
 
-func (t *Tilemap) OnInteraction(s screen.ScreenManager) {
-
-}
-
-func (t *Tilemap) OnCollision(s screen.ScreenManager) {
-
-}
-
 type RenderTilemapOpts struct {
-	Position types.Vec2
+	Position, Scale    types.Vec2
+	AutoScaleForbidden bool
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	screenSize := sm.GetSize()
+	screenScale := sm.GetScale()
 	for k, v := range t.Tiles {
-		if (float64(k.X)-t.TileSize.X < screenSize.X && float64(k.Y)-t.TileSize.Y < screenSize.Y) &&
-			(float64(k.X)+t.TileSize.X > 0 && float64(k.Y)+t.TileSize.Y > 0) {
+		if (float64(k.X)+opts.Position.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.Position.Y-t.TileSize.Y < screenSize.Y) &&
+			(float64(k.X)+opts.Position.X+t.TileSize.X > 0 && float64(k.Y)+opts.Position.Y+t.TileSize.Y > 0) {
 			drawOpts := &ebiten.DrawImageOptions{}
-			drawOpts.GeoM.Translate(float64(k.X), float64(k.Y))
+			drawOpts.GeoM.Translate(float64(k.X)+opts.Position.X, float64(k.Y)+opts.Position.Y)
+			if !opts.AutoScaleForbidden {
+				drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
+			}
+			if opts.Scale.X != 0 && opts.Scale.Y != 0 {
+				drawOpts.GeoM.Scale(opts.Scale.X, opts.Scale.Y)
+			}
+
 			sm.Image.DrawImage(v.Image, drawOpts)
 		}
 	}

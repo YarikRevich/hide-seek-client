@@ -10,7 +10,9 @@ import (
 
 type InputOpts struct {
 	// Metadata     *sources.MetadataModel
-	Position                      types.Vec2
+	Tilemap                       *sources.Tilemap
+	Position, Scale               types.Vec2
+	AutoScaleForbidden            bool
 	FontDistance                  float64
 	Text                          string
 	RowWidth                      float64
@@ -29,6 +31,11 @@ func (i *Input) Update() {
 }
 
 func (in *Input) Render(sm *screen.ScreenManager) {
+	in.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
+		Position:           in.Opts.Position,
+		Scale:              in.Opts.Scale,
+		AutoScaleForbidden: in.Opts.AutoScaleForbidden,
+	})
 	in.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
 		Position:     in.Opts.Position,
 		FontDistance: in.Opts.FontDistance,

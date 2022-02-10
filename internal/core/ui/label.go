@@ -10,12 +10,14 @@ import (
 
 type LabelOpts struct {
 	// Metadata     *sources.MetadataModel
-	Position     types.Vec2
-	FontDistance float64
-	Text         string
-	RowWidth     float64
-	Font         *sources.Font
-	Color        color.Color
+	Tilemap            *sources.Tilemap
+	Position, Scale    types.Vec2
+	AutoScaleForbidden bool
+	FontDistance       float64
+	Text               string
+	RowWidth           float64
+	Font               *sources.Font
+	Color              color.Color
 }
 
 type Label struct {
@@ -25,6 +27,11 @@ type Label struct {
 func (l *Label) Update() {}
 
 func (l *Label) Render(sm *screen.ScreenManager) {
+	l.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
+		Position:           l.Opts.Position,
+		Scale:              l.Opts.Scale,
+		AutoScaleForbidden: l.Opts.AutoScaleForbidden,
+	})
 	l.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
 		Position:     l.Opts.Position,
 		FontDistance: l.Opts.FontDistance,

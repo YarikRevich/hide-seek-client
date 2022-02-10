@@ -6,6 +6,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
+	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statistics"
 	"github.com/google/uuid"
@@ -303,6 +304,14 @@ func (wm *WorldManager) FromAPIMessage(m *server_external.World) {
 	// fmt.Println(m.GameSettings)
 	wm.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted
 	wm.gamesettings.IsWorldExist = m.GameSettings.IsWorldExist
+}
+
+func (wm *WorldManager) Update() {
+
+}
+
+func (wm *WorldManager) Render(sm *screen.ScreenManager) {
+
 }
 
 func NewWorldManager() *WorldManager {

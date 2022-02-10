@@ -11,7 +11,8 @@ import (
 type ButtonOpts struct {
 	// Metadata                  *sources.MetadataModel
 	Tilemap                       *sources.Tilemap
-	Position                      types.Vec2
+	Position, Scale               types.Vec2
+	AutoScaleForbidden            bool
 	FontDistance, FontAdvance     float64
 	Text                          string
 	RowWidth                      float64
@@ -25,13 +26,19 @@ type Button struct {
 }
 
 func (b *Button) Update() {
-	b.Opts.OnMousePress()
-	b.Opts.OnKeyboardPress()
+	if b.Opts.OnMousePress != nil {
+		b.Opts.OnMousePress()
+	}
+	if b.Opts.OnKeyboardPress != nil {
+		b.Opts.OnKeyboardPress()
+	}
 }
 
 func (b *Button) Render(sm *screen.ScreenManager) {
 	b.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
-		Position: b.Opts.Position,
+		Position:           b.Opts.Position,
+		Scale:              b.Opts.Scale,
+		AutoScaleForbidden: b.Opts.AutoScaleForbidden,
 	})
 	b.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
 		Position:     b.Opts.Position,
@@ -39,6 +46,7 @@ func (b *Button) Render(sm *screen.ScreenManager) {
 		FontDistance: b.Opts.FontDistance,
 		Color:        b.Opts.Color,
 		RowWidth:     b.Opts.RowWidth,
+		Text:         b.Opts.Text,
 	})
 }
 

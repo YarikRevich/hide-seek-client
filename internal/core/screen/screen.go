@@ -181,6 +181,9 @@ func NewScreenManager() *ScreenManager {
 		MaxScreenSize: types.Vec2{
 			X: float64(fullScreenWidth),
 			Y: float64(fullScreenHeight)},
+		SizeOnStartup: types.Vec2{
+			X: float64(fullScreenWidth),
+			Y: float64(fullScreenHeight)},
 		MinScreenSize: types.Vec2{
 			X: float64(fullScreenWidth * 60 / 100),
 			Y: float64(fullScreenHeight * 60 / 100)},

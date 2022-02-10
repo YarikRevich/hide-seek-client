@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image/color"
 	"math"
-	"strconv"
 	"strings"
 
 	"github.com/YarikRevich/hide-seek-client/assets"
@@ -20,8 +19,8 @@ type Font struct {
 	Font font.Face
 }
 
-func (f *Font) load(path string) error {
-	file, err := assets.Assets.ReadFile(path)
+func (f *Font) load(path string, size int) error {
+	file, err := assets.Assets.ReadFile(fmt.Sprintf("%s.%s", path, "ttf"))
 	if err != nil {
 		return fmt.Errorf("error happened opening font file from embedded fs: %s", err)
 	}
@@ -32,11 +31,6 @@ func (f *Font) load(path string) error {
 	}
 
 	name := strings.Split(path, ".")[0]
-
-	size, err := strconv.Atoi(strings.Split(path, "_")[1])
-	if err != nil {
-		return err
-	}
 
 	f.Name = name
 	f.Font = truetype.NewFace(parsedFont, &truetype.Options{
@@ -49,6 +43,7 @@ func (f *Font) load(path string) error {
 }
 
 type RenderTextCharachterOpts struct {
+	Tilemap                             *Tilemap
 	Text                                string
 	Position                            types.Vec2
 	FontAdvance, FontDistance, RowWidth float64
@@ -68,13 +63,17 @@ func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 			}
 			yOffset = math.Floor(opts.Position.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
 		}
-
+		fmt.Println(
+			int(opts.Position.X+opts.FontDistance*float64(i/(i+1))),
+			int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
+		)
 		text.Draw(
 			sm.GetImage(),
 			string(c),
 			f.Font,
-			int(opts.Position.X*float64(i)+opts.FontDistance*float64(i/(i+1))),
-			int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
-			opts.Color)
+			int(opts.Position.X+opts.FontDistance*float64(i/(i+1))),
+			// int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
+			200,
+			color.Opaque)
 	}
 }

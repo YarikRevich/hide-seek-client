@@ -49,8 +49,8 @@ func GetFont(path string, size int) *Font {
 	font, ok := fontCollection[path]
 	if !ok {
 		newFont := new(Font)
-		if err := newFont.load(path); err != nil {
-			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "font", path))
+		if err := newFont.load(path, size); err != nil {
+			logrus.Fatalln(err, fmt.Sprintf(ResourceNotFoundError.Error(), "font", path))
 		}
 		return newFont
 	}
