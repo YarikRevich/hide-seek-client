@@ -21,8 +21,8 @@ func (p *MousePress) IsMousePressLeftOnce(sm screen.ScreenManager, tm sources.Ti
 	screenScale := sm.GetScale()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(b.Position.X) && currX <= int((tm.Size.X*screenScale.X)+(b.Position.X))) &&
-		(currY >= int(b.Position.Y) && currY <= int((tm.Size.Y*screenScale.Y)+(b.Position.Y)))
+		(currX >= int(b.Position.X) && currX <= int((tm.MapSize.X*screenScale.X)+(b.Position.X))) &&
+		(currY >= int(b.Position.Y) && currY <= int((tm.MapSize.Y*screenScale.Y)+(b.Position.Y)))
 }
 
 //It checks collision with a static object, which won't change its size
@@ -31,8 +31,8 @@ func (p *MousePress) IsMousePressLeftOnceStatic(tm sources.Tilemap, b ui.ButtonO
 	currX, currY := ebiten.CursorPosition()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(b.Position.X) && currX <= int((tm.Size.X)+(b.Position.X))) &&
-		(currY >= int(b.Position.Y) && currY <= int((tm.Size.Y)+(b.Position.Y)))
+		(currX >= int(b.Position.X) && currX <= int((tm.MapSize.X)+(b.Position.X))) &&
+		(currY >= int(b.Position.Y) && currY <= int((tm.MapSize.Y)+(b.Position.Y)))
 }
 
 func (p *Mouse) IsAnyMouseButtonsPressed() bool {

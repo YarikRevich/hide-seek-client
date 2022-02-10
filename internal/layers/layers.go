@@ -8,7 +8,7 @@ import (
 )
 
 var Layers = []Layer{
-	NewStartMenuLayer().Init(),
+	NewStartMenuLayer(),
 }
 
 type ContextOpts struct {
@@ -21,7 +21,7 @@ type ContextOpts struct {
 type Layer interface {
 	SetContext(*ContextOpts)
 
-	Init() Layer
+	Init()
 
 	IsActive() bool
 	Update()

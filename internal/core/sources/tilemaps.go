@@ -3,7 +3,9 @@ package sources
 import (
 	"fmt"
 	"image"
+	_ "image/jpeg"
 	_ "image/png"
+	"path/filepath"
 	"strings"
 
 	"github.com/YarikRevich/hide-seek-client/assets"
@@ -11,6 +13,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
+	"github.com/sirupsen/logrus"
 )
 
 type Tile struct {
@@ -23,8 +26,13 @@ type Tile struct {
 	}
 }
 
+type AnimationFrame struct {
+	Duration uint32
+	TileID   image.Point
+}
+
 type Animation struct {
-	Frames                     []*tiled.AnimationFrame
+	Frames                     []*AnimationFrame
 	CurrentFrame, DelayTrigger int
 }
 
@@ -47,44 +55,84 @@ type Tilemap struct {
 	Animations map[int]*Animation
 	Graph
 
-	Tiles      map[uint32]*Tile
+	Tiles      map[image.Point]*Tile
 	Properties struct {
 		//Contains IDs of Spawn Tiles
 		Spawns []int64
 	}
 
-	Size types.Vec2
+	MapSize, TileSize types.Vec2
 }
 
 func (tm *Tilemap) load(path string) error {
-	gameMap, err := tiled.LoadFile(path, tiled.WithFileSystem(assets.Assets))
+	gameMap, err := tiled.LoadFile(fmt.Sprintf("%s.%s", path, "tmx"), tiled.WithFileSystem(assets.Assets))
 	if err != nil {
 		return err
 	}
 
-	tm.Size = types.Vec2{
+	baseDir := filepath.Dir(path)
+
+	tm.MapSize = types.Vec2{
 		X: float64(gameMap.Width * gameMap.TileWidth),
 		Y: float64(gameMap.Height * gameMap.TileHeight)}
+	tm.TileSize = types.Vec2{
+		X: float64(gameMap.TileWidth),
+		Y: float64(gameMap.TileHeight)}
 
 	tempTileCollection := make(map[image.Point]*Tile)
+	tempTileImageCache := make(map[string]*ebiten.Image)
+
 	for n, l := range gameMap.Layers {
 		y := 0
 		for i, t := range l.Tiles {
+			// fmt.Println(t)
 			if (i%gameMap.Width)*gameMap.TileWidth == ((gameMap.Width * gameMap.TileWidth) - gameMap.TileWidth) {
 				y += gameMap.TileHeight
 			}
+
 			if !t.IsNil() {
 				tile := new(Tile)
+
+				if _, ok := tempTileImageCache[t.Tileset.Image.Source]; !ok {
+					file, err := assets.Assets.Open(filepath.Join(baseDir, t.Tileset.Image.Source))
+					if err != nil {
+						logrus.Fatalln(err)
+					}
+					// fmt.Println(file.Stat())
+					pngFile, _, err := image.Decode(file)
+					if err != nil {
+						logrus.Fatalln(err)
+					}
+					if err := file.Close(); err != nil {
+						logrus.Fatalln(err)
+					}
+					ebitenImage := ebiten.NewImageFromImage(pngFile)
+					tempTileImageCache[t.Tileset.Image.Source] = ebitenImage
+				}
+
+				ebitenImage := tempTileImageCache[t.Tileset.Image.Source]
+				subImage := ebitenImage.SubImage(t.GetTileRect())
+
+				tile.Image = ebiten.NewImageFromImage(subImage)
 
 				tile.Layer = l.Name
 				tile.LayerNum = n
 
 				x := (i % gameMap.Width) * gameMap.TileWidth
+				// fmt.Println(t.Tileset.Image, len(t.Tileset.Tiles))
+
 				for _, w := range t.Tileset.Tiles {
 					if w.ID == t.ID {
 						// tile.Image = w.Image
 						animation := new(Animation)
-						animation.Frames = w.Animation
+						// fmt.Println("HERLLO")
+						for _, a := range w.Animation {
+
+							animation.Frames = append(animation.Frames, &AnimationFrame{
+								Duration: a.Duration,
+								TileID:   image.Point{X: x, Y: y},
+							})
+						}
 						tm.Animations[len(tm.Animations)+1] = animation
 						tile.Properties.Collision = w.Properties.GetBool("collision")
 					}
@@ -112,8 +160,9 @@ func (tm *Tilemap) load(path string) error {
 						tile, left)
 				}
 
+				// fmt.Println(t.ID<<x, t.Tileset.FirstGID)
 				tempTileCollection[image.Point{X: x, Y: y}] = tile
-				tm.Tiles[t.ID] = tile
+				tm.Tiles[image.Point{X: x, Y: y}] = tile
 			}
 		}
 	}
@@ -137,10 +186,24 @@ type RenderTilemapOpts struct {
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
-	fmt.Println(sm)
+	// fmt.Println("START")
+	for _, v := range t.Tiles {
+		drawOpts := &ebiten.DrawImageOptions{}
+		drawOpts.GeoM.Translate(float64(v.Rect.Max.X)-t.TileSize.X, float64(v.Rect.Max.Y)-t.TileSize.Y)
+		sm.Image.DrawImage(v.Image, drawOpts)
+	}
+	// fmt.Println("END")
 	// screenSize := sm.GetSize()
 	// for _, v := range t.Tiles {
 	// 	v.Rect
 	// 	// sm.RenderTile(v.Rect, v)
 	// }
+}
+
+func NewTilemap() *Tilemap {
+	return &Tilemap{
+		Tiles:      make(map[image.Point]*Tile),
+		Animations: make(map[int]*Animation),
+		Graph:      make(Graph),
+	}
 }

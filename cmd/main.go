@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -99,7 +98,6 @@ func main() {
 	maxSize := sm.GetMaxSize()
 	minSize := sm.GetMinSize()
 
-	fmt.Println(maxSize, minSize)
 	ebiten.SetWindowSize(int(maxSize.X), int(maxSize.Y))
 	ebiten.SetWindowTitle("HideSeek-Client")
 	ebiten.SetWindowResizable(true)

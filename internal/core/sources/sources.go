@@ -4,12 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+
+	"github.com/sirupsen/logrus"
 )
 
-var tileMapCollection map[string]*Tilemap
-var shaderCollection map[string]*Shader
-var fontCollection map[string]*Font
-var audioCollection map[string]*Audio
+var tileMapCollection = make(map[string]*Tilemap)
+var shaderCollection = make(map[string]*Shader)
+var fontCollection = make(map[string]*Font)
+var audioCollection = make(map[string]*Audio)
 
 var ResourceNotFoundError error = errors.New("'%s' with path '%s' not found")
 
@@ -18,9 +20,9 @@ func GetTileMap(path string) *Tilemap {
 
 	tileMap, ok := tileMapCollection[path]
 	if !ok {
-		newTileMap := new(Tilemap)
+		newTileMap := NewTilemap()
 		if err := newTileMap.load(path); err != nil {
-			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "tilemap", path))
+			logrus.Fatalln(err, fmt.Sprintf(ResourceNotFoundError.Error(), "tilemap", path))
 		}
 		return newTileMap
 	}

@@ -55,6 +55,7 @@ func (g *Loop) Update() error {
 
 	for _, v := range layers.Layers {
 		if v.IsActive() {
+			v.Init()
 			v.Update()
 		}
 	}

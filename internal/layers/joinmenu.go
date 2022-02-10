@@ -26,7 +26,7 @@ func (iml *JoinMenuLayer) Render() {
 	iml.UIManager.Render(iml.opts.ScreenManager)
 }
 
-func (iml *JoinMenuLayer) Init() Layer {
+func (iml *JoinMenuLayer) Init() {
 	// iml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
 	// 	OnMousePress: func() {
 	// 		ID, err := iml.opts.NetworkingManager.ServerClient.CreateSession()
@@ -51,7 +51,7 @@ func (iml *JoinMenuLayer) Init() Layer {
 	// 	return
 	// }
 	// sml.opts.WorldManager.ID =
-	return iml
+	// return iml
 }
 
 func NewJoinMenuLayer() Layer {
