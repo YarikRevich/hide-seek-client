@@ -12,7 +12,7 @@ import (
 
 //Keyboard entity which is used for
 //key handler with further callback
-type KeyBoardEntity struct {
+type KeyboardEntity struct {
 
 	//Describes single keys like "T", "A"...
 	SingleKeys []ebiten.Key
@@ -26,11 +26,11 @@ type KeyBoardEntity struct {
 	Callback func(IBuffer, rune)
 }
 
-type KeyBoard struct {
+type KeyboardPressEventManager struct {
 	awaitKeyTimer time.Time
 }
 
-func (b *KeyBoard) IsKeyInList(k ebiten.Key, l []ebiten.Key) bool {
+func (b *KeyboardPressEventManager) IsKeyInList(k ebiten.Key, l []ebiten.Key) bool {
 	for _, v := range l {
 		if v == k {
 			return true
@@ -39,11 +39,11 @@ func (b *KeyBoard) IsKeyInList(k ebiten.Key, l []ebiten.Key) bool {
 	return false
 }
 
-func (k *KeyBoard) CleanPressedKey(key ebiten.Key) string {
+func (k *KeyboardPressEventManager) CleanPressedKey(key ebiten.Key) string {
 	return regexp.MustCompile(strings.Join(keycodes.ServiceKeyPrefixes, "|")).ReplaceAllString(key.String(), "")
 }
 
-func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
+func (k *KeyboardPressEventManager) HandleKeyPress(b IBuffer, ke []KeyboardEntity) {
 	b.CleanBlinking()
 
 	for _, pk := range inpututil.PressedKeys() {
@@ -77,15 +77,15 @@ func (k *KeyBoard) HandleKeyPress(b IBuffer, ke []KeyBoardEntity) {
 	b.UpdateCursorBlink()
 }
 
-//Checks if any keyboard key pressed
-func (k *KeyBoard) IsAnyKeyPressed() bool {
+//Checks if any Keyboard key pressed
+func (kp *KeyboardPressEventManager) IsAnyKeyPressed() bool {
 	return len(inpututil.PressedKeys()) != 0
 }
 
-func (k *KeyBoard) AreKeysCombinedInOrder(m, s ebiten.Key) bool {
-	return ebiten.IsKeyPressed(m) == true && ebiten.IsKeyPressed(s) == true && inpututil.KeyPressDuration(m) > inpututil.KeyPressDuration(s)
+func (k *KeyboardPressEventManager) AreKeysCombinedInOrder(m, s ebiten.Key) bool {
+	return ebiten.IsKeyPressed(m) && ebiten.IsKeyPressed(s) && inpututil.KeyPressDuration(m) > inpututil.KeyPressDuration(s)
 }
 
-func NewKeyBoard() *KeyBoard {
-	return new(KeyBoard)
+func NewKeyboardPressEventManager() *KeyboardPressEventManager {
+	return new(KeyboardPressEventManager)
 }

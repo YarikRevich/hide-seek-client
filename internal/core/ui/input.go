@@ -9,7 +9,6 @@ import (
 )
 
 type InputOpts struct {
-	// Metadata     *sources.MetadataModel
 	Tilemap                       *sources.Tilemap
 	Position, Scale               types.Vec2
 	AutoScaleForbidden            bool
@@ -32,15 +31,15 @@ func (i *Input) Update() {
 
 func (in *Input) Render(sm *screen.ScreenManager) {
 	in.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
-		Position:           in.Opts.Position,
+		SurfacePosition:    in.Opts.Position,
 		Scale:              in.Opts.Scale,
 		AutoScaleForbidden: in.Opts.AutoScaleForbidden,
 	})
 	in.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		Position:     in.Opts.Position,
-		FontDistance: in.Opts.FontDistance,
-		Color:        in.Opts.Color,
-		RowWidth:     in.Opts.RowWidth,
+		SurfacePosition: in.Opts.Position,
+		FontDistance:    in.Opts.FontDistance,
+		Color:           in.Opts.Color,
+		RowWidth:        in.Opts.RowWidth,
 	})
 }
 

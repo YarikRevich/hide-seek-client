@@ -9,7 +9,6 @@ import (
 )
 
 type LabelOpts struct {
-	// Metadata     *sources.MetadataModel
 	Tilemap            *sources.Tilemap
 	Position, Scale    types.Vec2
 	AutoScaleForbidden bool
@@ -28,15 +27,15 @@ func (l *Label) Update() {}
 
 func (l *Label) Render(sm *screen.ScreenManager) {
 	l.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
-		Position:           l.Opts.Position,
+		SurfacePosition:    l.Opts.Position,
 		Scale:              l.Opts.Scale,
 		AutoScaleForbidden: l.Opts.AutoScaleForbidden,
 	})
 	l.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		Position:     l.Opts.Position,
-		FontDistance: l.Opts.FontDistance,
-		Color:        l.Opts.Color,
-		RowWidth:     l.Opts.RowWidth,
+		SurfacePosition: l.Opts.Position,
+		FontDistance:    l.Opts.FontDistance,
+		Color:           l.Opts.Color,
+		RowWidth:        l.Opts.RowWidth,
 	})
 }
 

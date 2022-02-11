@@ -165,18 +165,18 @@ func (tm *Tilemap) load(path string) error {
 }
 
 type RenderTilemapOpts struct {
-	Position, Scale    types.Vec2
-	AutoScaleForbidden bool
+	SurfacePosition, Scale types.Vec2
+	AutoScaleForbidden     bool
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	screenSize := sm.GetSize()
 	screenScale := sm.GetScale()
 	for k, v := range t.Tiles {
-		if (float64(k.X)+opts.Position.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.Position.Y-t.TileSize.Y < screenSize.Y) &&
-			(float64(k.X)+opts.Position.X+t.TileSize.X > 0 && float64(k.Y)+opts.Position.Y+t.TileSize.Y > 0) {
+		if (float64(k.X)+opts.SurfacePosition.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.SurfacePosition.Y-t.TileSize.Y < screenSize.Y) &&
+			(float64(k.X)+opts.SurfacePosition.X+t.TileSize.X > 0 && float64(k.Y)+opts.SurfacePosition.Y+t.TileSize.Y > 0) {
 			drawOpts := &ebiten.DrawImageOptions{}
-			drawOpts.GeoM.Translate(float64(k.X)+opts.Position.X, float64(k.Y)+opts.Position.Y)
+
 			if !opts.AutoScaleForbidden {
 				drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
 			}
@@ -184,6 +184,7 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 				drawOpts.GeoM.Scale(opts.Scale.X, opts.Scale.Y)
 			}
 
+			drawOpts.GeoM.Translate(float64(k.X)+opts.SurfacePosition.X, float64(k.Y)+opts.SurfacePosition.Y)
 			sm.Image.DrawImage(v.Image, drawOpts)
 		}
 	}

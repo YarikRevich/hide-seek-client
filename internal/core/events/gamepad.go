@@ -2,17 +2,24 @@ package events
 
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-type Gamepad struct {
-	GamepadPress
+type GamepadEventManager struct{}
+
+func (g *GamepadEventManager) IsGamepadConnected() bool {
+	return len(ebiten.GamepadIDs()) != 0
 }
 
-type GamepadPress struct{}
+func NewGamepadEventManager() *GamepadEventManager {
+	return new(GamepadEventManager)
+}
 
-func (g *GamepadPress) IsGamepadButtonPressedOnce(button ebiten.GamepadButton) bool {
+type GamepadPressEventManager struct{}
+
+func (g *GamepadPressEventManager) IsGamepadButtonPressedOnce(button ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if inpututil.IsGamepadButtonJustPressed(v, button) {
 			return true
@@ -21,7 +28,7 @@ func (g *GamepadPress) IsGamepadButtonPressedOnce(button ebiten.GamepadButton) b
 	return false
 }
 
-func (g *GamepadPress) IsGamepadButtonPressed(button ebiten.GamepadButton) bool {
+func (g *GamepadPressEventManager) IsGamepadButtonPressed(button ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if ebiten.IsGamepadButtonPressed(v, button) {
 			return true
@@ -30,7 +37,7 @@ func (g *GamepadPress) IsGamepadButtonPressed(button ebiten.GamepadButton) bool 
 	return false
 }
 
-func (g *GamepadPress) AreGamepadButtonsCombinedOnce(button1, button2 ebiten.GamepadButton) bool {
+func (g *GamepadPressEventManager) AreGamepadButtonsCombinedOnce(button1, button2 ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if inpututil.IsGamepadButtonJustPressed(v, button1) && inpututil.IsGamepadButtonJustPressed(v, button2) {
 			return true
@@ -39,7 +46,7 @@ func (g *GamepadPress) AreGamepadButtonsCombinedOnce(button1, button2 ebiten.Gam
 	return false
 }
 
-func (g *GamepadPress) AreGamepadButtonsCombined(button1, button2 ebiten.GamepadButton) bool {
+func (g *GamepadPressEventManager) AreGamepadButtonsCombined(button1, button2 ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if ebiten.IsGamepadButtonPressed(v, button1) && ebiten.IsGamepadButtonPressed(v, button2) {
 			return true
@@ -48,7 +55,7 @@ func (g *GamepadPress) AreGamepadButtonsCombined(button1, button2 ebiten.Gamepad
 	return false
 }
 
-func (g *GamepadPress) AreGamepadButtonsCombinedInOrder(m, s ebiten.GamepadButton) bool {
+func (g *GamepadPressEventManager) AreGamepadButtonsCombinedInOrder(m, s ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if ebiten.IsGamepadButtonPressed(v, m) == true && ebiten.IsGamepadButtonPressed(v, s) == true && inpututil.GamepadButtonPressDuration(v, m) > inpututil.GamepadButtonPressDuration(v, s) {
 			return true
@@ -57,7 +64,7 @@ func (g *GamepadPress) AreGamepadButtonsCombinedInOrder(m, s ebiten.GamepadButto
 	return false
 }
 
-func (g *GamepadPress) IsAnyButtonPressed() bool {
+func (g *GamepadPressEventManager) IsAnyButtonPressed() bool {
 	for _, v := range ebiten.GamepadIDs() {
 		for _, q := range []ebiten.GamepadButton{
 			keycodes.GamepadUPButton,
@@ -76,11 +83,34 @@ func (g *GamepadPress) IsAnyButtonPressed() bool {
 	return false
 }
 
-//Checks if any gamepad is connected
-func (g *GamepadPress) IsGamepadConnected() bool {
-	return len(ebiten.GamepadIDs()) != 0
+func NewGamepadPressEventManager() *GamepadPressEventManager {
+	return new(GamepadPressEventManager)
 }
 
-func NewGamepad() *Gamepad {
-	return new(Gamepad)
+type GamepadScrollEventManager struct {
+	IsMoved bool
+
+	Offset, LastOffset types.Vec2
+
+	Speed float64
+}
+
+func (gsem *GamepadScrollEventManager) UpdateGamepadScrollOffset() {
+	if GamepadPress.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
+		gsem.Offset.Y -= gsem.Speed
+	} else if GamepadPress.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
+		gsem.Offset.Y += gsem.Speed
+	} else if GamepadPress.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
+		gsem.Offset.X -= gsem.Speed
+	} else if GamepadPress.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
+		gsem.Offset.X += gsem.Speed
+	}
+
+	gsem.IsMoved = gsem.LastOffset.X != gsem.Offset.X && gsem.LastOffset.Y != gsem.Offset.Y
+	gsem.LastOffset.X = gsem.Offset.X
+	gsem.LastOffset.Y = gsem.Offset.Y
+}
+
+func NewGamepadScrollEventManager() *GamepadScrollEventManager {
+	return &GamepadScrollEventManager{Speed: .5}
 }

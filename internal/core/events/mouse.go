@@ -1,33 +1,35 @@
 package events
 
 import (
-	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
-	"github.com/YarikRevich/hide-seek-client/internal/core/ui"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-type Mouse struct {
-	MousePress
-	MouseWheel
+// type Mouse struct {
+// 	MouseWheel
+// }
+
+type MousePressEventManager struct{}
+
+type IsMousePress struct {
+	Position types.Vec2
 }
 
-type MousePress struct{}
-
-func (p *MousePress) IsMousePressLeftOnce(sm screen.ScreenManager, tm sources.Tilemap, b ui.ButtonOpts) bool {
+func (mpem *MousePressEventManager) IsMousePressLeftOnce(sm screen.ScreenManager, tm sources.Tilemap, opts IsMousePress) bool {
 	currX, currY := ebiten.CursorPosition()
 	screenScale := sm.GetScale()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(b.Position.X) && currX <= int((tm.MapSize.X*screenScale.X)+(b.Position.X))) &&
-		(currY >= int(b.Position.Y) && currY <= int((tm.MapSize.Y*screenScale.Y)+(b.Position.Y)))
+		(currX >= int(opts.Position.X) && currX <= int((tm.MapSize.X*screenScale.X)+(opts.Position.X))) &&
+		(currY >= int(opts.Position.Y) && currY <= int((tm.MapSize.Y*screenScale.Y)+(opts.Position.Y)))
 }
 
 //It checks collision with a static object, which won't change its size
 //after window resizing
-func (p *MousePress) IsMousePressLeftOnceStatic(tm sources.Tilemap, b ui.ButtonOpts) bool {
+func (mpem *MousePressEventManager) IsMousePressLeftOnceStatic(tm sources.Tilemap, b IsMousePress) bool {
 	currX, currY := ebiten.CursorPosition()
 
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
@@ -35,7 +37,7 @@ func (p *MousePress) IsMousePressLeftOnceStatic(tm sources.Tilemap, b ui.ButtonO
 		(currY >= int(b.Position.Y) && currY <= int((tm.MapSize.Y)+(b.Position.Y)))
 }
 
-func (p *Mouse) IsAnyMouseButtonsPressed() bool {
+func (mpem *MousePressEventManager) IsAnyMouseButtonsPressed() bool {
 	for _, v := range []ebiten.MouseButton{
 		ebiten.MouseButtonLeft, ebiten.MouseButtonMiddle, ebiten.MouseButtonRight} {
 		if inpututil.IsMouseButtonJustPressed(v) {
@@ -45,7 +47,7 @@ func (p *Mouse) IsAnyMouseButtonsPressed() bool {
 	return false
 }
 
-func (p *Mouse) IsAnyMovementButtonPressed() bool {
+func (mpem *MousePressEventManager) IsAnyMovementButtonPressed() bool {
 	return ebiten.IsKeyPressed(ebiten.KeyW) ||
 		ebiten.IsKeyPressed(ebiten.KeyS) ||
 		ebiten.IsKeyPressed(ebiten.KeyA) ||
@@ -56,42 +58,29 @@ func (p *Mouse) IsAnyMovementButtonPressed() bool {
 		ebiten.IsKeyPressed(ebiten.KeyArrowRight)
 }
 
-type MouseWheel struct {
+func NewMousePressEventManager() *MousePressEventManager {
+	return new(MousePressEventManager)
+}
+
+type MouseScrollEventManager struct {
 	IsMoved bool
 
-	LastMouseWheelX, LastMouseWheelY float64
-	OffsetX, OffsetY                 float64
-	moveCoefficient                  float64
+	Offset, LastOffset types.Vec2
+	Speed              float64
 }
 
 //Saves mouse wheel offsets using ebiten API
 //or uses offsets gotten from gamepad
-func (p *MouseWheel) UpdateMouseWheelOffsets() {
-	e := UseEvents().Gamepad()
+func (msem *MouseScrollEventManager) UpdateMouseScrollOffsets() {
+	sx, sy := ebiten.Wheel()
+	msem.Offset.X += (sx * msem.Speed)
+	msem.Offset.Y += (sy * msem.Speed)
 
-	if e.IsGamepadConnected() {
-		if e.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
-			p.OffsetY -= p.moveCoefficient
-		} else if e.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
-			p.OffsetY += p.moveCoefficient
-		} else if e.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
-			p.OffsetX -= p.moveCoefficient
-		} else if e.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
-			p.OffsetX += p.moveCoefficient
-		}
-	} else {
-		sx, sy := ebiten.Wheel()
-		p.OffsetX += sx
-		p.OffsetY += sy
-	}
-
-	p.IsMoved = p.LastMouseWheelX != p.OffsetX && p.LastMouseWheelY != p.OffsetY
-	p.LastMouseWheelX = p.OffsetX
-	p.LastMouseWheelY = p.OffsetY
+	msem.IsMoved = msem.LastOffset.X != msem.Offset.X && msem.LastOffset.Y != msem.Offset.Y
+	msem.LastOffset.X = msem.Offset.X
+	msem.LastOffset.Y = msem.Offset.Y
 }
 
-func NewMouse() *Mouse {
-	m := new(Mouse)
-	m.moveCoefficient = .5
-	return m
+func NewMouseScrollEventManager() *MouseScrollEventManager {
+	return &MouseScrollEventManager{Speed: 1}
 }

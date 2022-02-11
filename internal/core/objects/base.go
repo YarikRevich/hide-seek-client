@@ -87,69 +87,67 @@ func (o *Base) IsEqualTo(ob *Base) bool {
 }
 
 func (o *Base) UpdateDirection() {
-	k := events.UseEvents().Keyboard()
-	g := events.UseEvents().Gamepad()
-	if g.IsGamepadConnected() {
-		if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadDOWNButton, keycodes.GamepadRIGHTButton) {
+	if events.Gamepad.IsGamepadConnected() {
+		if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadDOWNButton, keycodes.GamepadRIGHTButton) {
 			o.Direction = keycodes.DOWN
 			o.SubDirection = keycodes.RIGHT
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadRIGHTButton, keycodes.GamepadDOWNButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadRIGHTButton, keycodes.GamepadDOWNButton) {
 			o.Direction = keycodes.RIGHT
 			o.SubDirection = keycodes.DOWN
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTButton) {
 			o.Direction = keycodes.DOWN
 			o.SubDirection = keycodes.LEFT
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadLEFTButton, keycodes.GamepadDOWNButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadLEFTButton, keycodes.GamepadDOWNButton) {
 			o.Direction = keycodes.LEFT
 			o.SubDirection = keycodes.DOWN
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadUPButton, keycodes.GamepadRIGHTButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadUPButton, keycodes.GamepadRIGHTButton) {
 			o.Direction = keycodes.UP
 			o.SubDirection = keycodes.RIGHT
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadRIGHTButton, keycodes.GamepadUPButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadRIGHTButton, keycodes.GamepadUPButton) {
 			o.Direction = keycodes.RIGHT
 			o.SubDirection = keycodes.UP
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadUPButton, keycodes.GamepadLEFTButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadUPButton, keycodes.GamepadLEFTButton) {
 			o.Direction = keycodes.UP
 			o.SubDirection = keycodes.LEFT
-		} else if g.AreGamepadButtonsCombinedInOrder(keycodes.GamepadLEFTButton, keycodes.GamepadUPButton) {
+		} else if events.GamepadPress.AreGamepadButtonsCombinedInOrder(keycodes.GamepadLEFTButton, keycodes.GamepadUPButton) {
 			o.Direction = keycodes.LEFT
 			o.SubDirection = keycodes.UP
-		} else if g.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
+		} else if events.GamepadPress.IsGamepadButtonPressed(keycodes.GamepadUPButton) {
 			o.Direction = keycodes.UP
 			o.SubDirection = keycodes.NONE
-		} else if g.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
+		} else if events.GamepadPress.IsGamepadButtonPressed(keycodes.GamepadLEFTButton) {
 			o.Direction = keycodes.LEFT
 			o.SubDirection = keycodes.NONE
-		} else if g.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
+		} else if events.GamepadPress.IsGamepadButtonPressed(keycodes.GamepadRIGHTButton) {
 			o.Direction = keycodes.RIGHT
 			o.SubDirection = keycodes.NONE
-		} else if g.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
+		} else if events.GamepadPress.IsGamepadButtonPressed(keycodes.GamepadDOWNButton) {
 			o.Direction = keycodes.DOWN
 			o.SubDirection = keycodes.NONE
 		}
 	} else {
-		if k.AreKeysCombinedInOrder(ebiten.KeyS, ebiten.KeyD) || k.AreKeysCombinedInOrder(ebiten.KeyArrowDown, ebiten.KeyArrowRight) {
+		if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyS, ebiten.KeyD) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowDown, ebiten.KeyArrowRight) {
 			o.Direction = keycodes.DOWN
 			o.SubDirection = keycodes.RIGHT
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyD, ebiten.KeyS) || k.AreKeysCombinedInOrder(ebiten.KeyArrowRight, ebiten.KeyArrowDown) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyD, ebiten.KeyS) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowRight, ebiten.KeyArrowDown) {
 			o.Direction = keycodes.RIGHT
 			o.SubDirection = keycodes.DOWN
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyS, ebiten.KeyA) || k.AreKeysCombinedInOrder(ebiten.KeyArrowDown, ebiten.KeyArrowLeft) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyS, ebiten.KeyA) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowDown, ebiten.KeyArrowLeft) {
 			o.Direction = keycodes.DOWN
 			o.SubDirection = keycodes.LEFT
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyA, ebiten.KeyS) || k.AreKeysCombinedInOrder(ebiten.KeyArrowLeft, ebiten.KeyArrowDown) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyA, ebiten.KeyS) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowLeft, ebiten.KeyArrowDown) {
 			o.Direction = keycodes.LEFT
 			o.SubDirection = keycodes.DOWN
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyW, ebiten.KeyD) || k.AreKeysCombinedInOrder(ebiten.KeyArrowUp, ebiten.KeyArrowRight) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyW, ebiten.KeyD) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowUp, ebiten.KeyArrowRight) {
 			o.Direction = keycodes.UP
 			o.SubDirection = keycodes.RIGHT
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyD, ebiten.KeyW) || k.AreKeysCombinedInOrder(ebiten.KeyArrowRight, ebiten.KeyArrowUp) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyD, ebiten.KeyW) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowRight, ebiten.KeyArrowUp) {
 			o.Direction = keycodes.RIGHT
 			o.SubDirection = keycodes.UP
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyW, ebiten.KeyA) || k.AreKeysCombinedInOrder(ebiten.KeyArrowUp, ebiten.KeyArrowLeft) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyW, ebiten.KeyA) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowUp, ebiten.KeyArrowLeft) {
 			o.Direction = keycodes.UP
 			o.SubDirection = keycodes.LEFT
-		} else if k.AreKeysCombinedInOrder(ebiten.KeyA, ebiten.KeyW) || k.AreKeysCombinedInOrder(ebiten.KeyArrowLeft, ebiten.KeyArrowUp) {
+		} else if events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyA, ebiten.KeyW) || events.KeyboardPress.AreKeysCombinedInOrder(ebiten.KeyArrowLeft, ebiten.KeyArrowUp) {
 			o.Direction = keycodes.LEFT
 			o.SubDirection = keycodes.UP
 		} else if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
@@ -171,12 +169,15 @@ func (o *Base) UpdateDirection() {
 func (o *Base) IsDirectionUP() bool {
 	return o.Direction == keycodes.UP || o.SubDirection == keycodes.UP
 }
+
 func (o *Base) IsDirectionLEFT() bool {
 	return o.Direction == keycodes.LEFT || o.SubDirection == keycodes.LEFT
 }
+
 func (o *Base) IsDirectionRIGHT() bool {
 	return o.Direction == keycodes.RIGHT || o.SubDirection == keycodes.RIGHT
 }
+
 func (o *Base) IsDirectionDOWN() bool {
 	return o.Direction == keycodes.DOWN || o.SubDirection == keycodes.DOWN
 }

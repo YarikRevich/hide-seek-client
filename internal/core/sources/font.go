@@ -11,6 +11,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/image/font"
 )
 
@@ -45,35 +46,60 @@ func (f *Font) load(path string, size int) error {
 type RenderTextCharachterOpts struct {
 	Tilemap                             *Tilemap
 	Text                                string
-	Position                            types.Vec2
+	SurfacePosition                     types.Vec2
 	FontAdvance, FontDistance, RowWidth float64
+	TextPosition                        types.Vec2
 	Color                               color.Color
 }
 
 func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
+	screenScale := sm.GetScale()
+	if opts.RowWidth == 0 {
+		logrus.Fatalln("RowWidth should be greather than zero")
+	}
+
+	var lastYOffset float64
+	var lastIndex int
+	var spaceOffset float64
 	for i, c := range opts.Text {
-		var yOffset float64
+		fontHeight := f.Font.Metrics().Height
+
+		fontAdvance, ok := f.Font.GlyphAdvance(c)
+		if !ok {
+			logrus.Fatalln("can't get advance of the font")
+		}
+
+		var yOffset, xOffset float64
+
 		if c != '\n' {
-			yOffset = math.Floor(opts.Position.X*float64(i) + opts.FontDistance*float64(i-1)/opts.RowWidth)
+			yOffset = opts.SurfacePosition.X + float64(fontHeight.Round())*1.5*(math.Floor(((opts.SurfacePosition.X)+(opts.TextPosition.X)+(float64(fontAdvance.Round()*(i)))/screenScale.X)/(opts.RowWidth+float64(fontAdvance.Round())))-1)
 		} else {
 			delta := float64(i) - opts.RowWidth
 			cNumInc := opts.RowWidth
 			if delta > 0 {
 				cNumInc = math.Ceil(float64(i) / cNumInc)
 			}
-			yOffset = math.Floor(opts.Position.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
+			yOffset = math.Floor(opts.SurfacePosition.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
 		}
-		fmt.Println(
-			int(opts.Position.X+opts.FontDistance*float64(i/(i+1))),
-			int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
-		)
+		if lastYOffset != yOffset {
+			lastIndex = i
+
+			if c == ' ' {
+				spaceOffset = float64(fontAdvance.Round())
+			} else {
+				spaceOffset = 0
+			}
+		}
+
+		xOffset = (opts.SurfacePosition.X) + (opts.TextPosition.X) + (float64(fontAdvance.Round() * (i - lastIndex))) - spaceOffset/screenScale.X
+		lastYOffset = yOffset
+
 		text.Draw(
 			sm.GetImage(),
 			string(c),
 			f.Font,
-			int(opts.Position.X+opts.FontDistance*float64(i/(i+1))),
-			// int(opts.Position.Y*yOffset+opts.FontAdvance*float64(yOffset-1)),
-			200,
+			int(xOffset),
+			int(yOffset),
 			color.Opaque)
 	}
 }

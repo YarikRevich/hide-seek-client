@@ -50,14 +50,18 @@ func (sml *StartMenuLayer) Init() {
 
 	// fmt.Println(sources.GetFont("base", 9))
 	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
-		Text:     "it works",
-		Font:     sources.GetFont("base", 20),
-		Tilemap:  sources.GetTileMap("system/buttons/button"),
-		Position: types.Vec2{X: 100, Y: 100},
-		Scale:    types.Vec2{X: 1.9, Y: 1.9},
-		// OnMousePress: func() {
-		// statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
-		// },
+		Text:            "it works i love ukraine, i hate russia, lorem ipsum",
+		Font:            sources.GetFont("base", 20),
+		Tilemap:         sources.GetTileMap("system/buttons/button"),
+		SurfacePosition: types.Vec2{X: 100, Y: 100},
+		TextPosition:    types.Vec2{X: 20, Y: 10},
+		Scale:           types.Vec2{X: 5, Y: 5},
+		RowWidth:        100,
+		FontDistance:    5,
+		FontAdvance:     10,
+		OnMousePress: func() {
+			statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
+		},
 	}))
 }
 
