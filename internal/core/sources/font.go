@@ -3,7 +3,6 @@ package sources
 import (
 	"fmt"
 	"image/color"
-	"math"
 	"strings"
 
 	"github.com/YarikRevich/hide-seek-client/assets"
@@ -53,14 +52,13 @@ type RenderTextCharachterOpts struct {
 }
 
 func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
-	screenScale := sm.GetScale()
+	// screenScale := sm.GetScale()
 	if opts.RowWidth == 0 {
 		logrus.Fatalln("RowWidth should be greather than zero")
 	}
 
-	var lastYOffset float64
-	var lastIndex int
 	var spaceOffset float64
+	var lineNum, breakIndex int
 	for i, c := range opts.Text {
 		fontHeight := f.Font.Metrics().Height
 
@@ -69,30 +67,26 @@ func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 			logrus.Fatalln("can't get advance of the font")
 		}
 
+		maxSymbols := int(opts.RowWidth / float64(fontAdvance.Round()))
+
 		var yOffset, xOffset float64
 
-		if c != '\n' {
-			yOffset = opts.SurfacePosition.X + float64(fontHeight.Round())*1.5*(math.Floor(((opts.SurfacePosition.X)+(opts.TextPosition.X)+(float64(fontAdvance.Round()*(i)))/screenScale.X)/(opts.RowWidth+float64(fontAdvance.Round())))-1)
-		} else {
-			delta := float64(i) - opts.RowWidth
-			cNumInc := opts.RowWidth
-			if delta > 0 {
-				cNumInc = math.Ceil(float64(i) / cNumInc)
-			}
-			yOffset = math.Floor(opts.SurfacePosition.X*float64(cNumInc) + opts.FontDistance*float64(cNumInc-1)/opts.RowWidth)
-		}
-		if lastYOffset != yOffset {
-			lastIndex = i
+		currentSymbolsInRow := int(fontAdvance.Round() * i)
+		maxSymbolsInRow := int((fontAdvance.Round() * maxSymbols))
 
+		if (currentSymbolsInRow != 0 && currentSymbolsInRow%maxSymbolsInRow == 0) || c == '\n' {
+			lineNum = (currentSymbolsInRow / maxSymbolsInRow)
+			breakIndex = i
 			if c == ' ' {
 				spaceOffset = float64(fontAdvance.Round())
 			} else {
 				spaceOffset = 0
 			}
 		}
+		yOffset = opts.SurfacePosition.Y + opts.TextPosition.Y + float64(fontHeight.Round()*lineNum)
+		fmt.Println(string(c), currentSymbolsInRow, maxSymbolsInRow, yOffset)
 
-		xOffset = (opts.SurfacePosition.X) + (opts.TextPosition.X) + (float64(fontAdvance.Round() * (i - lastIndex))) - spaceOffset/screenScale.X
-		lastYOffset = yOffset
+		xOffset = opts.SurfacePosition.X + opts.TextPosition.X + (float64(fontAdvance.Round() * (i - breakIndex))) - spaceOffset
 
 		text.Draw(
 			sm.GetImage(),

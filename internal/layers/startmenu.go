@@ -48,15 +48,14 @@ func (sml *StartMenuLayer) Init() {
 	// 	},
 	// }))
 
-	// fmt.Println(sources.GetFont("base", 9))
 	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
-		Text:            "it works i love ukraine, i hate russia, lorem ipsum",
+		Text:            "it works i love ukraine, i hate russia, lorem ipsum blabla haha yana vova yarik popa pisa zno",
 		Font:            sources.GetFont("base", 20),
 		Tilemap:         sources.GetTileMap("system/buttons/button"),
 		SurfacePosition: types.Vec2{X: 100, Y: 100},
 		TextPosition:    types.Vec2{X: 20, Y: 10},
 		Scale:           types.Vec2{X: 5, Y: 5},
-		RowWidth:        100,
+		RowWidth:        200,
 		FontDistance:    5,
 		FontAdvance:     10,
 		OnMousePress: func() {
