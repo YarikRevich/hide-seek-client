@@ -60,7 +60,7 @@ type Tilemap struct {
 		Spawns []int64
 	}
 
-	MapSize, TileSize types.Vec2
+	MapSize, TileSize, TileCount types.Vec2
 }
 
 func (tm *Tilemap) load(path string) error {
@@ -77,6 +77,10 @@ func (tm *Tilemap) load(path string) error {
 	tm.TileSize = types.Vec2{
 		X: float64(gameMap.TileWidth),
 		Y: float64(gameMap.TileHeight)}
+	tm.TileCount = types.Vec2{
+		X: float64(gameMap.TileWidth),
+		Y: float64(gameMap.TileHeight),
+	}
 
 	tempTileCollection := make(map[image.Point]*Tile)
 	tempTileImageCache := make(map[string]*ebiten.Image)
@@ -165,13 +169,14 @@ func (tm *Tilemap) load(path string) error {
 }
 
 type RenderTilemapOpts struct {
-	SurfacePosition, Scale types.Vec2
-	AutoScaleForbidden     bool
+	SurfacePosition, Scale               types.Vec2
+	AutoScaleForbidden, CenterizedOffset bool
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	screenSize := sm.GetSize()
 	screenScale := sm.GetScale()
+
 	for k, v := range t.Tiles {
 		if (float64(k.X)+opts.SurfacePosition.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.SurfacePosition.Y-t.TileSize.Y < screenSize.Y) &&
 			(float64(k.X)+opts.SurfacePosition.X+t.TileSize.X > 0 && float64(k.Y)+opts.SurfacePosition.Y+t.TileSize.Y > 0) {
@@ -180,8 +185,13 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 			if !opts.AutoScaleForbidden {
 				drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
 			}
+
 			if opts.Scale.X != 0 && opts.Scale.Y != 0 {
 				drawOpts.GeoM.Scale(opts.Scale.X, opts.Scale.Y)
+			}
+
+			if opts.CenterizedOffset {
+				drawOpts.GeoM.Translate(-t.TileSize.X*(t.TileCount.X/2), -t.TileSize.Y*(t.TileCount.Y/2))
 			}
 
 			drawOpts.GeoM.Translate(float64(k.X)+opts.SurfacePosition.X, float64(k.Y)+opts.SurfacePosition.Y)

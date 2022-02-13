@@ -112,8 +112,8 @@ func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 	})
 	for y, p := range formattedText {
 		for x, c := range p {
-			yOffset := opts.SurfacePosition.Y + opts.TextPosition.Y + float64(int(fontHeight)*y)
-			xOffset := opts.SurfacePosition.X + opts.TextPosition.X + (float64((fontAdvance.Round() / int(screenScale.X)) * x))
+			yOffset := opts.SurfacePosition.Y + opts.TextPosition.Y - (opts.Tilemap.TileSize.Y * (opts.Tilemap.TileCount.Y / 2)) + float64(int(fontHeight)*(y+1))
+			xOffset := opts.SurfacePosition.X + opts.TextPosition.X - (opts.Tilemap.TileSize.X * (opts.Tilemap.TileCount.X / 2)) + (float64((fontAdvance.Round() / int(screenScale.X)) * x))
 
 			text.Draw(
 				sm.GetImage(),

@@ -45,8 +45,10 @@ func (b *Button) Render(sm *screen.ScreenManager) {
 		SurfacePosition:    b.Opts.SurfacePosition,
 		Scale:              b.Opts.Scale,
 		AutoScaleForbidden: b.Opts.AutoScaleForbidden,
+		CenterizedOffset:   true,
 	})
 	b.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
+		Tilemap:         b.Opts.Tilemap,
 		SurfacePosition: b.Opts.SurfacePosition,
 		FontAdvance:     b.Opts.FontAdvance,
 		FontDistance:    b.Opts.FontDistance,
