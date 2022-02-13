@@ -42,6 +42,45 @@ func (f *Font) load(path string, size int) error {
 	return nil
 }
 
+type TextFormatterOpts struct {
+	Text     string
+	RowWidth float64
+}
+
+func (f *Font) formatTextToRender(opts TextFormatterOpts) [][]rune {
+	fontAdvance, ok := f.Font.GlyphAdvance(rune(opts.Text[0]))
+	if !ok {
+		logrus.Fatalln("can't get advance of the font")
+	}
+
+	maxSymbolsPerRow := int(opts.RowWidth / float64(fontAdvance.Round()))
+
+	var r [][]rune
+	var q []rune
+
+	var breakIndex int
+	var spaceShift int
+	for i, c := range opts.Text {
+		currentSymbolsInRow := int(fontAdvance.Round() * i)
+		maxRowWidth := int((fontAdvance.Round() * maxSymbolsPerRow))
+
+		if !(c == ' ' && breakIndex != 0 && breakIndex == i-1) {
+			q = append(q, c)
+		} else {
+			spaceShift = fontAdvance.Round()
+		}
+
+		if currentSymbolsInRow != 0 && currentSymbolsInRow%maxRowWidth == spaceShift && breakIndex != i-1 {
+			r = append(r, q)
+			q = make([]rune, 0)
+			breakIndex = i
+		}
+	}
+
+	r = append(r, q)
+	return r
+}
+
 type RenderTextCharachterOpts struct {
 	Tilemap                             *Tilemap
 	Text                                string
@@ -52,48 +91,37 @@ type RenderTextCharachterOpts struct {
 }
 
 func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
-	// screenScale := sm.GetScale()
+	if len(opts.Text) == 0 {
+		return
+	}
+	screenScale := sm.GetScale()
 	if opts.RowWidth == 0 {
 		logrus.Fatalln("RowWidth should be greather than zero")
 	}
 
-	var spaceOffset float64
-	var lineNum, breakIndex int
-	for i, c := range opts.Text {
-		fontHeight := f.Font.Metrics().Height
+	fontAdvance, ok := f.Font.GlyphAdvance(rune(opts.Text[0]))
+	if !ok {
+		logrus.Fatalln("can't get advance of the font")
+	}
 
-		fontAdvance, ok := f.Font.GlyphAdvance(c)
-		if !ok {
-			logrus.Fatalln("can't get advance of the font")
+	fontHeight := float64(f.Font.Metrics().Height.Round()) / (screenScale.Y)
+
+	formattedText := f.formatTextToRender(TextFormatterOpts{
+		Text:     opts.Text,
+		RowWidth: opts.RowWidth,
+	})
+	for y, p := range formattedText {
+		for x, c := range p {
+			yOffset := opts.SurfacePosition.Y + opts.TextPosition.Y + float64(int(fontHeight)*y)
+			xOffset := opts.SurfacePosition.X + opts.TextPosition.X + (float64((fontAdvance.Round() / int(screenScale.X)) * x))
+
+			text.Draw(
+				sm.GetImage(),
+				string(c),
+				f.Font,
+				int(xOffset),
+				int(yOffset),
+				color.Opaque)
 		}
-
-		maxSymbols := int(opts.RowWidth / float64(fontAdvance.Round()))
-
-		var yOffset, xOffset float64
-
-		currentSymbolsInRow := int(fontAdvance.Round() * i)
-		maxSymbolsInRow := int((fontAdvance.Round() * maxSymbols))
-
-		if (currentSymbolsInRow != 0 && currentSymbolsInRow%maxSymbolsInRow == 0) || c == '\n' {
-			lineNum = (currentSymbolsInRow / maxSymbolsInRow)
-			breakIndex = i
-			if c == ' ' {
-				spaceOffset = float64(fontAdvance.Round())
-			} else {
-				spaceOffset = 0
-			}
-		}
-		yOffset = opts.SurfacePosition.Y + opts.TextPosition.Y + float64(fontHeight.Round()*lineNum)
-		fmt.Println(string(c), currentSymbolsInRow, maxSymbolsInRow, yOffset)
-
-		xOffset = opts.SurfacePosition.X + opts.TextPosition.X + (float64(fontAdvance.Round() * (i - breakIndex))) - spaceOffset
-
-		text.Draw(
-			sm.GetImage(),
-			string(c),
-			f.Font,
-			int(xOffset),
-			int(yOffset),
-			color.Opaque)
 	}
 }

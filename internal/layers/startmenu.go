@@ -47,14 +47,15 @@ func (sml *StartMenuLayer) Init() {
 	// 		statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
 	// 	},
 	// }))
+	screenAxis := sml.opts.ScreenManager.GetAxis()
 
 	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
-		Text:            "it works i love ukraine, i hate russia, lorem ipsum blabla haha yana vova yarik popa pisa zno",
+		Text:            "Start Game",
 		Font:            sources.GetFont("base", 20),
 		Tilemap:         sources.GetTileMap("system/buttons/button"),
-		SurfacePosition: types.Vec2{X: 100, Y: 100},
-		TextPosition:    types.Vec2{X: 20, Y: 10},
-		Scale:           types.Vec2{X: 5, Y: 5},
+		SurfacePosition: types.Vec2{X: screenAxis.X, Y: screenAxis.Y},
+		TextPosition:    types.Vec2{X: 20, Y: 40},
+		Scale:           types.Vec2{X: 10, Y: 10},
 		RowWidth:        200,
 		FontDistance:    5,
 		FontAdvance:     10,
