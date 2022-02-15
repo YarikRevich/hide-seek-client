@@ -5,13 +5,13 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/player"
 	"github.com/YarikRevich/hide-seek-client/internal/core/profiling/ingame"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/YarikRevich/hide-seek-client/internal/core/world"
 	"github.com/YarikRevich/hide-seek-client/internal/layers"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/audio"
 
-	// "github.com/YarikRevich/hide-seek-client/internal/layers/networking"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/particles"
 	"github.com/YarikRevich/hide-seek-client/internal/layers/ui"
 
@@ -38,7 +38,7 @@ func (g *Loop) Update() error {
 		audio.Process()
 	}
 
-	// screen.UseScreen().CleanScreen()
+	g.opts.ScreenManager.CleanScreen()
 
 	// networking.Process()
 
@@ -55,6 +55,7 @@ func (g *Loop) Update() error {
 
 	for _, v := range layers.Layers {
 		if v.IsActive() {
+			v.Clear()
 			v.Init()
 			v.Update()
 		}
@@ -67,7 +68,6 @@ func (g *Loop) Update() error {
 
 func (g *Loop) Draw(i *ebiten.Image) {
 	g.opts.ScreenManager.SetImage(i)
-	// screen.UseScreen().SetScreen(i)
 
 	if params.IsDebug() {
 		ingame.UseProfiler().StartMonitoring(ingame.RENDER)
@@ -82,14 +82,15 @@ func (g *Loop) Draw(i *ebiten.Image) {
 
 	g.opts.ScreenManager.SetLastSize()
 
-	// screen.UseScreen().SetLastSize()
-
 	if params.IsDebug() {
 		debugui.UseDebugImGUI().Render(i)
 	}
 }
 
 func (g *Loop) Layout(outsideWidth, outsideHeight int) (int, int) {
+	g.opts.ScreenManager.SetSizeOnStartup(types.Vec2{
+		X: float64(outsideWidth),
+		Y: float64(outsideHeight)})
 	return outsideWidth, outsideHeight
 }
 

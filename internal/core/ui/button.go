@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"image/color"
+	"fmt"
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
@@ -10,20 +10,26 @@ import (
 )
 
 type ButtonOpts struct {
-	Tilemap                       *sources.Tilemap
-	SurfacePosition, Scale        types.Vec2
-	AutoScaleForbidden            bool
-	FontDistance, FontAdvance     float64
-	Text                          string
-	TextPosition                  types.Vec2
-	RowWidth                      float64
-	Font                          *sources.Font
-	Color                         color.Color
+	TextOpts TextOpts
+
+	ID string
+
+	//Should contain ID to the ui object
+	//you want this object to connect to
+	StickedTo              string
+	Tilemap                *sources.Tilemap
+	SurfacePosition, Scale types.Vec2
+
 	OnMousePress, OnKeyboardPress func()
 }
 
 type Button struct {
-	Opts *ButtonOpts
+	Opts        *ButtonOpts
+	ContextOpts *ContextOpts
+}
+
+func (b *Button) SetContext(opts *ContextOpts) {
+	b.ContextOpts = opts
 }
 
 func (b *Button) Update() {
@@ -41,24 +47,45 @@ func (b *Button) Update() {
 }
 
 func (b *Button) Render(sm *screen.ScreenManager) {
-	b.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
-		SurfacePosition:    b.Opts.SurfacePosition,
-		Scale:              b.Opts.Scale,
-		AutoScaleForbidden: b.Opts.AutoScaleForbidden,
-		CenterizedOffset:   true,
-	})
-	b.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
+	fmt.Println(b.ContextOpts.Components)
+
+	renderTilemapsOpts := sources.RenderTilemapOpts{
+		SurfacePosition:  b.Opts.SurfacePosition,
+		Scale:            b.Opts.Scale,
+		CenterizedOffset: true,
+	}
+
+	if stickedTo, ok := b.ContextOpts.Components[b.Opts.StickedTo]; ok {
+		renderTilemapsOpts.StickedTo = stickedTo.GetTilemap()
+		renderTilemapsOpts.StickedToPosition = stickedTo.GetPosition()
+	}
+
+	b.Opts.Tilemap.Render(sm, renderTilemapsOpts)
+
+	b.Opts.TextOpts.Font.Render(sm, sources.RenderTextCharachterOpts{
+		Align:           b.Opts.TextOpts.Align,
 		Tilemap:         b.Opts.Tilemap,
 		SurfacePosition: b.Opts.SurfacePosition,
-		FontAdvance:     b.Opts.FontAdvance,
-		FontDistance:    b.Opts.FontDistance,
-		TextPosition:    b.Opts.TextPosition,
-		Color:           b.Opts.Color,
-		RowWidth:        b.Opts.RowWidth,
-		Text:            b.Opts.Text,
+		SurfaceScale:    b.Opts.Scale,
+		TextPosition:    b.Opts.TextOpts.Position,
+		Color:           b.Opts.TextOpts.Color,
+		RowWidth:        b.Opts.TextOpts.RowWidth,
+		Text:            b.Opts.TextOpts.Text,
 	})
 }
 
+func (b *Button) GetID() string {
+	return b.Opts.ID
+}
+
+func (b *Button) GetTilemap() *sources.Tilemap {
+	return b.Opts.Tilemap
+}
+
+func (b *Button) GetPosition() types.Vec2 {
+	return b.Opts.SurfacePosition
+}
+
 func NewButton(opts *ButtonOpts) Component {
-	return &Button{opts}
+	return &Button{Opts: opts}
 }

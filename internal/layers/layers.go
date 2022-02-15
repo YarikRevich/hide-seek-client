@@ -21,6 +21,7 @@ type ContextOpts struct {
 type Layer interface {
 	SetContext(*ContextOpts)
 
+	Clear()
 	Init()
 
 	IsActive() bool

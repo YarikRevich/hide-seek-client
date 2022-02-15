@@ -1,44 +1,63 @@
 package ui
 
 import (
-	"image/color"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 )
 
 type LabelOpts struct {
-	Tilemap            *sources.Tilemap
-	Position, Scale    types.Vec2
-	AutoScaleForbidden bool
-	FontDistance       float64
-	Text               string
-	RowWidth           float64
-	Font               *sources.Font
-	Color              color.Color
+	TextOpts
+
+	ID string
+
+	//Should contain ID to the ui object
+	//you want this object to connect to
+	StickedTo              string
+	Tilemap                *sources.Tilemap
+	SurfacePosition, Scale types.Vec2
 }
 
 type Label struct {
-	Opts *LabelOpts
+	Opts        *LabelOpts
+	ContextOpts *ContextOpts
+}
+
+func (l *Label) SetContext(opts *ContextOpts) {
+	l.ContextOpts = opts
 }
 
 func (l *Label) Update() {}
 
 func (l *Label) Render(sm *screen.ScreenManager) {
 	l.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
-		SurfacePosition:    l.Opts.Position,
-		Scale:              l.Opts.Scale,
-		AutoScaleForbidden: l.Opts.AutoScaleForbidden,
+		SurfacePosition:  l.Opts.Position,
+		Scale:            l.Opts.Scale,
+		CenterizedOffset: true,
 	})
+
 	l.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		SurfacePosition: l.Opts.Position,
-		FontDistance:    l.Opts.FontDistance,
+		Tilemap:         l.Opts.Tilemap,
+		SurfacePosition: l.Opts.SurfacePosition,
+		TextPosition:    l.Opts.TextOpts.Position,
 		Color:           l.Opts.Color,
 		RowWidth:        l.Opts.RowWidth,
+		Text:            l.Opts.Text,
 	})
 }
 
+func (l *Label) GetID() string {
+	return l.Opts.ID
+}
+
+func (l *Label) GetTilemap() *sources.Tilemap {
+	return l.Opts.Tilemap
+}
+
+func (l *Label) GetPosition() types.Vec2 {
+	return l.Opts.Position
+}
+
 func NewLabel(opts *LabelOpts) Component {
-	return &Label{opts}
+	return &Label{Opts: opts}
 }

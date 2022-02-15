@@ -2,6 +2,7 @@ package screen
 
 import (
 	"fmt"
+	"sync"
 
 	// "github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
@@ -11,6 +12,8 @@ import (
 //All metrics of the ScreenManager are shown
 //in tiles
 type ScreenManager struct {
+	SizeOnStartupOnce sync.Once
+
 	SizeOnStartup types.Vec2
 	// Pixels       []types.Vec2
 	// OrigTileSize int
@@ -84,6 +87,7 @@ func (s *ScreenManager) GetImage() *ebiten.Image {
 
 func (s *ScreenManager) GetScale() types.Vec2 {
 	currentSize := s.GetSize()
+	fmt.Println(s.SizeOnStartup.Y, currentSize.Y)
 	return types.Vec2{
 		X: s.SizeOnStartup.X / currentSize.X,
 		Y: s.SizeOnStartup.Y / currentSize.Y}
@@ -175,13 +179,16 @@ func (s *ScreenManager) IsHigherAxisYCrossed(y float64, speedY float64) bool {
 // 	return types.Vec2{X: math.Ceil(s.GetAxisX()), Y: math.Ceil(s.GetAxisY())}
 // }
 
+func (s *ScreenManager) SetSizeOnStartup(size types.Vec2) {
+	s.SizeOnStartupOnce.Do(func() {
+		s.SizeOnStartup = size
+	})
+}
+
 func NewScreenManager() *ScreenManager {
 	fullScreenWidth, fullScreenHeight := ebiten.ScreenSizeInFullscreen()
 	return &ScreenManager{
 		MaxScreenSize: types.Vec2{
-			X: float64(fullScreenWidth),
-			Y: float64(fullScreenHeight)},
-		SizeOnStartup: types.Vec2{
 			X: float64(fullScreenWidth),
 			Y: float64(fullScreenHeight)},
 		MinScreenSize: types.Vec2{

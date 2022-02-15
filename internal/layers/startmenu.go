@@ -1,6 +1,8 @@
 package layers
 
 import (
+	"fmt"
+
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
@@ -27,14 +29,17 @@ func (sml *StartMenuLayer) Update() {
 
 func (sml *StartMenuLayer) Render() {
 	sml.UIManager.Render(sml.opts.ScreenManager)
-	sml.UIManager.Clear()
 	sml.opts.WorldManager.Render(sml.opts.ScreenManager)
+}
+
+func (sml *StartMenuLayer) Clear() {
+	sml.UIManager.Clear()
 }
 
 func (sml *StartMenuLayer) Init() {
 	sml.UIManager.AddComponent(ui.NewBackground(&ui.BackgroundOpts{
-		AutoScaleForbidden: true,
-		Tilemap:            sources.GetTileMap("system/backgrounds/background"),
+		ID:      "joingame",
+		Tilemap: sources.GetTileMap("system/backgrounds/background"),
 	}))
 	// sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
 	// 	OnMousePress: func() {
@@ -49,16 +54,21 @@ func (sml *StartMenuLayer) Init() {
 	// }))
 	screenAxis := sml.opts.ScreenManager.GetAxis()
 
+	fmt.Println(screenAxis.X, sml.opts.ScreenManager.GetSize())
 	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
-		Text:            "Start Game",
-		Font:            sources.GetFont("base", 20),
+		TextOpts: ui.TextOpts{
+			Align:    sources.Right,
+			Text:     "gjerkgejglerjglkeglkglegeglkejgeglkgl",
+			Position: types.Vec2{X: 0, Y: 0},
+			Font:     sources.GetFont("base", 20),
+			RowWidth: 200,
+		},
+
+		ID:              "startgamebutton",
 		Tilemap:         sources.GetTileMap("system/buttons/button"),
 		SurfacePosition: types.Vec2{X: screenAxis.X, Y: screenAxis.Y - 150},
-		TextPosition:    types.Vec2{X: 0, Y: 0},
-		Scale:           types.Vec2{X: 10, Y: 10},
-		RowWidth:        200,
-		FontDistance:    5,
-		FontAdvance:     10,
+		Scale:           types.Vec2{X: 4, Y: 4},
+
 		OnMousePress: func() {
 			statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
 		},

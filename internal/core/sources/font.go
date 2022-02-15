@@ -61,8 +61,18 @@ func (f *Font) formatTextToRender(opts TextFormatterOpts) [][]rune {
 	var breakIndex int
 	var spaceShift int
 	for i, c := range opts.Text {
+		// fmt.Println(q, string(c))
+
 		currentSymbolsInRow := int(fontAdvance.Round() * i)
 		maxRowWidth := int((fontAdvance.Round() * maxSymbolsPerRow))
+
+		fmt.Println(currentSymbolsInRow%maxRowWidth, string(c))
+
+		if currentSymbolsInRow != 0 && currentSymbolsInRow%maxRowWidth == spaceShift && breakIndex != i-1 {
+			r = append(r, q)
+			q = make([]rune, 0)
+			breakIndex = i
+		}
 
 		if !(c == ' ' && breakIndex != 0 && breakIndex == i-1) {
 			q = append(q, c)
@@ -70,31 +80,37 @@ func (f *Font) formatTextToRender(opts TextFormatterOpts) [][]rune {
 			spaceShift = fontAdvance.Round()
 		}
 
-		if currentSymbolsInRow != 0 && currentSymbolsInRow%maxRowWidth == spaceShift && breakIndex != i-1 {
-			r = append(r, q)
-			q = make([]rune, 0)
-			breakIndex = i
-		}
 	}
 
 	r = append(r, q)
 	return r
 }
 
+type Align string
+
+const (
+	Center Align = "center"
+	Left         = "left"
+	Right        = "right"
+)
+
 type RenderTextCharachterOpts struct {
-	Tilemap                             *Tilemap
-	Text                                string
-	SurfacePosition                     types.Vec2
-	FontAdvance, FontDistance, RowWidth float64
-	TextPosition                        types.Vec2
-	Color                               color.Color
+	Align
+
+	Tilemap                       *Tilemap
+	SurfacePosition, SurfaceScale types.Vec2
+
+	Text         string
+	RowWidth     float64
+	TextPosition types.Vec2
+	Color        color.Color
 }
 
 func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 	if len(opts.Text) == 0 {
 		return
 	}
-	screenScale := sm.GetScale()
+
 	if opts.RowWidth == 0 {
 		logrus.Fatalln("RowWidth should be greather than zero")
 	}
@@ -104,16 +120,41 @@ func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 		logrus.Fatalln("can't get advance of the font")
 	}
 
+	screenScale := sm.GetScale()
 	fontHeight := float64(f.Font.Metrics().Height.Round()) / (screenScale.Y)
+
+	var textPosition types.Vec2
+	var textRowWidth float64
+
+	switch opts.Align {
+	case Center:
+		textPosition.X = (-opts.Tilemap.MapSize.X * opts.SurfaceScale.X / 2) + opts.Tilemap.TileSize.X
+		textPosition.Y = -opts.Tilemap.MapSize.Y*opts.SurfaceScale.Y/2 + fontHeight
+		textRowWidth = opts.Tilemap.MapSize.X*opts.SurfaceScale.X - (opts.Tilemap.TileSize.X * 2)
+	case Right:
+		textPosition.X = (-opts.Tilemap.MapSize.X * opts.SurfaceScale.X / 2) + (opts.Tilemap.TileSize.X * 2)
+		textPosition.Y = -opts.Tilemap.MapSize.Y*opts.SurfaceScale.Y/2 + fontHeight
+		textRowWidth = opts.Tilemap.MapSize.X*opts.SurfaceScale.X - (opts.Tilemap.TileSize.X * 3)
+	case Left:
+		textPosition.X = (-opts.Tilemap.MapSize.X * opts.SurfaceScale.X / 2) + (opts.Tilemap.TileSize.X)
+		textPosition.Y = -opts.Tilemap.MapSize.Y*opts.SurfaceScale.Y/2 + fontHeight
+		textRowWidth = opts.Tilemap.MapSize.X*opts.SurfaceScale.X - (opts.Tilemap.TileSize.X * 4)
+	default:
+		textRowWidth = opts.RowWidth
+		textPosition = opts.TextPosition
+	}
 
 	formattedText := f.formatTextToRender(TextFormatterOpts{
 		Text:     opts.Text,
-		RowWidth: opts.RowWidth,
+		RowWidth: textRowWidth,
 	})
 	for y, p := range formattedText {
 		for x, c := range p {
-			yOffset := opts.SurfacePosition.Y + opts.TextPosition.Y - (opts.Tilemap.TileSize.Y * (opts.Tilemap.TileCount.Y / 2)) + float64(int(fontHeight)*(y+1))
-			xOffset := opts.SurfacePosition.X + opts.TextPosition.X - (opts.Tilemap.TileSize.X * (opts.Tilemap.TileCount.X / 2)) + (float64((fontAdvance.Round() / int(screenScale.X)) * x))
+			// - (opts.Tilemap.MapSize.Y / 2)
+			// - (opts.Tilemap.MapSize.X / 2)
+			// fmt.Println(textPosition, y, x, fontHeight, fontAdvance)
+			yOffset := opts.SurfacePosition.Y + textPosition.Y + float64(int(fontHeight)*(y+1))
+			xOffset := opts.SurfacePosition.X + textPosition.X + ((float64(fontAdvance.Round()) / screenScale.X) * float64(x))
 
 			text.Draw(
 				sm.GetImage(),

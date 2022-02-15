@@ -72,14 +72,14 @@ func (tm *Tilemap) load(path string) error {
 	baseDir := filepath.Dir(path)
 
 	tm.MapSize = types.Vec2{
-		X: float64(gameMap.Width * gameMap.TileWidth),
-		Y: float64(gameMap.Height * gameMap.TileHeight)}
+		X: float64((gameMap.Width) * gameMap.TileWidth),
+		Y: float64((gameMap.Height) * gameMap.TileHeight)}
 	tm.TileSize = types.Vec2{
 		X: float64(gameMap.TileWidth),
 		Y: float64(gameMap.TileHeight)}
 	tm.TileCount = types.Vec2{
-		X: float64(gameMap.TileWidth),
-		Y: float64(gameMap.TileHeight),
+		X: float64(gameMap.Width),
+		Y: float64(gameMap.Height),
 	}
 
 	tempTileCollection := make(map[image.Point]*Tile)
@@ -147,7 +147,7 @@ func (tm *Tilemap) load(path string) error {
 						tile, right)
 				}
 
-				if left, ok := tempTileCollection[image.Point{X: x - gameMap.TileWidth, Y: y}]; ok {
+				if left, ok := tempTileCollection[image.Point{X: x + gameMap.TileWidth, Y: y}]; ok {
 					tm.Graph.AddNode(
 						tile, left)
 				}
@@ -169,32 +169,49 @@ func (tm *Tilemap) load(path string) error {
 }
 
 type RenderTilemapOpts struct {
+	StickedTo                            *Tilemap
+	StickedToPosition                    types.Vec2
 	SurfacePosition, Scale               types.Vec2
 	AutoScaleForbidden, CenterizedOffset bool
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	screenSize := sm.GetSize()
-	screenScale := sm.GetScale()
+
+	// opts.SurfacePosition.X -= t.TileSize.X * (t.TileCount.X * 2)
+	// opts.SurfacePosition.Y -= t.MapSize.Y
+	// screenScale := sm.GetScale()
 
 	for k, v := range t.Tiles {
 		if (float64(k.X)+opts.SurfacePosition.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.SurfacePosition.Y-t.TileSize.Y < screenSize.Y) &&
 			(float64(k.X)+opts.SurfacePosition.X+t.TileSize.X > 0 && float64(k.Y)+opts.SurfacePosition.Y+t.TileSize.Y > 0) {
 			drawOpts := &ebiten.DrawImageOptions{}
 
-			if !opts.AutoScaleForbidden {
-				drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
+			// if !opts.AutoScaleForbidden {
+			// 	drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
+			// }
+
+			if opts.CenterizedOffset {
+				// fmt.Println(t.TileSize.X*(t.TileCount.X/2), t.MapSize.X, "CEnterize")
+				// drawOpts.GeoM.Translate(-t.MapSize.X*2, -t.MapSize.Y*2)
 			}
+
+			if opts.StickedTo != nil {
+				drawOpts.GeoM.Translate(opts.StickedToPosition.X, opts.StickedToPosition.Y)
+			}
+
+			// if opts.CenterizedOffset {
+			// 	drawOpts.GeoM.Translate((-t.MapSize.X*opts.Scale.X)/2, -t.MapSize.Y)
+			// 	// drawOpts.GeoM.Translate(-t.MapSize.X*opts.Scale.X/3, -t.MapSize.Y*opts.Scale.X/2)
+			// }
+			drawOpts.GeoM.Translate(float64(k.X), float64(k.Y))
+			drawOpts.GeoM.Translate(-t.MapSize.X/2, -t.MapSize.Y/2)
 
 			if opts.Scale.X != 0 && opts.Scale.Y != 0 {
 				drawOpts.GeoM.Scale(opts.Scale.X, opts.Scale.Y)
 			}
 
-			if opts.CenterizedOffset {
-				drawOpts.GeoM.Translate(-t.TileSize.X*(t.TileCount.X/2), -t.TileSize.Y*(t.TileCount.Y/2))
-			}
-
-			drawOpts.GeoM.Translate(float64(k.X)+opts.SurfacePosition.X, float64(k.Y)+opts.SurfacePosition.Y)
+			drawOpts.GeoM.Translate(opts.SurfacePosition.X, opts.SurfacePosition.Y)
 			sm.Image.DrawImage(v.Image, drawOpts)
 		}
 	}

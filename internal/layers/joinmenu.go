@@ -10,6 +10,10 @@ type JoinMenuLayer struct {
 	UIManager *ui.UIManager
 }
 
+func (iml *JoinMenuLayer) Clear() {
+	iml.UIManager.Clear()
+}
+
 func (iml *JoinMenuLayer) SetContext(opts *ContextOpts) {
 	iml.opts = opts
 }
