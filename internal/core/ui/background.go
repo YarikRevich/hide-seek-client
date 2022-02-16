@@ -22,7 +22,7 @@ func (b *Background) SetContext(opts *ContextOpts) {
 	b.ContextOpts = opts
 }
 
-func (b *Background) Update() {}
+func (b *Background) Update(sm *screen.ScreenManager) {}
 
 func (b *Background) Render(sm *screen.ScreenManager) {
 	b.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{

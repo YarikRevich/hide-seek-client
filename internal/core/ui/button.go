@@ -1,8 +1,6 @@
 package ui
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
@@ -32,12 +30,16 @@ func (b *Button) SetContext(opts *ContextOpts) {
 	b.ContextOpts = opts
 }
 
-func (b *Button) Update() {
+func (b *Button) Update(sm *screen.ScreenManager) {
 	if b.Opts.OnMousePress != nil {
 		if events.MousePress.IsAnyMouseButtonsPressed() {
-			// if events.MousePress.IsMousePressLeftOnce(b.Opts.)
-			//TODO: check if button is pressed, then do action
-			b.Opts.OnMousePress()
+			if events.MousePress.IsMousePressLeftOnce(sm, events.IsMousePress{
+				Position: b.Opts.SurfacePosition,
+				MapSize:  b.Opts.Tilemap.MapSize,
+				MapScale: b.Opts.Scale,
+			}) {
+				b.Opts.OnMousePress()
+			}
 		}
 
 	}
@@ -47,8 +49,6 @@ func (b *Button) Update() {
 }
 
 func (b *Button) Render(sm *screen.ScreenManager) {
-	fmt.Println(b.ContextOpts.Components)
-
 	renderTilemapsOpts := sources.RenderTilemapOpts{
 		SurfacePosition:  b.Opts.SurfacePosition,
 		Scale:            b.Opts.Scale,

@@ -28,7 +28,7 @@ func (i *Input) SetContext(opts *ContextOpts) {
 	i.ContextOpts = opts
 }
 
-func (i *Input) Update() {
+func (i *Input) Update(sm *screen.ScreenManager) {
 	i.Opts.OnMousePress()
 	i.Opts.OnKeyboardPress()
 }

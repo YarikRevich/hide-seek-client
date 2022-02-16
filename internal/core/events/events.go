@@ -1,5 +1,6 @@
 package events
 
+var Activity = NewActivityManager()
 var KeyboardPress = NewKeyboardPressEventManager()
 var MousePress = NewMousePressEventManager()
 var MouseScroll = NewMouseScrollEventManager()

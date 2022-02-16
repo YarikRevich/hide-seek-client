@@ -14,7 +14,7 @@ type ContextOpts struct {
 
 type Component interface {
 	SetContext(*ContextOpts)
-	Update()
+	Update(*screen.ScreenManager)
 
 	GetTilemap() *sources.Tilemap
 	GetPosition() types.Vec2
@@ -45,9 +45,9 @@ func (uim *UIManager) AddComponent(c Component) {
 	uim.components = append(uim.components, c)
 }
 
-func (uim *UIManager) Update() {
+func (uim *UIManager) Update(s *screen.ScreenManager) {
 	for _, c := range uim.components {
-		c.Update()
+		c.Update(s)
 	}
 }
 

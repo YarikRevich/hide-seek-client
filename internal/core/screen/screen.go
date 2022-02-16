@@ -1,7 +1,6 @@
 package screen
 
 import (
-	"fmt"
 	"sync"
 
 	// "github.com/YarikRevich/hide-seek-client/internal/core/sources"
@@ -87,7 +86,6 @@ func (s *ScreenManager) GetImage() *ebiten.Image {
 
 func (s *ScreenManager) GetScale() types.Vec2 {
 	currentSize := s.GetSize()
-	fmt.Println(s.SizeOnStartup.Y, currentSize.Y)
 	return types.Vec2{
 		X: s.SizeOnStartup.X / currentSize.X,
 		Y: s.SizeOnStartup.Y / currentSize.Y}
@@ -150,7 +148,6 @@ func (s *ScreenManager) IsLessAxisXCrossed(x float64, speedX float64) bool {
 	a := s.GetAxis()
 	asz := s.GetAxisSleepingZones()
 
-	fmt.Println(x, a.X)
 	return x < a.X+(speedX+asz.X) && x > a.X-(speedX+asz.X)
 }
 

@@ -79,7 +79,11 @@ func (k *KeyboardPressEventManager) HandleKeyPress(b IBuffer, ke []KeyboardEntit
 
 //Checks if any Keyboard key pressed
 func (kp *KeyboardPressEventManager) IsAnyKeyPressed() bool {
-	return len(inpututil.PressedKeys()) != 0
+	r := len(inpututil.PressedKeys()) != 0
+	if r {
+		Activity.SetLastActivity()
+	}
+	return r
 }
 
 func (k *KeyboardPressEventManager) AreKeysCombinedInOrder(m, s ebiten.Key) bool {

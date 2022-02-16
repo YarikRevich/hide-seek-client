@@ -23,7 +23,7 @@ func (iml *JoinMenuLayer) IsActive() bool {
 }
 
 func (iml *JoinMenuLayer) Update() {
-	iml.UIManager.Update()
+	iml.UIManager.Update(iml.opts.ScreenManager)
 }
 
 func (iml *JoinMenuLayer) Render() {

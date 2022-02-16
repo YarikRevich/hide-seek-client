@@ -8,14 +8,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var tileMapCollection = make(map[string]*Tilemap)
-var shaderCollection = make(map[string]*Shader)
+var tileMapCollection = make(map[string]Tilemap)
+var shaderCollection = make(map[string]Shader)
 var fontCollection = make(map[string]*Font)
 var audioCollection = make(map[string]*Audio)
 
 var ResourceNotFoundError error = errors.New("'%s' with path '%s' not found")
 
-func GetTileMap(path string) *Tilemap {
+func GetTileMap(path string) Tilemap {
 	path = filepath.Join("dist/tilemaps", path)
 
 	tileMap, ok := tileMapCollection[path]
@@ -29,14 +29,14 @@ func GetTileMap(path string) *Tilemap {
 	return tileMap
 }
 
-func GetShader(path string) *Shader {
+func GetShader(path string) Shader {
 	path = filepath.Join("dist/shaders", path)
 
 	shader, ok := shaderCollection[path]
 	if !ok {
-		newShader := new(Shader)
+		newShader := NewShader()
 		if err := newShader.load(path); err != nil {
-			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "shader", path))
+			logrus.Fatalln(err, fmt.Sprintf(ResourceNotFoundError.Error(), "shader", path))
 		}
 		return newShader
 	}
@@ -64,7 +64,7 @@ func GetAudio(path string) *Audio {
 	if !ok {
 		newAudio := new(Audio)
 		if err := newAudio.load(path); err != nil {
-			fmt.Errorf("%w: %w", err, fmt.Sprintf(ResourceNotFoundError.Error(), "audio", path))
+			logrus.Fatalln(err, fmt.Sprintf(ResourceNotFoundError.Error(), "audio", path))
 		}
 		return newAudio
 	}

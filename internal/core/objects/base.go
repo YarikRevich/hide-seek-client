@@ -34,38 +34,39 @@ func (p *Physics) IsAnimated() bool {
 	return len(p.Jump) != 0
 }
 
-type Animation struct {
-	AnimationStartPosition types.Vec2
-	FrameCount             uint64
-	FrameDelayCounter      uint64
-	CurrentFrameMatrix     []float64
-}
+// type Animation struct {
+// 	AnimationStartPosition types.Vec2
+// 	FrameCount             uint64
+// 	FrameDelayCounter      uint64
+// 	CurrentFrameMatrix     []float64
+// }
 
-type Skin struct {
-	Name, Path string
-}
+// type Skin struct {
+// 	Name, Path string
+// }
 
-func (s *Skin) IsSet() bool {
-	return len(s.Name) != 0 && len(s.Path) != 0
-}
+// func (s *Skin) IsSet() bool {
+// 	return len(s.Name) != 0 && len(s.Path) != 0
+// }
 
 /*
 The object structure which describes
 each object on the map
 */
 type Base struct {
-	Tilemap *sources.Tilemap
+	//Base object metadata
+	ID     uuid.UUID
+	Parent *Base
+
+	Tilemap sources.Tilemap
 
 	Type string
 
-	Animation
-	Skin
-	Physics
-
-	Parent *Base
+	// Animation
+	// Skin
+	// Physics
 
 	// Names parentid the object referes to
-	ID uuid.UUID
 
 	WorldPos, ScreenPos           types.Vec2
 	RawPos, RawOffset, LastRawPos types.Vec2
@@ -73,18 +74,18 @@ type Base struct {
 
 	Spawn server_external.PositionInt
 
-	Role Role
+	// Role Role
 
-	TranslationMovementXBlocked, TranslationMovementYBlocked bool
+	// TranslationMovementXBlocked, TranslationMovementYBlocked bool
 
 	//Only client fields
 
 	PositionHistorySequence zeroshifter.IZeroShifter
 }
 
-func (o *Base) IsEqualTo(ob *Base) bool {
-	return o.ID == ob.ID
-}
+// func (o *Base) IsEqualTo(ob *Base) bool {
+// 	return o.ID == ob.ID
+// }
 
 func (o *Base) UpdateDirection() {
 	if events.Gamepad.IsGamepadConnected() {
@@ -183,20 +184,16 @@ func (o *Base) IsDirectionDOWN() bool {
 }
 
 func (o *Base) UpdateLastPosition() {
-	o.LastRawPos = struct {
-		X float64
-		Y float64
-	}{
-		X: o.RawPos.X, Y: o.RawPos.Y}
-	o.PositionHistorySequence.Add(image.Point{X: int(o.RawPos.X), Y: int(o.RawPos.Y)})
+	o.LastRawPos = o.RawPos
+	o.PositionHistorySequence.Add(o.RawPos)
 }
 
-func (o *Base) SaveAnimationStartPosition() {
-	o.Animation.AnimationStartPosition = struct {
-		X float64
-		Y float64
-	}{o.RawPos.X, o.RawPos.Y}
-}
+// func (o *Base) SaveAnimationStartPosition() {
+// 	o.Animation.AnimationStartPosition = struct {
+// 		X float64
+// 		Y float64
+// 	}{o.RawPos.X, o.RawPos.Y}
+// }
 
 func (o *Base) SetRawX(x float64) {
 	o.RawPos.X = x
@@ -249,15 +246,15 @@ func (o *Base) IsYChanged() bool {
 }
 
 //Sets spawn point for the object
-func (o *Base) SetSpawn(spawns []image.Point) {
+func (o *Base) SetSpawn(spawns []types.Vec2) {
 	o.RawPos.X = 500
 	o.RawPos.Y = 500
 }
 
-//Returns last saved position before animation was executed
-func (o *Base) GetAnimationStartPosition() (float64, float64) {
-	return o.Animation.AnimationStartPosition.X, o.Animation.AnimationStartPosition.Y
-}
+// //Returns last saved position before animation was executed
+// func (o *Base) GetAnimationStartPosition() (float64, float64) {
+// 	return o.Animation.AnimationStartPosition.X, o.Animation.AnimationStartPosition.Y
+// }
 
 //Sets skin for the object
 func (o *Base) SetSkin(path string) {

@@ -27,7 +27,7 @@ func (l *Label) SetContext(opts *ContextOpts) {
 	l.ContextOpts = opts
 }
 
-func (l *Label) Update() {}
+func (l *Label) Update(sm *screen.ScreenManager) {}
 
 func (l *Label) Render(sm *screen.ScreenManager) {
 	l.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{

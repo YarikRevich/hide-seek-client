@@ -61,12 +61,8 @@ func (f *Font) formatTextToRender(opts TextFormatterOpts) [][]rune {
 	var breakIndex int
 	var spaceShift int
 	for i, c := range opts.Text {
-		// fmt.Println(q, string(c))
-
 		currentSymbolsInRow := int(fontAdvance.Round() * i)
 		maxRowWidth := int((fontAdvance.Round() * maxSymbolsPerRow))
-
-		fmt.Println(currentSymbolsInRow%maxRowWidth, string(c))
 
 		if currentSymbolsInRow != 0 && currentSymbolsInRow%maxRowWidth == spaceShift && breakIndex != i-1 {
 			r = append(r, q)
@@ -89,7 +85,8 @@ func (f *Font) formatTextToRender(opts TextFormatterOpts) [][]rune {
 type Align string
 
 const (
-	Center Align = "center"
+	None   Align = ""
+	Center       = "center"
 	Left         = "left"
 	Right        = "right"
 )
@@ -111,8 +108,8 @@ func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 		return
 	}
 
-	if opts.RowWidth == 0 {
-		logrus.Fatalln("RowWidth should be greather than zero")
+	if opts.RowWidth == 0 && opts.Align == None {
+		logrus.Fatalln("RowWidth should be greather than zero or Align should be set")
 	}
 
 	fontAdvance, ok := f.Font.GlyphAdvance(rune(opts.Text[0]))
@@ -150,9 +147,6 @@ func (f *Font) Render(sm *screen.ScreenManager, opts RenderTextCharachterOpts) {
 	})
 	for y, p := range formattedText {
 		for x, c := range p {
-			// - (opts.Tilemap.MapSize.Y / 2)
-			// - (opts.Tilemap.MapSize.X / 2)
-			// fmt.Println(textPosition, y, x, fontHeight, fontAdvance)
 			yOffset := opts.SurfacePosition.Y + textPosition.Y + float64(int(fontHeight)*(y+1))
 			xOffset := opts.SurfacePosition.X + textPosition.X + ((float64(fontAdvance.Round()) / screenScale.X) * float64(x))
 

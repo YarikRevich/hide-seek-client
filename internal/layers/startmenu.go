@@ -1,8 +1,6 @@
 package layers
 
 import (
-	"fmt"
-
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
@@ -23,7 +21,7 @@ func (sml *StartMenuLayer) IsActive() bool {
 }
 
 func (sml *StartMenuLayer) Update() {
-	sml.UIManager.Update()
+	sml.UIManager.Update(sml.opts.ScreenManager)
 	sml.opts.WorldManager.Update()
 }
 
@@ -54,14 +52,12 @@ func (sml *StartMenuLayer) Init() {
 	// }))
 	screenAxis := sml.opts.ScreenManager.GetAxis()
 
-	fmt.Println(screenAxis.X, sml.opts.ScreenManager.GetSize())
+	// fmt.Println(screenAxis.X, sml.opts.ScreenManager.GetSize())
 	sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
 		TextOpts: ui.TextOpts{
-			Align:    sources.Right,
-			Text:     "gjerkgejglerjglkeglkglegeglkejgeglkgl",
-			Position: types.Vec2{X: 0, Y: 0},
-			Font:     sources.GetFont("base", 20),
-			RowWidth: 200,
+			Align: sources.Center,
+			Text:  "gjerkgejglerjglkeglkglegeglkejgeglkgl",
+			Font:  sources.GetFont("base", 20),
 		},
 
 		ID:              "startgamebutton",
@@ -70,7 +66,7 @@ func (sml *StartMenuLayer) Init() {
 		Scale:           types.Vec2{X: 4, Y: 4},
 
 		OnMousePress: func() {
-			statemachine.Layers.SetState(statemachine.LAYERS_MAP_CHOOSE)
+			statemachine.Layers.SetState(statemachine.LAYERS_SESSION)
 		},
 	}))
 }

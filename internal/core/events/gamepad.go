@@ -31,6 +31,7 @@ func (g *GamepadPressEventManager) IsGamepadButtonPressedOnce(button ebiten.Game
 func (g *GamepadPressEventManager) IsGamepadButtonPressed(button ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if ebiten.IsGamepadButtonPressed(v, button) {
+
 			return true
 		}
 	}
@@ -40,6 +41,7 @@ func (g *GamepadPressEventManager) IsGamepadButtonPressed(button ebiten.GamepadB
 func (g *GamepadPressEventManager) AreGamepadButtonsCombinedOnce(button1, button2 ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
 		if inpututil.IsGamepadButtonJustPressed(v, button1) && inpututil.IsGamepadButtonJustPressed(v, button2) {
+
 			return true
 		}
 	}
@@ -57,7 +59,7 @@ func (g *GamepadPressEventManager) AreGamepadButtonsCombined(button1, button2 eb
 
 func (g *GamepadPressEventManager) AreGamepadButtonsCombinedInOrder(m, s ebiten.GamepadButton) bool {
 	for _, v := range ebiten.GamepadIDs() {
-		if ebiten.IsGamepadButtonPressed(v, m) == true && ebiten.IsGamepadButtonPressed(v, s) == true && inpututil.GamepadButtonPressDuration(v, m) > inpututil.GamepadButtonPressDuration(v, s) {
+		if ebiten.IsGamepadButtonPressed(v, m) && ebiten.IsGamepadButtonPressed(v, s) && inpututil.GamepadButtonPressDuration(v, m) > inpututil.GamepadButtonPressDuration(v, s) {
 			return true
 		}
 	}
@@ -76,6 +78,7 @@ func (g *GamepadPressEventManager) IsAnyButtonPressed() bool {
 			keycodes.GamepadLEFTLOWERCLICKERButton,
 			keycodes.GamepadRIGHTLOWERCLICKERButton} {
 			if ebiten.IsGamepadButtonPressed(v, q) {
+				Activity.SetLastActivity()
 				return true
 			}
 		}

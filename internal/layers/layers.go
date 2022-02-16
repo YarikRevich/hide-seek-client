@@ -9,6 +9,7 @@ import (
 
 var Layers = []Layer{
 	NewStartMenuLayer(),
+	NewSessionLayer(),
 }
 
 type ContextOpts struct {

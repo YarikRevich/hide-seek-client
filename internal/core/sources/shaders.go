@@ -26,7 +26,7 @@ func (s *Shader) load(path string) error {
 	s.Shader = shader
 
 	s.Name = strings.Split(path, ".")[0]
-	shaderCollection[s.Name] = s
+	shaderCollection[s.Name] = *s
 
 	return nil
 }
@@ -41,4 +41,8 @@ func (s *Shader) OnCollision() {
 
 func (s *Shader) Render(sm screen.ScreenManager) {
 
+}
+
+func NewShader() Shader {
+	return Shader{}
 }

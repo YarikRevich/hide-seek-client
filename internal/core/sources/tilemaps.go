@@ -56,6 +56,13 @@ type Tilemap struct {
 
 	Tiles      map[image.Point]*Tile
 	Properties struct {
+		//PHYSICS
+
+		//Acceleration
+		G int
+
+		//WORLD MAP properties
+
 		//Contains IDs of Spawn Tiles
 		Spawns []int64
 	}
@@ -163,7 +170,7 @@ func (tm *Tilemap) load(path string) error {
 	}
 
 	tm.Name = strings.Split(path, ".")[0]
-	tileMapCollection[tm.Name] = tm
+	tileMapCollection[tm.Name] = *tm
 
 	return nil
 }
@@ -177,23 +184,15 @@ type RenderTilemapOpts struct {
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	screenSize := sm.GetSize()
-
-	// opts.SurfacePosition.X -= t.TileSize.X * (t.TileCount.X * 2)
-	// opts.SurfacePosition.Y -= t.MapSize.Y
-	// screenScale := sm.GetScale()
+	screenScale := sm.GetScale()
 
 	for k, v := range t.Tiles {
 		if (float64(k.X)+opts.SurfacePosition.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.SurfacePosition.Y-t.TileSize.Y < screenSize.Y) &&
 			(float64(k.X)+opts.SurfacePosition.X+t.TileSize.X > 0 && float64(k.Y)+opts.SurfacePosition.Y+t.TileSize.Y > 0) {
 			drawOpts := &ebiten.DrawImageOptions{}
 
-			// if !opts.AutoScaleForbidden {
-			// 	drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
-			// }
-
-			if opts.CenterizedOffset {
-				// fmt.Println(t.TileSize.X*(t.TileCount.X/2), t.MapSize.X, "CEnterize")
-				// drawOpts.GeoM.Translate(-t.MapSize.X*2, -t.MapSize.Y*2)
+			if !opts.AutoScaleForbidden {
+				drawOpts.GeoM.Scale(1/screenScale.X, 1/screenScale.Y)
 			}
 
 			if opts.StickedTo != nil {
@@ -217,8 +216,8 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	}
 }
 
-func NewTilemap() *Tilemap {
-	return &Tilemap{
+func NewTilemap() Tilemap {
+	return Tilemap{
 		Tiles:      make(map[image.Point]*Tile),
 		Animations: make(map[int]*Animation),
 		Graph:      make(Graph),

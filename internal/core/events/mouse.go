@@ -15,16 +15,15 @@ import (
 type MousePressEventManager struct{}
 
 type IsMousePress struct {
-	Position types.Vec2
+	Position, MapSize, MapScale types.Vec2
 }
 
-func (mpem *MousePressEventManager) IsMousePressLeftOnce(sm screen.ScreenManager, tm sources.Tilemap, opts IsMousePress) bool {
+func (mpem *MousePressEventManager) IsMousePressLeftOnce(sm *screen.ScreenManager, opts IsMousePress) bool {
 	currX, currY := ebiten.CursorPosition()
 	screenScale := sm.GetScale()
-
 	return inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) &&
-		(currX >= int(opts.Position.X) && currX <= int((tm.MapSize.X*screenScale.X)+(opts.Position.X))) &&
-		(currY >= int(opts.Position.Y) && currY <= int((tm.MapSize.Y*screenScale.Y)+(opts.Position.Y)))
+		(currX >= int(opts.Position.X-(opts.MapSize.X/2*opts.MapScale.X)) && currX <= int((opts.MapSize.X/2*opts.MapScale.X/screenScale.X)+(opts.Position.X))) &&
+		(currY >= int(opts.Position.Y-(opts.MapSize.Y/2*opts.MapScale.Y)) && currY <= int((opts.MapSize.Y/2*opts.MapScale.Y/screenScale.Y)+(opts.Position.Y)))
 }
 
 //It checks collision with a static object, which won't change its size
@@ -41,6 +40,7 @@ func (mpem *MousePressEventManager) IsAnyMouseButtonsPressed() bool {
 	for _, v := range []ebiten.MouseButton{
 		ebiten.MouseButtonLeft, ebiten.MouseButtonMiddle, ebiten.MouseButtonRight} {
 		if inpututil.IsMouseButtonJustPressed(v) {
+			Activity.SetLastActivity()
 			return true
 		}
 	}
@@ -48,7 +48,7 @@ func (mpem *MousePressEventManager) IsAnyMouseButtonsPressed() bool {
 }
 
 func (mpem *MousePressEventManager) IsAnyMovementButtonPressed() bool {
-	return ebiten.IsKeyPressed(ebiten.KeyW) ||
+	r := ebiten.IsKeyPressed(ebiten.KeyW) ||
 		ebiten.IsKeyPressed(ebiten.KeyS) ||
 		ebiten.IsKeyPressed(ebiten.KeyA) ||
 		ebiten.IsKeyPressed(ebiten.KeyD) ||
@@ -56,6 +56,10 @@ func (mpem *MousePressEventManager) IsAnyMovementButtonPressed() bool {
 		ebiten.IsKeyPressed(ebiten.KeyArrowDown) ||
 		ebiten.IsKeyPressed(ebiten.KeyArrowLeft) ||
 		ebiten.IsKeyPressed(ebiten.KeyArrowRight)
+	if r {
+		Activity.SetLastActivity()
+	}
+	return r
 }
 
 func NewMousePressEventManager() *MousePressEventManager {

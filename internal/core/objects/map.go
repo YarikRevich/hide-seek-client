@@ -183,6 +183,10 @@ func (m *Map) DebugInit() {
 	m.Base.SetSkin("maps/helloween/background/background")
 }
 
+func (m *Map) SetTilemap(tilemapPath string) {
+
+}
+
 // func (m *Map) String() string {
 // 	return m.Skin.Name
 // }

@@ -288,6 +288,8 @@ type WorldManager struct {
 	ammos    []*objects.Ammo
 
 	statistics *statistics.Statistics
+
+	camera Camera
 }
 
 //Creates snapshot of world and sends it to the server
@@ -299,9 +301,8 @@ func (wm *WorldManager) ToAPIMessage() *server_external.World {
 }
 
 func (wm *WorldManager) FromAPIMessage(m *server_external.World) {
+	//TODO: implementing importing of map regime
 	// w.gamesettings.Regime = m.GameSettings.Regime
-	// fmt.Println(m)
-	// fmt.Println(m.GameSettings)
 	wm.gamesettings.IsGameStarted = m.GameSettings.IsGameStarted
 	wm.gamesettings.IsWorldExist = m.GameSettings.IsWorldExist
 }
@@ -311,7 +312,8 @@ func (wm *WorldManager) Update() {
 }
 
 func (wm *WorldManager) Render(sm *screen.ScreenManager) {
-
+	wm.camera.Opts.Angle
+	sm.GetImage().DrawImage()
 }
 
 func NewWorldManager() *WorldManager {
