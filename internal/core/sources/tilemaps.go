@@ -3,6 +3,7 @@ package sources
 import (
 	"fmt"
 	"image"
+	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
 	"math"
@@ -19,12 +20,13 @@ import (
 )
 
 type Tile struct {
-	Image      *ebiten.Image
-	Position   image.Point
-	Layer      string
-	LayerNum   int
-	TileNum    int
-	Properties struct {
+	Image       *ebiten.Image
+	Position    image.Point
+	Layer       string
+	LayerNum    int
+	TileNum     int
+	ColorMatrix []color.Color
+	Properties  struct {
 		Collision, Spawn bool
 	}
 }
@@ -231,6 +233,7 @@ func (tm *Tilemap) load(path string) error {
 
 	tempTileCollection := make(map[image.Point]*Tile)
 	tempTileImageCache := make(map[string]*ebiten.Image)
+	tempTileColorMatrixCache := make(map[string][]color.Color)
 
 	for n, l := range gameMap.Layers {
 		y := 0
@@ -259,6 +262,21 @@ func (tm *Tilemap) load(path string) error {
 				subImage := ebitenImage.SubImage(t.GetTileRect())
 
 				tile.Image = ebiten.NewImageFromImage(subImage)
+
+				if _, ok := tempTileColorMatrixCache[t.Tileset.Image.Source]; !ok {
+					w, h := tile.Image.Size()
+					colorMatrix := make([]color.Color, w*h)
+
+					for y := 0; y < h; y++ {
+						for x := 0; x < w; x++ {
+							colorMatrix[y*int(tm.TileSize.X)+x] = tile.Image.At(x, y)
+						}
+					}
+
+					tempTileColorMatrixCache[t.Tileset.Image.Source] = colorMatrix
+				}
+
+				tile.ColorMatrix = tempTileColorMatrixCache[t.Tileset.Image.Source]
 
 				tile.Layer = l.Name
 				tile.LayerNum = n
@@ -445,25 +463,16 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 		})
 
 		orthographicSurface := ebiten.NewImage(int(t.MapSize.X), int(t.MapSize.Y))
-		w, h := orthographicSurface.Size()
-		fmt.Println(w, t.MapSize.X)
 		for _, v := range orthographicPostRender {
+			w, h := v.Image.Size()
 			for y := 0; y < h; y++ {
 				for x := 0; x < w; x++ {
-					// fmt.Println(v.Position, x, y, v.Image.At(x, y))
-					orthographicSurface.Set(v.Position.X+int(t.TileSize.X)+x, v.Position.Y+int(t.TileSize.Y)+y, v.Image.At(x, y))
+					orthographicSurface.Set(v.Position.X+x, v.Position.Y+y, v.ColorMatrix[y*int(t.TileSize.X)+x])
 				}
 			}
 		}
 
-		// op := &ebiten.DrawImageOptions{}
-		// op.GeoM.Translate(100, 100)
-		// // w, h := orthographicSurface.Size()
-		// // for ?
-
-		// sm.Image.DrawImage(orthographicSurface, op)
-
-		// fmt.Println(w)
+		w, h := orthographicSurface.Size()
 		op := &ebiten.DrawImageOptions{}
 		for i := 0; i < h; i++ {
 			op.GeoM.Reset()
@@ -472,8 +481,7 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 			lineW := (w + i*3/4)
 			x := -float64(lineW) / float64(w) / 2
 
-			op.GeoM.Scale(float64(lineW)/float64(w)*math.Sin(opts.CameraPitch), 1)
-			// fmt.Println(float64(lineW) / float64(w))
+			op.GeoM.Scale(float64(lineW)/float64(w), 1)
 			op.GeoM.Translate(x, float64(i))
 			op.GeoM.Translate(screenSize.X/2, screenSize.Y/2)
 			// sm.Image.DrawImage(t.OrthographicTilemap[k].Tiles[OrthographicTileFace(c[4])].Tile.Image, opts)
