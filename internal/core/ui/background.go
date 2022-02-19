@@ -9,11 +9,18 @@ import (
 type BackgroundOpts struct {
 	ID string
 
-	Tilemap  *sources.Tilemap
-	Position types.Vec2
+	Tilemap         string
+	Position, Scale types.Vec2
+
+	CameraAngle, CameraPitch float64
+	CameraPosition           types.Vec3
+
+	OrthigraphicProjection bool
 }
 
 type Background struct {
+	Tilemap sources.Tilemap
+
 	Opts        *BackgroundOpts
 	ContextOpts *ContextOpts
 }
@@ -25,9 +32,17 @@ func (b *Background) SetContext(opts *ContextOpts) {
 func (b *Background) Update(sm *screen.ScreenManager) {}
 
 func (b *Background) Render(sm *screen.ScreenManager) {
-	b.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
-		SurfacePosition:    types.Vec2{X: 0, Y: 0},
-		AutoScaleForbidden: true,
+	// x, y := ebiten.CursorPosition()
+	b.Tilemap.Render(sm, sources.RenderTilemapOpts{
+		SurfacePosition:        types.Vec2{X: 0, Y: 0},
+		Scale:                  b.Opts.Scale,
+		AutoScaleForbidden:     true,
+		OrthigraphicProjection: b.Opts.OrthigraphicProjection,
+
+		// CameraPosition: types.Vec3{X: float64(x), Z: float64(y)},
+		CameraPosition: b.Opts.CameraPosition,
+		CameraAngle:    b.Opts.CameraAngle,
+		CameraPitch:    b.Opts.CameraPitch,
 	})
 }
 
@@ -36,7 +51,7 @@ func (b *Background) GetID() string {
 }
 
 func (b *Background) GetTilemap() *sources.Tilemap {
-	return b.Opts.Tilemap
+	return &b.Tilemap
 }
 
 func (b *Background) GetPosition() types.Vec2 {
@@ -44,5 +59,7 @@ func (b *Background) GetPosition() types.Vec2 {
 }
 
 func NewBackground(opts *BackgroundOpts) Component {
-	return &Background{Opts: opts}
+	return &Background{
+		Tilemap: sources.GetTileMap(opts.Tilemap),
+		Opts:    opts}
 }

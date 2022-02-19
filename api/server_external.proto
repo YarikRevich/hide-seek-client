@@ -5,6 +5,10 @@ import "google/protobuf/empty.proto";
 
 option go_package="internal/core/networking/api/server_external";
 
+message Tilemap {
+    
+}
+
 message AddPC {
 
 };

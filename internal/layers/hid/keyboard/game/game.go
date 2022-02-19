@@ -24,15 +24,15 @@ func Exec() {
 	wM := world.UseWorld().GetWorldMap()
 	wMSize := wM.GetSize()
 
-	if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
-		c.Zoom(1.1)
-		p.UpdateLastActivity()
-		return
-	} else if g.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
-		c.Zoom(0.9)
-		p.UpdateLastActivity()
-		return
-	}
+	// if g.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
+	// 	c.Zoom(1.1)
+	// 	p.UpdateLastActivity()
+	// 	return
+	// } else if g.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
+	// 	c.Zoom(0.9)
+	// 	p.UpdateLastActivity()
+	// 	return
+	// }
 
 	if k.IsAnyKeyPressed() || g.IsAnyButtonPressed() {
 		p.UpdateLastActivity()

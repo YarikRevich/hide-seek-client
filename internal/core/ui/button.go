@@ -15,13 +15,15 @@ type ButtonOpts struct {
 	//Should contain ID to the ui object
 	//you want this object to connect to
 	StickedTo              string
-	Tilemap                *sources.Tilemap
+	Tilemap                string
 	SurfacePosition, Scale types.Vec2
 
 	OnMousePress, OnKeyboardPress func()
 }
 
 type Button struct {
+	Tilemap sources.Tilemap
+
 	Opts        *ButtonOpts
 	ContextOpts *ContextOpts
 }
@@ -35,7 +37,7 @@ func (b *Button) Update(sm *screen.ScreenManager) {
 		if events.MousePress.IsAnyMouseButtonsPressed() {
 			if events.MousePress.IsMousePressLeftOnce(sm, events.IsMousePress{
 				Position: b.Opts.SurfacePosition,
-				MapSize:  b.Opts.Tilemap.MapSize,
+				MapSize:  b.Tilemap.MapSize,
 				MapScale: b.Opts.Scale,
 			}) {
 				b.Opts.OnMousePress()
@@ -49,6 +51,7 @@ func (b *Button) Update(sm *screen.ScreenManager) {
 }
 
 func (b *Button) Render(sm *screen.ScreenManager) {
+
 	renderTilemapsOpts := sources.RenderTilemapOpts{
 		SurfacePosition:  b.Opts.SurfacePosition,
 		Scale:            b.Opts.Scale,
@@ -60,11 +63,11 @@ func (b *Button) Render(sm *screen.ScreenManager) {
 		renderTilemapsOpts.StickedToPosition = stickedTo.GetPosition()
 	}
 
-	b.Opts.Tilemap.Render(sm, renderTilemapsOpts)
+	b.Tilemap.Render(sm, renderTilemapsOpts)
 
 	b.Opts.TextOpts.Font.Render(sm, sources.RenderTextCharachterOpts{
 		Align:           b.Opts.TextOpts.Align,
-		Tilemap:         b.Opts.Tilemap,
+		Tilemap:         &b.Tilemap,
 		SurfacePosition: b.Opts.SurfacePosition,
 		SurfaceScale:    b.Opts.Scale,
 		TextPosition:    b.Opts.TextOpts.Position,
@@ -79,7 +82,7 @@ func (b *Button) GetID() string {
 }
 
 func (b *Button) GetTilemap() *sources.Tilemap {
-	return b.Opts.Tilemap
+	return &b.Tilemap
 }
 
 func (b *Button) GetPosition() types.Vec2 {
@@ -87,5 +90,7 @@ func (b *Button) GetPosition() types.Vec2 {
 }
 
 func NewButton(opts *ButtonOpts) Component {
-	return &Button{Opts: opts}
+	return &Button{
+		Tilemap: sources.GetTileMap(opts.Tilemap),
+		Opts:    opts}
 }

@@ -48,9 +48,9 @@ func (p *PC) LoadUsername() {
 	p.Username = storage.UseStorage().User().GetUsername()
 }
 
-func (p *PC) DebugInit() {
-	p.Base.SetSkin("heroes/pumpkin")
-}
+// func (p *PC) DebugInit() {
+// 	p.Base.SetTilemap("heroes/pumpkin")
+// }
 
 // //Returns movement rotation related to the last
 // //movement direction

@@ -22,12 +22,10 @@ func (sml *StartMenuLayer) IsActive() bool {
 
 func (sml *StartMenuLayer) Update() {
 	sml.UIManager.Update(sml.opts.ScreenManager)
-	sml.opts.WorldManager.Update()
 }
 
 func (sml *StartMenuLayer) Render() {
 	sml.UIManager.Render(sml.opts.ScreenManager)
-	sml.opts.WorldManager.Render(sml.opts.ScreenManager)
 }
 
 func (sml *StartMenuLayer) Clear() {
@@ -37,7 +35,7 @@ func (sml *StartMenuLayer) Clear() {
 func (sml *StartMenuLayer) Init() {
 	sml.UIManager.AddComponent(ui.NewBackground(&ui.BackgroundOpts{
 		ID:      "joingame",
-		Tilemap: sources.GetTileMap("system/backgrounds/background"),
+		Tilemap: "system/backgrounds/background",
 	}))
 	// sml.UIManager.AddComponent(ui.NewButton(&ui.ButtonOpts{
 	// 	OnMousePress: func() {
@@ -61,7 +59,7 @@ func (sml *StartMenuLayer) Init() {
 		},
 
 		ID:              "startgamebutton",
-		Tilemap:         sources.GetTileMap("system/buttons/button"),
+		Tilemap:         "system/buttons/button",
 		SurfacePosition: types.Vec2{X: screenAxis.X, Y: screenAxis.Y - 150},
 		Scale:           types.Vec2{X: 4, Y: 4},
 

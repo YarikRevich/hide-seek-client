@@ -3,13 +3,16 @@ package world
 import (
 	"fmt"
 
+	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings"
+	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/objects"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statistics"
 	"github.com/google/uuid"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 var instance *World
@@ -289,7 +292,7 @@ type WorldManager struct {
 
 	statistics *statistics.Statistics
 
-	camera Camera
+	Camera
 }
 
 //Creates snapshot of world and sends it to the server
@@ -308,14 +311,44 @@ func (wm *WorldManager) FromAPIMessage(m *server_external.World) {
 }
 
 func (wm *WorldManager) Update() {
+	if events.KeyboardPress.IsAnyKeyPressed() || events.GamepadPress.IsAnyButtonPressed() {
+		if events.GamepadPress.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
+			wm.Camera.ZoomIn(1.1)
+		} else if events.GamepadPress.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
+			wm.Camera.ZoomIn(0.9)
+		}
 
+		if ebiten.IsKeyPressed(ebiten.Key8) {
+			wm.Camera.MoveAngle(0.01)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.Key7) {
+			wm.Camera.MoveAngle(-0.01)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.Key6) {
+			wm.Camera.MovePitch(0.1)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.Key5) {
+			wm.Camera.MovePitch(-0.1)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.KeyA) {
+			wm.Camera.MovePositionX(-1)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.KeyD) {
+			wm.Camera.MovePositionX(1)
+		}
+	}
 }
 
 func (wm *WorldManager) Render(sm *screen.ScreenManager) {
-	wm.camera.Opts.Angle
-	sm.GetImage().DrawImage()
+	// wm.camera.Opts.Angle
+	// sm.GetImage().DrawImage()
 }
 
 func NewWorldManager() *WorldManager {
-	return new(WorldManager)
+	return &WorldManager{Camera: Camera{Pitch: 5.5, Angle: 5}}
 }

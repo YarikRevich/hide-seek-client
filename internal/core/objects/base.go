@@ -2,8 +2,6 @@ package objects
 
 import (
 	"image"
-	"path/filepath"
-	"unsafe"
 
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
@@ -257,12 +255,13 @@ func (o *Base) SetSpawn(spawns []types.Vec2) {
 // }
 
 //Sets skin for the object
-func (o *Base) SetSkin(path string) {
-	o.Skin.Path = path
-	_, file := filepath.Split(path)
-	o.Skin.Name = file
+func (o *Base) SetTilemap(tileMapPath string) {
+	o.Tilemap = sources.GetTileMap(tileMapPath)
+	// o.Skin.Path = path
+	// _, file := filepath.Split(path)
+	// o.Skin.Name = file
 
-	o.Tilemap = sources.GetTileMap(o.Path)
+	// o.Tilemap = sources.GetTileMap(o.Path)
 	// o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Path)
 
 	// cs, err := sources.UseSources().Colliders().GetCollider(o.Path)
@@ -292,21 +291,23 @@ func (o *Base) SetSkin(path string) {
 func (o *Base) ToAPIMessage() *server_external.Base {
 	m := &server_external.Base{
 		Type: o.Type,
-		Animation: &server_external.Animation{
-			PositionBeforeAnimation: &server_external.Position{
-				X: o.Animation.AnimationStartPosition.X,
-				Y: o.Animation.AnimationStartPosition.Y,
-			},
-			FrameCount:         uint64(o.FrameCount),
-			FrameDelayCounter:  uint64(o.FrameDelayCounter),
-			CurrentFrameMatrix: o.CurrentFrameMatrix,
-		},
-		Skin: &server_external.Skin{
-			Name: o.Skin.Name,
-			Path: o.Skin.Path,
-		},
+		//TODO: place sending of tilemap data
+
+		// Animation: &server_external.Animation{
+		// 	PositionBeforeAnimation: &server_external.Position{
+		// 		X: o.Animation.AnimationStartPosition.X,
+		// 		Y: o.Animation.AnimationStartPosition.Y,
+		// 	},
+		// 	FrameCount:         uint64(o.FrameCount),
+		// 	FrameDelayCounter:  uint64(o.FrameDelayCounter),
+		// 	CurrentFrameMatrix: o.CurrentFrameMatrix,
+		// },
+		// Skin: &server_external.Skin{
+		// 	Name: o.Skin.Name,
+		// 	Path: o.Skin.Path,
+		// },
 		Physics: &server_external.Physics{
-			Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
+			// Jump: *(*[]int64)(unsafe.Pointer(&o.Jump)),
 		},
 		Id: o.ID.String(),
 		RawPos: &server_external.Position{
@@ -318,7 +319,7 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 			Y: int64(o.Spawn.Y),
 		},
 		Direction: int64(o.Direction),
-		Role:      int64(o.Role),
+		// Role:      int64(o.Role),
 	}
 	if o.Parent != nil {
 		m.Parent = o.Parent.ToAPIMessage()
@@ -328,16 +329,16 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Type = m.Type
-	o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
-	o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
-	o.Animation.FrameCount = m.Animation.FrameCount
-	o.Animation.FrameDelayCounter = m.Animation.FrameDelayCounter
-	o.Animation.CurrentFrameMatrix = m.Animation.CurrentFrameMatrix
+	// o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
+	// o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
+	// o.Animation.FrameCount = m.Animation.FrameCount
+	// o.Animation.FrameDelayCounter = m.Animation.FrameDelayCounter
+	// o.Animation.CurrentFrameMatrix = m.Animation.CurrentFrameMatrix
 
-	o.Skin.Name = m.Skin.Name
-	o.Skin.Path = m.Skin.Path
+	// o.Skin.Name = m.Skin.Name
+	// o.Skin.Path = m.Skin.Path
 
-	o.Physics.Jump = *(*[]keycodes.Direction)(unsafe.Pointer(&m.Physics.Jump))
+	// o.Physics.Jump = *(*[]keycodes.Direction)(unsafe.Pointer(&m.Physics.Jump))
 
 	if o.Parent != nil {
 		o.Parent.FromAPIMessage(m.Parent)
@@ -354,24 +355,24 @@ func (o *Base) FromAPIMessage(m *server_external.Base) {
 	o.Spawn.X = m.Spawn.X
 	o.Spawn.Y = m.Spawn.Y
 	o.Direction = keycodes.Direction(m.Direction)
-	o.Role = Role(m.Role)
+	// o.Role = Role(m.Role)
 
 	// if o.MetadataModel == nil && o.Skin.IsSet() {
 	// 	o.MetadataModel = sources.UseSources().Metadata().GetMetadata(o.Skin.Path)
 	// }
 }
 
-func (o *Base) SetTranslationXMovementBlocked(s bool) {
-	o.TranslationMovementXBlocked = s
-}
+// func (o *Base) SetTranslationXMovementBlocked(s bool) {
+// 	o.TranslationMovementXBlocked = s
+// }
 
-func (o *Base) SetTranslationYMovementBlocked(s bool) {
-	o.TranslationMovementYBlocked = s
-}
+// func (o *Base) SetTranslationYMovementBlocked(s bool) {
+// 	o.TranslationMovementYBlocked = s
+// }
 
-func (o *Base) IsTranslationMovementBlocked() bool {
-	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
-}
+// func (o *Base) IsTranslationMovementBlocked() bool {
+// 	return o.TranslationMovementXBlocked || o.TranslationMovementYBlocked
+// }
 
 // func (o *Base) GetPosForCamera() types.Vec2 {
 // 	var rX, rY float64
@@ -384,16 +385,6 @@ func (o *Base) IsTranslationMovementBlocked() bool {
 // 	}
 // 	return types.Vec2{X: rX, Y: rY}
 // }
-
-func (b *Base) Animate() {
-	animationSet := b.Tilemap.Animations[1]
-	animationSet.DelayTrigger++
-	animationSet.DelayTrigger %= int(animationSet.Frames[animationSet.CurrentFrame].Duration)
-	if animationSet.DelayTrigger == 0 {
-		animationSet.CurrentFrame++
-		animationSet.CurrentFrame %= len(animationSet.Frames)
-	}
-}
 
 type ObjectRenderOpts struct {
 }

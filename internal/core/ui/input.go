@@ -14,12 +14,14 @@ type InputOpts struct {
 	//Should contain ID to the ui object
 	//you want this object to connect to
 	StickedTo                     string
-	Tilemap                       *sources.Tilemap
+	Tilemap                       string
 	SurfacePosition, Scale        types.Vec2
 	OnMousePress, OnKeyboardPress func()
 }
 
 type Input struct {
+	Tilemap sources.Tilemap
+
 	Opts        *InputOpts
 	ContextOpts *ContextOpts
 }
@@ -34,14 +36,14 @@ func (i *Input) Update(sm *screen.ScreenManager) {
 }
 
 func (in *Input) Render(sm *screen.ScreenManager) {
-	in.Opts.Tilemap.Render(sm, sources.RenderTilemapOpts{
+	in.Tilemap.Render(sm, sources.RenderTilemapOpts{
 		SurfacePosition:  in.Opts.Position,
 		Scale:            in.Opts.Scale,
 		CenterizedOffset: true,
 	})
 
 	in.Opts.Font.Render(sm, sources.RenderTextCharachterOpts{
-		Tilemap:         in.Opts.Tilemap,
+		Tilemap:         &in.Tilemap,
 		SurfacePosition: in.Opts.SurfacePosition,
 		TextPosition:    in.Opts.TextOpts.Position,
 		Color:           in.Opts.Color,
@@ -55,7 +57,7 @@ func (in *Input) GetID() string {
 }
 
 func (in *Input) GetTilemap() *sources.Tilemap {
-	return in.Opts.Tilemap
+	return &in.Tilemap
 }
 
 func (in *Input) GetPosition() types.Vec2 {
@@ -63,5 +65,7 @@ func (in *Input) GetPosition() types.Vec2 {
 }
 
 func NewInput(opts *InputOpts) Component {
-	return &Input{Opts: opts}
+	return &Input{
+		Tilemap: sources.GetTileMap(opts.Tilemap),
+		Opts:    opts}
 }

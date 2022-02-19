@@ -18,6 +18,7 @@ require (
 	github.com/EngoEngine/math v1.0.4 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/engoengine/glm v0.0.0-20170725114841-9c08f4d1f668 // indirect
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/gabstv/ebiten-imgui v0.2.0 // indirect
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
 	github.com/go-gl/glfw v0.0.0-20211213063430-748e38ca8aec // indirect
@@ -27,6 +28,8 @@ require (
 	github.com/inkyblackness/imgui-go/v2 v2.4.1 // indirect
 	github.com/inkyblackness/imgui-go/v4 v4.4.0 // indirect
 	github.com/lafriks/go-tiled v0.7.0 // indirect
+	github.com/mattn/go-colorable v0.1.9 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea // indirect
 	github.com/veandco/go-sdl2 v0.4.10 // indirect
 	golang.org/x/mod v0.4.2 // indirect
@@ -52,7 +55,7 @@ require (
 	golang.org/x/exp v0.0.0-20201221025956-e89b829e73ea // indirect
 	golang.org/x/mobile v0.0.0-20210220033013-bdb1ca9a1e08 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
+	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 )
 
 replace github.com/YarikRevich/lru => github.com/YarikRevich/caching v0.0.0-20211008094010-9f23bdf6c975

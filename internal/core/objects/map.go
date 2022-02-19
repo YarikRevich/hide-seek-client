@@ -179,9 +179,9 @@ func (w *Map) FromAPIMessage(m *server_external.Map) {
 	w.Base.FromAPIMessage(m.Base)
 }
 
-func (m *Map) DebugInit() {
-	m.Base.SetSkin("maps/helloween/background/background")
-}
+// func (m *Map) DebugInit() {
+// 	m.Base.SetTilemap("maps/helloween/background/background")
+// }
 
 func (m *Map) SetTilemap(tilemapPath string) {
 
