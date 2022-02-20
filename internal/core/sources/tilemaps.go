@@ -8,13 +8,13 @@ import (
 	_ "image/png"
 	"math"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/YarikRevich/hide-seek-client/assets"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kvartborg/vector"
 	"github.com/lafriks/go-tiled"
 	"github.com/sirupsen/logrus"
 )
@@ -29,6 +29,32 @@ type Tile struct {
 	Properties  struct {
 		Collision, Spawn bool
 	}
+}
+
+type Vertex struct {
+	Position    vector.Vector
+	Color       color.Color
+	UV          vector.Vector
+	transformed vector.Vector
+	Normal      vector.Vector
+	triangle    *Triangle
+	Weights     []float32
+	VertexNum   int
+}
+
+type Triangle struct {
+	Vertices    []*Vertex
+	MaxSpan     float64
+	Normal      vector.Vector
+	Center      vector.Vector
+	visible     bool
+	depth       float64
+	TriangleNum int
+}
+
+//Returns tile image in triangles of vertices
+func (t *Tile) GetTrasformedVertices() []*Triangle {
+	return []*Triangle{}
 }
 
 type AnimationFrame struct {
@@ -263,6 +289,8 @@ func (tm *Tilemap) load(path string) error {
 
 				tile.Image = ebiten.NewImageFromImage(subImage)
 
+				// tile.Image.
+
 				if _, ok := tempTileColorMatrixCache[t.Tileset.Image.Source]; !ok {
 					w, h := tile.Image.Size()
 					colorMatrix := make([]color.Color, w*h)
@@ -351,7 +379,7 @@ type RenderTilemapOpts struct {
 	StickedTo                            *Tilemap
 	StickedToPosition                    types.Vec2
 	SurfacePosition, Scale               types.Vec2
-	CameraAngle, CameraPitch             float64
+	CameraAngle, CameraPitch, CameraZoom float64
 	CameraPosition                       types.Vec3
 	AutoScaleForbidden, CenterizedOffset bool
 
@@ -370,6 +398,7 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 
 			if opts.OrthigraphicProjection {
 				orthographicPostRender = append(orthographicPostRender, v)
+
 				// projectionCube := CreateCube(CubeOpts{
 				// 	sm:             sm,
 				// 	Scale:          opts.Scale,
@@ -394,30 +423,6 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 				// path.LineTo(float32(v3.X), float32(v4.Y))
 				// path.LineTo(float32(v4.X), float32(v1.Y))
 				// path.Fill(sm.Image, &vector.FillOptions{Color: color.Opaque})
-
-				// w, h := v.Image.Size()
-				// imageWidth, imageHeight := float64(w), float64(h)
-				// imageWidth += float64(v.TileNum / 2)
-				// // imageHeight -= float64(v.TileNum)
-				// // imageWidth -= (opts.CameraAngle * 1.2)
-				// // imageHeight *= math.Cos(opts.CameraAngle)
-				// fmt.Println(v.TileNum % int(t.TileCount.X))
-				// opts := &ebiten.DrawImageOptions{}
-				// for i := 0; i < int(imageHeight); i++ {
-				// 	opts.GeoM.Reset()
-
-				// 	// opts.GeoM.Translate(-screenSize.X/2, -screenSize.Y/2)
-				// 	opts.GeoM.Translate(-imageWidth/2-float64(v.TileNum), -imageHeight/2)
-				// 	lineW := (int(imageWidth) + i*3/4)
-				// 	x := -float64(lineW) / imageWidth / 2
-				// 	opts.GeoM.Scale(float64(lineW)/imageWidth, 1)
-				// 	opts.GeoM.Translate(x, float64(i))
-				// 	opts.GeoM.Translate(screenSize.X/2, screenSize.Y/2)
-				// 	opts.GeoM.Translate(float64(k.X), float64(k.Y))
-				// 	// sm.Image.DrawImage(t.OrthographicTilemap[k].Tiles[OrthographicTileFace(c[4])].Tile.Image, opts)
-				// 	sm.Image.DrawImage(v.Image.SubImage(image.Rect(0, i, int(imageWidth), i+1)).(*ebiten.Image), opts)
-				// }
-
 				// opts.GeoM.Rotate(float64(10%360) * 2 * math.Pi / 360)
 
 				// opts.GeoM.Translate(v3.X, v3.X)
@@ -458,35 +463,167 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	}
 
 	if opts.OrthigraphicProjection {
-		sort.Slice(orthographicPostRender, func(i, j int) bool {
-			return orthographicPostRender[i].TileNum < orthographicPostRender[j].TileNum
+		op := &ebiten.DrawTrianglesOptions{}
+		// op.Address = ebiten.AddressUnsafe
+
+		img := ebiten.NewImage(3, 3)
+		img.Fill(color.Opaque)
+
+		var (
+			centerX = screenSize.X / 2
+			centerY = screenSize.Y / 2
+			// r       = 50
+		)
+
+		vs := []ebiten.Vertex{}
+		// for i := 0; i < 4; i++ {
+		// 	rate := float64(i) / float64(4)
+		// 	fmt.Println(rate)
+		// cr := 0.0
+		// cg := 0.0
+		// cb := 0.0
+		// if rate < 1.0/3.0 {
+		// 	cb = 2 - 2*(rate*3)
+		// 	cr = 2 * (rate * 3)
+		// }
+		// if 1.0/3.0 <= rate && rate < 2.0/3.0 {
+		// 	cr = 2 - 2*(rate-1.0/3.0)*3
+		// 	cg = 2 * (rate - 1.0/3.0) * 3
+		// }
+		// if 2.0/3.0 <= rate {
+		// 	cg = 2 - 2*(rate-2.0/3.0)*3
+		// 	cb = 2 * (rate - 2.0/3.0) * 3
+		// }
+		vs = append(vs, ebiten.Vertex{
+			DstX: 0,
+			DstY: float32(centerY),
+			SrcX: 0,
+			SrcY: 0,
+			// ColorR: float32(cr),
+			// ColorG: float32(cg),
+			// ColorB: float32(cb),
+			// ColorA: 1,
+			ColorR: 1,
+			ColorG: 1,
+			ColorB: 1,
+			ColorA: 1,
 		})
 
-		orthographicSurface := ebiten.NewImage(int(t.MapSize.X), int(t.MapSize.Y))
-		for _, v := range orthographicPostRender {
-			w, h := v.Image.Size()
-			for y := 0; y < h; y++ {
-				for x := 0; x < w; x++ {
-					orthographicSurface.Set(v.Position.X+x, v.Position.Y+y, v.ColorMatrix[y*int(t.TileSize.X)+x])
-				}
-			}
+		vs = append(vs, ebiten.Vertex{
+			DstX: float32(centerX),
+			DstY: float32(centerY),
+			SrcX: 0,
+			SrcY: 0,
+			// ColorR: float32(cr),
+			// ColorG: float32(cg),
+			// ColorB: float32(cb),
+			// ColorA: 1,
+			ColorR: 1,
+			ColorG: 1,
+			ColorB: 1,
+			ColorA: 1,
+		})
+
+		vs = append(vs, ebiten.Vertex{
+			DstX: float32(centerX),
+			DstY: 0,
+			SrcX: 0,
+			SrcY: 0,
+			// ColorR: float32(cr),
+			// ColorG: float32(cg),
+			// ColorB: float32(cb),
+			// ColorA: 1,
+			ColorR: 1,
+			ColorG: 1,
+			ColorB: 1,
+			ColorA: 1,
+		})
+		// }
+
+		vs = append(vs, ebiten.Vertex{
+			DstX:   0,
+			DstY:   0,
+			SrcX:   0,
+			SrcY:   0,
+			ColorR: 1,
+			ColorG: 1,
+			ColorB: 1,
+			ColorA: 1,
+		})
+		// var verts []ebiten.Vertex
+		// for i := 0; i < 3; i++ {
+		// 	verts = append(verts, ebiten.Vertex{
+		// 		SrcX: 0, SrcY: 0, DstX: float32(160*math.Cos(float64(2)*math.Pi*float64(i/3)) + (screenSize.X / 2)), DstY: float32(160*math.Sin(float64(2)*math.Pi*float64(i/3)) + (screenSize.Y / 2)), ColorR: 120, ColorG: 192, ColorB: 255, ColorA: 1})
+		// }
+		// verts = append(verts, ebiten.Vertex{
+		// 	DstX:   float32(screenSize.X / 2),
+		// 	DstY:   float32(screenSize.Y / 2),
+		// 	SrcX:   0,
+		// 	SrcY:   0,
+		// 	ColorR: 1,
+		// 	ColorG: 1,
+		// 	ColorB: 1,
+		// 	ColorA: 1,
+		// })
+
+		indices := []uint16{}
+		for i := 0; i < 4; i++ {
+			// fmt.Println(uint16(i), uint16(i+1)%uint16(3), uint16(3))
+			indices = append(indices, uint16(i), uint16(i+1)%uint16(3), uint16(3))
 		}
+		fmt.Println(vs, indices)
+		sm.Image.DrawTriangles(vs, indices, t.Tiles[image.Point{0, 0}].Image, op)
+		// sort.Slice(orthographicPostRender, func(i, j int) bool {
+		// 	return orthographicPostRender[i].TileNum < orthographicPostRender[j].TileNum
+		// })
 
-		w, h := orthographicSurface.Size()
-		op := &ebiten.DrawImageOptions{}
-		for i := 0; i < h; i++ {
-			op.GeoM.Reset()
+		// orthographicSurface := ebiten.NewImage(int(t.MapSize.X), int(t.MapSize.Y))
+		// for _, v := range orthographicPostRender {
+		// 	w, h := v.Image.Size()
+		// 	for y := 0; y < h; y++ {
+		// 		for x := 0; x < w; x++ {
+		// 			orthographicSurface.Set(v.Position.X+x, v.Position.Y+y, v.ColorMatrix[y*int(t.TileSize.X)+x])
+		// 		}
+		// 	}
+		// }
 
-			op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-			lineW := (w + i*3/4)
-			x := -float64(lineW) / float64(w) / 2
+		// // sm.Image.DrawTriangles()
 
-			op.GeoM.Scale(float64(lineW)/float64(w), 1)
-			op.GeoM.Translate(x, float64(i))
-			op.GeoM.Translate(screenSize.X/2, screenSize.Y/2)
-			// sm.Image.DrawImage(t.OrthographicTilemap[k].Tiles[OrthographicTileFace(c[4])].Tile.Image, opts)
-			sm.Image.DrawImage(orthographicSurface.SubImage(image.Rect(0, i, w, i+1)).(*ebiten.Image), op)
-		}
+		// w, h := orthographicSurface.Size()
+		// op := &ebiten.DrawImageOptions{}
+		// for i := 0; i < h; i++ {
+		// 	op.GeoM.Reset()
+
+		// 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+		// 	lineW := (w + i*3/4)
+		// 	x := -float64(lineW) / float64(w) / 2
+
+		// 	fmt.Println(opts.CameraPitch)
+		// 	// op.GeoM.Scale(float64(lineW)/float64(w), opts.CameraPitch)
+		// 	if opts.CameraZoom > 0 {
+		// 		op.GeoM.Scale(float64(lineW)/float64(w)*(opts.CameraZoom), opts.CameraZoom)
+		// 	} else {
+		// 		op.GeoM.Scale(float64(lineW)/float64(w), opts.CameraZoom)
+		// 	}
+
+		// 	//Makes rotation around Y but with offset, so it rounds around circle
+		// 	//#####
+		// 	// op.GeoM.Rotate(opts.CameraAngle)
+		// 	//#####
+
+		// 	op.GeoM.Translate(x+(float64(i)/opts.CameraAngle), float64(i)*(opts.CameraZoom))
+
+		// 	op.GeoM.Translate(opts.CameraPosition.X, opts.CameraPosition.Y)
+
+		// 	//Makes rotation around Y axis
+		// 	//#####
+		// 	op.GeoM.Rotate(opts.CameraAngle)
+		// 	//#####
+
+		// 	op.GeoM.Translate(screenSize.X/2, screenSize.Y/2)
+		// 	// sm.Image.DrawImage(t.OrthographicTilemap[k].Tiles[OrthographicTileFace(c[4])].Tile.Image, opts)
+		// 	sm.Image.DrawImage(orthographicSurface.SubImage(image.Rect(0, i, w, i+1)).(*ebiten.Image), op)
+		// }
 	}
 }
 

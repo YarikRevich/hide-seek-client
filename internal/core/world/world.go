@@ -313,25 +313,25 @@ func (wm *WorldManager) FromAPIMessage(m *server_external.World) {
 func (wm *WorldManager) Update() {
 	if events.KeyboardPress.IsAnyKeyPressed() || events.GamepadPress.IsAnyButtonPressed() {
 		if events.GamepadPress.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
-			wm.Camera.ZoomIn(1.1)
+			wm.Camera.ZoomIn(-0.04)
 		} else if events.GamepadPress.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
-			wm.Camera.ZoomIn(0.9)
+			wm.Camera.ZoomIn(0.04)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.Key8) {
-			wm.Camera.MoveAngle(0.01)
+			wm.Camera.MoveAngle(0.04)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.Key7) {
-			wm.Camera.MoveAngle(-0.01)
+			wm.Camera.MoveAngle(-0.04)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.Key6) {
-			wm.Camera.MovePitch(0.1)
+			wm.Camera.MovePitch(0.04)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.Key5) {
-			wm.Camera.MovePitch(-0.1)
+			wm.Camera.MovePitch(-0.04)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) {
@@ -350,5 +350,5 @@ func (wm *WorldManager) Render(sm *screen.ScreenManager) {
 }
 
 func NewWorldManager() *WorldManager {
-	return &WorldManager{Camera: Camera{Pitch: 5.5, Angle: 5}}
+	return &WorldManager{Camera: Camera{Pitch: 1, Angle: 5, Zoom: 1}}
 }

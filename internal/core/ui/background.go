@@ -12,8 +12,8 @@ type BackgroundOpts struct {
 	Tilemap         string
 	Position, Scale types.Vec2
 
-	CameraAngle, CameraPitch float64
-	CameraPosition           types.Vec3
+	CameraAngle, CameraPitch, CameraZoom float64
+	CameraPosition                       types.Vec3
 
 	OrthigraphicProjection bool
 }
@@ -40,6 +40,7 @@ func (b *Background) Render(sm *screen.ScreenManager) {
 		OrthigraphicProjection: b.Opts.OrthigraphicProjection,
 
 		// CameraPosition: types.Vec3{X: float64(x), Z: float64(y)},
+		CameraZoom:     b.Opts.CameraZoom,
 		CameraPosition: b.Opts.CameraPosition,
 		CameraAngle:    b.Opts.CameraAngle,
 		CameraPitch:    b.Opts.CameraPitch,

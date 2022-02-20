@@ -40,6 +40,7 @@ func (sl *SessionLayer) Init() {
 		Scale:                  types.Vec2{X: 1, Y: 1},
 		OrthigraphicProjection: true,
 
+		CameraZoom:     sl.opts.WorldManager.Zoom,
 		CameraAngle:    sl.opts.WorldManager.Camera.Angle,
 		CameraPitch:    sl.opts.WorldManager.Camera.Pitch,
 		CameraPosition: sl.opts.WorldManager.Camera.Position,

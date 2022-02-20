@@ -27,6 +27,7 @@ require (
 	github.com/inkyblackness/imgui-go v1.12.0 // indirect
 	github.com/inkyblackness/imgui-go/v2 v2.4.1 // indirect
 	github.com/inkyblackness/imgui-go/v4 v4.4.0 // indirect
+	github.com/kvartborg/vector v0.1.0 // indirect
 	github.com/lafriks/go-tiled v0.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
