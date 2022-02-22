@@ -3,6 +3,7 @@ package world
 import (
 	"fmt"
 
+	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
 	"github.com/YarikRevich/hide-seek-client/internal/core/events"
 	"github.com/YarikRevich/hide-seek-client/internal/core/gamesettings"
 	"github.com/YarikRevich/hide-seek-client/internal/core/keycodes"
@@ -11,6 +12,7 @@ import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statemachine"
 	"github.com/YarikRevich/hide-seek-client/internal/core/statistics"
+	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/google/uuid"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -292,7 +294,7 @@ type WorldManager struct {
 
 	statistics *statistics.Statistics
 
-	Camera
+	Camera *camera.Camera
 }
 
 //Creates snapshot of world and sends it to the server
@@ -350,5 +352,5 @@ func (wm *WorldManager) Render(sm *screen.ScreenManager) {
 }
 
 func NewWorldManager() *WorldManager {
-	return &WorldManager{Camera: Camera{Pitch: 1, Angle: 5, Zoom: 1}}
+	return &WorldManager{Camera: &camera.Camera{Pitch: 1, Angle: 5, Zoom: 1, Position: types.Vec3{10, 10, 10}}}
 }

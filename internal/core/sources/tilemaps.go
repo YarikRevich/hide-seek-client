@@ -11,17 +11,22 @@ import (
 	"strings"
 
 	"github.com/YarikRevich/hide-seek-client/assets"
+	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
+	"github.com/YarikRevich/hide-seek-client/internal/core/primitives"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/kvartborg/vector"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/lafriks/go-tiled"
 	"github.com/sirupsen/logrus"
 )
 
 type Tile struct {
-	Image       *ebiten.Image
-	Position    image.Point
+	Image    *ebiten.Image
+	Position image.Point
+
+	Triangles []*types.Triangle
+
 	Layer       string
 	LayerNum    int
 	TileNum     int
@@ -31,30 +36,8 @@ type Tile struct {
 	}
 }
 
-type Vertex struct {
-	Position    vector.Vector
-	Color       color.Color
-	UV          vector.Vector
-	transformed vector.Vector
-	Normal      vector.Vector
-	triangle    *Triangle
-	Weights     []float32
-	VertexNum   int
-}
-
-type Triangle struct {
-	Vertices    []*Vertex
-	MaxSpan     float64
-	Normal      vector.Vector
-	Center      vector.Vector
-	visible     bool
-	depth       float64
-	TriangleNum int
-}
-
-//Returns tile image in triangles of vertices
-func (t *Tile) GetTrasformedVertices() []*Triangle {
-	return []*Triangle{}
+func (t *Tile) GetTriangleIndicies() int {
+	return len(t.Triangles)
 }
 
 type AnimationFrame struct {
@@ -140,8 +123,6 @@ type CubeOpts struct {
 func CreateCube(opts CubeOpts) [8]types.Vec3 {
 
 	var unitCube, rotCube, worldCube, projCube [8]types.Vec3
-
-	fmt.Println(opts.Scale)
 
 	unitCube[1] = types.Vec3{X: opts.Scale.X}
 	unitCube[2] = types.Vec3{X: opts.Scale.X, Y: -opts.Scale.Y}
@@ -260,6 +241,7 @@ func (tm *Tilemap) load(path string) error {
 	tempTileCollection := make(map[image.Point]*Tile)
 	tempTileImageCache := make(map[string]*ebiten.Image)
 	tempTileColorMatrixCache := make(map[string][]color.Color)
+	tempTileTriangleCache := make(map[string][]*types.Triangle)
 
 	for n, l := range gameMap.Layers {
 		y := 0
@@ -289,8 +271,6 @@ func (tm *Tilemap) load(path string) error {
 
 				tile.Image = ebiten.NewImageFromImage(subImage)
 
-				// tile.Image.
-
 				if _, ok := tempTileColorMatrixCache[t.Tileset.Image.Source]; !ok {
 					w, h := tile.Image.Size()
 					colorMatrix := make([]color.Color, w*h)
@@ -303,6 +283,24 @@ func (tm *Tilemap) load(path string) error {
 
 					tempTileColorMatrixCache[t.Tileset.Image.Source] = colorMatrix
 				}
+
+				if _, ok := tempTileTriangleCache[t.Tileset.Image.Source]; !ok {
+					var tris []*types.Triangle
+
+					tris = append(tris, primitives.CreateBottomQuad()...)
+
+					tempTileTriangleCache[t.Tileset.Image.Source] = tris
+				}
+
+				tile.Triangles = tempTileTriangleCache[t.Tileset.Image.Source]
+
+				// tri := NewTriangle(part)
+				// tri.ID = part.Mesh.triIndex
+				// part.Triangles = append(part.Triangles, tri)
+				// part.sortedTriangles = append(part.sortedTriangles, tri)
+				// part.Vertices = append(part.Vertices, verts[i], verts[i+1], verts[i+2])
+				// tri.SetVertices(verts[i], verts[i+1], verts[i+2])
+				// part.Mesh.triIndex++
 
 				tile.ColorMatrix = tempTileColorMatrixCache[t.Tileset.Image.Source]
 
@@ -375,15 +373,21 @@ func (tm *Tilemap) load(path string) error {
 	return nil
 }
 
+type RenderTilemapOptsContext struct {
+	Camera *camera.Camera
+}
+
 type RenderTilemapOpts struct {
-	StickedTo                            *Tilemap
-	StickedToPosition                    types.Vec2
-	SurfacePosition, Scale               types.Vec2
-	CameraAngle, CameraPitch, CameraZoom float64
-	CameraPosition                       types.Vec3
+	StickedTo              *Tilemap
+	StickedToPosition      types.Vec2
+	SurfacePosition, Scale types.Vec2
+	// CameraAngle, CameraPitch, CameraZoom float64
+	// CameraPosition                       types.Vec3
 	AutoScaleForbidden, CenterizedOffset bool
 
 	OrthigraphicProjection bool
+
+	RenderTilemapOptsContext
 }
 
 func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
@@ -399,22 +403,6 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 			if opts.OrthigraphicProjection {
 				orthographicPostRender = append(orthographicPostRender, v)
 
-				// projectionCube := CreateCube(CubeOpts{
-				// 	sm:             sm,
-				// 	Scale:          opts.Scale,
-				// 	Position:       opts.SurfacePosition,
-				// 	Angle:          opts.CameraAngle,
-				// 	Pitch:          opts.CameraPitch,
-				// 	CameraPosition: opts.CameraPosition,
-				// })
-				// for _, c := range [][5]int{
-				// 	{4, 0, 1, 5, int(Floor)},
-				// 	{3, 0, 1, 2, int(South)},
-				// 	{6, 5, 4, 7, int(North)},
-				// 	{7, 4, 0, 3, int(East)},
-				// 	{2, 1, 5, 6, int(West)},
-				// 	{7, 3, 2, 6, int(Top)},
-				// } {
 				// v1, v2, v3, v4 := projectionCube[c[0]], projectionCube[c[1]], projectionCube[c[2]], projectionCube[c[3]]
 				// var path vector.Path
 				// path.MoveTo(float32(k.X*int(opts.Scale.X)), float32(k.Y*int(opts.Scale.Y)))
@@ -463,101 +451,249 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	}
 
 	if opts.OrthigraphicProjection {
-		op := &ebiten.DrawTrianglesOptions{}
-		// op.Address = ebiten.AddressUnsafe
+		// vp := opts.RenderTilemapOptsContext.Camera.GetView().GetMultiplied(opts.RenderTilemapOptsContext.Camera.GetProjection(sm))
 
-		img := ebiten.NewImage(3, 3)
-		img.Fill(color.Opaque)
+		// for _, v := range orthographicPostRender {
+		// 	var verts []ebiten.Vertex
+		// 	for _, t := range v.Triangles {
+		// 		// fmt.Println(t.Vertices[0].Position)
+		// 		v0 := vp.GetMultipiedVector(t.Vertices[0].Position)
+		// 		v1 := vp.GetMultipiedVector(t.Vertices[1].Position)
+		// 		v2 := vp.GetMultipiedVector(t.Vertices[2].Position)
+		// 		fmt.Println(v0, v1, v2)
 
-		var (
-			centerX = screenSize.X / 2
-			centerY = screenSize.Y / 2
-			// r       = 50
-		)
+		// 		var ev0, ev1, ev2 ebiten.Vertex
 
-		vs := []ebiten.Vertex{}
-		// for i := 0; i < 4; i++ {
-		// 	rate := float64(i) / float64(4)
-		// 	fmt.Println(rate)
-		// cr := 0.0
-		// cg := 0.0
-		// cb := 0.0
-		// if rate < 1.0/3.0 {
-		// 	cb = 2 - 2*(rate*3)
-		// 	cr = 2 * (rate * 3)
-		// }
-		// if 1.0/3.0 <= rate && rate < 2.0/3.0 {
-		// 	cr = 2 - 2*(rate-1.0/3.0)*3
-		// 	cg = 2 * (rate - 1.0/3.0) * 3
-		// }
-		// if 2.0/3.0 <= rate {
-		// 	cg = 2 - 2*(rate-2.0/3.0)*3
-		// 	cb = 2 * (rate - 2.0/3.0) * 3
-		// }
-		vs = append(vs, ebiten.Vertex{
-			DstX: 0,
-			DstY: float32(centerY),
-			SrcX: 0,
-			SrcY: 0,
-			// ColorR: float32(cr),
-			// ColorG: float32(cg),
-			// ColorB: float32(cb),
-			// ColorA: 1,
-			ColorR: 1,
-			ColorG: 1,
-			ColorB: 1,
-			ColorA: 1,
-		})
+		// 		ev0.DstX = float32(math.Round(v0[0]))
+		// 		ev0.DstY = float32(math.Round(v0[1]))
+		// 		ev0.ColorR = 1
+		// 		ev0.ColorG = 1
+		// 		ev0.ColorB = 1
+		// 		ev0.ColorA = 1
 
-		vs = append(vs, ebiten.Vertex{
-			DstX: float32(centerX),
-			DstY: float32(centerY),
-			SrcX: 0,
-			SrcY: 0,
-			// ColorR: float32(cr),
-			// ColorG: float32(cg),
-			// ColorB: float32(cb),
-			// ColorA: 1,
-			ColorR: 1,
-			ColorG: 1,
-			ColorB: 1,
-			ColorA: 1,
-		})
+		// 		ev1.DstX = float32(math.Round(v1[0]))
+		// 		ev1.DstY = float32(math.Round(v1[1]))
+		// 		ev1.ColorR = 1
+		// 		ev1.ColorG = 1
+		// 		ev1.ColorB = 1
+		// 		ev1.ColorA = 1
 
-		vs = append(vs, ebiten.Vertex{
-			DstX: float32(centerX),
-			DstY: 0,
-			SrcX: 0,
-			SrcY: 0,
-			// ColorR: float32(cr),
-			// ColorG: float32(cg),
-			// ColorB: float32(cb),
-			// ColorA: 1,
-			ColorR: 1,
-			ColorG: 1,
-			ColorB: 1,
-			ColorA: 1,
-		})
-		// }
+		// 		ev2.DstX = float32(math.Round(v2[0]))
+		// 		ev2.DstY = float32(math.Round(v2[1]))
+		// 		ev2.ColorR = 1
+		// 		ev2.ColorG = 1
+		// 		ev2.ColorB = 1
+		// 		ev2.ColorA = 1
 
-		vs = append(vs, ebiten.Vertex{
-			DstX:   0,
-			DstY:   0,
-			SrcX:   0,
-			SrcY:   0,
-			ColorR: 1,
-			ColorG: 1,
-			ColorB: 1,
-			ColorA: 1,
-		})
+		// 		verts = append(verts, ev0, ev1, ev2)
+		// 	}
+		// 	var indices []uint16
+		// 	// for q := 0; q < v.GetTriangleIndicies()*3/2; q++ {
+		// 	// 	indices = append(indices, uint16(q))
+		// 	// }
+		// 	fmt.Println(verts[0].DstX, indices)
+		// 	sm.Image.DrawTriangles(verts, indices, t.Tiles[image.Point{0, 0}].Image, nil)
+		// // }
 		// var verts []ebiten.Vertex
-		// for i := 0; i < 3; i++ {
-		// 	verts = append(verts, ebiten.Vertex{
-		// 		SrcX: 0, SrcY: 0, DstX: float32(160*math.Cos(float64(2)*math.Pi*float64(i/3)) + (screenSize.X / 2)), DstY: float32(160*math.Sin(float64(2)*math.Pi*float64(i/3)) + (screenSize.Y / 2)), ColorR: 120, ColorG: 192, ColorB: 255, ColorA: 1})
+
+		// var vx1, vx2, vx3, vx4, vx5, vx6 ebiten.Vertex
+
+		// // NewVertex(1, -1, -1, 1, 0),
+		// NewVertex(1, -1, 1, 1, 1),
+		// NewVertex(-1, -1, -1, 0, 0),
+
+		// NewVertex(-1, -1, -1, 0, 0),
+		// NewVertex(1, -1, 1, 1, 1),
+		// NewVertex(-1, -1, 1, 0, 1),
+
+		// var path vector.Path
+		// vector.Path
+		// path.MoveTo(10, 10)
+
+		// path.LineTo(10, 10)
+		// path.LineTo(10, 20)
+		// path.LineTo(20, 20)
+		// path.LineTo(20, 10)
+
+		// path.MoveTo(20, 20)
+		// path.LineTo(20, 70)
+		// path.LineTo(70, 70)
+		// path.LineTo(70, 60)
+		// path.LineTo(30, 60)
+		// path.LineTo(30, 50)
+		// path.LineTo(70, 50)
+		// path.LineTo(70, 40)
+		// path.LineTo(30, 40)
+		// path.LineTo(30, 30)
+		// path.LineTo(70, 30)
+		// path.LineTo(70, 20)
+
+		// path.LineTo(10, 10)
+		// path.LineTo(20, 10)
+		// path.LineTo(20, -10)
+		// path.MoveTo(10, 10)
+		// path.LineTo(1, 1)
+		// path.LineTo(1, -1)
+		// path.LineTo(-1, -1)
+		// path.LineTo(-1, -1)
+		// path.LineTo(1, 1)
+		// path.LineTo(-1, -1)
+		var path vector.Path
+		// path.MoveTo(500, 500)
+		z := float32(opts.RenderTilemapOptsContext.Camera.Zoom)
+		path.LineTo(1*z, 1*z)
+		path.LineTo(1*z, -1*z)
+		path.LineTo(-1*z, -1*z)
+		path.LineTo(-1*z, 1*z)
+		path.LineTo(1*z, 1*z)
+
+		path.Fill(sm.Image, &vector.FillOptions{color.Opaque})
+
+		// const z = 100
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Scale(4, 4)
+		op.GeoM.Translate(100, 100)
+		// opts.GeoM.Translate(100/z, 100/z)
+		// opts.GeoM.Translate()
+
+		sm.Image.DrawImage(t.Tiles[image.Point{0, 0}].Image, op)
+
+		// const z = 3
+		// opts1 := &ebiten.DrawImageOptions{}
+
+		// opts1.GeoM.Scale(4/opts.RenderTilemapOptsContext.Camera.Zoom, 4/opts.RenderTilemapOptsContext.Camera.Zoom)
+		// // opts1.GeoM.Translate(100, 100)
+		// opts1.GeoM.Translate(opts.RenderTilemapOptsContext.Camera.Position.X/opts.RenderTilemapOptsContext.Camera.Zoom, opts.RenderTilemapOptsContext.Camera.Position.Y/opts.RenderTilemapOptsContext.Camera.Zoom)
+		// // opts.GeoM.Translate()
+
+		// sm.Image.DrawImage(t.Tiles[image.Point{0, 0}].Image, opts1)
+		// opts := &vector.FillOptions{}
+		// fmt.Println(path)
+		// opts.Color = color.RGBA{120, 214, 192, 255}
+		// // image.
+		// path.Fill(sm.Image, opts)
+
+		// op := ebiten.DrawImageOptions{}
+		// sm.Image.DrawImage(t.Tiles[image.Point{0, 0}].Image, &op)
+
+		// vx1.ColorR = 1
+		// vx1.ColorG = 1
+		// vx1.ColorB = 1
+		// vx1.ColorA = 1
+
+		// vx2.ColorR = 1
+		// vx2.ColorG = 1
+		// vx2.ColorB = 1
+		// vx2.ColorA = 1
+
+		// vx3.ColorR = 1
+		// vx3.ColorG = 1
+		// vx3.ColorB = 1
+		// vx3.ColorA = 1
+
+		// vx4.ColorR = 1
+		// vx4.ColorG = 1
+		// vx4.ColorB = 1
+		// vx4.ColorA = 1
+
+		// vx5.ColorR = 1
+		// vx5.ColorG = 1
+		// vx5.ColorB = 1
+		// vx5.ColorA = 1
+
+		// vx6.ColorR = 1
+		// vx6.ColorG = 1
+		// vx6.ColorB = 1
+		// vx6.ColorA = 1
+
+		// verts = append(verts, vx1, vx2, vx3, vx4, vx5, vx6)
+
+		// var indices []uint16
+		// for q := 0; q < 3; q++ {
+		// 	indices = append(indices, uint16(q))
 		// }
-		// verts = append(verts, ebiten.Vertex{
-		// 	DstX:   float32(screenSize.X / 2),
-		// 	DstY:   float32(screenSize.Y / 2),
+		// sm.Image.DrawTriangles(verts, indices, t.Tiles[image.Point{0, 0}].Image, nil)
+
+		// op := &ebiten.DrawTrianglesOptions{}
+		// // op.Address = ebiten.AddressUnsafe
+
+		// img := ebiten.NewImage(3, 3)
+		// img.Fill(color.Opaque)
+
+		// var (
+		// 	centerX = screenSize.X / 2
+		// 	centerY = screenSize.Y / 2
+		// 	// r       = 50
+		// )
+
+		// vs := []ebiten.Vertex{}
+		// // for i := 0; i < 4; i++ {
+		// // 	rate := float64(i) / float64(4)
+		// // 	fmt.Println(rate)
+		// // cr := 0.0
+		// // cg := 0.0
+		// // cb := 0.0
+		// // if rate < 1.0/3.0 {
+		// // 	cb = 2 - 2*(rate*3)
+		// // 	cr = 2 * (rate * 3)
+		// // }
+		// // if 1.0/3.0 <= rate && rate < 2.0/3.0 {
+		// // 	cr = 2 - 2*(rate-1.0/3.0)*3
+		// // 	cg = 2 * (rate - 1.0/3.0) * 3
+		// // }
+		// // if 2.0/3.0 <= rate {
+		// // 	cg = 2 - 2*(rate-2.0/3.0)*3
+		// // 	cb = 2 * (rate - 2.0/3.0) * 3
+		// // }
+		// vs = append(vs, ebiten.Vertex{
+		// 	DstX: 0,
+		// 	DstY: float32(centerY),
+		// 	SrcX: 0,
+		// 	SrcY: 0,
+		// 	// ColorR: float32(cr),
+		// 	// ColorG: float32(cg),
+		// 	// ColorB: float32(cb),
+		// 	// ColorA: 1,
+		// 	ColorR: 1,
+		// 	ColorG: 1,
+		// 	ColorB: 1,
+		// 	ColorA: 1,
+		// })
+
+		// vs = append(vs, ebiten.Vertex{
+		// 	DstX: float32(centerX),
+		// 	DstY: float32(centerY),
+		// 	SrcX: 0,
+		// 	SrcY: 0,
+		// 	// ColorR: float32(cr),
+		// 	// ColorG: float32(cg),
+		// 	// ColorB: float32(cb),
+		// 	// ColorA: 1,
+		// 	ColorR: 1,
+		// 	ColorG: 1,
+		// 	ColorB: 1,
+		// 	ColorA: 1,
+		// })
+
+		// vs = append(vs, ebiten.Vertex{
+		// 	DstX: float32(centerX),
+		// 	DstY: 0,
+		// 	SrcX: 0,
+		// 	SrcY: 0,
+		// 	// ColorR: float32(cr),
+		// 	// ColorG: float32(cg),
+		// 	// ColorB: float32(cb),
+		// 	// ColorA: 1,
+		// 	ColorR: 1,
+		// 	ColorG: 1,
+		// 	ColorB: 1,
+		// 	ColorA: 1,
+		// })
+		// // }
+
+		// vs = append(vs, ebiten.Vertex{
+		// 	DstX:   0,
+		// 	DstY:   0,
 		// 	SrcX:   0,
 		// 	SrcY:   0,
 		// 	ColorR: 1,
@@ -565,14 +701,28 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 		// 	ColorB: 1,
 		// 	ColorA: 1,
 		// })
+		// // var verts []ebiten.Vertex
+		// // for i := 0; i < 3; i++ {
+		// // 	verts = append(verts, ebiten.Vertex{
+		// // 		SrcX: 0, SrcY: 0, DstX: float32(160*math.Cos(float64(2)*math.Pi*float64(i/3)) + (screenSize.X / 2)), DstY: float32(160*math.Sin(float64(2)*math.Pi*float64(i/3)) + (screenSize.Y / 2)), ColorR: 120, ColorG: 192, ColorB: 255, ColorA: 1})
+		// // }
+		// // verts = append(verts, ebiten.Vertex{
+		// // 	DstX:   float32(screenSize.X / 2),
+		// // 	DstY:   float32(screenSize.Y / 2),
+		// // 	SrcX:   0,
+		// // 	SrcY:   0,
+		// // 	ColorR: 1,
+		// // 	ColorG: 1,
+		// // 	ColorB: 1,
+		// // 	ColorA: 1,
+		// // })
 
-		indices := []uint16{}
-		for i := 0; i < 4; i++ {
-			// fmt.Println(uint16(i), uint16(i+1)%uint16(3), uint16(3))
-			indices = append(indices, uint16(i), uint16(i+1)%uint16(3), uint16(3))
-		}
-		fmt.Println(vs, indices)
-		sm.Image.DrawTriangles(vs, indices, t.Tiles[image.Point{0, 0}].Image, op)
+		// indices := []uint16{}
+		// for i := 0; i < 4; i++ {
+		// 	// fmt.Println(uint16(i), uint16(i+1)%uint16(3), uint16(3))
+		// 	indices = append(indices, uint16(i), uint16(i+1)%uint16(3), uint16(3))
+		// }
+		// sm.Image.DrawTriangles(vs, indices, t.Tiles[image.Point{0, 0}].Image, op)
 		// sort.Slice(orthographicPostRender, func(i, j int) bool {
 		// 	return orthographicPostRender[i].TileNum < orthographicPostRender[j].TileNum
 		// })
@@ -586,8 +736,6 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 		// 		}
 		// 	}
 		// }
-
-		// // sm.Image.DrawTriangles()
 
 		// w, h := orthographicSurface.Size()
 		// op := &ebiten.DrawImageOptions{}

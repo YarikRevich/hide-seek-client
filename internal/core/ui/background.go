@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/YarikRevich/hide-seek-client/internal/core/camera"
 	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/sources"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
@@ -16,6 +17,8 @@ type BackgroundOpts struct {
 	CameraPosition                       types.Vec3
 
 	OrthigraphicProjection bool
+
+	Camera *camera.Camera
 }
 
 type Background struct {
@@ -38,12 +41,14 @@ func (b *Background) Render(sm *screen.ScreenManager) {
 		Scale:                  b.Opts.Scale,
 		AutoScaleForbidden:     true,
 		OrthigraphicProjection: b.Opts.OrthigraphicProjection,
-
+		RenderTilemapOptsContext: sources.RenderTilemapOptsContext{
+			Camera: b.Opts.Camera,
+		},
 		// CameraPosition: types.Vec3{X: float64(x), Z: float64(y)},
-		CameraZoom:     b.Opts.CameraZoom,
-		CameraPosition: b.Opts.CameraPosition,
-		CameraAngle:    b.Opts.CameraAngle,
-		CameraPitch:    b.Opts.CameraPitch,
+		// CameraZoom:     b.Opts.CameraZoom,
+		// CameraPosition: b.Opts.CameraPosition,
+		// CameraAngle:    b.Opts.CameraAngle,
+		// CameraPitch:    b.Opts.CameraPitch,
 	})
 }
 

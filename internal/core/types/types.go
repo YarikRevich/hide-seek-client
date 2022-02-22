@@ -1,12 +1,38 @@
 package types
 
 import (
+	"image/color"
+
 	"github.com/kvartborg/vector"
 )
 
 type Vec2 struct{ X, Y float64 }
 
 type Vec3 struct{ X, Y, Z float64 }
+
+type Vertex struct {
+	Position, UV, Transformed, Normal vector.Vector
+	Color                             color.Color
+	Weights                           []float32
+	VertexNum                         int
+}
+
+func NewVertex(x, y, z, u, v float64) *Vertex {
+	return &Vertex{
+		Position: vector.Vector{x, y, z},
+		Color:    color.RGBA{1, 1, 1, 1},
+		UV:       vector.Vector{u, v},
+		Weights:  make([]float32, 0, 4),
+	}
+}
+
+type Triangle struct {
+	Vertices       []*Vertex
+	Normal, Center vector.Vector
+	MaxSpan, Depth float64
+	visible        bool
+	TriangleNum    int
+}
 
 type Matrix4 [4][4]float64
 
@@ -28,7 +54,7 @@ func (m *Matrix4) GetForward() vector.Vector {
 	return vert.Unit()
 }
 
-func (m *Matrix4) GetMultipied(other Matrix4) Matrix4 {
+func (m Matrix4) GetMultiplied(other Matrix4) Matrix4 {
 	newMat := Matrix4{
 		{1, 0, 0, 0},
 		{0, 1, 0, 0},
@@ -57,4 +83,13 @@ func (m *Matrix4) GetMultipied(other Matrix4) Matrix4 {
 	newMat[3][3] = m[3][0]*other[0][3] + m[3][1]*other[1][3] + m[3][2]*other[2][3] + m[3][3]*other[3][3]
 
 	return newMat
+}
+
+func (m *Matrix4) GetMultipiedVector(other vector.Vector) vector.Vector {
+	v := vector.Vector{0, 0, 0}
+	v[0] = m[0][0]*other[0] + m[1][0]*other[1] + m[2][0]*other[2] + m[3][0]
+	v[1] = m[0][1]*other[0] + m[1][1]*other[1] + m[2][1]*other[2] + m[3][1]
+	v[2] = m[0][2]*other[0] + m[1][2]*other[1] + m[2][2]*other[2] + m[3][2]
+
+	return v
 }
