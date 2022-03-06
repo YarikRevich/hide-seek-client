@@ -121,9 +121,9 @@ type CubeOpts struct {
 }
 
 func CreateCube(opts CubeOpts) [8]types.Vec3 {
-
 	var unitCube, rotCube, worldCube, projCube [8]types.Vec3
 
+	unitCube[0] = types.Vec3{}
 	unitCube[1] = types.Vec3{X: opts.Scale.X}
 	unitCube[2] = types.Vec3{X: opts.Scale.X, Y: -opts.Scale.Y}
 	unitCube[3] = types.Vec3{Y: -opts.Scale.Y}
@@ -131,14 +131,6 @@ func CreateCube(opts CubeOpts) [8]types.Vec3 {
 	unitCube[5] = types.Vec3{X: opts.Scale.X, Z: opts.Scale.Y}
 	unitCube[6] = types.Vec3{X: opts.Scale.X, Y: -opts.Scale.Y, Z: opts.Scale.Y}
 	unitCube[7] = types.Vec3{Y: -opts.Scale.Y, Z: opts.Scale.Y}
-
-	// unitCube[1] = types.Vec3{X: 0}
-	// unitCube[2] = types.Vec3{X: 10, Y: 2}
-	// unitCube[3] = types.Vec3{Y: 43}
-	// unitCube[4] = types.Vec3{Z: 20}
-	// unitCube[5] = types.Vec3{X: 20, Z: 0}
-	// unitCube[6] = types.Vec3{X: 40, Y: -5, Z: 23}
-	// unitCube[7] = types.Vec3{Y: -10, Z: 3}
 
 	for i := 0; i < 8; i++ {
 		unitCube[i].X += (opts.Position.X*opts.Scale.X - opts.CameraPosition.X)
@@ -170,21 +162,41 @@ func CreateCube(opts CubeOpts) [8]types.Vec3 {
 		projCube[i].Z = worldCube[i].Z
 	}
 
+	// fmt.Println("START", opts.Position.X, " : ", opts.Position.Y)
+	// fmt.Println("1: ", projCube[0].X, " ", projCube[0].Y)
+	// fmt.Println("2: ", projCube[1].X, " ", projCube[1].Y)
+	// fmt.Println("3: ", projCube[2].X, " ", projCube[2].Y)
+	// fmt.Println("4: ", projCube[3].X, " ", projCube[3].Y)
+	// fmt.Println(" \n")
+
 	return projCube
 }
 
-// type FaceQuadOpts struct {
-// 	CubeOpts
-// }
+type FaceQuadOpts struct {
+	CubeOpts
+}
 
-// func GetFaceQuad(opts FaceQuadOpts) Quad {
-// 	CreateCube(CubeOpts{
-// 		sm:             opts.sm,
-// 		CameraPosition: opts.CameraPosition,
-// 		Scale:          opts.Scale,
-// 	})
-// 	return Quad{}
-// }
+func GetFaceQuad(opts FaceQuadOpts) []Quad {
+	var r []Quad
+
+	projectionCube := CreateCube(CubeOpts{
+		sm:             opts.sm,
+		Position:       opts.Position,
+		Angle:          opts.Angle,
+		Pitch:          opts.Pitch,
+		CameraPosition: opts.CameraPosition,
+		Scale:          opts.Scale,
+	})
+
+	r = append(r, Quad{Points: [4]types.Vec3{projectionCube[4], projectionCube[0], projectionCube[1], projectionCube[5]}})
+	// r = append(r, Quad{Points: [4]types.Vec3{projectionCube[3], projectionCube[0], projectionCube[1], projectionCube[2]}})
+	// r = append(r, Quad{Points: [4]types.Vec3{projectionCube[6], projectionCube[5], projectionCube[4], projectionCube[7]}})
+	// r = append(r, Quad{Points: [4]types.Vec3{projectionCube[7], projectionCube[4], projectionCube[0], projectionCube[3]}})
+	// r = append(r, Quad{Points: [4]types.Vec3{projectionCube[2], projectionCube[1], projectionCube[5], projectionCube[6]}})
+	// r = append(r, Quad{Points: [4]types.Vec3{projectionCube[7], projectionCube[3], projectionCube[2], projectionCube[6]}})
+
+	return r
+}
 
 type Tilemap struct {
 	Name string
@@ -294,14 +306,6 @@ func (tm *Tilemap) load(path string) error {
 
 				tile.Triangles = tempTileTriangleCache[t.Tileset.Image.Source]
 
-				// tri := NewTriangle(part)
-				// tri.ID = part.Mesh.triIndex
-				// part.Triangles = append(part.Triangles, tri)
-				// part.sortedTriangles = append(part.sortedTriangles, tri)
-				// part.Vertices = append(part.Vertices, verts[i], verts[i+1], verts[i+2])
-				// tri.SetVertices(verts[i], verts[i+1], verts[i+2])
-				// part.Mesh.triIndex++
-
 				tile.ColorMatrix = tempTileColorMatrixCache[t.Tileset.Image.Source]
 
 				tile.Layer = l.Name
@@ -394,23 +398,107 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 	screenSize := sm.GetSize()
 	screenScale := sm.GetScale()
 
-	var orthographicPostRender []*Tile
+	// // var orthographicPostRender []*Tile
+
 	for k, v := range t.Tiles {
 		if (float64(k.X)+opts.SurfacePosition.X-t.TileSize.X < screenSize.X && float64(k.Y)+opts.SurfacePosition.Y-t.TileSize.Y < screenSize.Y) &&
 			(float64(k.X)+opts.SurfacePosition.X+t.TileSize.X > 0 && float64(k.Y)+opts.SurfacePosition.Y+t.TileSize.Y > 0) {
 			drawOpts := &ebiten.DrawImageOptions{}
 
 			if opts.OrthigraphicProjection {
-				orthographicPostRender = append(orthographicPostRender, v)
+				for y := k.Y; y < k.Y+(int(t.TileSize.Y)); y += 1 {
+					for x := k.X; x < k.X+int(t.TileSize.X); x += 1 {
+						quads := GetFaceQuad(FaceQuadOpts{CubeOpts{sm: sm, Scale: types.Vec2{X: opts.Camera.Zoom, Y: opts.Camera.Zoom}, Position: types.Vec2{X: float64(x), Y: float64(y)}, Angle: opts.Camera.Angle, Pitch: opts.Camera.Pitch, CameraPosition: opts.Camera.Position}})
+						for _, quad := range quads {
+							// var r []ebiten.Vertex
+							// var v1, v2, v3, v4, v5 ebiten.Vertex
 
-				// v1, v2, v3, v4 := projectionCube[c[0]], projectionCube[c[1]], projectionCube[c[2]], projectionCube[c[3]]
-				// var path vector.Path
-				// path.MoveTo(float32(k.X*int(opts.Scale.X)), float32(k.Y*int(opts.Scale.Y)))
-				// path.LineTo(float32(v1.X), float32(v2.Y))
-				// path.LineTo(float32(v2.X), float32(v3.Y))
-				// path.LineTo(float32(v3.X), float32(v4.Y))
-				// path.LineTo(float32(v4.X), float32(v1.Y))
-				// path.Fill(sm.Image, &vector.FillOptions{Color: color.Opaque})
+							// fmt.Println((y*int(t.TileSize.X) + x), y-k.Y, t.TileSize.Y, x-k.X, t.TileSize.X)
+							color := v.ColorMatrix[((y-k.Y)*int(t.TileSize.X) + (x - k.X))]
+							// R, G, B, A := color.RGBA()
+
+							// r8, g8, b8, a8 := R>>8, G>>8, B>>8, A>>8
+							// fmt.Println(float32(r8), float32(g8), float32(b8), float32(a8))
+
+							// v1.DstX = float32(quad.Points[0].X)
+							// v1.DstY = float32(quad.Points[0].Y)
+
+							// v1.ColorR = float32(r8)
+							// v1.ColorG = float32(g8)
+							// v1.ColorB = float32(b8)
+							// v1.ColorA = 1
+
+							// v2.DstX = float32(quad.Points[1].X)
+							// v2.DstY = float32(quad.Points[1].Y)
+							// v2.ColorR = float32(r8)
+							// v2.ColorG = float32(g8)
+							// v2.ColorB = float32(b8)
+							// v2.ColorA = 1
+
+							// v3.DstX = float32(quad.Points[2].X)
+							// v3.DstY = float32(quad.Points[2].Y)
+							// v3.ColorR = float32(r8)
+							// v3.ColorG = float32(g8)
+							// v3.ColorB = float32(b8)
+							// v3.ColorA = 1
+
+							// v4.DstX = float32(quad.Points[3].X)
+							// v4.DstY = float32(quad.Points[3].Y)
+							// v4.ColorR = float32(r8)
+							// v4.ColorG = float32(g8)
+							// v4.ColorB = float32(b8)
+							// v4.ColorA = 1
+
+							// v5.DstX = float32(quad.Points[0].X)
+							// v5.DstY = float32(quad.Points[0].Y)
+							// v5.ColorR = float32(r8)
+							// v5.ColorG = float32(g8)
+							// v5.ColorB = float32(b8)
+							// v5.ColorA = 1
+							// fmt.Println(v1)
+
+							// r = append(r, v1, v2, v3, v4, v5)
+							// var indices []uint16
+							// for i := 0; i < 4; i++ {
+							// 	indices = append(indices, uint16(i), uint16(i+1)%uint16(4), uint16(4))
+							// }
+
+							// opts := &ebiten.DrawTrianglesOptions{}
+
+							// sm.Image.DrawTriangles(r, indices, v.Image, opts)
+
+							var path vector.Path
+							path.LineTo(float32(quad.Points[0].X), float32(quad.Points[0].Y))
+							path.LineTo(float32(quad.Points[1].X), float32(quad.Points[1].Y))
+							path.LineTo(float32(quad.Points[2].X), float32(quad.Points[2].Y))
+							path.LineTo(float32(quad.Points[3].X), float32(quad.Points[3].Y))
+							path.LineTo(float32(quad.Points[0].X), float32(quad.Points[0].Y))
+							path.Fill(sm.Image, &vector.FillOptions{Color: color})
+						}
+						// xi++
+					}
+					// yi++
+
+				}
+
+				// for x := 0; x < int(t.TileSize.X); x += 2 {
+				// 	for y := 0; y < int(t.TileSize.Y); y += 2 {
+				// 		quads := GetFaceQuad(FaceQuadOpts{CubeOpts{sm: sm, Scale: types.Vec2{X: opts.Camera.Zoom * opts.Scale.X, Y: opts.Camera.Zoom * opts.Scale.Y}, Position: types.Vec2{X: float64(k.X + x), Y: float64(k.Y + y)}, Angle: opts.Camera.Angle, Pitch: opts.Camera.Pitch, CameraPosition: opts.Camera.Position}})
+				// 		for _, quad := range quads {
+				// Position: types.Vec2{X: float64(k.X), Y: float64(k.Y)}
+
+				// fmt.Println(quad.Points)
+				//староеврейская 22 князя данила
+				// 	path.LineTo(float32(quad.Points[0].X), float32(quad.Points[0].Y))
+				// 	path.LineTo(float32(quad.Points[1].X), float32(quad.Points[1].Y))
+				// 	path.LineTo(float32(quad.Points[2].X), float32(quad.Points[2].Y))
+				// 	path.LineTo(float32(quad.Points[3].X), float32(quad.Points[3].Y))
+				// 	path.LineTo(float32(quad.Points[0].X), float32(quad.Points[0].Y))
+				// 	path.Fill(sm.Image, &vector.FillOptions{Color: color.Opaque})
+				// }
+				// 	}
+				// }
+
 				// opts.GeoM.Rotate(float64(10%360) * 2 * math.Pi / 360)
 
 				// opts.GeoM.Translate(v3.X, v3.X)
@@ -538,25 +626,25 @@ func (t *Tilemap) Render(sm *screen.ScreenManager, opts RenderTilemapOpts) {
 		// path.LineTo(-1, -1)
 		// path.LineTo(1, 1)
 		// path.LineTo(-1, -1)
-		var path vector.Path
-		// path.MoveTo(500, 500)
-		z := float32(opts.RenderTilemapOptsContext.Camera.Zoom)
-		path.LineTo(1*z, 1*z)
-		path.LineTo(1*z, -1*z)
-		path.LineTo(-1*z, -1*z)
-		path.LineTo(-1*z, 1*z)
-		path.LineTo(1*z, 1*z)
+		// var path vector.Path
+		// // path.MoveTo(500, 500)
+		// z := float32(opts.RenderTilemapOptsContext.Camera.Zoom)
+		// path.LineTo(1*z, 1*z)
+		// path.LineTo(1*z, -1*z)
+		// path.LineTo(-1*z, -1*z)
+		// path.LineTo(-1*z, 1*z)
+		// path.LineTo(1*z, 1*z)
 
-		path.Fill(sm.Image, &vector.FillOptions{color.Opaque})
+		// path.Fill(sm.Image, &vector.FillOptions{color.Opaque})
 
-		// const z = 100
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Scale(4, 4)
-		op.GeoM.Translate(100, 100)
+		// // const z = 100
+		// op := &ebiten.DrawImageOptions{}
+		// op.GeoM.Scale(4, 4)
+		// op.GeoM.Translate(100, 100)
 		// opts.GeoM.Translate(100/z, 100/z)
 		// opts.GeoM.Translate()
 
-		sm.Image.DrawImage(t.Tiles[image.Point{0, 0}].Image, op)
+		// sm.Image.DrawImage(t.Tiles[image.Point{0, 0}].Image, op)
 
 		// const z = 3
 		// opts1 := &ebiten.DrawImageOptions{}

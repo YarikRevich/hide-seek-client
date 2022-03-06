@@ -315,9 +315,9 @@ func (wm *WorldManager) FromAPIMessage(m *server_external.World) {
 func (wm *WorldManager) Update() {
 	if events.KeyboardPress.IsAnyKeyPressed() || events.GamepadPress.IsAnyButtonPressed() {
 		if events.GamepadPress.AreGamepadButtonsCombined(keycodes.GamepadUPButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF1) {
-			wm.Camera.ZoomIn(-0.04)
+			wm.Camera.ZoomIn(-0.4)
 		} else if events.GamepadPress.AreGamepadButtonsCombined(keycodes.GamepadDOWNButton, keycodes.GamepadLEFTUPPERCLICKERButton) || ebiten.IsKeyPressed(ebiten.KeyF2) {
-			wm.Camera.ZoomIn(0.04)
+			wm.Camera.ZoomIn(0.4)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.Key8) {
