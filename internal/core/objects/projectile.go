@@ -6,7 +6,7 @@ type Projectile struct {
 }
 
 type ProjectileOpts struct {
-	Angle float64
+	Angle, Lifetime float64
 }
 
 func NewProjectile(opts ProjectileOpts) *Projectile {

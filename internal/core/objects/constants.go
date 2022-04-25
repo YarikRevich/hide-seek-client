@@ -1,10 +1,11 @@
 package objects
 
-//Constants for collidable objects
+//Object types
 const (
-	ELEMENT = iota
+	ELEMENT uint16 = iota
 	AMMO
 	LOOT
 	PLAYER
 	WEAPON
+	MAP
 )

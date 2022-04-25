@@ -16,7 +16,7 @@ type BackgroundOpts struct {
 	CameraAngle, CameraPitch, CameraZoom float64
 	CameraPosition                       types.Vec3
 
-	OrthigraphicProjection bool
+	OrthigraphicProjection, PerspectiveProjection bool
 
 	Camera *camera.Camera
 }

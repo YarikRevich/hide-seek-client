@@ -39,6 +39,7 @@ func (sl *SessionLayer) Init() {
 		Tilemap:                "test/test",
 		Scale:                  types.Vec2{X: 1, Y: 1},
 		OrthigraphicProjection: true,
+		// AvailableFaces:         []sources.TileFace{sources.Floor},
 
 		// CameraZoom:     sl.opts.WorldManager.Zoom,
 		CameraAngle:    sl.opts.WorldManager.Camera.Angle,

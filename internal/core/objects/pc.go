@@ -1,8 +1,6 @@
 package objects
 
 import (
-	"time"
-
 	"github.com/YarikRevich/caching/pkg/zeroshifter"
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/YarikRevich/hide-seek-client/internal/core/storage"
@@ -13,25 +11,25 @@ const DEFAULT_HEALTH = 10
 
 type Buffs struct{ SpeedX, SpeedY float64 }
 
-// type Team int
-
-// const (
-// 	Team1 Team = iota
-// 	Team2
-// )
-
 type PC struct {
 	Base
 
-	Killer uuid.UUID
+	Opts PCOpts
 
+	//TODO: set a temporary killer name
+	// Killer uuid.UUID
+
+	// LobbyNumber int
+
+	//TODO: set a temporary kicked state
+	// IsKicked bool
+
+	// LastActivity int64
+}
+
+type PCOpts struct {
 	Username string
 	Health   uint64
-
-	LobbyNumber int
-
-	IsKicked     bool
-	LastActivity int64
 }
 
 // func (p *PC) GetScaledOffsetX() float64 {
@@ -45,7 +43,7 @@ type PC struct {
 
 //Initializes pc username by requesting storage
 func (p *PC) LoadUsername() {
-	p.Username = storage.UseStorage().User().GetUsername()
+	p.Opts.Username = storage.UseStorage().User().GetUsername()
 }
 
 // func (p *PC) DebugInit() {
@@ -61,37 +59,38 @@ func (p *PC) GetMovementRotation() float64 {
 	return 1
 }
 
-func (p *PC) UpdateLastActivity() {
-	p.LastActivity = time.Now().Unix()
-}
+// func (p *PC) UpdateLastActivity() {
+// 	p.LastActivity = time.Now().Unix()
+// }
 
-func (p *PC) SetKicked(s bool) {
-	p.IsKicked = s
-}
+// func (p *PC) SetKicked(s bool) {
+// 	p.Opts.IsKicked = s
+// }
 
 func (p *PC) ToAPIMessage() *server_external.PC {
 	return &server_external.PC{
 		Base:     p.Base.ToAPIMessage(),
-		Username: p.Username,
-		Health:   p.Health,
+		Username: p.Opts.Username,
+		Health:   p.Opts.Health,
 	}
 }
 
 func (p *PC) FromAPIMessage(m *server_external.PC) {
 	p.Base.FromAPIMessage(m.Base)
-	p.Username = m.Username
-	p.Health = m.Health
+	p.Opts.Username = m.Username
+	p.Opts.Health = m.Health
 }
 
 func (p *PC) String() string {
-	return p.Username
+	return p.Opts.Username
 }
 
-func NewPC() *PC {
-	pc := new(PC)
-	pc.ID = uuid.New()
-	pc.PositionHistorySequence = zeroshifter.New(2)
-	pc.Health = 10
-	pc.Type = "pc"
-	return pc
+func NewPC(opts PCOpts) *PC {
+	return &PC{
+		Base: Base{
+			ID:                      uuid.New(),
+			Type:                    PLAYER,
+			PositionHistorySequence: zeroshifter.New(2),
+		},
+		Opts: PCOpts{Health: 10}}
 }

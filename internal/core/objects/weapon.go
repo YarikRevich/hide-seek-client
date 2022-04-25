@@ -3,30 +3,29 @@ package objects
 import (
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 )
 
 type Weapon struct {
 	Base
+	Opts WeaponOpts
+}
 
+type WeaponOpts struct {
 	Name, Radius string
 }
 
 func (w *Weapon) ToAPIMessage() *server_external.Weapon {
 	return &server_external.Weapon{
 		Base:   w.Base.ToAPIMessage(),
-		Name:   w.Name,
-		Radius: w.Radius,
+		Name:   w.Opts.Name,
+		Radius: w.Opts.Radius,
 	}
 }
 
 func NewWeapon() *Weapon {
-	w := new(Weapon)
-	id, err := uuid.NewUUID()
-	if err != nil {
-		logrus.Fatal("failed to create uuid for world:", err)
-	}
-	w.ID = id
-	w.Type = "weapon"
-	return w
+	return &Weapon{
+		Base: Base{
+			ID:   uuid.New(),
+			Type: WEAPON,
+		}}
 }

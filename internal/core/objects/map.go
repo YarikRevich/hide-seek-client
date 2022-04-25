@@ -5,7 +5,6 @@ import (
 
 	"github.com/YarikRevich/hide-seek-client/internal/core/networking/api/server_external"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 )
 
 // const (
@@ -213,12 +212,9 @@ func (m *Map) SetTilemap(tilemapPath string) {
 // }
 
 func NewMap() *Map {
-	worldMap := new(Map)
-	id, err := uuid.NewUUID()
-	if err != nil {
-		logrus.Fatal("failed to create uuid for worldMap:", err)
-	}
-	worldMap.ID = id
-	worldMap.Type = "worldMap"
-	return worldMap
+	return &Map{
+		Base: Base{
+			ID:   uuid.New(),
+			Type: MAP,
+		}}
 }

@@ -339,7 +339,6 @@ package camera
 import (
 	"math"
 
-	"github.com/YarikRevich/hide-seek-client/internal/core/screen"
 	"github.com/YarikRevich/hide-seek-client/internal/core/types"
 	"github.com/kvartborg/vector"
 )
@@ -379,6 +378,14 @@ func (c *Camera) MovePositionZ(v float64) {
 	c.Position.Z += v
 }
 
+//Returns position multiplied by zoom
+func (c *Camera) GetPosition() types.Vec3 {
+	return types.Vec3{
+		X: c.Position.X * c.Zoom,
+		Y: c.Position.Y * c.Zoom,
+		Z: c.Position.Z * c.Zoom}
+}
+
 func (ca *Camera) Rotate(x, y, z, angle float64) {
 	mat := types.Matrix4{
 		{1, 0, 0, 0},
@@ -406,25 +413,34 @@ func (ca *Camera) Rotate(x, y, z, angle float64) {
 	ca.Rotation = mat.GetMultiplied(ca.Rotation)
 }
 
-func (c *Camera) GetProjection(sm *screen.ScreenManager) types.Matrix4 {
-	w, h := sm.Image.Size()
-	asr := float64(h) / float64(w)
+// func (camera *Camera) GetProjection(sm *screen.ScreenManager) types.Matrix4 {
+// 	w, h := sm.Image.Size()
+// 	asr := float64(h) / float64(w)
 
-	return types.Matrix4{
-		{2 / (1*c.Zoom - (-1 * c.Zoom)), 0, 0, 0},
-		{0, 2 / (asr*c.Zoom - (-asr * c.Zoom)), 0, 0},
-		{0, 0, -2, 0},
-		{0, 0, 0, 1},
-	}
+// 	return types.Matrix4{
+// 		{2 / (1*c.Zoom - (-1 * c.Zoom)), 0, 0, 0},
+// 		{0, 2 / (asr*c.Zoom - (-asr * c.Zoom)), 0, 0},
+// 		{0, 0, -2, 0},
+// 		{0, 0, 0, 1},
+// 	}
+// }
+
+// func (camera *Camera) GetView() types.Matrix4 {
+// 	var mat types.Matrix4
+// 	mat[3][0] = camera.Position.X
+// 	mat[3][1] = camera.Position.Y
+// 	mat[3][2] = camera.Position.Z
+
+// 	return mat.GetMultiplied(camera.Rotation.GetTransposed())
+// }
+
+func (camera *Camera) ScreenCoordsToWorldCoords() {
+	//TODO: transformation from screen space to world one
 }
 
-func (camera *Camera) GetView() types.Matrix4 {
-	var mat types.Matrix4
-	mat[3][0] = camera.Position.X
-	mat[3][1] = camera.Position.Y
-	mat[3][2] = camera.Position.Z
-
-	return mat.GetMultiplied(camera.Rotation.GetTransposed())
+func (camera *Camera) WorldCoordsToScreenCoords() types.Vec2 {
+	//TODO: transformation from world space to screen one
+	return types.Vec2{2, 2}
 }
 
 func (camera *Camera) Render() {

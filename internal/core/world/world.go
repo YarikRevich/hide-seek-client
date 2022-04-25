@@ -61,7 +61,7 @@ func (w *World) UpdatePCs(m []*server_external.PC) {
 			foundPC = true
 			w.AddPCs(w.pc)
 		} else {
-			npc := objects.NewPC()
+			npc := objects.NewPC(objects.PCOpts{Health: 10})
 			npc.FromAPIMessage(pc)
 			w.AddPCs(npc)
 		}
@@ -264,7 +264,7 @@ func UseWorld() *World {
 	if instance == nil {
 		instance = &World{
 			ID:       uuid.New(),
-			pc:       objects.NewPC(),
+			pc:       objects.NewPC(objects.PCOpts{Health: 10}),
 			worldMap: objects.NewMap(),
 		}
 
@@ -320,28 +320,36 @@ func (wm *WorldManager) Update() {
 			wm.Camera.ZoomIn(0.4)
 		}
 
-		if ebiten.IsKeyPressed(ebiten.Key8) {
-			wm.Camera.MoveAngle(0.04)
-		}
+		// if ebiten.IsKeyPressed(ebiten.Key8) {
+		// 	wm.Camera.MoveAngle(0.04)
+		// }
 
-		if ebiten.IsKeyPressed(ebiten.Key7) {
-			wm.Camera.MoveAngle(-0.04)
-		}
+		// if ebiten.IsKeyPressed(ebiten.Key7) {
+		// 	wm.Camera.MoveAngle(-0.04)
+		// }
 
-		if ebiten.IsKeyPressed(ebiten.Key6) {
-			wm.Camera.MovePitch(0.04)
-		}
+		// if ebiten.IsKeyPressed(ebiten.Key6) {
+		// 	wm.Camera.MovePitch(0.04)
+		// }
 
-		if ebiten.IsKeyPressed(ebiten.Key5) {
-			wm.Camera.MovePitch(-0.04)
-		}
+		// if ebiten.IsKeyPressed(ebiten.Key5) {
+		// 	wm.Camera.MovePitch(-0.04)
+		// }
 
 		if ebiten.IsKeyPressed(ebiten.KeyA) {
-			wm.Camera.MovePositionX(-1)
+			wm.Camera.MovePositionX(-2)
 		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyD) {
-			wm.Camera.MovePositionX(1)
+			wm.Camera.MovePositionX(2)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.KeyW) {
+			wm.Camera.MovePositionY(-2)
+		}
+
+		if ebiten.IsKeyPressed(ebiten.KeyS) {
+			wm.Camera.MovePositionY(2)
 		}
 	}
 }
@@ -352,5 +360,5 @@ func (wm *WorldManager) Render(sm *screen.ScreenManager) {
 }
 
 func NewWorldManager() *WorldManager {
-	return &WorldManager{Camera: &camera.Camera{Pitch: 1, Angle: 5, Zoom: 1, Position: types.Vec3{10, 10, 10}}}
+	return &WorldManager{Camera: &camera.Camera{Pitch: 0.5, Angle: 5.48, Zoom: 1, Position: types.Vec3{10, 10, 10}}}
 }

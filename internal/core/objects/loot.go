@@ -2,16 +2,21 @@ package objects
 
 type LootSet struct {
 	Base
+	Opts LootSetOpts
+}
 
+type LootSetOpts struct {
 	IsHidden bool
 	Weapon   []*Weapon
 	Ammo     []*Ammo
 }
 
-func NewLootSet(w []*Weapon, a []*Ammo) *LootSet {
-	l := new(LootSet)
-	l.Weapon = w
-	l.Ammo = a
-	l.Type = "lootset"
-	return l
+func (ls *LootSet) ToAPIMessage()   {}
+func (ls *LootSet) FromAPIMessage() {}
+
+func NewLootSet(opts LootSetOpts) *LootSet {
+	return &LootSet{
+		Base: Base{
+			Type: LOOT,
+		}}
 }

@@ -54,11 +54,10 @@ each object on the map
 type Base struct {
 	//Base object metadata
 	ID     uuid.UUID
+	Type   uint16
 	Parent *Base
 
 	Tilemap sources.Tilemap
-
-	Type string
 
 	// Animation
 	// Skin
@@ -290,7 +289,7 @@ func (o *Base) SetTilemap(tileMapPath string) {
 
 func (o *Base) ToAPIMessage() *server_external.Base {
 	m := &server_external.Base{
-		Type: o.Type,
+		// Type: o.Type,
 		//TODO: place sending of tilemap data
 
 		// Animation: &server_external.Animation{
@@ -328,7 +327,7 @@ func (o *Base) ToAPIMessage() *server_external.Base {
 }
 
 func (o *Base) FromAPIMessage(m *server_external.Base) {
-	o.Type = m.Type
+	// o.Type = m.Type
 	// o.Animation.AnimationStartPosition.X = m.Animation.PositionBeforeAnimation.X
 	// o.Animation.AnimationStartPosition.Y = m.Animation.PositionBeforeAnimation.Y
 	// o.Animation.FrameCount = m.Animation.FrameCount
@@ -390,7 +389,9 @@ type ObjectRenderOpts struct {
 }
 
 func (b *Base) Render(sm screen.ScreenManager, opts *ObjectRenderOpts) {
-
+	if b.Tilemap.IsAnimated() {
+		b.Tilemap.Animations[1].Proceed()
+	}
 }
 
 func NewBase() *Base {
