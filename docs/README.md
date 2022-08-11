@@ -1,42 +1,34 @@
-#Hide&Seek🎮
+# hide-seek-client
 
-![](preview.png)
+![Linux](https://svgshare.com/i/Zhy.svg)
+![macOS](https://svgshare.com/i/ZjP.svg)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+![go-report-card](https://goreportcard.com/badge/github.com/YarikRevich/hide-seek-client)
 
-**_You can install the game using insructions below_**
 
-Create a dir
 
-```
-$ go get github.com/YarikRevich/Hide-Seek-with-Guns
-```
+## General Information
 
-Go to sources
-```
-$ cd $(go env GOPATH)/src/github.com/YarikRevich/Hide-Seek-with-Guns
-```
+2D multiplayer game
 
-Use Bazel
+## Technologies
 
-```
-$ sudo bazel build :deps
-$ sudo bazel build --action_env=USER=$USER :service_env --spawn_strategy=standalone
-$ sudo bazel build //cmd:hide-seek-client 
-```
+- Golang 1.18+
+- Bazel
 
-Run and enjoy the game👌
+## Setup
 
-```
-$ HideSeek
-```
+### Golang([Linux](https://go.dev/dl/go1.19.linux-amd64.tar.gz) or [MacOS(x86-64)](https://go.dev/dl/go1.19.darwin-amd64.pkg) or [MacOS(ARM64)](https://go.dev/dl/go1.19.darwin-arm64.pkg))
 
-Use 
+### Bazel([Linux](https://docs.bazel.build/versions/main/install-ubuntu.html) or [MacOS](https://docs.bazel.build/versions/main/install-os-x.html))
 
-```
-$ HideSeek --help
-```
+## Status
 
-To see all available flags
+hide-seek-client is still actively supported
 
-😊 If you want to contribute you definetily should use [debug cli](DEBUG.md)
+## Inspiration
+
+I have never done games from scratch on my own, that's why I created hide-seek!
+
 
 
